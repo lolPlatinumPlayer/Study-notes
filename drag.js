@@ -8,23 +8,29 @@ export default {
             const rightHandle=$(el).children('.drag-bar__right-handle')[0];
             const leftHandle=$(el).children('.drag-bar__left-handle')[0];
             const bg=$(el).children('.drag-bar__bg')[0];
-            //CalLeftRightMousedown()
-            let minLeft,maxRight,
-                beforeDragBarIndex,
-                afterDragBarIndex;
+            let minLeft,maxRight;
+            //↓计算拖拽条left最小值和right最大值↙
+            //（在新增拖拽条时会依靠这个函数计算出left最小值）
+            CalLimitvalue()
 
-
-
-            CollisionSolution()
-            //EntireDragBarPutRight()
+            //以dom拖拽条宽度来做拖拽条宽度的标准
+            /*
+            * 会导致 根据vuex响应dom 失败
+            * 进而导致 获取dom数据再反馈给vuex 出现错误
+            * */
             let thisDragBarWidth=$(el).width(),
                 maxLeft=maxRight-thisDragBarWidth
+            //正确获取拖拽条的宽度
+            //（有vuex就从vuex获取，没有就从dom获取）
 
-            EntireDragBarPutRight(store.state.dragBar[binding.value].left)//这个括号内的内容是state数据dragBar在当前拖拽条上的left值
-            CalLeftRightMousedown()
+
+            //这个括号内的内容是state数据dragBar在当前拖拽条上的left值
+            //（在新增拖拽条时）
+            EntireDragBarPutRight(store.state.dragBar[binding.value].left)
+            VuexLeftRightFromDom()
 
             leftHandle.onmousedown = function (e) {
-                CollisionSolution()
+                CalLimitvalue()
                 let oldClientX = e.clientX
                 const disX = e.clientX - el.offsetLeft;
                 const styleWidth=parseFloat($(el).css('width'))
@@ -48,7 +54,7 @@ export default {
                         el.style.width=bodyW+'px'
                         $(el).children('.drag-bar__bg').css('width',bgW+'px');
                     }
-                    CalLeftRightMousedown()
+                    VuexLeftRightFromDom()
                 }
                 document.onmouseup = function (e) {//用函数封装无效
                     CalLeftRightMouseup()
@@ -58,7 +64,7 @@ export default {
             }
 
             rightHandle.onmousedown = function (e) {
-                CollisionSolution()
+                CalLimitvalue()
                 let oldClientX = e.clientX
                 const styleWidth=parseFloat($(el).css('width'))
                 const maxWidth=maxRight-store.state.dragBar[binding.value].left
@@ -75,7 +81,7 @@ export default {
                         el.style.width= bodyW+'px';
                         $(el).children('.drag-bar__bg').css('width',bgW+'px');
                     }
-                    CalLeftRightMousedown()
+                    VuexLeftRightFromDom()
                 }
                 document.onmouseup = function (e) {
                     CalLeftRightMouseup()
@@ -85,14 +91,14 @@ export default {
             }
 
             bg.onmousedown = function (e) {
-                CollisionSolution()
+                CalLimitvalue()
                 const disX = e.clientX - el.offsetLeft;
                 thisDragBarWidth=store.state.dragBar[binding.value].right-store.state.dragBar[binding.value].left
                 maxLeft=maxRight-thisDragBarWidth
                 document.onmousemove = function (e) {
                     let l = e.clientX - disX;
                     EntireDragBarPutRight(l)
-                    CalLeftRightMousedown()
+                    VuexLeftRightFromDom()
                 };
                 document.onmouseup = function (e) {
                     CalLeftRightMouseup()
@@ -101,8 +107,8 @@ export default {
                 };
             };
 
-            //在按下鼠标时根据dom获取的left、right来实时同步vuex中的left、right
-            function CalLeftRightMousedown(){
+            //根据dom获取的left、width计算后实时同步vuex中的left、right
+            function VuexLeftRightFromDom(){
                 let left=parseFloat($(el).css('left'))
                 let right=left+parseFloat($(el).css('width'))
                 store.state.dragBar[binding.value].left=left
@@ -125,35 +131,32 @@ export default {
                 store.commit('SetDragbarSubkeyAttr',payloadRight)
             }
 
-            function CollisionSolution() {//因为bind只会在创建时调用一次，所以初始化应该放在事件函数中
+            //计算最小left以及最大right
+            function CalLimitvalue() {
                 minLeft=0;maxRight=777;
-                beforeDragBarIndex=binding.value;
-                afterDragBarIndex=binding.value;
 
-                for (let i=binding.value;i>=0;i--){//选出前一个拖拽条序号
+                for (let i=binding.value;i>=0;i--){
                     if(!store.state.dragBar[i-1]){
-                        beforeDragBarIndex=i
                         break
                     }else if(store.state.dragBar[i-1].show===true){
-                        beforeDragBarIndex=i-1
                         minLeft=store.state.dragBar[i-1].right
                         break
                     }
                 }
 
-                for (let i=binding.value;i<=store.state.dragBar.length-1;i++){//选出后一个拖拽条序号
+                for (let i=binding.value;i<=store.state.dragBar.length-1;i++){
                     if(!store.state.dragBar[i+1]){
-                        afterDragBarIndex=i
                         break
                     }else if(store.state.dragBar[i+1].show===true){
-                        afterDragBarIndex=i+1
                         maxRight=store.state.dragBar[i+1].left
                         break
                     }
                 }
 
             }
-            //根据左端点判断拖拽条放入情况，并根据判断结果作出反应
+
+            //根据左端点判断拖拽条放入情况
+            //并根据判断结果操作拖拽条dom的左端位置
             function EntireDragBarPutRight(l) {
                 el.style.left=(function(){
                     switch (true){
