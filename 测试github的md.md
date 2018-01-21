@@ -19,18 +19,41 @@
 空两行
 
 
-> 这一部分是在行首用角括号 “ > ” 引用的效果
+>这一部分是在行首用角括号 “ > ” 引用的效果
 > 
-> This is the second paragraph in the blockquote.
+>This is the second paragraph in the blockquote.
 >
-> ## 这行除了 “ > ” 还加了两个井号
+>## 这行除了 “ > ” 还加了两个井号
 
+斜体：用*左右各一个星号*或者 _左右外侧空格内侧一个下划线_ 包裹
+粗体：用**左右各两个星号**或者 __左右外侧空格内侧两个下划线__ 包裹
 
+## 无序列表使用星号、加号和减号来做为列表的项目标记，这些符号是都可以使用的
+使用星号：
 
-Some of these words *are emphasized*.
-Some of these words _are emphasized also_.
-Use two asterisks for **strong emphasis**.
-Or, if you prefer, __use two underscores instead__.
+* Candy.
+* Gum.
+* Booze.
+
+加号：
+
++ Candy.
++ Gum.
++ Booze.
+
+和减号
+
+- Candy.
+- Gum.
+- Booze.
+
+都会输出 HTML 为：
+
+<ul>
+<li>Candy.</li>
+<li>Gum.</li>
+<li>Booze.</li>
+</ul>
 
 
 
