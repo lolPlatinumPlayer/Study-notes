@@ -66,10 +66,6 @@
 2. Green
 3. Blue
 5. Red
-- Red
-- Red
-- Red
-- Red
 0. Red
 
 ### 似乎用任意数字他都会按先后顺序排好
@@ -98,18 +94,34 @@ See my [About](/Vue笔记.txt) page for details.
 
 
 
+## 可以使用HTML标签
+### 连写无属性的标签
+> 需要注意的是：HTML标签后要加空行，不然后续一行的markdown语法会失效
+<table><tr><td>Foo</td><td>Bar</td></tr></table>
+> 需要注意的是：HTML标签后要加空行，不然后续一行的markdown语法会失效
+
+### 有格式地写有属性的标签
+
+  <table>
+    <tr>
+        <td style='width:333px;background:blue;position:absolute;'>Foo</td>
+        <td style='width:333px;background:blue;'>Foo</td>
+    </tr>
+  </table>
+
+
+
+
+
 还有要学的东西：
 1. 文件内跳转的链接
 1. 跳转到其它文件指定位置的链接
+
        1. 目前看可以跳转到其他文件，但是不能跳到制定位子
+       1. 目前看可以跳转到其他文件，但是不能跳到制定位子
+       1. 目前看可以跳转到其他文件，但是不能跳到制定位子
+       
 1. 方便的缩进或者多级的列表
-
-
-
-
-
-
-
 
 
 
