@@ -21,7 +21,11 @@
 
 >这一部分是在行首用角括号 “ > ” 引用的效果
 > 
->This is the second paragraph in the blockquote.
+> 
+> 
+> 
+>在这里的一行或多行空白同样会被变成段落的分割标志
+> 相邻行同样会变成被空格连接
 >
 >## 这行除了 “ > ” 还加了两个井号
 
@@ -62,7 +66,10 @@
 2. Green
 3. Blue
 5. Red
--1. Red
+- Red
+- Red
+- Red
+- Red
 0. Red
 
 ### 似乎用任意数字他都会按先后顺序排好
@@ -73,15 +80,29 @@
 1. v
 1. b
 
+## 行内链接和参考链接
+### 可以打开同主机的文件
+直接写相对路径就行
+See my [About](/Vue笔记.txt) page for details.
+### 行内链接
+个人觉得这种方法加连接最好 [example link](http://example.com/).
+
+
+这个链接加有titile属性 [example link](http://example.com/ "这是Title内容").
+### 参考链接
+[1]: http://google.com/ "Google"
+[2]: http://search.yahoo.com/ "Yahoo Search"
+[3]: http://search.msn.com/ "MSN Search"
+个人理解：把链接赋值给一些变量，直接使用变量就等于使用链接 [Google][1] than from
+[Yahoo][2] or [MSN][3].
 
 
 
-
-
-
-
-
-
+还有要学的东西：
+1. 文件内跳转的链接
+1. 跳转到其它文件指定位置的链接
+       1. 目前看可以跳转到其他文件，但是不能跳到制定位子
+1. 方便的缩进或者多级的列表
 
 
 
