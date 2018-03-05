@@ -1,4 +1,3 @@
-v-html="rawHtml"ÓëmustacheÃ²ËÆÃ»Ê²Ã´Çø±ð,v-htmlÓÃ¼ÓºÅ£¨+£©Á¬½Ó¶à¸ö±äÁ¿£¬v-htmlÖÐËÆºõ²»ÄÜ¶Ô±äÁ¿½øÐÐÔËËã
 
 
 Ö§³Öie9
@@ -28,12 +27,20 @@ mounted: function () {
 }
 mountedÖÐµÄº¯ÊýÔÚÕâ¸öÊµÀýÒ»ÇÐ×¼±¸ºÃÒ²äÖÈ¾ºÃÖ®ºóÖ´ÐÐ¡£
 £¨ÆäËûÉúÃüÖÜÆÚ¹³×ÓÔÝÎ´²âÊÔ£©
+ÒÉËÆbug£ºmountedÖÐÈç¹ûÒýÓÃmethodsÖÐº¯ÊýÇ°ÓÐÓï¾äµÄ»°£¬»á±¨´í
+        ½â¾ö·½·¨£ºÔÚÕâÐ©º¯ÊýºóÃæ¼ÓÉÏ·ÖºÅ¡°;¡±
 
 
 ¡¤ ¡°Mustache¡± Óï·¨
  Ë«´óÀ¨ºÅ£¬Èç¡°<span v-once>This will never change: {{ msg }}</span>¡±
 ¿É°üº¬µ¥¸öJS±í´ïÊ½£¬Èç¡°{{ message.split('').reverse().join('') }}¡±
 µ±ÖÐÓï·¨ÓëJSÒ»ÖÂ£¬¿É°üº¬ÏÞ¶¨×÷ÓÃÓòÄÚ±äÁ¿£¬ÏÞ¶¨×÷ÓÃÓòÎª£ºÓÃnew Vue(){}ÐÂ½¨¶ÔÏóÖÐdataµÄÊôÐÔÖµ¡£¿ÉÓÃ¶ººÅ¡°,¡±¸ô¿ª¶à¸öÄÚÈÝ¡£
+
+
+¡¤ v-html="rawHtml"ÓëmustacheµÄÇø±ð
+v-htmlÓÃ¼ÓºÅ£¨+£©Á¬½Ó¶à¸ö±äÁ¿
+v-htmlÖÐËÆºõ²»ÄÜ¶Ô±äÁ¿½øÐÐÔËËã
+¾­¹ý²âÊÔv-html¿ÉÒÔÓÃv-html="a.trackingDayBegin<=now&&now<a.trackingDayEnd?1:2"£¬¶ømustacheÖ»ÄÜ{{a.trackingDayBegin<=now?1:2}}
 
 
 ¡¤ v-model
@@ -102,7 +109,6 @@ Vue¶ÔÏóÖÐmethodsÊôÐÔµÄ ÊôÐÔ ¿ÉÒÔÄäÃûº¯ÊýÎªÖµ£¬ÔÚMustacheÖÐÊäÈë¸ÃÊôÐÔÃû¼Ó() Ôò¿ÉÖ
 ÈôÒªÖ»ÏÔÊ¾aÊôÐÔ²»ÒªÊôÐÔÖµ£¬¿ÉÖ±½ÓÔÚ±êÇ©ÖÐÐ´a£¬ÎÞÐè¼ÓÉÏv-bind¡£
 
 
-
 ¡¤ v-bind:class
 ±êÇ©ÖÐÊäÈëv-bind:class="{ a:b }"£¬bÎªÕæÊ±class="a"£»
 v-bind:class="['a','b']"£¬class="a,b"£»
@@ -114,7 +120,8 @@ v-bind²»»á¸²¸Ç×é¼þÒÑÓÐÑùÊ½
 
 
 ¡¤ v-bind:style
-Ê¹ÓÃÍÕ·åÊ½£¬ÊéÐ´¹æÔò²ÎÕÕjqÑùÊ½£¬ÆäÓàÓëv-bind:classÏàÍ¬£¬¶ÔÓÚÐèÒªhackµÄÊôÐÔ»á×Ô¶¯Ôö¼ÓÇ°×º¡£
+Ê¹ÓÃÍÕ·åÊ½£¬ÊéÐ´¹æÔò²ÎÕÕjqÑùÊ½£¬ÆäÓàÓëv-bind:classÏàÍ¬£¬¶ÔÓÚÐèÒªhackµÄÊôÐÔ»á×Ô¶¯Ôö¼ÓÇ°×º¡£Èç£º
+v-bind:style="{ color: activeColor, fontSize: fontSize + 20 + 'px' }"
 
 
 ¡¤ v-if¡¢v-else¡¢v-else-if
@@ -158,6 +165,18 @@ methods: {
 }
 
 
+¡¤ ÊÂ¼þ´¦Àí·½·¨
+<button v-on:click="greet">Greet</button>
+1¡¢click´¦£¨¸öÈË£©³ÆÎª¡°ÊÂ¼þ´¥·¢Ìõ¼þ¡±£¬ÒÑÖªµÄÓÐclick¡¢submit¡¢keyup
+   keyup½áºÏ °´¼üÐÞÊÎ·û Ê¹ÓÃ£¬Ïê¼û£ºhttps://cn.vuejs.org/v2/guide/events.html#°´¼üÐÞÊÎ·û
+   £¨³ý´ËÍâ¿ÉÄÜ»¹ÓÐ¸ü¶àµÄÊÂ¼þ´¥·¢Ìõ¼þ£¬Ã»ÓÐÉîÈëÑÐ¾¿£©
+2¡¢greet´¦£¨¸öÈË£©³ÆÎª¡°ÊÂ¼þÃüÁî¡±
+   ¿ÉÒÔÊäÈë½Å±¾Óï¾ä£¬Ò²¿ÉÒÔÊäÈëº¯ÊýÃû£¨¹Ù·½³Æº¯ÊýÃûÎª¡°ÊÂ¼þ´¦Àí·½·¨¡±£©
+   Ö»ÔÚÕâÀï·ÅÒ»¸öº¯ÊýÃûµÄ»°¿ÉÒÔ²»¼ÓÀ¨ºÅ£¬µ«ÔÚ¶à¸öº¯ÊýÃû»òÕßÓë½Å±¾Óï¾ä»ìÓÃµÄÇé¿öÏÂ£¬Òª¼ÓÀ¨ºÅ£¬Èç£º
+   ¡°<a @click="½Å±¾Óï¾ä,º¯ÊýÃû()">·ÖÅäÍê±Ï</a>¡±
+   ÓÃ·ÖºÅ¡°;¡±»òÕß¶ººÅ¡°,¡±×ö¼ä¸ô
+
+
 ¡¤ ÊÂ¼þÐÞÊÎ·û
 ÔÚv-on:XXºó¼ÓÈëµÄ.XXX³ÆÎªÊÂ¼þÐÞÊÎ·û
 .stop  ×èÖ¹ÊÂ¼þÃ°ÅÝ£¬Èçµ¥»÷×ÓÔªËØÖ»´¥·¢×ÓÔªËØµÄÊÂ¼þ¶ø²»´¥·¢¸¸ÔªËØµÄÊÂ¼þ
@@ -184,6 +203,10 @@ methods: {
 £¨templateÔÚÊµÀýÖÐÒ²¿ÉÓÃ£¬»á°Ñ²¶»ñµ½µÄdomÄÚÈÝÌæ»»ÎªtemplateÖÐÄÚÈÝ£©
 
 
+¡¤ ×é¼þµÄµ¥ÎÄ¼þ
+¿ÉÒÔµ¥ÎÄ¼þ»¯£¬·Å½ø.vueÎÄ¼þÀï
+
+
 ¡¤ ×é¼þhtml±êÇ©ÖÐµÄ¹æÔò
 Ð´ÆÕÍ¨µÄhtmlÊôÐÔ¿ÉÒÔÔÚäÖÈ¾ºóÏÔÊ¾£¬µ«ÊÇÐ´vueµÄ×¨ÊôÊôÐÔÓÐÌØ±ðµÄÒ»Ì×¹æÔò£¨Óë·Ç×é¼þµÄhtml±êÇ©µÄvue¹æÔòÍêÈ«²»Í¬£©£¬ÔÚÏÂÎÄ½øÐÐ½éÉÜ¡£
 
@@ -200,7 +223,7 @@ methods: {
 ±ØÐëÊÇº¯Êý£¬ÔÚÆäÖÐÐ´Èë¡°return{a:1}¡±¿ÉÒÔÈÃËùÓÐÍ¬Ãû×é¼þÓµÓÐ¶ÀÁ¢µÄaÊý¾Ý£¨ÖµÎª1£©
 
 
-¡¤ ½ÓÊÕ¸¸×é¼þÊý¾Ý
+¡¤ ½ÓÊÕ¸¸×é¼þÊý¾Ý/ÔÚtemplateÄ£°åÖÐ´«Öµ½ø×é¼þÄÚ²¿
 ÔÚ×é¼þ±êÇ©ÉÏÊôÐÔ²¿·ÖÐ´¡°AÊôÐÔ='XXÄÚÈÝ'¡±¾Í¿ÉÒÔ½«×é¼þµÄpropsÑ¡ÏîµÄAÊôÐÔ£¨²»ÄÜÔÚÉùÃ÷µÄÊ±ºò¸³Öµ£©¸ÄÎªXXÄÚÈÝ×Ö·û´®£¬ÈôÒª½«¸¸×é¼þdata¶¯Ì¬´«Èë×Ó×é¼þÔòÐèÔÚÇ°Ãæ¼ÓÉÏÃ°ºÅ¡°:¡±
 ¡¾²âÊÔ²»¿ÉÓÃ¡¿ÈôÐ´¡°:AÊôÐÔ.sync='XXÄÚÈÝ'¡±Ôò¿ÉÒÔ½«×Ó×é¼þµÄAÊôÐÔÓë¸¸×é¼þµÄXXÄÚÈÝ½øÐÐË«Ïò°ó¶¨¡¾²âÊÔ²»¿ÉÓÃ¡¿
 Ã¿´Î¸¸×é¼þ±ä»¯¶¼»á¸üÐÂ×Ó×é¼þµÄpropsÖÐµÄÊôÐÔ£¬Èç¹ûÏëÒª ¼Ì³ÐÊý¾Ý ÔÚ¼Ì³Ðºó²»Ëæ×Å ¸¸×é¼þÊý¾Ý ¸üÐÂ£¬¿ÉÊ¹ÓÃÈçÏÂ·½·¨Ê¹ÓÃSON_A£º
@@ -411,6 +434,11 @@ new Vue({
     }
 1¡¢×Ô¶¨ÒåÖ¸ÁîÓÐÒ»Ì×²»Í¬ÓÚ ×é¼þµÄÉúÃüÖÜÆÚ¹³×Ó µÄ¹³×Ó£¬Ïê¼û£º
 https://cn.vuejs.org/v2/guide/custom-directive.html#¹³×Óº¯Êý
+ÒÑÖªµÄÓÐ£º
+bind£ºÖ»»áÔÚÖ¸ÁîµÚÒ»´Î°ó¶¨µ½ÔªËØÊ±µ÷ÓÃÒ»´Î¡£
+      ²»¹ýÆäÖÐ¿ÉÒÔÉèÖÃÊÂ¼þ£¬ÒÔ´ËÀ´´ïµ½¶à´Îµ÷ÓÃ²¿·Ö´úÂëµÄÄ¿µÄ£»
+      ¶øÇÒÊÂ¼þÖÐÄÜ¸Ä±äbindµÄ±äÁ¿Öµ£¬²¢·´Ó¦µ½bind²ã¼¶µÄº¯ÊýÄÚ¡£
+update£ºµ±ÆäÖÐÓï¾äÒÀÀµµÄÊý¾Ý·¢Éú¸Ä±äºó²Å»á´¥·¢£¨Ó¦¸ÃÊÇÕâÑù£©
 2¡¢¹³×Óº¯ÊýµÄ²ÎÊý£º
     el: Ö¸ÁîËù°ó¶¨µÄÔªËØ£¬¿ÉÒÔÓÃÀ´Ö±½Ó²Ù×÷ DOM ¡£
     binding: Ò»¸ö¶ÔÏó£¬°üº¬ÒÔÏÂÊôÐÔ£º
@@ -420,17 +448,25 @@ https://cn.vuejs.org/v2/guide/custom-directive.html#¹³×Óº¯Êý
         expression:Ö¸ÁîµÄ°ó¶¨ÄÚÈÝ£¬Ð´ÔÚµÈºÅºóÃæË«ÒýºÅÖÐµÄÄÚÈÝÒÔ×Ö·û´®ÐÎÊ½Ð´³öÀ´¡£
         arg:´«¸øÖ¸ÁîµÄ²ÎÊý¡£ÀýÈç v-my-directive:foo£¬ arg µÄÖµÊÇ "foo"¡£
         modifiers:Ò»¸ö°üº¬ÐÞÊÎ·ûµÄ¶ÔÏó¡£ ÀýÈç£º v-my-directive.foo.bar, ÐÞÊÎ·û¶ÔÏó modifiers µÄÖµÊÇ { foo: true, bar: true }¡£
-    vnodeºÍoldVnode¡¾²»ÖªµÀÔõÃ´ÓÃ¡¿
+    vnode.context´ú±íËùÊôÊµÀýµÄthis
+    ÆäËûvnodeºÍoldVnode¡¾²»ÖªµÀÔõÃ´ÓÃ¡¿
 3¡¢¹³×ÓÖ»¹ÒÔØÔÚbindºÍupdateÉÏµÄ¼òÐ´£º
     Vue.directive('name', function (el, binding) {
       el.style.backgroundColor = binding.value //´ÓäÖÈ¾¿ªÊ¼±³¾°ÑÕÉ«¾ÍÊÇvalue£¬ºóÃævalue±ä¶¯ºó±³¾°ÑÕÉ«Ò²»á¸üÐÂÎªvalue
     })
-4¡¢Ö¸ÁîÓëvuexµÄ½áºÏÊ¹ÓÃ
-store,
-¹³×Ó() {
-    // store.state.Êý¾ÝÃû ¾Í¿ÉÒÔÖ±½Ó²Ù×÷state
-    this.$store.commit('AddAttr',{num:6666666});
-}
+
+
+¡¤ Ö¸ÁîÓëvuexµÄ½áºÏÊ¹ÓÃ
+·½·¨Ò»£º
+¾Ö²¿ÒýÈëÆäËûÎÄ¼þÖ¸Áî£¬ÇÒÖ¸ÁîÖÐÒýÈëstoreµÄÇé¿öÏÂ£¬Àý×ÓÈçÏÂ£º
+    store,
+    ¹³×Ó() {
+        // store.state.Êý¾ÝÃû ¿ÉÒÔÊ¹ÓÃ
+        // store.commit(xxx) Ò²¿ÉÒÔÊ¹ÓÃ£¬²»¹ýËÆºõÎÞ·¨Ê¹ÓÃ¸¨Öúº¯Êý
+    }
+·½·¨¶þ£º£¨²»ÍÆ¼öÊ¹ÓÃ£¬ÒòÎªÖ¸ÁîÖÐ²¿·Ö¶ÀÓÐ´úÂë¿ÉÄÜÒªÐ´ÔÚ.vueÎÄ¼þÖÐ£©
+ÔÚ.vueÎÄ¼þÖÐ×¢²ámutation£¬²¢ÔÚÖ¸ÁîÖÐÓÃvnode.context.xx()Ê¹ÓÃ
+
 ¡¾ÓÐÐèÒªÔÙÊÔÑé¡¿ÄÜ²»ÄÜÔÚÖ¸ÁîÖÐÊ¹ÓÃËùÓÐÄÜÔÚÊµÀýÖÐÓÃµÄvuex¹¦ÄÜ
 
 

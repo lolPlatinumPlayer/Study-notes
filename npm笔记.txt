@@ -29,10 +29,29 @@ dependencies中的代表生产时使用，如vue、vuex等
 devDependencies代表开发时使用，而生产不使用，如gulp、babel等
 
 
-Error: EBUSY: resource busy or locked
+· 查看依赖版本
+1. 局部依赖：    
+   在package.json里查看    
+   （如果安装时没有--save的话就只能去文件夹里面看了）
+2. 全局依赖    
+   去文件夹里面看，路径是
+   C:\Users\Administrator\AppData\Roaming\npm\node_modules
+
+
+------------以下为各种BUG解决方案------------
+
+
+· Error: EBUSY: resource busy or locked
 很有可能是网络问题，过一两分钟再装【测试于cnpm环境下】
 
 
+· 有一些操作有可能导致npm依赖包残缺，因此会导致BUG
+重新装一下BUG的包基本能解决（直接install那个包就行）
+
+
+· 
+有的时候包不起作用，而且各种npm操作都会提示一串文件（或目录）不存在，并且这些操作都无法达到理想效果
+经历x1：查了一晚上解决不了，把项目里的node_modules文件夹删了，重新npm install就好了
 
 
 
