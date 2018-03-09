@@ -36,6 +36,10 @@ devDependencies代表开发时使用，而生产不使用，如gulp、babel等
 2. 全局依赖    
    去文件夹里面看，路径是
    C:\Users\Administrator\AppData\Roaming\npm\node_modules
+   
+   
+· npm list
+查看本地安装所有依赖以及，该装未装的依赖
 
 
 ------------以下为各种BUG解决方案------------
