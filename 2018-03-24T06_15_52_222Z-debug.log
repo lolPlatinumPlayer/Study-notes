@@ -1,0 +1,40 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'D:\\William_Wang\\configurations\\NodeJS\\node.exe',
+1 verbose cli   'D:\\William_Wang\\configurations\\NodeJS\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'run',
+1 verbose cli   'dev' ]
+2 info using npm@5.5.1
+3 info using node@v8.9.3
+4 verbose run-script [ 'predev', 'dev', 'postdev' ]
+5 info lifecycle inputprojectnamehere@1.0.0~predev: inputprojectnamehere@1.0.0
+6 info lifecycle inputprojectnamehere@1.0.0~dev: inputprojectnamehere@1.0.0
+7 verbose lifecycle inputprojectnamehere@1.0.0~dev: unsafe-perm in lifecycle true
+8 verbose lifecycle inputprojectnamehere@1.0.0~dev: PATH: D:\William_Wang\configurations\NodeJS\node_modules\npm\bin\node-gyp-bin;D:\William_Wang\tests\tm_test\node_modules\.bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;F:\JJJJJAVA\mysql\MySQL Utilities 1.3.5\;F:\JJJJJAVA\jdk\bin;F:\JJJJJAVA\jdk\jre\bin;C:\Windows\system32\config\systemprofile\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;D:\William_Wang\configurations\NodeJS\;C:\Users\bestfather\AppData\Roaming\npm
+9 verbose lifecycle inputprojectnamehere@1.0.0~dev: CWD: D:\William_Wang\tests\tm_test
+10 silly lifecycle inputprojectnamehere@1.0.0~dev: Args: [ '/d /s /c',
+10 silly lifecycle   'cross-env NODE_ENV=development webpack-dev-server --open --hot' ]
+11 silly lifecycle inputprojectnamehere@1.0.0~dev: Returned: code: 1  signal: null
+12 info lifecycle inputprojectnamehere@1.0.0~dev: Failed to exec dev script
+13 verbose stack Error: inputprojectnamehere@1.0.0 dev: `cross-env NODE_ENV=development webpack-dev-server --open --hot`
+13 verbose stack Exit status 1
+13 verbose stack     at EventEmitter.<anonymous> (D:\William_Wang\configurations\NodeJS\node_modules\npm\node_modules\npm-lifecycle\index.js:280:16)
+13 verbose stack     at emitTwo (events.js:126:13)
+13 verbose stack     at EventEmitter.emit (events.js:214:7)
+13 verbose stack     at ChildProcess.<anonymous> (D:\William_Wang\configurations\NodeJS\node_modules\npm\node_modules\npm-lifecycle\lib\spawn.js:55:14)
+13 verbose stack     at emitTwo (events.js:126:13)
+13 verbose stack     at ChildProcess.emit (events.js:214:7)
+13 verbose stack     at maybeClose (internal/child_process.js:925:16)
+13 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:209:5)
+14 verbose pkgid inputprojectnamehere@1.0.0
+15 verbose cwd D:\William_Wang\tests\tm_test
+16 verbose Windows_NT 6.1.7601
+17 verbose argv "D:\\William_Wang\\configurations\\NodeJS\\node.exe" "D:\\William_Wang\\configurations\\NodeJS\\node_modules\\npm\\bin\\npm-cli.js" "run" "dev"
+18 verbose node v8.9.3
+19 verbose npm  v5.5.1
+20 error code ELIFECYCLE
+21 error errno 1
+22 error inputprojectnamehere@1.0.0 dev: `cross-env NODE_ENV=development webpack-dev-server --open --hot`
+22 error Exit status 1
+23 error Failed at the inputprojectnamehere@1.0.0 dev script.
+23 error This is probably not a problem with npm. There is likely additional logging output above.
+24 verbose exit [ 1, true ]
