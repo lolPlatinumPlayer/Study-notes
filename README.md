@@ -1,2 +1,2 @@
-# Study-notes
-Study notes of William Wang.
+ 这是王佳星（William Wang）学习各种知识的笔记
+## 觉得有用请在右上角点个Star哦~~ 万分感谢
