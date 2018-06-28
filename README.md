@@ -1,2 +1,2 @@
 # Study-notes
-Study notes of mine.
+Study notes of William Wang.
