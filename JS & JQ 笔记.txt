@@ -3,10 +3,10 @@ vue-cli与webpack同时存在的情况下，模块化引入jquery的方法：
 1. cnpm i jquery@1.11.3 --save
 2. webpack.config.js的module.exports的最后加入：
    plugins: [
-   new webpack.ProvidePlugin({
-   jQuery: "jquery",
-   $: "jquery"
-   })
+       new webpack.ProvidePlugin({
+           jQuery: "jquery",
+           $: "jquery"
+       })
    ]
 3. 在main.js 加上import $ from 'jquery'
 
@@ -20,13 +20,21 @@ vue-cli与webpack同时存在的情况下，模块化引入jquery的方法：
 $.extend( object1, object2 );
 /*
 1、将对象object2 加入对象object1中，无则增，有则改。
-2、如果属性为对象，则该属性会被完全覆盖
+2、如果属性值为对象，则该属性值会被完全覆盖
 */
 
 $.extend( true, object1, object2 );
 /*
-第一点同上，如果属性为对象，则对该属性执行第一条，其属性中再有属性为对象的情况也都执行第一条。
+第一点同上，如果属性值为对象，则对该属性值执行第一条，其属性值中再有属性值为对象的情况也都执行第一条。
 */
+
+$(window).scroll(function(){
+    //函数内容写在这
+});
+每次页面滚动都会触发当中的函数内容
+如果要取消掉对“页面滚动”的监听，则写：
+$(window).unbind('scroll')
+$(window)还有其它一系列操作，并未整理进来
 
 
 ----------------------------
@@ -36,19 +44,23 @@ $.extend( true, object1, object2 );
 
 		   
 		   
-函数的参数
+函数的参数【？】
 可读不可写，但是参数的属性可以直接通过赋值被改变
 
+浅拷贝
 > 引用传递的意思是“若把b赋值给a，之后b的每次变化，a的值都会变成变化后的b”
-如果赋值的内容是对象或数组的话，赋值变量与被赋值变量间就会产生一个情况。这个情况中分两个子情况，其中一个子情况会导致引用传递。
-	- 会导致引用传递的子情况：对赋值变量的某个子项进行赋值或者删除（不管层级如何，都会引用传递）
-	- 不会导致引用传递的子情况：对赋值变量本身（或者说整体）进行赋值
+如果赋值的内容是对象或数组的话，再对赋值变量进行操作就要分为两种情况。其中一种情况会导致引用传递。
+	- 会导致引用传递的情况： 对赋值变量的某个子项进行赋值或者删除 （不管层级如何，都会引用传递）
+	- 不会导致引用传递的情况： 对赋值变量本身（或者说整体）进行赋值
 
-规避引用传递的方法
+深拷贝	
+第一次赋值时 规避引用传递的方法
 1. $.extend(objectA, objectB )
    （使用这种方法的前提是：objectA是空对象，对象类型是对象）
 2. objectA={...objectB}
-   （使用这种方法的前提是：objectA是空，类型无要求。已经安装好npm插件“babel-plugin-transform-object-rest-spread”）
+   （使用这种方法的前提是： objectA是空，类型无要求。 已经安装好npm插件“babel-plugin-transform-object-rest-spread”）
+3. objectA = { a: objectB.a, b: objectB.b, c: objectB.c };
+4. arrA=arrB.slice()
 
 throw exception;
 /*
@@ -57,23 +69,23 @@ throw exception;
 
 用 var sth=function(){...} 这种方法声明函数的话，不可在声明前的代码中使用函数。
 
-constructor
+constructor【】类、类方法、工厂函数 有待深入研究
 译文：构造函数
 prototype
-译文：原型  //怀疑.prototype访问的不是“原型”而是相反的“由前者创建的对象”
+译文：原型  //怀疑.prototype访问的不是“原型”而是相反的“由前者创建的对象”【？】
 打印 函数名.prototype.constructor 则会显示函数内容。
 若一个对象由另一个函数生成
 打印 该对象名.constructor 则会显示函数内容。
-
-Object.keys(sth)
-Object.keys(sth)能以字符串形式返回sth所有属性名称
 
 <自定义构造函数创建新对象>
 var XX=new 自定义构造函数;会执行 自定义构造函数 一次，创建并初始化XX
 给所有由该 自定义构造函数 创建的对象增加属性的方法：
 1、在该 自定义构造函数 中给 this.属性名 赋值。
 2、在构造函数外的方法：给 自定义构造函数名.prototype.属性名 赋值。
-获取  由该 自定义构造函数 创建的对象  的方法与上面两条同理。
+获取  由该 自定义构造函数 创建的对象  的方法与上面两条同理。【？】
+
+Object.keys(sth)
+Object.keys(sth)能以字符串形式返回sth所有属性名称
 
 <<、>>、<<<、>>>
 按位移动运算符。
@@ -108,11 +120,11 @@ x前面最好加上声明，不然编译后chrome会报错且js无法运行
 · forEach遍历数组
 array.forEach(function(currentValue, index, arr) {
 },this)
-花括号间可使用变量如下：（需先在花括号外部引用，否则花括号内无法使用）
+花括号间可使用变量如下：（需先在函数参数中或者forEach第二个参数中写下，否则花括号内无法使用）
     currentValue代表当前循环的值，除了这个参数外其他参数都是可选的
     index代表当前循环索引值
     arr代表整个数组
-    this代表第二个参数，最好用对象或数组，数字或字符串不好处理
+    this处可以传入一个值，最好用对象或数组，数字或字符串不好处理
 
 
 · typeof a
@@ -122,7 +134,8 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/type
 
 
 · push
-arr.push(xx)向arr数组末尾增加一个子项，子项值为xx，不可用于对象
+arr.push(xx)向arr数组末尾增加一个子项，子项值为xx
+不可用于对象
 
 
 · join
@@ -135,9 +148,9 @@ arr.join(xx)返回一个字符串，这个字符串包含arr数组所有子项，子项间用xx分隔
 
 · split
 split() 方法用于把一个字符串分割成字符串数组。
-格式：stringObject.split(separator,howmany)
-     separator是用来分割的字符串
-     howmany是分割出数组的长度的上限
+格式：字符串.split(separator,howmany)
+      separator是用来分割的字符串
+      howmany是分割出数组的长度的上限【？】
 不指定howmany的情况下，若 用来分割的字符 在头或者在尾，则头或者尾一侧的子项为空字符串
 
 
@@ -145,17 +158,24 @@ split() 方法用于把一个字符串分割成字符串数组。
 var XX = arr.filter(XXFn);
 把XXFn的return值赋值给XX
 XXFn处可以直接写单参数匿名函数
+写匿名函数的话里面直接写条件就行【原理待探究】
 单参数代表前面的arr
 
 
+· 数字操作
+四舍五入 Math.round(7.25)
+取出大的值 Math.max(2,4)
 
 
-四舍五入 Math.round(7.25) 取出大的值 Math.max(2,4)
+· document.querySelector()
+只会选择匹配到的第一个元素
+（不知道是es几的语法）
+详见https://developer.mozilla.org/zh-CN/docs/Web/API/Document/querySelector
 
+
+· 疑问
 如何打开指定窗口
-
 如何在浏览器的状态栏放入一条消息？
-
 如何获得客户端浏览器的名称？
 
 
@@ -188,7 +208,7 @@ export可以位于模块顶层任何位置（即不能放在块级作用域内），import命令也是如此
 
 · 动态绑定
 例子：export var foo = 'bar';
-     setTimeout(() => foo = 'baz', 500);
+      setTimeout(() => foo = 'baz', 500);
 用webpack【测试失败】，原因可能是其遵循的是来自nodeJS的CommonJS规范
 可能加babel或者vue-cli后可以成功
 
@@ -246,6 +266,7 @@ export default可以输出类【未测试export行不行】
 · 属性名简写
 属性名与属性值变量名相同时可以只写一个
 属性名与属性值的函数名相同时可以直接写 “函数名(xxx){.. }”
+如果属性值是匿名函数好像也可以直接写“属性名(){.. }”
 
 
 · 作用域
@@ -258,7 +279,7 @@ let/const与var区别：
 let与var仅有以上区别，const除了以上区别外，const在声明时必须赋值，而且其局部变量不能在声明以外的地方赋值。但是有两种情况可以让声明后的const改变：①const依赖的变量改变；②const是个数组或对象，其属性值或者某一位是可以改变的
 
 
-· 数组扩展运算
+· 数组扩展运算（不知道是不是和“对象扩展符”是同一个东西）
 ...array可以把数组的各子项变成各参数，console.log、运行函数时传入参数中都可用，array与[...array]相等
 1、在document.write中，加不加...输出都是用英文逗号隔开
 2、定义函数传入参数前加上...，如function a(...x)
@@ -270,7 +291,7 @@ let与var仅有以上区别，const除了以上区别外，const在声明时必须赋值，而且其局部变量
 更多内容见http://es6.ruanyifeng.com/#docs/array#扩展运算符的应用
 
 
-· 对象扩展（中文名可能是“对象扩展符”，英文名object-rest-spread）
+· 对象扩展符（英文名object-rest-spread）
 ES6不支持，使用前需配置babel扩展（配置方法在VUEX笔记中有）
 ...obj可以将该obj最外层花括号去掉，就算用变量代理一样可以办到
 
@@ -311,7 +332,7 @@ move(11,22);
 move(11);
 move([11,22]);
 move([11]);
-6、以下是自己测试的结果，在《ECMAScript6入门-阮一峰》里没找到相关文档
+6、以下是自己测试的结果，在《ECMAScript6入门-阮一峰》里没找到相关内容
 function Fn({x}){
     //函数内容
 }
@@ -350,6 +371,33 @@ promise.then(onCompleted, onRejected);
 
 · catch
 等于then处理承诺被拒绝的功能
+	
+1. fetch
+   ```
+		fetch(一个请求或者一个php文件)
+			.then((请求返回的内容)=>{
+				return 请求返回的内容.对于这个内容的方法()//这里可选的方法详见https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#Body
+			})
+			.then((上一个then return出来的东西)=>{
+				//一些操作
+			})
+	```
+1. new request（未测试不用new request是否能成功）
+   ```
+		let myImage = document.querySelector('img');
+		var myRequest = new Request('flowers.gif');
+		fetch(myRequest) // 返回一个Promise对象
+			.then((res)=>{
+				console.log('res:',res);
+				return res.blob() // res.text()是一个Promise对象，但是个人测试发现是php echo出来的文本
+			})//return的东西会给下一个then用
+			.then((res)=>{
+				var objectURL = URL.createObjectURL(res);
+				myImage.src = objectURL;
+				console.log(res) // res是最终的结果
+			})
+	```
+
 
 
 
@@ -374,6 +422,18 @@ let n = { x, y, ...z };
 console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
 3、
 vuex的辅助函数
+
+
+----------------------------
+
+
+           【算法】
+		   
+取余（%）
+a、b都是正数：
+a%b=c 意味着 a=b的整数倍+c 且 0<=c<=(b-1)
+a是负数b是正数：
+a%b=c 意味着 a=b的整数倍+(-c) 且 0>=c>=-(b-1) 也就是 c为用a绝对值取余b的结果的相反数
 
 
 ----------------------------
