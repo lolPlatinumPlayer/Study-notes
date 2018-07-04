@@ -69,8 +69,8 @@
 1. 设置初始state：
    不设置初始值后续也可以操作
     1. ```
-        constructor() {//【】测这里props能不能改成其他的
-            super() //必须在constructor所有语句前加上这一句
+        constructor(props) {//如果需要使用this.props的话这两行必须加props，否则不需要
+            super(props) //必须在constructor所有语句前加上这一句
             this.state = { 
                 state名: state值
             } 
