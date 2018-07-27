@@ -173,6 +173,12 @@ XXFn处可以直接写单参数匿名函数
 详见https://developer.mozilla.org/zh-CN/docs/Web/API/Document/querySelector
 
 
+· concat
+arrayObject.concat(arrayX,arrayX,......,arrayX)
+该方法返回一个数组，这个数组连接了调用它的内容和传进去的内容，如果传进去的不是数组则会作为元素连接
+只有字符串或数组能调用这个方法，如果是字符串调用这个方法的话，字符串将会拼接在第一个元素前
+
+
 · 疑问
 如何打开指定窗口
 如何在浏览器的状态栏放入一条消息？
@@ -279,24 +285,6 @@ let/const与var区别：
 let与var仅有以上区别，const除了以上区别外，const在声明时必须赋值，而且其局部变量不能在声明以外的地方赋值。但是有两种情况可以让声明后的const改变：①const依赖的变量改变；②const是个数组或对象，其属性值或者某一位是可以改变的
 
 
-· 数组扩展运算（不知道是不是和“对象扩展符”是同一个东西）
-...array可以把数组的各子项变成各参数，console.log、运行函数时传入参数中都可用，array与[...array]相等
-1、在document.write中，加不加...输出都是用英文逗号隔开
-2、定义函数传入参数前加上...，如function a(...x)
-   则函数中x代表所有传入参数组成的数组
-   ...x代表所有传入参数，可以再传入其他函数，直接document.write会将参数连着打出，console.log则会在参数间加入空格打出
-3、扩展运算符（...）后的数组可用变量代替，可以与正常参数混合使用
-4、可以使用三元运算符，如...(x > 0 ? ['a'] : [])
-5、arr1.push(...arr2)意为把arr2每个子项都加到arr1数组后面，不用...的话则是在arr1的末尾新增一项并加入整个arr2
-更多内容见http://es6.ruanyifeng.com/#docs/array#扩展运算符的应用
-
-
-· 对象扩展符（英文名object-rest-spread）
-ES6不支持，使用前需配置babel扩展（配置方法在VUEX笔记中有）
-...obj可以将该obj最外层花括号去掉，就算用变量代理一样可以办到
-
-
-
 · 解构赋值
 1、
 var a, b, rest;
@@ -398,7 +386,10 @@ promise.then(onCompleted, onRejected);
 			})
 	```
 
-
+· Object.assign(object1,object2,object3等等) 
+把除第一个参数外的参数的属性添加到第一个参数上，参数要求都是对象
+遇到同名的属性后面的会覆盖前面的
+是浅拷贝，用“...”添加的话是深拷贝
 
 
 ----------------------------
@@ -407,21 +398,45 @@ promise.then(onCompleted, onRejected);
        【JS】其他版本
 
 
-· 对象展开运算符（Object rest spread）
-（不知道来自哪个版本ES提案的stage-3阶段）
-使用条件：1、cnpm install --save-dev babel-plugin-transform-object-rest-spread
-          2、.babelrc中加"plugins": ["transform-object-rest-spread"]
-例子：
-1、
+## 对象展开运算符（Object rest spread）
+（ES6的stage-3、ES7）
+...后的内容可用变量代理
+使用条件：
+1. cnpm install --save-dev babel-plugin-transform-object-rest-spread
+2. .babelrc中加"plugins": ["transform-object-rest-spread"]
+- 运用于对象
+1.
+```
 let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
 console.log(x); // 1
 console.log(y); // 2
 console.log(z); // { a: 3, b: 4 }
-2、
+```
+2.
+```
 let n = { x, y, ...z };
 console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
-3、
-vuex的辅助函数
+```
+3. vuex的辅助函数
+- 运用于数组
+...array可以把数组的各子项变成各参数，console.log、运行函数时传入参数中都可用，array与[...array]相等
+1. 在document.write中，加不加...输出都是用英文逗号隔开
+2. 定义函数传入参数前加上...，如function a(...x)
+   则函数中x代表所有传入参数组成的数组
+   ...x代表所有传入参数，可以再传入其他函数，直接document.write会将参数连着打出，console.log则会在参数间加入空格打出
+3. 函数编写时形参中的运用，可在最后一个参数前加上...
+   意思是把最后几个实参合成一个数组，例子：
+   ```
+      function a(first,...aaa){
+        console.log('first',first); // 11
+        console.log('aaa',aaa); // [22,33]
+        console.log('...aaa',...aaa); // 22,33
+      }
+      a(11,22,33)
+   ```
+4. 可以使用三元运算符，如...(x > 0 ? ['a'] : [])
+5. arr1.push(...arr2)意为把arr2每个子项都加到arr1数组后面，不用...的话则是在arr1的末尾新增一项并加入整个arr2
+更多内容见http://es6.ruanyifeng.com/#docs/array#扩展运算符的应用
 
 
 ----------------------------
