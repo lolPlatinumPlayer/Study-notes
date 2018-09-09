@@ -44,6 +44,10 @@ $(window)还有其它一系列操作，并未整理进来
 
 		   
 		   
+## undefined
+赋值时可以把原有内容覆盖掉
+但是对对象的某个属性赋值undefined并不会将这个属性删除
+		   
 函数的参数【？】
 可读不可写，但是参数的属性可以直接通过赋值被改变
 
@@ -61,6 +65,7 @@ $(window)还有其它一系列操作，并未整理进来
    （使用这种方法的前提是： objectA是空，类型无要求。 已经安装好npm插件“babel-plugin-transform-object-rest-spread”）
 3. objectA = { a: objectB.a, b: objectB.b, c: objectB.c };
 4. arrA=arrB.slice()
+5. A=JSON.parse(JSON.stringify(B))
 
 throw exception;
 /*
@@ -82,10 +87,22 @@ var XX=new 自定义构造函数;会执行 自定义构造函数 一次，创建并初始化XX
 给所有由该 自定义构造函数 创建的对象增加属性的方法：
 1、在该 自定义构造函数 中给 this.属性名 赋值。
 2、在构造函数外的方法：给 自定义构造函数名.prototype.属性名 赋值。
+   // 给Array或者Object做这样的操作则可以给所有数组或者对象的__proto__属性上加上那个属性（就算在某个作用域内也会对所有对象或数组生效，甚至是写在之前的数组或对象）
+   用这种方法增加的属性可以用访问普通属性的方法访问（前提是普通属性中没有与这个属性同名的）
 获取  由该 自定义构造函数 创建的对象  的方法与上面两条同理。【？】
 
-Object.keys(sth)
-Object.keys(sth)能以字符串形式返回sth所有属性名称
+## Object.keys(obj)
+返回一个数组，数组包含了obj所有属性名（字符串格式）
+如果属性名中不含数字的话，则这个数组会按赋值先后排序
+包含数字则按数字大小排序
+
+
+· 对象属性
+有2个判断不同的依据：
+1. 是否可枚举
+2. 是否处于原型中
+详见：https://www.cnblogs.com/kongxy/p/4618173.html
+没有顺序，如果chrome打印的话是按照首字母排序
 
 <<、>>、<<<、>>>
 按位移动运算符。
@@ -106,15 +123,12 @@ sessionStorage除以上限定外，还限定与窗口，窗口关闭则数据销毁
 以上这些方式直接出现的都叫字面量
 
 
-· .map()
-arr.map(fun)
-将arr的每一项经过fun处理后返回一个 新的数组
-
-
 · for(let x in xx)
 x前面最好加上声明，不然编译后chrome会报错且js无法运行
-数组：xx是要遍历的数组，所有被赋值的子项都会进入循环，x在循环中代表本次循环子项序号
+数组：xx是要遍历的数组，所有被赋值的子项都会进入循环，x在循环中代表本次循环子项序号（字符串），对数组并不会一定按顺序遍历
 对象：xx是要遍历的对象，所有属性名都会进入循环，x在循环中代表本次循环属性名
+obj.hasOwnProperty(attr)判断对象或者数组自身(不包括原型链)是否具有指定名称的属性或序号，返回布尔值（该方法属于Object对象，由于所有的对象都"继承"了Object的对象实例，因此几乎所有的实例对象都可以使用该方法）
+for in如果遇到数组元素为空时，不会执行本次循环
 
 
 · forEach遍历数组
@@ -127,14 +141,31 @@ array.forEach(function(currentValue, index, arr) {
     this处可以传入一个值，最好用对象或数组，数字或字符串不好处理
 
 
+· .map()
+arr.map(fun)
+将arr的每一项经过fun处理（return）后形成这一项新的内容，这些新的项集合成一个新的数组，最终返回这个新的数组
+fun四个参数与map一致
+map似乎全面领先forEach。map可以return，而forEach不行，而且forEach似乎有兼容性问题
+
+
+· filter
+var XX = arr.filter(XXFn);
+把XXFn的return值赋值给XX
+XXFn处可以直接写单参数匿名函数
+写匿名函数的话里面直接写条件就行【原理待探究】
+单参数代表前面的arr
+
+
 · typeof a
 返回a的数据类型，返回值是字符串，优先级第二级，测试表如下：
 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/typeof
 注意：对于数组返回的是和对象一样的'object'
 
 
-· push
-arr.push(xx)向arr数组末尾增加一个子项，子项值为xx
+## push
+`arr.push(xx)`
+没输入xx则不执行这个方法
+只要有输入xx，不管值是什么都会向arr末尾增加一个值为xx的子项
 不可用于对象
 
 
@@ -154,17 +185,37 @@ split() 方法用于把一个字符串分割成字符串数组。
 不指定howmany的情况下，若 用来分割的字符 在头或者在尾，则头或者尾一侧的子项为空字符串
 
 
-· filter
-var XX = arr.filter(XXFn);
-把XXFn的return值赋值给XX
-XXFn处可以直接写单参数匿名函数
-写匿名函数的话里面直接写条件就行【原理待探究】
-单参数代表前面的arr
+· concat
+arrayObject.concat(arrayX,arrayX,......,arrayX)
+该方法返回一个数组，这个数组连接了调用它的内容和传进去的内容，如果传进去的不是数组则会作为元素连接
+只有字符串或数组能调用这个方法，如果是字符串调用这个方法的话，字符串将会拼接在第一个元素前
 
 
-· 数字操作
-四舍五入 Math.round(7.25)
-取出大的值 Math.max(2,4)
+· JSON.stringify()
+返回 转为JSON格式字符串 的 传入js对象或数组
+第三个参数可输入数字或者字符串，这个参数生效的话就会对结果进行格式整理
+1. 输入数字代表缩进（缩进个数为0到10）
+2. 输入字符串则代表缩进用字符串进行填充（也是0到10个字符，可输入转义字符）
+这个方法不能直接对有循环引用的内容使用，否则阻塞报错“Converting circular structure to JSON”
+遇到这情况在第二个参数传入如下函数后即可正常返回```
+function(key, value) {
+  if (typeof value === 'object' && value !== null) {
+	if (cache.indexOf(value) !== -1) {
+	  // Duplicate reference found
+	  try {
+		// If this value does not reference a parent it can be deduped
+		return JSON.parse(JSON.stringify(value));
+	  } catch (error) {
+		// discard key if value cannot be deduped
+		return;
+	  }
+	}
+	// Store value in our collection
+	cache.push(value);
+  }
+  return value;
+}
+```
 
 
 · document.querySelector()
@@ -173,14 +224,13 @@ XXFn处可以直接写单参数匿名函数
 详见https://developer.mozilla.org/zh-CN/docs/Web/API/Document/querySelector
 
 
-· concat
-arrayObject.concat(arrayX,arrayX,......,arrayX)
-该方法返回一个数组，这个数组连接了调用它的内容和传进去的内容，如果传进去的不是数组则会作为元素连接
-只有字符串或数组能调用这个方法，如果是字符串调用这个方法的话，字符串将会拼接在第一个元素前
+· 数字操作
+四舍五入 Math.round(7.25)
+取出大的值 Math.max(2,4)
 
 
 · 疑问
-如何打开指定窗口
+如何打开指定窗口（？）
 如何在浏览器的状态栏放入一条消息？
 如何获得客户端浏览器的名称？
 
@@ -234,7 +284,7 @@ as可以将一个变量重命名为多个变量
     这种语法需配置，配置方法与nodeJS自定义模块一致
     4、import * as a from './b';
     针对export输出，将./b中的变量都重命名为a.x1、a.x2等
-import from的地址可以省略.js，
+import from的地址可以省略.js，（慕课react实战里说是脚手架的功能）
 import在静态解析阶段执行，所以它是一个模块之中最早执行的。
 由于import是静态执行，所以不能使用 表达式、变量 这种只有在运行时才能得到结果的语法结构。
 而export可以用export var i = k这种语句
@@ -263,9 +313,10 @@ export default可以输出类【未测试export行不行】
 
 · 箭头函数
 简化 “function(){return(函数内容)}” 的写法
-单参数：  x=>函数内容  相当于  function(x){return(函数内容)}
 无参数：  ()=>函数内容  相当于  function(){return(函数内容)}
+单参数：  x=>函数内容  相当于  function(x){return(函数内容)}
 多参数：  (x,y)=>函数内容  相当于  function(x,y){return(函数内容)}
+多行值：()=>(值)  相当于  function(){return(值)}
 多行语句：()=>{函数内容}  相当于  function(){函数内容}
 
 
@@ -320,13 +371,9 @@ move(11,22);
 move(11);
 move([11,22]);
 move([11]);
-6、以下是自己测试的结果，在《ECMAScript6入门-阮一峰》里没找到相关内容
-function Fn({x}){
-    //函数内容
-}
-以上方法定义函数的话
-Fn({x:1,y:1,x:1})
-就只会接收到x，而且函数内容中直接操作x就会收到1，操作y或z的话会报错未定义
+6、解构实参（以下是自己测试的结果，在《ECMAScript6入门-阮一峰》里没找到相关内容）
+`function Fn({x}){函数内容}`
+函数内x就直接代表实参（对象）的x属性
 
 
 · Promise（内容很多，这里只写非常小的一部分）
@@ -389,7 +436,14 @@ promise.then(onCompleted, onRejected);
 · Object.assign(object1,object2,object3等等) 
 把除第一个参数外的参数的属性添加到第一个参数上，参数要求都是对象
 遇到同名的属性后面的会覆盖前面的
-是浅拷贝，用“...”添加的话是深拷贝
+是浅拷贝，用“...”添加的话是深拷贝 //有空可以测试一下第一个设空对象和不设的区别，并探究...遇到同名属性会如何处理
+
+## 参数默认值语法（default parameter）
+```
+function a(p0,p1='p1'){
+    // 按顺序给参数赋予默认值（目前js用原生api给真正的函数参数默认值的话也只能按顺序给）
+}
+```
 
 
 ----------------------------
@@ -435,7 +489,7 @@ console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
       a(11,22,33)
    ```
 4. 可以使用三元运算符，如...(x > 0 ? ['a'] : [])
-5. arr1.push(...arr2)意为把arr2每个子项都加到arr1数组后面，不用...的话则是在arr1的末尾新增一项并加入整个arr2
+5. arr1.push(...arr2)意为把arr2每个子项都加到arr1数组后面（前面有push的介绍）
 更多内容见http://es6.ruanyifeng.com/#docs/array#扩展运算符的应用
 
 
