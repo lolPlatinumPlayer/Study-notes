@@ -1,0 +1,46 @@
+一个template下只能有一个子标签
+
+
+src 导入要遵循和require() 调用一样的路径解析规则，这就是说你需要用以 ./ 开头的相对路径，引用npm资源的话不用加 ./
+
+
+· .vue文件的编写
+一整个文件就是一个组件，所以不能用vue实例，template下也只能有一个子标签。
+与普通组件不同之处是最外层组件是包裹在 export default中，用name属性代表组件名称。
+单文件组件中要使用全局组件的话，要先import Vue from 'vue'
+
+
+· 单文件组件的使用
+要先 import componentName from './fileName.vue'
+然后再在引入文件的components属性中写上componentName，之后组件就能正常使用了
+（componentName与被引入文件中代码无关）
+
+
+
+
+
+
+有空整理一个有less，vuex配置完全，去掉默认页面,build.js引入前面去掉 / ,四空格缩进的模板
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
