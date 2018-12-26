@@ -22,3 +22,18 @@ var material = new THREE.MeshBasicMaterial({color: 0x00ff00}); // 上材质（�
 var cube = new THREE.Mesh(geometry, material); // 新建立方体
 scene.add(cube); // 将立方体加进场景中
 ```
+
+
+## 动画
+```
+function animate() {
+	requestAnimationFrame( animate ); // 应该是输入所在的函数名，让函数中内容每1/60秒执行一次
+  
+  // 两行动画效果
+  cube.rotation.x += 0.01;
+  cube.rotation.y += 0.01;
+  
+	renderer.render( scene, camera ); // 应该是执行渲染
+}
+animate();
+```
