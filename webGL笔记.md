@@ -46,3 +46,7 @@ animate();
 
 ## 最终渲染
 `renderer.render( scene, camera )`
+
+
+## js判断浏览器是否支持webGL
+https://threejs.org/docs/index.html#manual/zh/introduction/WebGL-compatibility-check
