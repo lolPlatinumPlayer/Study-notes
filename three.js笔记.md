@@ -1,9 +1,15 @@
+## js判断浏览器是否支持webGL
+https://threejs.org/docs/index.html#manual/zh/introduction/WebGL-compatibility-check
+
+
 ## 坐标系
 z轴指向屏幕外
 
 
 ## 场景
 - 创建：`let scene=new THREE.Scene()`
+- 添加内容：`scene.add(a,b,c)`
+  可以同时添加不限个数的对象、光源，也可以多次添加
 
 
 ## 相机
@@ -18,12 +24,13 @@ z轴指向屏幕外
 
 
 ## 渲染器
-暂时理解为canvas节点
 - 创建：`let renderer = new THREE.WebGLRenderer()`
 - 设置canvas节点尺寸：`renderer.setSize(宽度,高度)`
   宽高只接受数字，渲染时会自动加上px
 - 插入canvas节点：
   `父元素.appendChild(renderer.domElement)`
+- 最终渲染
+  `renderer.render( scene, camera )`
 
 
 ## 对象
@@ -48,17 +55,29 @@ scene.add(cube); // 将对象加进场景中
     这里的节点会按顺序连成线，但是首尾不会相连
     （`new THREE.Vector3(x,y,z)`是three里面表达向量的一种方法，还有2维4维向量。目前不知道更简便地加线条节点的方法）
 - 设置材质
-  - 网格：`new THREE.MeshBasicMaterial({color: 0x00ff00})`
+  - 网格：
+    - 直接上色：MeshBasicMaterial
+      什么情况下都固定颜色
+    - 漫反射：MeshLambertMaterial
+      没有光源的话将不显示
   - 线：`new THREE.LineDashedMaterial({color:'red'})`
 - 新建对象
   - 网格：`new THREE.Mesh(形状, 材质)`
   - 线：`new THREE.Line(形状, 材质)`
 
 
+## 光源
+```
+var light = new THREE.PointLight( 'white' );
+light.position.set( 10, 0, 25 );
+scene.add( cube,light );
+```
+
+
 ## 动画
 ```
 function animate() {
-    requestAnimationFrame( animate ); // 1/60秒后调用其中函数（点其他标签页后就会暂停）
+    requestAnimationFrame( animate ); // 1/60秒后调用其中回调（js专门给动画做的定时器，各方面比普通定时器都有优化）
 
     // 这里放每1/60秒需要的变化
     
@@ -67,10 +86,3 @@ function animate() {
 animate();
 ```
 
-
-## 最终渲染
-`renderer.render( scene, camera )`
-
-
-## js判断浏览器是否支持webGL
-https://threejs.org/docs/index.html#manual/zh/introduction/WebGL-compatibility-check
