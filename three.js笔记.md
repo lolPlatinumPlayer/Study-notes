@@ -17,7 +17,7 @@ z轴指向屏幕外
   - 获取图像宽高比：就是相机捕获到的图像的宽高比，猜测：一般这个图像会拉伸着塞进canvas里
   - 是否渲染：只有同时在渲染距离与视角内的物体才会被渲染
 - 移动：
-  给`camera.position.x或y或z`赋值
+  给`camera.position.x或y或z`赋值、camera.position.setX或setY或setZ(距离)
   要一次性设置三个参数的话用position的set方法
   （无法直接给camera.position赋值）
 - 旋转与移动同理，就是把`position`改为`rotation`
