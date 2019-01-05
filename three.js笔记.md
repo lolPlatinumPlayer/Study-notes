@@ -21,6 +21,8 @@ z轴指向屏幕外
   要一次性设置三个参数的话用position的set方法
   （无法直接给camera.position赋值）
 - 旋转与移动同理，就是把`position`改为`rotation`
+- 缩放：scale
+- quaternion暂不理解
 
 
 ## 渲染器
