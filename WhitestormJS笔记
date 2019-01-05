@@ -1,0 +1,12 @@
+
+## 对象以外所有内容
+`const app =new WHS.App([各子项])`
+子项中加入new WHS.OrbitControlsModule()可以拥有控制相机的交互
+
+
+
+
+
+
+
+
