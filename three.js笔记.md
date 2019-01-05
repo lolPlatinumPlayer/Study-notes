@@ -58,7 +58,7 @@ scene.add(cube); // 将对象加进场景中
   - 网格：
     - 直接上色：MeshBasicMaterial
       什么情况下都固定颜色
-    - 漫反射：MeshLambertMaterial
+    - 漫反射：MeshLambertMaterial、MeshPhongMaterial（两个目前不知道区别）
       没有光源的话将不显示
   - 线：`new THREE.LineDashedMaterial({color:'red'})`
 - 新建对象
