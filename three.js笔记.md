@@ -46,6 +46,7 @@ scene.add(cube); // 将对象加进场景中
 - 设置形状：
   - 立方体：`new THREE.BoxGeometry(1, 1, 1)` 参数对应立方体x、y、z边的长度
   - 圆：`new THREE.CircleGeometry( 半径, 圆弧上的节点数 )`
+  - 面：`new THREE.PlaneBufferGeometry(x长,y长)`
   - 线：
     ```
     new THREE.Geometry()
@@ -66,6 +67,17 @@ scene.add(cube); // 将对象加进场景中
 - 新建对象
   - 网格：`new THREE.Mesh(形状, 材质)`
   - 线：`new THREE.Line(形状, 材质)`
+- 删除对象：`父内容.remove(组件)`
+- 让物体永远处于最前：`物体.material.depthTest=false`
+
+
+## Sprite对象（总朝着摄像机的一个平面）
+```
+var spriteMap = new THREE.TextureLoader().load("图片地址") // 这个加载是异步的
+var spriteMaterial = new THREE.SpriteMaterial({map: spriteMap,rotation:1,color:'red'}) // color会与map相乘
+var sprite = new THREE.Sprite(spriteMaterial)
+```
+旋转：通过`spriteMaterial.rotation`旋转
 
 
 ## 光源
@@ -82,9 +94,32 @@ function animate() {
     requestAnimationFrame( animate ); // 1/60秒后调用其中回调（js专门给动画做的定时器，各方面比普通定时器都有优化）
 
     // 这里放每1/60秒需要的变化
-    
+
     renderer.render( scene, camera );
 }
 animate();
 ```
 
+
+## 鼠标拾取（鼠标碰了什么物体）
+```
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+function onMouseMove( event ) {
+    // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 to +1)
+    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    // 通过摄像机和鼠标位置更新射线
+    raycaster.setFromCamera( mouse, camera );
+    // 鼠标所在位置投线触碰到所有物体的数组
+    var intersects = raycaster.intersectObjects( scene.children );
+    if(intersects.length>0){
+        for ( var i = 0; i < intersects.length; i++ ) {
+            console.log(intersects[ i ])
+            intersects[ i ].object.position.x+=0.01 // 对物体进行操作
+        }
+        renderer.render( scene, camera );
+    }
+}
+window.addEventListener( 'mousemove', onMouseMove, false );
+```
