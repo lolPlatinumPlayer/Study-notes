@@ -55,7 +55,8 @@ console.log('a[3]',a[3]) // undefined
    比如`a.b()`调用者就是a
    `c=a.b;c()`如果在最外层的话调用者就是window
 2. 箭头函数
-   在哪产生就是指哪（所以如果一个函数的this不是window，那么在产生这个函数的过程中一定用了非箭头函数）
+   在哪产生就指向哪的上下文（如果是对象的某一层属性，那指向的就是对象所在的上下文）
+   （所以如果一个函数的this不是window，那么在产生这个函数的过程中一定用了非箭头函数或者改变this的方法）
    例子：
     1. `let a={b:()=>this}`a.b不管怎么调用返回都是window
     2. ```
@@ -65,9 +66,15 @@ console.log('a[3]',a[3]) // undefined
             }
           }
           console.log(obj.bar()()) // 箭头函数是在obj.bar()产生的，所以this与obj.bar()一致
+          let c=obj.bar
+          console.log(c()()) // 结果：window。因为箭头函数产生于c()，上下文是window
        ```
 3. 使用new的构造函数中
    this代表这个构造函数创建的对象，初始值是`{}`
+4. bind方法
+   `函数.bind(x)`返回一个this是x的函数
+   不过bind似乎无法改变箭头函数的this
+   （mdn上还有 传参、new等内容）
 
 
 ## 回调函数
