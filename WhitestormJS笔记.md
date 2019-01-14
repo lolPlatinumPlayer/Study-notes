@@ -4,7 +4,8 @@
 功能：将渲染器和场景做好、一次性设置并添加多个组件
 子项中加入new WHS.OrbitControlsModule()可以拥有控制相机的交互
 `应用.start()`运行（加不加动画这行都是必须的）
-其中相机子项的话建议用：```
+其中相机子项的话建议用：
+```
 new WHS.DefineModule('camera', new WHS.PerspectiveCamera({
 	position: new THREE.Vector3(0, 0, 5)
 }))
@@ -17,7 +18,7 @@ new WHS.DefineModule('camera', new WHS.PerspectiveCamera({
 - build
   这是一个很多组件都有的生命周期（但是基组件、组上没有），组件有new就会执行一次，出现多次也只会执行一次（个人猜测）
   相当于普通类的constructor，但是whs组件不能写constructor
-  必须返回一个three对象
+  必须返回一个three物体（组的话可以返回WHS.Group 的.native）（这种方法建组，中间带自建sprite实例的话，组实例.children[0].material全等于sprite实例.spriteMaterial）
 - native属性：组件的three对象
 - 组件进行extends后，build形参除了实参以外还会返回extends的whs组件自带的属性，在实参处也可以直接传这些自带的属性
 - position、rotation可以整体赋值，不需要three的给一个向量
@@ -41,7 +42,7 @@ loop.start(应用)和loop.stop(应用)可以开启、暂停动画（不过目前
 ## 模块（个人感觉whs的模块有点类似es6类的扩展，但是比扩展多了一些whs的方法）
 - 生命周期  
   加入模块的组件每new一次执行一次生命周期
-  顺序是：constructor、manager、integrate、build（bridge中的方法的话是调用applyBridge时执行）
+  顺序是：constructor、manager、integrate、build、渲染（bridge中的方法的话是调用applyBridge时执行）
 - constructor
   在其中给this添加的内容可以在生成模块的类间通用（实例上不能用）
   bridge中通过第二个参数调用（一般命名为self）
@@ -51,7 +52,7 @@ loop.start(应用)和loop.stop(应用)可以开启、暂停动画（不过目前
     applyBridge方法目前感觉相当于一个默认的实例方法
 - integrate
   - 其中给this添加的内容都会到实例上，这里操作this也相当于操作实例  
-  - 除了实例，增加了这个模块的类的build方法里也能通过`this.属性名`调用这些内容
+  - 除了实例，增加了这个模块的类的build方法里也能通过`this.属性名`调用这些内容，也可以给这些内容赋值
 - manager 似乎是组件间通信用的
 
 
@@ -68,5 +69,6 @@ loop.start(应用)和loop.stop(应用)可以开启、暂停动画（不过目前
 	- `物体.on(.. )`
 
 
+## 其他
 
 
