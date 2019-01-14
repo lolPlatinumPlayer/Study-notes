@@ -58,12 +58,14 @@ scene.add(cube); // 将对象加进场景中
     这里的节点会按顺序连成线，但是首尾不会相连
     （`new THREE.Vector3(x,y,z)`是three里面表达向量的一种方法，还有2维4维向量。目前不知道更简便地加线条节点的方法）
 - 设置材质
+  纹理（map）与颜色等合起来变成材质
   - 网格：
     - 直接上色：MeshBasicMaterial
       什么情况下都固定颜色
     - 漫反射：MeshLambertMaterial、MeshPhongMaterial（两个目前不知道区别）
       没有光源的话将不显示
   - 线：`new THREE.LineDashedMaterial({color:'red'})`
+  - 更换贴图：给Material.map赋值新new loader的图片
 - 新建对象
   - 网格：`new THREE.Mesh(形状, 材质)`
   - 线：`new THREE.Line(形状, 材质)`
@@ -123,3 +125,7 @@ function onMouseMove( event ) {
 }
 window.addEventListener( 'mousemove', onMouseMove, false );
 ```
+
+
+## 其他
+- 材质的颜色值有set方法（应该所有值都能用set设置）
