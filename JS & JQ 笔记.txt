@@ -551,6 +551,31 @@ promise.then(onCompleted, onRejected);
    必需。承诺成功完成时要运行的履行处理程序函数。
 3. onRejected
    可选。承诺被拒绝时要运行的错误处理程序函数。
+   
+
+## 可行的例子
+```
+function timeout(ms) {
+    return new Promise((resolve, reject) => {
+        setTimeout(resolve, ms, 'done');
+    });
+}
+
+timeout(1100).then((value) => {
+    return value
+});
+
+async function drawBuilding() { // 要用await，其所在函数体外一定要加async
+    const result = await timeout(1100).then((value) => { // 在函数前加await可以让函数在完成前让语句保持阻塞
+        return value
+    })
+    console.log(result); // done
+    return result;
+}
+const aa= drawBuilding()
+console.log(aa); // Promise对象
+```
+
 
 
 · catch
