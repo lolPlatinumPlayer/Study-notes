@@ -554,7 +554,7 @@ promise.then(onCompleted, onRejected);
    
 
 ## 可行的例子
-```
+1. ```
 function timeout(ms) {
     return new Promise((resolve, reject) => {
         setTimeout(resolve, ms, 'done');
@@ -575,7 +575,23 @@ async function drawBuilding() { // 要用await，其所在函数体外一定要�
 const aa= drawBuilding()
 console.log(aa); // Promise对象
 ```
+2. ···
+    async function getBorderCanvas({width,height,lineWidth,color}) {
+        ......
+        const afterLoading= new Promise((resolve) => {
+            let img = new Image()
+            img.src ='resource/border-img.png'
+            img.onload = function(){
+                ctx.drawImage(img,0,0,canvasWidth,canvasHeight)
+                resolve()
+            }
+        })
 
+        return await afterLoading.then(() => {
+            return canvas
+        })
+    }
+···
 
 
 · catch
