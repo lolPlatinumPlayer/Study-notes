@@ -43,10 +43,12 @@ var cube = new THREE.Mesh(geometry, material); // 依据形状和材质新建对
 scene.add(cube); // 将对象加进场景中
 ```
 - 移动与旋转操作方法与相机相同
+  （在whs组件中返回的组件中，这些操作要在setTimeout0里才能生效）
 - 设置形状：
   - 立方体：`new THREE.BoxGeometry(1, 1, 1)` 参数对应立方体x、y、z边的长度
   - 圆：`new THREE.CircleGeometry( 半径, 圆弧上的节点数 )`
-  - 面：`new THREE.PlaneBufferGeometry(x长,y长)`
+  - 面：`new THREE.PlaneBufferGeometry(x长,y长,side: THREE.DoubleSide)`
+    side默认为单面显示
   - 线：
     ```
     new THREE.Geometry()
@@ -70,7 +72,7 @@ scene.add(cube); // 将对象加进场景中
   - 网格：`new THREE.Mesh(形状, 材质)`
   - 线：`new THREE.Line(形状, 材质)`
 - 删除对象：`父内容.remove(组件)`
-- 让物体永远处于最前：`物体.material.depthTest=false`
+- 让物体永远处于最前：`物体.material.depthTest=false`（设置材质时depthTest设为false也可以）
 
 
 ## Sprite对象（总朝着摄像机的一个平面）
@@ -79,7 +81,13 @@ var spriteMap = new THREE.TextureLoader().load("图片地址") // 这个加载�
 var spriteMaterial = new THREE.SpriteMaterial({map: spriteMap,rotation:1,color:'red'}) // color会与map相乘
 var sprite = new THREE.Sprite(spriteMaterial)
 ```
-旋转：通过`spriteMaterial.rotation`旋转
+- 旋转
+  只能通过`spriteMaterial.rotation`旋转
+  增加的话是逆时针
+- center（只有sprite有）
+  值是three二维向量
+  xy为0时在左下角，为1时在右上角，值的大小不限
+  之后旋转位移缩放等都会以此为中心
 
 
 ## 光源
