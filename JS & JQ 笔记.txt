@@ -477,7 +477,7 @@ var：若在块内声明，则与块外同名变量为两个不同变量；若�
 let/const与var区别：
 1. let/const在声明语句前使用会直接报错“is not defined”，而var会返回undefined，因为var的声明会提升至作用域顶部，而赋值不会提升
 2. var可以重复声明，而let/const会报错“has already been declared”
-3. var不会在在花括号形成独立作用域，而let/const会（这个花括号包括if的花括号）
+3. var不会在在花括号形成独立作用域，而let/const会（这个花括号包括但不限于if、for及直接写的花括号）
 4. var声明变量会给window的原型链加属性，而let、const不会
 let与var仅有以上区别，const除了以上区别外，const在声明时必须赋值，而且其声明的变量不能在其他地方赋值。
 但是有两种情况可以让声明后的const看起来像被改变：（其实对常量赋值的引用并没有被改变，被改变的是引用另一头的内容）
