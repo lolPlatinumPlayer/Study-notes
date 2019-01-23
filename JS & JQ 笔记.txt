@@ -592,6 +592,7 @@ console.log(aa); // Promise对象
         })
     }
 ···
+要获取加了async的函数return值，必须用await
 
 
 · catch
