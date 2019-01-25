@@ -1,0 +1,52 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>BufferGeometry</title>
+	<style>
+		body { margin: 0; }
+		canvas { width: 100%; height: 100% }
+	</style>
+</head>
+<body>
+<script src="resource/three.js"></script>
+<script>
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+    camera.position.z = 22;
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+
+
+    var geometry = new THREE.BufferGeometry();
+    // 创建一个简单的矩形. 在这里我们左上和右下顶点被复制了两次。
+    // 因为在两个三角面片里，这两个顶点都需要被用到。
+    var vertices = new Float32Array( [
+        -1.0, -1.0,  1.0,
+        1.0, -1.0,  1.0,
+        1.0,  1.0,  1.0,
+
+        1.0,  1.0,  1.0,
+        -1.0,  1.0,  1.0,
+        -1.0, -1.0,  1.0
+    ] );
+
+    // itemSize = 3 因为每个顶点都是一个三元组。
+    geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+    var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+    var mesh = new THREE.Mesh( geometry, material );
+    scene.add( mesh );
+
+
+
+
+setInterval(()=>{
+    camera.position.z+=1
+    renderer.render( scene, camera );
+},1111)
+
+    renderer.render( scene, camera );
+</script>
+</body>
+</html>

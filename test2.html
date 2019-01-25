@@ -1,0 +1,107 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>对“不依赖相机而固定物体大小”的研究</title>
+	<style>
+		body { margin: 0; }
+		canvas { width: 100%; height: 100% }
+	</style>
+</head>
+<body>
+<script src="resource/three.js"></script>
+<script>
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+    camera.position.z = 22;
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+
+
+    //立方体
+    var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+    var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+    var cube = new THREE.Mesh( geometry, material );
+    scene.add( cube );
+    cube.position.x=4
+
+	//点
+    let sss=new THREE.TextureLoader().load('images/sprite-ico.png')
+    /*const pg = new THREE.BufferGeometry();
+	const pm = new THREE.PointsMaterial({
+		map: sss,
+		size: 11,
+		// vertexColors: true,
+		// blending: THREE.AdditiveBlending,
+		// depthWrite: false,
+		color: 'white'
+	});
+	const p = new THREE.Points(pg, pm)
+    console.log(p)
+    scene.add(p)*/
+
+    const aa=[
+        16, 16, 8,
+        2, -4, 3,
+        16, -5, -17,
+        -11, -17, 12
+    ]
+    const bb=[
+        1, 1, 1,
+        1, 0, 0.5019607843137255,
+        0.5019607843137255, 0, 1,
+        1, 0.5, 1
+    ]
+    var ggggg = new THREE.BufferGeometry();
+    ggggg.addAttribute( 'position', new THREE.Float32BufferAttribute( aa, 3 ) );
+    ggggg.addAttribute( 'color', new THREE.Float32BufferAttribute( bb, 3 ) );
+    console.log(ggggg);
+    console.log(JSON.stringify(ggggg));
+    var mmmmm = new THREE.PointsMaterial( { size: 4,color:'green', vertexColors: THREE.VertexColors, depthTest: false, sizeAttenuation: false } );
+    var ppppp = new THREE.Points( ggggg, mmmmm );
+    scene.add(ppppp)
+
+
+    //面
+    const planeG=new THREE.PlaneBufferGeometry(2,2,THREE.DoubleSide)
+    var planeM = new THREE.MeshBasicMaterial( { map: sss,color: '#2162a0' } );
+    const plane=new THREE.Mesh(planeG,planeM)
+    scene.add( plane );
+    plane.position.x=-4
+
+
+
+
+    //线
+   /* const ag=new THREE.Geometry()
+    ag.vertices.push(new THREE.Vector3(-10,0,0));
+    ag.vertices.push(new THREE.Vector3(0,10,0));
+    ag.vertices.push(new THREE.Vector3(10,0,0));
+
+    var curve = new THREE.CubicBezierCurve3(
+        new THREE.Vector3( -10, 0, 0 ),
+        new THREE.Vector3( -5, 15, 0 ),
+        new THREE.Vector3( 20, 15, 0 ),
+        new THREE.Vector3( 10, 0, 0 )
+    );
+    var points = curve.getPoints( 11 );
+    const agc=new THREE.BufferGeometry().setFromPoints( points )
+    
+    
+    const am=new THREE.LineDashedMaterial({color:'red'})
+	const a=new THREE.Line(agc,am)
+    scene.add( a );*/
+
+
+
+
+setInterval(()=>{
+    camera.position.z+=1
+    renderer.render( scene, camera );
+},1111)
+
+    renderer.render( scene, camera );
+</script>
+</body>
+</html>
