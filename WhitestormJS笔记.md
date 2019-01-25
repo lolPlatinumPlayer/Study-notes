@@ -4,11 +4,25 @@
 功能：将渲染器和场景做好、一次性设置并添加多个组件
 子项中加入new WHS.OrbitControlsModule()可以拥有控制相机的交互
 `应用.start()`运行（加不加动画这行都是必须的）
-其中相机子项的话建议用：
-```
-new WHS.DefineModule('camera', new WHS.PerspectiveCamera({
-	position: new THREE.Vector3(0, 0, 5)
-}))
+整体例子：```
+    const app = new WHS.App([
+        new WHS.ElementModule(document.getElementById('app')),
+        new WHS.SceneModule(),
+        new WHS.DefineModule('camera', new WHS.PerspectiveCamera({
+            position: new THREE.Vector3(0, 22, 44),
+        })),
+        new WHS.RenderingModule({
+            bgColor: '#1a2d39',
+            renderer: {
+                antialias: true,
+                shadowmap: {
+                    type: THREE.PCFSoftShadowMap
+                }
+            }
+        }, {shadow: true}),
+        new WHS.OrbitControlsModule(),
+        new WHS.ResizeModule(),
+    ])
 ```
 
 
