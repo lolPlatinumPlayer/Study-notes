@@ -18,9 +18,9 @@ z轴指向屏幕外
   - 是否渲染：只有同时在渲染距离与视角内的物体才会被渲染
 - 移动：
   给`camera.position.x或y或z`赋值、camera.position.setX或setY或setZ(距离)
-  要一次性设置三个参数的话用position的set方法
+  要一次性设置三个参数的话用position.set(x值,y值,z值)
   （无法直接给camera.position赋值）
-- 旋转与移动同理，就是把`position`改为`rotation`
+- 旋转与移动同理，就是把`position`改为`rotation`，three的角度单位都是弧度
 - 缩放：scale
 - quaternion暂不理解
 
@@ -42,14 +42,16 @@ var material = new THREE.MeshBasicMaterial({color: 0x00ff00}); // 设置材质�
 var cube = new THREE.Mesh(geometry, material); // 依据形状和材质新建对象
 scene.add(cube); // 将对象加进场景中
 ```
-- 移动与旋转操作方法与相机相同
+- 移动与旋转操作方法与相机相同、旋转比相机多了`物体.lookAt(new THREE.Vector3(0,0,2))`这种方法
   （在whs组件中返回的组件中，这些操作要在setTimeout0里才能生效）
 - 设置形状：
   - 立方体：`new THREE.BoxGeometry(1, 1, 1)` 参数对应立方体x、y、z边的长度
   - 圆：`new THREE.CircleGeometry( 半径, 圆弧上的节点数 )`
-  - 面：`new THREE.PlaneBufferGeometry(x长,y长,side: THREE.DoubleSide)`
+  - 面：
+    `new THREE.PlaneBufferGeometry(x长,y长,side: THREE.DoubleSide)`
     side默认为单面显示
   - 线：
+    线和点的尺寸似乎都不会随着相机远近而改变
     ```
     new THREE.Geometry()
     geometry.vertices.push(new THREE.Vector3(-10,0,0));
@@ -67,20 +69,24 @@ scene.add(cube); // 将对象加进场景中
     - 漫反射：MeshLambertMaterial、MeshPhongMaterial（两个目前不知道区别）
       没有光源的话将不显示
   - 线：`new THREE.LineDashedMaterial({color:'red'})`
-  - 更换贴图：给Material.map赋值新new loader的图片
+  - 更换贴图：给material.map赋值新new的图片或者新new的canvas
+    （不过在whs的精灵组件中可以给spriteMaterial.map赋值）
 - 新建对象
   - 网格：`new THREE.Mesh(形状, 材质)`
   - 线：`new THREE.Line(形状, 材质)`
 - 删除对象：`父内容.remove(组件)`
-- 让物体永远处于最前：`物体.material.depthTest=false`（设置材质时depthTest设为false也可以）
+- 让物体永远处于最前：`物体.material.depthTest=false`（new材质时也可以设置）（depthWrite也可以）
+  （bug：whs平面有时候会挡在depthTest=false的物体上，这个时候给需要最前的物体的材质设置transparent:true就行）
 
 
-## Sprite对象（总朝着摄像机的一个平面）
+## Sprite对象（总朝着摄像机的一个平面）（Points对象也有相同效果）
 ```
 var spriteMap = new THREE.TextureLoader().load("图片地址") // 这个加载是异步的
 var spriteMaterial = new THREE.SpriteMaterial({map: spriteMap,rotation:1,color:'red'}) // color会与map相乘
 var sprite = new THREE.Sprite(spriteMaterial)
 ```
+- 尺寸
+  sprite对象建好后都是宽1高1的，需要用scale放大至需要的尺寸
 - 旋转
   只能通过`spriteMaterial.rotation`旋转
   增加的话是逆时针
