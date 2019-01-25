@@ -4,7 +4,8 @@
 功能：将渲染器和场景做好、一次性设置并添加多个组件
 子项中加入new WHS.OrbitControlsModule()可以拥有控制相机的交互
 `应用.start()`运行（加不加动画这行都是必须的）
-整体例子：```
+整体例子：
+```
     const app = new WHS.App([
         new WHS.ElementModule(document.getElementById('app')),
         new WHS.SceneModule(),
@@ -24,6 +25,7 @@
         new WHS.ResizeModule(),
     ])
 ```
+
 
 
 ## 组件
