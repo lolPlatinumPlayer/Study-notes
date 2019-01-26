@@ -43,7 +43,7 @@
 ## 组（组件有的方法属性基本都有）
 组件添加到组后就不能再添加进应用，不过还能单独对组中的某个组件进行控制
 声明： `const group = new WHS.Group(任意数量的组件);` 组件用数组或多参数都可以
-虽然源码上extends自MeshComponent，但是extends组不会拥有extends MeshComponent的build，也不能通过直接传参position、rotation等进行改变
+虽然源码上extends自MeshComponent，但是组不能通过直接传参position、rotation等进行改变
 
 
 ## 动画
