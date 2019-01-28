@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body{
+            background-color: #3e1717;
+        }
+    </style>
+    <script type="text/babel" src="jsx.js"></script>
+</head>
+<body>
+<script>
+
+    let canvas = document.createElement('canvas');
+    canvas.width=500
+    canvas.height=330
+    var ctx=canvas.getContext("2d")
+
+
+
+    ctx.lineWidth=11;
+    ctx.strokeStyle="#4247ff";
+    ctx.strokeRect(5,5,222,111);
+    ctx.scale(0.5,0.5);
+    ctx.strokeStyle="#0000b9";
+    ctx.strokeRect(5,5,222,111);
+    ctx.scale(0.5,0.5);
+    ctx.strokeStyle="#000087";
+    ctx.strokeRect(5,5,222,111);
+    canvas.height=330
+    ctx.scale(0.5,0.5);
+    ctx.strokeStyle="#000046";
+    ctx.strokeRect(5,5,222,111);
+
+
+
+
+
+
+
+
+
+
+    document.getElementsByTagName('body')[0].appendChild(canvas)
+</script>
+</body>
+</html>
