@@ -45,6 +45,7 @@
 
 
 ## 类与对象
+```
 class class_name{
     var $cons;//声明成员变量（或叫类属性）
     var $a=11;//声明时可以赋值
@@ -68,8 +69,7 @@ class class_name{
 $object_name=new class_name('str');//新建对象，如无构造函数可不加括号
 $object_name->get();//调用对象内方法
 $object_name->a++;//调用对象内公有变量
-
-
+```
 继承语法：class Child extends Parent { ..}
 可以增加自己的属性、方法，也可对来自父类的属性、方法进行重写
 
@@ -83,15 +83,15 @@ $object_name->a++;//调用对象内公有变量
 
 
 ## Ajax jq部分
-ajax的get都不会改变url，所有信息api里都是可用的 
-$.get('url',data,function(data,status){.. },dataType)
-callback中data代表请求文件中的内容，请求txt则是所有文本，php则是所有echo内容以字符串形式连接在一起的字符串。
-status这参数感觉没什么用，请求文件不存在控制台会报错，且回调不执行，文件存在回调就会执行，status值就只有‘SUCCESS’
-data参数格式是{a:'xx',b:'xx',.. }，用来向后端发送数据
-php中用$_REQUEST['']、$_POST['']和$_GET['']能捕获到相关参数。
-dataType为返回数据格式，如获取服务器返回的json数组则应填写'json'
-$.post()与$.get()同理
-有更多需求的话需要使用$.ajax，它含有jq中ajax的完整功能 
+- ajax的get都不会改变url，所有信息api里都是可用的 
+- $.get('url',data,function(data,status){.. },dataType)
+- callback中data代表请求文件中的内容，请求txt则是所有文本，php则是所有echo内容以字符串形式连接在一起的字符串。
+- status这参数感觉没什么用，请求文件不存在控制台会报错，且回调不执行，文件存在回调就会执行，status值就只有‘SUCCESS’
+- data参数格式是{a:'xx',b:'xx',.. }，用来向后端发送数据
+- php中用$_REQUEST['']、$_POST['']和$_GET['']能捕获到相关参数。
+- dataType为返回数据格式，如获取服务器返回的json数组则应填写'json'
+- $.post()与$.get()同理
+- 有更多需求的话需要使用$.ajax，它含有jq中ajax的完整功能 
 
 
 ## Ajax php部分
@@ -114,7 +114,7 @@ ajax json的话，数组前先要用json_encode()包起来再echo，索引数组
 
 
 ## 数据库·增
-- 时间
+- 时间  
   php向mysql创建时间格式只能选date、datetime、time
   php只能向mysql中插入当前时间，三种方法如下：
   - NOW()函数以'YYYY-MM-DD HH:MM:SS'返回当前的日期时间，可以直接存到DATETIME字段中。 
