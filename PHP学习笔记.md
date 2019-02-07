@@ -96,7 +96,7 @@ $object_name->a++;//调用对象内公有变量
 
 ## Ajax php部分
 ajax json的话，数组前先要用json_encode()包起来再echo，索引数组关联数组都可以
-- $_REQUEST['']可以通过input的name属性捕获到填写的数据
+- $_REQUEST['属性名']可以获得接收对象的某个属性的值（通过input的name属性捕获到填写的数据也会存为一个属性值，属性名为name值）
 - $_POST['']和$_GET['']也可以，不过各自只能对应一种提交方法，$_GET['']也可以直接根据url来捕获
 - 提交表单后留在原页面的话，actoion的php写htmlspecialchars($_SERVER["PHP_SELF"]);
 - empty()判断数据是否为空
