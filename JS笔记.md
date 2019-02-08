@@ -1,6 +1,5 @@
 
 # 【JS】ES5
-
 		   
 		   
 ## undefined
@@ -682,9 +681,7 @@ function a(p0,p1='p1'){
 ```
 
 
-
 #  【JS】ES7
-
 
 
 ## 对象展开运算符（或称扩展运算符）（Object rest spread）
@@ -731,61 +728,20 @@ function a(p0,p1='p1'){
 （更多内容见http://es6.ruanyifeng.com/#docs/array#扩展运算符）
 
 
-
-#    【JQ】1.10.2
-
+# 【算法】
 
 
-$.extend( object1, object2 );
-/*
-1、将对象object2 加入对象object1中，无则增，有则改。
-2、如果属性值为对象，则该属性值会被完全覆盖
-*/
-
-$.extend( true, object1, object2 );
-/*
-第一点同上，如果属性值为对象，则对该属性值执行第一条，其属性值中再有属性值为对象的情况也都执行第一条。
-*/
-
-$(window).scroll(function(){
-    //函数内容写在这
-});
-每次页面滚动都会触发当中的函数内容
-如果要取消掉对“页面滚动”的监听，则写：
-$(window).unbind('scroll')
-$(window)还有其它一系列操作，并未整理进来
-
-
-vue-cli与webpack同时存在的情况下，模块化引入jquery的方法：
-1. cnpm i jquery@1.11.3 --save
-2. webpack.config.js的module.exports的最后加入：
-   plugins: [
-       new webpack.ProvidePlugin({
-           jQuery: "jquery",
-           $: "jquery"
-       })
-   ]
-3. 在main.js 加上import $ from 'jquery'
-
-
-
-#    【算法】
-	   
-	   
-		   
-取余（%）
-a、b都是正数：
-a%b=c 意味着 a=b的整数倍+c 且 0<=c<=(b-1)
-a是负数b是正数：
+## 取余（%）
+- a、b都是正数时
+  a%b=c 意味着 a=b的整数倍+c 且 0<=c<=(b-1)
+- a是负数b是正数时
 a%b=c 意味着 a=b的整数倍+(-c) 且 0>=c>=-(b-1) 也就是 c为用a绝对值取余b的结果的相反数
-
 
 
 # 【前端技术概念】
 
 
-
-MVC与MVP：
+## MVC与MVP
 MVC中V（视图）需承担显示以外的功能
 MVP中V（视图）无需承担显示以外的功能
 两个模式中M与P、M与C分界都比较模糊，但存放数据的功能都是由M完成
