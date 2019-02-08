@@ -19,6 +19,11 @@
 - try catch可以避免Fatal error的阻塞
 - Parse error（解析错误）会导致整个php脚本失效，情况有：（不加 ; 、使用类似 1=1+1; 语句等）
 - 自定义错误处理器无法处理Parse error和Fatal error
+  
+  
+## 引号
+- 单引号内部 变量、/n换行符 不解析，而双引号会解析（就算变量被单引号包围也会解析）
+- 单、双引号中要打出单、双引号字符串要使用 /' 或 /" 
 
 
 ## 变量的操作
@@ -82,18 +87,6 @@ $object_name->a++;//调用对象内公有变量
 - 私有方法，在继承链中无法被 非 定义时所在类 用$this->fn()调用
 
 
-## Ajax jq部分
-- ajax的get都不会改变url，所有信息api里都是可用的 
-- $.get('url',data,function(data,status){.. },dataType)
-- callback中data代表请求文件中的内容，请求txt则是所有文本，php则是所有echo内容以字符串形式连接在一起的字符串。
-- status这参数感觉没什么用，请求文件不存在控制台会报错，且回调不执行，文件存在回调就会执行，status值就只有‘SUCCESS’
-- data参数格式是{a:'xx',b:'xx',.. }，用来向后端发送数据
-- php中用$_REQUEST['']、$_POST['']和$_GET['']能捕获到相关参数。
-- dataType为返回数据格式，如获取服务器返回的json数组则应填写'json'
-- $.post()与$.get()同理
-- 有更多需求的话需要使用$.ajax，它含有jq中ajax的完整功能 
-
-
 ## Ajax php部分
 ajax json的话，数组前先要用json_encode()包起来再echo，索引数组关联数组都可以
 - $_REQUEST['属性名']可以获得接收对象的某个属性的值（通过input的name属性捕获到填写的数据也会存为一个属性值，属性名为name值）
@@ -113,17 +106,15 @@ ajax json的话，数组前先要用json_encode()包起来再echo，索引数组
 - 操作cookie要大约一秒后才会生效
 
 
-## 数据库·增
-- 时间  
+## mysql
+- 向mysql插入字符串数据时，变量周围要加引号
+- 增加时间格式字段  
+  （下面是测试结果，真实情况应该有更多操作空间）
   php向mysql创建时间格式只能选date、datetime、time
-  php只能向mysql中插入当前时间，三种方法如下：
+  php只能向mysql中插入当前时间，这三个函数都是属于sql的，方法如下：
   - NOW()函数以'YYYY-MM-DD HH:MM:SS'返回当前的日期时间，可以直接存到DATETIME字段中。 
   - CURDATE()以'YYYY-MM-DD'的格式返回今天的日期，可以直接存到DATE字段中。 
   - CURTIME()以'HH:MM:SS'的格式返回当前的时间，可以直接存到TIME字段中。 
-- 其他
-  - 向mysql插入字符串数据时，变量外要加引号
-  - 单引号内部 变量、/n换行符 不解析，而双引号会解析（就算变量被单引号包围也会解析）
-  - 单、双引号中要打出单、双引号字符串要使用 /' 或 /" 
   
 
 
