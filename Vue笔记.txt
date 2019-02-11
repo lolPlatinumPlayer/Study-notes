@@ -58,9 +58,10 @@ number:将输入数值变为Number类型（如果原值的转换结果为 NaN �
 trim:过滤用户输入的首尾空格
 
 
-· data属性
-Vue对象中data属性用来存放vue操作的数据，可在Mustache中写属性名直接打印，也可在其他vue属性中用 this.属性名 来调用，vue对象外可用 vue对象名.属性名 调用。
-可用对象代理
+## data属性
+- Vue对象中data属性用来存放vue操作的数据，可在Mustache中写属性名直接打印，也可在其他vue属性中用 this.属性名 来调用，vue对象外可用 vue对象名.属性名 调用。
+- data变化会触发视图更新，但是给某个data的属性赋值并不会被vue判断为data改变，不过可以在watch中监听某个data的属性
+- 可用对象代理
 
 
 · 计算属性（computed属性的值的属性名）
