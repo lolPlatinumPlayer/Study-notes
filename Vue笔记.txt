@@ -143,7 +143,7 @@ v-bind:style="{ color: activeColor, fontSize: fontSize + 20 + 'px' }"
 语法等同v-if，通过css选择显示隐藏，不支持else，不支持在template标签中多次切换【？】
 
 
-· v-for
+· v-for【】格式待整理
 在标签内加入v-for="(a,b) in c"（in可更改为of），可以循环生成该标签。
 生成标签间固定加入部分可以是data中的数据。
 在mustache或v-html里输入c、b、a分别表示：
@@ -172,6 +172,13 @@ methods: {
         })
     }
 }
+
+
+## v-for中的ref
+- 找到 v-for中有ref的组件 的方法：
+  `this.$refs.ref值[序号]`
+  这里序号指的是：如果想要定位到的组件在拥有这个ref值的组件中排第n个，序号就是n-1
+- 这种情况ref可以用动态生成，不过动态生成后找到组件的方法还是和上一条一致
 
 
 · 事件处理方法
