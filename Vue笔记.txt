@@ -287,6 +287,9 @@ https://cn.vuejs.org/v2/guide/components.html#Prop-验证
 “this.$emit('a',b)”中b就是能带上的内部数据，父组件methods中单参数函数中的单参数就能捕捉到内部数据b
 
 
+用这种方法向组件外传值是可以发生引用传递的，因引用传递导致组件外数据变化时甚至能用watch监听到（未做详细测试）
+
+
 · 在子组件上触发methods中的函数（在html子组件上用本地事件触发method中的函数）
 在子组件标签中写好“@click.native="b"”就会在点击后触发b函数
 
