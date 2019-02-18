@@ -581,7 +581,9 @@ directives: {
   v-show再过滤出需要显示的选项（这里用v-if的话就只能转换有显示的选项的数据）
   
 
-
-
+# iview
+- 有几率bug
+  template做if else时，其中第一个formitem 下无法验证，调用局部验证还会报错“第一个参数不是字符串”
+  
 
 
