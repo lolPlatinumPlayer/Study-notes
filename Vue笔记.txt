@@ -317,7 +317,7 @@ https://cn.vuejs.org/v2/guide/components.html#杂项
 
 
 · .nextTick
-1、Vue.nextTick(function () {...})【？】
+1、Vue.nextTick(function () {...})
    页面中所有dom渲染好之后立即执行当中函数内容，（由于vue的智能渲染，直接运行的函数会先运行，然后再渲染dom，所以nextTick中获取的数值都是先运行这些函数后才获得的）
    setTimeout延迟0毫秒效果同上。延迟更长时间就能获取到更长时间后改变的数据，这点nextTick做不到。
 2、this.$nextTick(function () {...})
