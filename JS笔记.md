@@ -615,7 +615,7 @@ Promise对象是一个构造函数，用来生成Promise实例。
    
 
 ## Promise相关可行的例子
-1.
+-
 ```
 function timeout(ms) {
     return new Promise((resolve, reject) => {
@@ -626,7 +626,9 @@ function timeout(ms) {
 timeout(1100).then((value) => {
     return value
 });
-
+```
+-
+```
 async function drawBuilding() { // 要用await，其所在函数体外一定要加async
     const result = await timeout(1100).then((value) => { // 在函数前加await可以让函数在完成前让语句保持阻塞
         return value
@@ -637,7 +639,7 @@ async function drawBuilding() { // 要用await，其所在函数体外一定要�
 const aa= drawBuilding()
 console.log(aa); // Promise对象
 ```
-2. 
+-
 ```
     async function getBorderCanvas({width,height,lineWidth,color}) {
         ......
