@@ -617,15 +617,12 @@ Promise对象是一个构造函数，用来生成Promise实例。
 ## Promise相关可行的例子
 -
 ```
-function timeout(ms) {
-    return new Promise((resolve, reject) => {
-        setTimeout(resolve, ms, 'done');
-    });
-}
-
-timeout(1100).then((value) => {
-    return value
-});
+const go= new Promise((resolve, reject) => {
+    setTimeout(resolve, 555, 'done')
+})
+go.then((value) => {
+    alert(value)
+})
 ```
 -
 ```
@@ -660,34 +657,36 @@ console.log(aa); // Promise对象
 要获取加了async的函数return值，必须用await
 
 
-· catch
+## catch
 等于then处理承诺被拒绝的功能
 	
-1. fetch
-   ```
-		fetch(一个请求或者一个php文件)
-			.then((请求返回的内容)=>{
-				return 请求返回的内容.对于这个内容的方法()//这里可选的方法详见https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#Body
-			})
-			.then((上一个then return出来的东西)=>{
-				//一些操作
-			})
-	```
-1. new request（未测试不用new request是否能成功）
-   ```
-		let myImage = document.querySelector('img');
-		var myRequest = new Request('flowers.gif');
-		fetch(myRequest) // 返回一个Promise对象
-			.then((res)=>{
-				console.log('res:',res);
-				return res.blob() // res.text()是一个Promise对象，但是个人测试发现是php echo出来的文本
-			})//return的东西会给下一个then用
-			.then((res)=>{
-				var objectURL = URL.createObjectURL(res);
-				myImage.src = objectURL;
-				console.log(res) // res是最终的结果
-			})
-	```
+## fetch
+```
+    fetch(一个请求或者一个php文件)
+        .then((请求返回的内容)=>{
+            return 请求返回的内容.对于这个内容的方法()//这里可选的方法详见https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#Body
+        })
+        .then((上一个then return出来的东西)=>{
+        //一些操作
+    })
+```
+
+
+## new request（未测试不用new request是否能成功）
+```
+    let myImage = document.querySelector('img');
+    var myRequest = new Request('flowers.gif');
+    fetch(myRequest) // 返回一个Promise对象
+        .then((res)=>{
+            console.log('res:',res);
+            return res.blob() // res.text()是一个Promise对象，但是个人测试发现是php echo出来的文本
+        })//return的东西会给下一个then用
+        .then((res)=>{
+            var objectURL = URL.createObjectURL(res);
+            myImage.src = objectURL;
+            console.log(res) // res是最终的结果
+        })
+```
 
 
 ## Object.assign(object1,object2,object3等等)
