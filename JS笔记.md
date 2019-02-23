@@ -264,11 +264,11 @@ array.forEach(function(currentValue, index, arr) {
 
 ## .map()
 arr.map(fun)
-将arr的每一项经过fun处理（return）后形成这一项新的内容，这些新的项集合成一个新的数组，最终返回这个新的数组 （注意是每一项，不管是否return，每一项的处理都会返回一个子项，就是说处理后的数组长度一定与调用map的数组长度一致）【】测试一下在回调中删掉this末尾项会如何
-map面对空子项时不会执行回调，但是还是会返回一个空子项 （ 这里指的是真正的“空”，没有任何内容，控制台打印也是empty，null、undefined这种不算空子项）
-四个参数与forEach一致，但是this经过多次测试都没成功
-this不会指向返回的数组
-map似乎全面领先forEach。map可以return，而forEach不行，而且forEach似乎有兼容性问题
+将arr的每一项经过fun处理（return）后形成这一项新的内容，这些新的项集合成一个新的数组，最终返回这个新的数组 （注意是每一项，不管是否return，每一项的处理都会返回一个子项，就是说处理后的数组长度一定与调用map的数组长度一致）【】测试一下在回调中删掉this末尾项会如何  
+map面对空子项时不会执行回调，但是还是会返回一个空子项（这里指的是真正的“空”，没有任何内容，控制台打印也是empty，null、undefined这种不算空子项）  
+四个参数与forEach一致，但是this经过多次测试都没成功  
+this不会指向返回的数组  
+map似乎全面领先forEach。map可以return，而forEach不行，而且forEach似乎有兼容性问题  
 
 
 ## filter
