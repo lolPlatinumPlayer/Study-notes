@@ -48,7 +48,8 @@ input、textarea等自然输入控件中属性加上v-model="xxx"，可实现inp
 多选按钮：在xxx声明为数组时可以获取选中框的value（使用vue的标签中应用v-bind），声明为空时将以true、false反映选中状态。
 单选按钮：只要有声明xxx，xxx值都为选中按钮的value。（相同v-model的单选按钮会自动绑定到一起）
 select下拉列表：只要有声明xxx，xxx值都为选中选项option中的内容。
-勾选框：true或false。绑定数值方法：v-bind:true-value="'a'"
+勾选框：true或false。绑定数值方法：v-bind:true-value="'a'"  
+（因为v-model是双向数据绑定，所以用v-for循环出来的内容直接写循环中的某一项就行，不用再从循环依赖的数据里一层一层点出来）
 
 
 · v-model修饰符
