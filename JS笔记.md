@@ -31,6 +31,13 @@
 `'abc'[1]`的结果是`'b'`
 
 
+## 字面量
+对象字面量：｛a:1,b:'aa'｝  
+数组字面量：[1,4,3,2]  
+函数字面量：function(){.. }  
+以上这些方式直接出现的都叫字面量  
+
+
 ## 数组
 ```
 let a=[11,22]
@@ -219,27 +226,10 @@ prototype（译文：原型）
 es5中对非对象使用会报错，而es6会返回内容（如：对字符串使用则会返回一个从0开始的数组，数组长度与字符串长度一致）
 
 
-## throw exception
-抛出一个自定义错误，exception为错误内容，可以是对象、数组、字符串、错误对象等
-
-
-## <<、>>、<<<、>>>
-按位移动运算符。
-在二进制位移，返回十进制。
-向左的即为左移，在右侧加上位移数个数的0，反之同理
-a<<b在数学中相当于a=a*2^b，反之类似
-
 ## sessionStorage和localStorage
 这两个都属于web存储，都限定在同文档源（协议、主机名、端口号）（根据https://segmentfault.com/a/1190000004121465 描述，应该也限定于同域名下，且子域名无法继承父域名localStorage）
 sessionStorage除以上限定外，还限定与窗口，窗口关闭则数据销毁
 正式存、取方法应该用setItem和getItem来，（稍微看了书和博客还是没研究清楚多级对象的存储）
-
-
-## js字面量
-对象字面量：｛a:1,b:'aa'｝
-数组字面量：[1,4,3,2]
-函数字面量：function(){.. }
-以上这些方式直接出现的都叫字面量
 
 
 ## for(const 变量 in 对象) （变量前面最好加上声明关键字，不然编译后chrome会报错且js无法运行）
@@ -329,7 +319,7 @@ arrayObject.concat(arrayX,arrayX,......,arrayX)
 1. item1, ..., itemX	（可选）向数组添加的新项目
 
 
-· JSON.stringify()
+## JSON.stringify()
 返回 转为JSON格式字符串 的 传入js对象或数组
 第三个参数可输入数字或者字符串，这个参数生效的话就会对结果进行格式整理
 1. 输入数字代表缩进（缩进个数为0到10）
@@ -357,9 +347,6 @@ function(key, value) {
 ```
 
 
-## setInterval和setTimeout获取的变量值都是其执行时的变量值
-
-
 ## 正则
 - 写法基本都用`/表达式/`这种方法写，虽然`new RegExp(字符串格式表达式)`效果基本一致，不过后者操作起来有点麻烦
 - 判断字符串中是否有内容被匹配到
@@ -380,10 +367,25 @@ function(key, value) {
 - 正则的[]几乎可以把中间所有原来有功能的符号转为无功能的（包括空格）
 
 
-## document.querySelector()
-只会选择匹配到的第一个元素
-（不知道是es几的语法）
-详见https://developer.mozilla.org/zh-CN/docs/Web/API/Document/querySelector
+## setInterval和setTimeout获取的变量值都是其执行时的变量值
+
+
+## 选择器
+- 单个元素
+  `document.querySelector(字符串格式的css选择器)` 
+  详见https://developer.mozilla.org/zh-CN/docs/Web/API/Document/querySelector
+- 多个元素
+  `document.querySelectorAll(字符串格式的css选择器)`
+  
+
+## 事件
+这里列出最正规的方法
+以下事件名不加on
+第三个参数可以传入布尔值选择是否冒泡
+- 增加事件
+  `元素.addEventListener(字符串事件名, 函数名)`
+- 移除事件
+  `元素.removeEventListener(字符串事件名, 函数名)`
 
 
 ## 数字操作
@@ -391,14 +393,21 @@ function(key, value) {
 取出大的值 Math.max(2,4)
 
 
-## 疑问
-如何打开指定窗口（？）
-如何在浏览器的状态栏放入一条消息？
-如何获得客户端浏览器的名称？
+## throw exception
+抛出一个自定义错误，exception为错误内容，可以是对象、数组、字符串、错误对象等
+
+
+## <<、>>、<<<、>>>
+按位移动运算符。
+在二进制位移，返回十进制。
+向左的即为左移，在右侧加上位移数个数的0，反之同理
+a<<b在数学中相当于a=a*2^b，反之类似
+
 
 
 
 #  【JS】ES6
+	   
 	   
 	   
 
