@@ -39,7 +39,7 @@
 
 
 ## 数组
-```
+```javascript
 let a=[11,22]
 a[6]='ss'
 console.log('a',a) // [11, 22, empty × 4, "ss"]
@@ -81,7 +81,7 @@ console.log('a[3]',a[3]) // undefined
    （所以如果一个函数的this不是window，那么在产生这个函数的过程中一定用了非箭头函数或者改变this的方法）
    例子：
     1. `let a={b:()=>this}`a.b不管怎么调用返回都是window
-    2. ```
+    2. ```javascript
           var obj={
             bar:function () {
               return ()=>this
@@ -170,7 +170,7 @@ instanceof Object的话数组、日期也会判断为true，但是`String instan
 
 ## 制造对象
 最原始的方法如下（基本不会用这种方法，这种方法创建的对象.constructor不会显示函数中的代码，只会显示`? Object() { [native code] }`）
-```
+```javascript
 function createObj(){
   let obj = {}
   obj.name = 11111
@@ -180,7 +180,7 @@ let obj1 = createObj()
 ```
 其中用来创建对象的函数被称为 构造函数
 使用new关键字可以简化一些代码
-```
+```javascript
 function createObj(){
   this.name = 11111
 }
@@ -326,7 +326,8 @@ arrayObject.concat(arrayX,arrayX,......,arrayX)
 2. 输入字符串则代表缩进用字符串进行填充（也是0到10个字符，可输入转义字符）
 这个方法不能直接对有循环引用的内容使用，否则阻塞报错“Converting circular structure to JSON”
 遇到这情况在第二个参数传入如下函数后即可正常返回
-```（这个例子不行）
+```javascript
+//（这个例子不行）
 function(key, value) {
   if (typeof value === 'object' && value !== null) {
 	if (cache.indexOf(value) !== -1) {
@@ -372,7 +373,7 @@ function(key, value) {
 
 ## 选择器
 - 单个元素
-  `document.querySelector(字符串格式的css选择器)` 
+  `document.querySelector(字符串格式的css选择器)`   
   详见https://developer.mozilla.org/zh-CN/docs/Web/API/Document/querySelector
 - 多个元素
   `document.querySelectorAll(字符串格式的css选择器)`
@@ -552,11 +553,12 @@ move([11]);
 
 
 ## 类
-```
+``` javascript
 class 类名 {
   constructor(x, y) { // 构造函数可以不写，js会自动生成
-    原来写在es5构造函数中的内容 // 这里如果return的话，制造的对象就和普通函数没多大区别了（比如方法不会加上去）
-    构造函数的形参指向new类时传入的实参，这点和es5构造函数一样
+    // 这里写原来写在es5构造函数中的内容 
+    // 构造函数的形参指向new类时传入的实参，这点和es5构造函数一样
+    // 这里如果return的话，制造的对象就和普通函数没多大区别了（比如方法不会加上去）
   }
   方法名() { // 这个方法会加在（类及其产生的对象的）原型链上（与给`es5构造函数名.prototype.方法名`赋值函数效果一致）
     ...
@@ -574,7 +576,7 @@ class 类名 {
 
 
 ## 类的存值函数和取值函数
-```
+```javascript
   class MyClass {
       set prop(value) {
           console.log('setter: ' + value);
@@ -624,53 +626,54 @@ Promise对象是一个构造函数，用来生成Promise实例。
    
 
 ## Promise相关可行的例子
--
-```
-const go= new Promise((resolve, reject) => {
-    setTimeout(resolve, 555, 'done')
-})
-go.then((value) => {
-    alert(value)
-})
-```
--
-```
-async function drawBuilding() { // 要用await，其所在函数体外一定要加async
-    const result = await timeout(1100).then((value) => { // 在函数前加await可以让函数在完成前让语句保持阻塞
-        return value
-    })
-    console.log(result); // done
-    return result;
-}
-const aa= drawBuilding()
-console.log(aa); // Promise对象
-```
--
-```
-    async function getBorderCanvas({width,height,lineWidth,color}) {
-        ......
-        const afterLoading= new Promise((resolve) => {
-            let img = new Image()
-            img.src ='resource/border-img.png'
-            img.onload = function(){
-                ctx.drawImage(img,0,0,canvasWidth,canvasHeight)
-                resolve()
-            }
-        })
+1.
+	```javascript
+	const go= new Promise((resolve, reject) => {
+	    setTimeout(resolve, 555, 'done')
+	})
+	go.then((value) => {
+	    alert(value)
+	})
+	```
+2.
+	```javascript
+	async function drawBuilding() { // 要用await，其所在函数体外一定要加async
+	    const result = await timeout(1100).then((value) => { // 在函数前加await可以让函数在完成前让语句保持阻塞
+		return value
+	    })
+	    console.log(result); // done
+	    return result;
+	}
+	const aa= drawBuilding()
+	console.log(aa); // Promise对象
+	```
+3.
+	```javascript
+	    async function getBorderCanvas({width,height,lineWidth,color}) {
+		......
+		const afterLoading= new Promise((resolve) => {
+		    let img = new Image()
+		    img.src ='resource/border-img.png'
+		    img.onload = function(){
+			ctx.drawImage(img,0,0,canvasWidth,canvasHeight)
+			resolve()
+		    }
+		})
 
-        return await afterLoading.then(() => {
-            return canvas
-        })
-    }
-```
+		return await afterLoading.then(() => {
+		    return canvas
+		})
+	    }
+	```
 要获取加了async的函数return值，必须用await
 
 
 ## catch
 等于then处理承诺被拒绝的功能
 	
+	
 ## fetch
-```
+```javascript
     fetch(一个请求或者一个php文件)
         .then((请求返回的内容)=>{
             return 请求返回的内容.对于这个内容的方法()//这里可选的方法详见https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#Body
@@ -682,7 +685,7 @@ console.log(aa); // Promise对象
 
 
 ## new request（未测试不用new request是否能成功）
-```
+```javascript
     let myImage = document.querySelector('img');
     var myRequest = new Request('flowers.gif');
     fetch(myRequest) // 返回一个Promise对象
@@ -707,7 +710,7 @@ console.log(aa); // Promise对象
 
 
 ## 参数默认值语法（default parameter）
-```
+```javascript
 function a(p0,p1='p1'){
     // 按顺序给参数赋予默认值（目前js用原生api给真正的函数参数默认值的话也只能按顺序给）
 }
@@ -720,32 +723,32 @@ function a(p0,p1='p1'){
 ## 对象展开运算符（或称扩展运算符）（Object rest spread）
 （ES6的stage-3、ES7）
 ...后的内容可用变量代理
-使用条件：
-1. cnpm install --save-dev babel-plugin-transform-object-rest-spread
-2. .babelrc中加"plugins": ["transform-object-rest-spread"]
+- 使用条件：
+  1. cnpm install --save-dev babel-plugin-transform-object-rest-spread
+  2. .babelrc中加"plugins": ["transform-object-rest-spread"]
 - 运用于对象
-    1.
-	    ```
-	    let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
-	    console.log(x); // 1
-	    console.log(y); // 2
-	    console.log(z); // { a: 3, b: 4 }
-	    ```
-    2.
-	    ```
-	    let n = { x, y, ...z };
-	    console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
-	    ```
+    1. 
+       ```javascript
+       let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
+       console.log(x); // 1
+       console.log(y); // 2
+       console.log(z); // { a: 3, b: 4 }
+       ```
+    2. 
+       ```javascript
+       let n = { x, y, ...z };
+       console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
+       ```
     3. vuex的辅助函数
 - 运用于数组
-...array可以把数组的各子项变成各参数，console.log、运行函数时传入参数中都可用，array与[...array]相等
+  ...array可以把数组的各子项变成各参数，console.log、运行函数时传入参数中都可用，array与[...array]相等
     1. 在document.write中，加不加...输出都是用英文逗号隔开
     2. 定义函数传入参数前加上...，如function a(...x)
        则函数中x代表所有传入参数组成的数组
        ...x代表所有传入参数，可以再传入其他函数，直接document.write会将参数连着打出，console.log则会在参数间加入空格打出
     3. 函数编写时形参中的运用，可在最后一个参数前加上...
        意思是把最后几个实参合成一个数组，例子：
-       ```
+       ```javascript
           function a(first,...aaa){
             console.log('first',first); // 11
             console.log('aaa',aaa); // [22,33]
