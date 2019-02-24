@@ -131,8 +131,9 @@ console.log('a[3]',a[3]) // undefined
 
 
 ## instanceof
-instanceof 判断构造函数的prototype属性是否出现在前者的原型链中
-instanceof Object的话数组、日期也会判断为true，但是`String instanceof String`这种情况都是返回false
+`对象 instanceof 构造函数`  
+mdn的说明是判断构造函数的prototype属性是否出现在对象的原型链中，不过粗略测试后感觉是构造函数或类是否出现在对象的原型链中  
+`instanceof Object`的话数组、日期也会判断为true，但是`String instanceof String`这种情况都是返回false
 
 
 ## 对象（下文的对象都指广义对象）
@@ -560,19 +561,20 @@ class 类名 {
     // 构造函数的形参指向new类时传入的实参，这点和es5构造函数一样
     // 这里如果return的话，制造的对象就和普通函数没多大区别了（比如方法不会加上去）
   }
-  方法名() { // 这个方法会加在（类及其产生的对象的）原型链上（与给`es5构造函数名.prototype.方法名`赋值函数效果一致）
-    ...
+  方法名() {
+    // 这个方法会加在（类及其产生的对象的）原型链上（与给`es5构造函数名.prototype.方法名`赋值函数效果一致）
   }
 }
 ```
 
 
 ## 类的继承
-类继承后，会继承父类的方法，并执行父类的构造函数
-- super
-  继承的类要写构造函数的话，里面一定要放super()，不然会阻塞报错
-  执行super即代表执行父类的构造函数
-  super前不能用this
+子类会继承父类的方法，并执行父类的构造函数
+- super  
+  子类要写构造函数的话，里面一定要放super()，不然会阻塞报错  
+  执行super意味着执行父类的构造函数，并添加父类属性、方法，最终创建this  
+  所以super前不能用this  
+- 子类new出来的对象，同时是父类与子类的示例，instanceof 父类或子类都是true
 
 
 ## 类的存值函数和取值函数
@@ -649,23 +651,23 @@ Promise对象是一个构造函数，用来生成Promise实例。
 	```
 3.
 	```javascript
-	    async function getBorderCanvas({width,height,lineWidth,color}) {
-		......
-		const afterLoading= new Promise((resolve) => {
-		    let img = new Image()
-		    img.src ='resource/border-img.png'
-		    img.onload = function(){
-			ctx.drawImage(img,0,0,canvasWidth,canvasHeight)
-			resolve()
-		    }
-		})
+        async function getBorderCanvas({width,height,lineWidth,color}) {
+            // ......
+            const afterLoading= new Promise((resolve) => {
+                let img = new Image()
+                img.src ='resource/border-img.png'
+                img.onload = function(){
+                    ctx.drawImage(img,0,0,canvasWidth,canvasHeight)
+                    resolve()
+                }
+            })
 
-		return await afterLoading.then(() => {
-		    return canvas
-		})
-	    }
+            return await afterLoading.then(() => {
+                return canvas
+            })
+        }
 	```
-要获取加了async的函数return值，必须用await
+        如果要获取加了async的函数return值，必须用await
 
 
 ## catch
@@ -726,20 +728,20 @@ function a(p0,p1='p1'){
 - 使用条件：
   1. cnpm install --save-dev babel-plugin-transform-object-rest-spread
   2. .babelrc中加"plugins": ["transform-object-rest-spread"]
-- 运用于对象
-    1. 
-       ```javascript
-       let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
-       console.log(x); // 1
-       console.log(y); // 2
-       console.log(z); // { a: 3, b: 4 }
-       ```
-    2. 
-       ```javascript
-       let n = { x, y, ...z };
-       console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
-       ```
-    3. vuex的辅助函数
+- 运用于对象 
+  1. 代码：（序号后不写点东西就变成行内代码了）
+     ```javascript
+     let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
+     console.log(x); // 1
+     console.log(y); // 2
+     console.log(z); // { a: 3, b: 4 }
+     ```
+  2. 代码：
+     ```javascript
+     let n = { x, y, ...z };
+     console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
+     ```
+  3. vuex的辅助函数
 - 运用于数组
   ...array可以把数组的各子项变成各参数，console.log、运行函数时传入参数中都可用，array与[...array]相等
     1. 在document.write中，加不加...输出都是用英文逗号隔开
