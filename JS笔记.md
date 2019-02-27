@@ -568,12 +568,34 @@ class 类名 {
 ```
 
 
+## 类的静态方法
+```javascript
+class Foo {
+  static bar() {
+    this.baz();
+  }
+  static baz() {
+    console.log('hello');
+  }
+  baz() {
+    console.log('world');
+  }
+}
+
+Foo.bar() // hello
+```
+- 类中非静态的内容都是给实例用的，而静态的内容都是给类用的，包括静态方法里的this的指向也是类而不是实例
+- 静态方法可以在静态方法中用super调用
+- 静态方法可以与非静态方法重名
+
+
 ## 类的继承
 子类会继承父类的方法，并执行父类的构造函数
 - super  
   子类要写构造函数的话，里面一定要放super()，不然会阻塞报错  
   执行super意味着执行父类的构造函数，并添加父类属性、方法，最终创建this  
   所以super前不能用this  
+  （super()只能写在构造函数里，而且只能写一次；不能用`super`这种形式直接存在；在构造函数里`super.静态方法`只会返回undefined）
 - 子类new出来的对象，同时是父类与子类的示例，instanceof 父类或子类都是true
 
 
