@@ -372,7 +372,20 @@ function(key, value) {
 - 正则的[]几乎可以把中间所有原来有功能的符号转为无功能的（包括空格）
 
 
-## setInterval和setTimeout获取的变量值都是其执行时的变量值
+## 定时器
+setInterval和setTimeout  
+- 定时器获取的变量值都是其执行时的变量值
+- 清除定时器循环的例子：  
+  ```javascript
+  let sss=1
+  const aa=setInterval(function () {
+  sss++
+  console.log(sss)
+  if(sss>11){
+      clearInterval(aa)
+    }
+  },111)
+  ```
 
 
 ## 选择器
