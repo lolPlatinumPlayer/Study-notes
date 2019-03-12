@@ -267,7 +267,11 @@ arr.map(fun)
 map面对空子项时不会执行回调，但是还是会返回一个空子项（这里指的是真正的“空”，没有任何内容，控制台打印也是empty，null、undefined这种不算空子项）  
 四个参数与forEach一致，但是this经过多次测试都没成功  
 this不会指向返回的数组  
-map似乎全面领先forEach。map可以return，而forEach不行，而且forEach似乎有兼容性问题  
+map似乎全面领先forEach。map可以return，而forEach不行，而且forEach似乎有兼容性问题 
+
+
+## break
+break可以跳出for循环、switch（其他没测试）
 
 
 ## filter
