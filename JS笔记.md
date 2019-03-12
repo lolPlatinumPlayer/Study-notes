@@ -823,6 +823,42 @@ function a(p0,p1='p1'){
 a%b=c 意味着 a=b的整数倍+(-c) 且 0>=c>=-(b-1) 也就是 c为用a绝对值取余b的结果的相反数
 
 
+## 递归
+- 不引入函数外变量，不用引用传递的话，单次递归返回全部处理后的树的方法
+    ```
+    const 模拟数据=[
+        [
+            112,
+            213,
+            [
+                334,
+                544
+            ]
+        ],
+        772,
+        [
+            888
+        ]
+    ]
+    console.log('结果',kk(模拟数据))
+    
+    function kk(arr) {
+        let resultOfThisLevel=[]
+        if(isArr(arr)){
+            for (let i=0;i<arr.length;i++){
+                resultOfThisLevel=[...resultOfThisLevel,...kk(arr[i])]
+            }
+            return resultOfThisLevel
+        }else {
+            return [arr]
+        }
+    }
+    function isArr (o) {
+        return Object.prototype.toString.call(o) === '[object Array]';
+    }
+    ```
+
+
 # 其他
 
 
