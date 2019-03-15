@@ -588,7 +588,9 @@ directives: {
   </template>
   ```
   template中可以用scope.row调取（传给表格的data中）属于这一行的子项
-  scope中除了row还有其他如序号等数据
+  scope.column调取这一列的内容
+  scope.$index调取这一行的序号（从0开始）
+  scope中还有一些其他数据
   template改成其他标签也可以
   el-table-column标签上无法加样式与类名
 
