@@ -420,6 +420,11 @@ setInterval和setTimeout
 取出大的值 Math.max(2,4)
 
 
+## 下载文件
+- 不用打开新页面的方法： 给`window.location.href`赋值下载的网址
+- 要打开新页面的方法： `window.open(下载的网址)`
+
+
 ## throw exception
 抛出一个自定义错误，exception为错误内容，可以是对象、数组、字符串、错误对象等
 
