@@ -732,14 +732,17 @@ Promise对象是一个构造函数，用来生成Promise实例。
 	
 ## fetch
 ```javascript
-    fetch(一个请求或者一个php文件)
-        .then((请求返回的内容)=>{
+    fetch(这里可以放请求、php文件或其他文件,{ // 不需要跨域的话可以不加第二个参数
+        method: "GET",
+        mode: "no-cors",
+    }).then((请求返回的内容)=>{
             return 请求返回的内容.对于这个内容的方法()//这里可选的方法详见https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#Body
         })
         .then((上一个then return出来的东西)=>{
         //一些操作
     })
 ```
+请求非本地json的话目前有跨域问题
 
 
 ## new request（未测试不用new request是否能成功）
