@@ -295,11 +295,13 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/type
 
 
 ## join
-arr.join(xx)返回一个字符串，这个字符串包含arr数组所有子项，子项间用xx分隔
-如果不填xx，则用英文逗号分隔
-子项是数组的话，也会按顺序打印，并用逗号分隔，层级再深都能打印
-子项是对象则会转为字符串'[object Object]'
-（以上两行规则和直接输入到html的规则相同）
+arr.join(分隔符)返回一个字符串，这个字符串包含arr数组所有子项，子项间用分隔符分隔  
+如果不填分隔符，则用`,`分隔。可以用空串做分隔符  
+子项在各种类型下的情况：
+- null、undefined、empty：都会转为空串
+- 数组：会按顺序打印，并用逗号分隔（不管分隔符是什么，这里都是逗号），层级再深都能打印  
+- 对象：会转为字符串'[object Object]'  
+（数组与对象的情况和直接输入到html的规则相同）  
 
 
 ## split
