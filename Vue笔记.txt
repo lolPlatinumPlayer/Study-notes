@@ -582,6 +582,13 @@ directives: {
   一条验证规则可以有的属性：type、required、message等，其中message可以是jsx
   在async-validator里（网址是：https://github.com/yiminghe/async-validator）
   说到某个属性在不同类型下表现不同时，其实指的是**这一条验证规则**的type属性传入不同类型时这个类型的表现不同
+  - 自定义验证规则  
+    就是validator方法（与type、required、message等同级）  
+    validator方法形参为：rule、 value、 callback、 source、 options  
+    rule中有与validator同级的type、required、message等信息
+    value是要验证的值
+    callback是验证方法（validate）的回调，传入布尔值，传入false的话则代表不符合验证条件，会触发相关视图效果
+    
   
 
 ## 表格
