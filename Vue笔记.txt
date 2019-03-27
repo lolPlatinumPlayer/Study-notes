@@ -588,7 +588,10 @@ directives: {
     rule中有与validator同级的type、required、message等信息
     value是要验证的值
     callback是验证方法（validate）的回调，不传参代表符合验证条件，有传参则代表不符合验证条件，会触发相关视图效果
-    
+- `:model`是必填的  
+  prop也要填model传入对象的属性  
+  验证估计都是依据model和prop完成的  
+  （虽然个人感觉没必要设计model）
   
 
 ## 表格
