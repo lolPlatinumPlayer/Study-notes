@@ -587,7 +587,7 @@ directives: {
     validator方法形参为：rule、 value、 callback、 source、 options  
     rule中有与validator同级的type、required、message等信息
     value是要验证的值
-    callback是验证方法（validate）的回调，传入布尔值，传入false的话则代表不符合验证条件，会触发相关视图效果
+    callback是验证方法（validate）的回调，不传参代表符合验证条件，有传参则代表不符合验证条件，会触发相关视图效果
     
   
 
