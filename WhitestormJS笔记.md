@@ -7,7 +7,7 @@
 整体例子：
 ```
     const app = new WHS.App([
-        new WHS.ElementModule(document.getElementById('app')),
+        new WHS.ElementModule({container:document.getElementById('app')}), // 这是2个教程里都仅存的写法，不过曾经个人用过一个写法：`new WHS.ElementModule(document.getElementById('app')),`
         new WHS.SceneModule(),
         new WHS.DefineModule('camera', new WHS.PerspectiveCamera({
             position: new THREE.Vector3(0, 22, 44),
