@@ -423,6 +423,12 @@ setInterval和setTimeout
 取出大的值 Math.max(2,4)
 
 
+## 请求的头部
+- 增加自定义字段
+  `请求.setRequestHeader(键,值)`
+  这个请求是`new XMLHttpRequest()`时可以，其他没测过
+
+
 ## 下载文件
 下面这两个方法的本质都是访问网址（网址不能单独访问的话，这两种方法应该都不会生效。网址放入get方法会面临跨域问题。）
 - 不用打开新页面的方法： 给`window.location.href`赋值下载的网址
