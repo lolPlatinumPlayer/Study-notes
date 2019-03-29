@@ -238,7 +238,8 @@ es5中对非对象使用会报错，而es6会返回内容（如：对字符串�
 ## sessionStorage和localStorage
 这两个都属于web存储，都限定在同文档源（协议、主机名、端口号）（根据https://segmentfault.com/a/1190000004121465 描述，应该也限定于同域名下，且子域名无法继承父域名localStorage）
 sessionStorage除以上限定外，还限定与窗口，窗口关闭则数据销毁
-正式存、取方法应该用setItem和getItem来，（稍微看了书和博客还是没研究清楚多级对象的存储）
+正式存、取方法应该用setItem和getItem来，（稍微看了书和博客还是没研究清楚多级对象的存储）  
+这两个东西都能被iframe中的页面获得
 
 
 ## for(const 变量 in 对象) （变量前面最好加上声明关键字，不然编译后chrome会报错且js无法运行）
