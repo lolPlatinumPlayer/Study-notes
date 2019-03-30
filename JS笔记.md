@@ -741,7 +741,7 @@ Promise对象是一个构造函数，用来生成Promise实例。
 	
 ## fetch
 ```javascript
-    fetch(这里可以放请求、php文件或其他文件,{ // 不需要跨域的话可以不加第二个参数
+    fetch(这里可以放请求、php文件或其他文件,{ // 加第二个参数可以规避在跨域时的报错，但并没有解决跨域获取不到东西的问题
         method: "GET",
         mode: "no-cors",
     }).then((请求返回的内容)=>{
@@ -766,7 +766,6 @@ Promise对象是一个构造函数，用来生成Promise实例。
         .then((res)=>{
             var objectURL = URL.createObjectURL(res);
             myImage.src = objectURL;
-            console.log(res) // res是最终的结果
         })
 ```
 
