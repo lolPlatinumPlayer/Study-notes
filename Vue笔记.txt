@@ -189,9 +189,9 @@ methods: {
 
 · 事件处理方法
 <button v-on:click="greet">Greet</button>
-1、click处（个人）称为“事件触发条件”，已知的有click、submit、keyup
-   keyup结合 按键修饰符 使用，详见：https://cn.vuejs.org/v2/guide/events.html#按键修饰符
-   （除此外可能还有更多的事件触发条件，没有深入研究）
+1、click处（个人）称为“事件触发条件”，已知的有click、submit、keyup、input（未测试，估计是文本框专用的，输入内容一变化就触发）
+   keyup只能给文本框使用`keyup.你要的按键（字母、空格、方向键等）`，详见：https://cn.vuejs.org/v2/guide/events.html#按键修饰符
+   （除此外可能还有更多的事件触发条件，没有深入研究。事件触发条件应该是vue规定的，很多html事件不可用）
 2、greet处（个人）称为“事件命令”
    可以输入脚本语句，也可以输入函数名（官方称函数名为“事件处理方法”）
    只在这里放一个函数名的话可以不加括号，但在多个函数名或者与脚本语句混用的情况下，要加括号，如：
