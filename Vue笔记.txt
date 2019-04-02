@@ -622,6 +622,14 @@ el-menu
 路由的话官网其实写错了，route属性的值就是路由到的地址（就相当于router-link标签的to属性）
 lin
 
+
+## 自动消失型提示
+- this.$message.error(参数)各种传参情况
+  - 空串：空白
+  - null、undefined、false、数字：提示不出现且控制台阻塞报错
+  - 对象：传入对象的表现与给this.$message()传入对象的表现基本一致，其中传空对象也会提示，但没有提示内容
+
+
 # iview
 - 有几率bug
   template做if else时，其中第一个formitem 下无法验证，调用局部验证还会报错“第一个参数不是字符串”
