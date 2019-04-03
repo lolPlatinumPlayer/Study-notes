@@ -434,8 +434,16 @@ setInterval和setTimeout
     `header("Access-Control-Allow-Origin: http://localhost:8080");`
   - java的部分代码
     ```java
-    HttpServletResponse【】
+    HttpServletResponse response=(HttpServletResponse) res;
+    response.setHeader("Access-Control-Allow-Origin","*");
+    response.setHeader("Access-Control-Allow-Methods","POST,GET,OPTIONS,DELETE");
+    response.setHeader("Access-Control-Allow-Max-Age","3600");
+    response.setHeader("Access-Control-Allow-Headers","x-requested-with");
+    chain.doFilter(req,res);
     ```
+- JSONP
+  对于json的话可以用JSONP技术获取跨域资源，js和css估计也可以
+  实现方法就是用js创建一个标签来获取json文件，然后获取加载的文件中的内容（因为标签发起的get请求不会受到同源协议限制，所以能实现）
 
 
 ## 下载文件
