@@ -425,6 +425,17 @@ setInterval和setTimeout
 - 增加自定义字段
   `请求.setRequestHeader(键,值)`
   这个请求是`new XMLHttpRequest()`时可以，其他没测过
+  
+  
+## 跨域
+用js加载资源的话会受到同源协议限制，要真正打破这个限制的话只有让后端加跨域头部一个方法
+- 后端增加跨域头部方法
+  - php
+    `header("Access-Control-Allow-Origin: http://localhost:8080");`
+  - java的部分代码
+    ```java
+    HttpServletResponse【】
+    ```
 
 
 ## 下载文件
@@ -778,6 +789,8 @@ Promise对象是一个构造函数，用来生成Promise实例。
             myImage.src = objectURL;
         })
 ```
+- 将json文件转为对象或数组
+  `json文件.json()`
 
 
 ## Object.assign(object1,object2,object3等等)
