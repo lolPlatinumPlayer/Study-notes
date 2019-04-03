@@ -428,7 +428,7 @@ setInterval和setTimeout
   
   
 ## 跨域
-用js加载资源的话会受到同源协议限制，要真正打破这个限制的话只有让后端加跨域头部一个方法
+用js加载资源的话会受到同源协议限制，要真正打破这个限制的话只有让后端加跨域头部一个方法（前端不用加任何东西，包括fetch，不过非“简单请求”应该要有些改动）
 - 后端增加跨域头部方法
   - php
     `header("Access-Control-Allow-Origin: http://localhost:8080");`
@@ -442,8 +442,8 @@ setInterval和setTimeout
     chain.doFilter(req,res);
     ```
 - JSONP
-  对于json的话可以用JSONP技术获取跨域资源，js和css估计也可以
-  实现方法就是用js创建一个标签来获取json文件，然后获取加载的文件中的内容（因为标签发起的get请求不会受到同源协议限制，所以能实现）
+  对于json的话可以用JSONP技术获取跨域资源，js和css估计也可以  
+  实现方法就是用js创建一个标签来获取json文件，然后获取加载的文件中的内容（因为标签发起的get请求不会受到同源协议限制，所以能实现）  
 
 
 ## 下载文件
