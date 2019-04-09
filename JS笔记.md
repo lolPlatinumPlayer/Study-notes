@@ -318,11 +318,15 @@ arrayObject.concat(arrayX,arrayX,......,arrayX)
 
 
 ## slice
-`arr.slice(begin,end)`
-返回一个数组，其元素从arr[begin]开始到arr[end]结尾（不包含arr[end]）
-可以不输入end，end不大于begin的话返回空数组
-输入负数则代表从末尾开始数（-1代表最后一个）
-返回数组子项顺序与原数组一致
+ `arr或str.slice(begin,end)`  
+- 数组  
+  返回一个数组，其元素从arr[begin]开始到arr[end]结尾（不包含arr[end]）  
+  可以不输入end，end不大于begin时返回空数组  
+  输入负数则代表从末尾开始数（-n代表倒数第n个）  
+  返回数组子项顺序与原数组一致  
+- 字符串  
+  规则与数组的类似  
+  就是返回的是字符串，且在end不大于begin时返回空串
 
 
 ## splice
