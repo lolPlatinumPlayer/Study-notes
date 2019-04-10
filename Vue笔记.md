@@ -606,6 +606,9 @@ directives: {
   prop也要填model传入对象的属性  
   表单的各种操作都是依据model和prop完成的（包括清空表单）  
   （虽然个人感觉没必要设计model）
+- 重置表单  
+  `this.$refs.表单ref值.resetFields()`  
+  会把表单绑定data的各属性还原成默认值（也就是写在data方法里的值）（属性值为对象或数组的话无法还原）  
   
 
 ## 表格
