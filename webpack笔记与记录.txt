@@ -107,7 +107,9 @@ module.exports = {
 # webpack4
 
 ## 入手
-因为是18年下半年发布的，目前网上资料都有不准确的地方。其中一定要同时全局安装webpack、webpack-cli、webpack-dev-server才能使用，就像这样`npm install webpack webpack-cli webpack-dev-server -g`
+因为是18年下半年正式发布的，目前网上资料都有不准确的地方。  
+其中一定要同时全局安装webpack、webpack-cli、webpack-dev-server才能使用，就像这样`npm install webpack webpack-cli webpack-dev-server -g`  
+压缩的话，uglifyjs的话要局部安装后再配置一下才能使用。压缩后常常出现比原文件大的情况，而且并不能压缩所有文件（比如pdf.js及pdf.worker.js）
 
 
 
