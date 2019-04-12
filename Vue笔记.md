@@ -3,16 +3,20 @@
 支持ie9
 
 
-· 可在控制台直接操作
+## 查看编译后的源代码的方法
+谷歌控制台sources选项卡 -> Page选项卡 -> Top文件夹 -> webpack://文件夹 -> src文件夹
+
+
+## 可在控制台直接操作
 如“app2.message = '新消息'”，app2为用new Vue()新建的对象
 
 
-· 缩写
-<a v-bind:href="url"></a> 缩写-> <a :href="url"></a>
-<a v-on:click="doSomething"></a> 缩写-> <a @click="doSomething"></a>
+## 缩写
+`<a v-bind:href="url"></a>` 缩写-> `<a :href="url"></a>`
+`<a v-on:click="doSomething"></a>` 缩写-> `<a @click="doSomething"></a>`
 
 
-· this
+## this
 实例中this会代理data、computed、method，其中代理的method后面要加括号
 可以用于钩子、method、computed中
 所有用this代理的东西都可以在实例外通过 “实例名.XXX” 访问
@@ -20,39 +24,41 @@
 （实例名就是new Vue()赋值给的变量）
 
 
-· 实例的生命周期钩子（函数）
+## 实例的生命周期钩子（函数）
 作为对象写在实例中（也就是）new Vue({})中，例子：
+```
 mounted: function () {
     this.show = false
 }
+```
 mounted中的函数在这个实例一切准备好也渲染好之后执行。
 （其他生命周期钩子暂未测试）
 疑似bug：mounted中如果引用methods中函数前有语句的话，会报错
         解决方法：在这些函数后面加上分号“;”
 
 
-· “Mustache” 语法
- 双大括号，如“<span v-once>This will never change: {{ msg }}</span>”
+## “Mustache” 语法
+双大括号，如“<span v-once>This will never change: {{ msg }}</span>”
 可包含单个JS表达式，如“{{ message.split('').reverse().join('') }}”
 当中语法与JS一致，可包含限定作用域内变量，限定作用域为：用new Vue(){}新建对象中data的属性值。可用逗号“,”隔开多个内容。
 
 
-· v-html="rawHtml"与mustache的区别
+## v-html="rawHtml"与mustache的区别
 v-html用加号（+）连接多个变量
 v-html中似乎不能对变量进行运算
 经过测试v-html可以用v-html="a.trackingDayBegin<=now&&now<a.trackingDayEnd?1:2"，而mustache只能{{a.trackingDayBegin<=now?1:2}}
 
 
-· v-model
+## v-model
 input、textarea等自然输入控件中属性加上v-model="xxx"，可实现input中输入数据与Vue对象data属性中的xxx属性的双向绑定，即输入数据===xxx属性，显示也同步。该点在单多选下拉input中同样适用。
 多选按钮：在xxx声明为数组时可以获取选中框的value（使用vue的标签中应用v-bind），声明为空时将以true、false反映选中状态。
 单选按钮：只要有声明xxx，xxx值都为选中按钮的value。（相同v-model的单选按钮会自动绑定到一起）
 select下拉列表：只要有声明xxx，xxx值都为选中选项option中的内容。
-勾选框：true或false。绑定数值方法：v-bind:true-value="'a'"  
+勾选框：true或false。绑定数值方法：v-bind:true-value="'a'"
 （因为v-model是双向数据绑定，所以用v-for循环出来的内容直接写循环中的某一项就行，不用再从循环依赖的数据里一层一层点出来）
 
 
-· v-model修饰符
+## v-model修饰符
 添加在v-model.后
 lazy:使v-model不会在输入未完成时就同步
 number:将输入数值变为Number类型（如果原值的转换结果为 NaN 则返回原值，如果输入第一位为数字，那后续也只能输入数字）
@@ -69,7 +75,7 @@ trim:过滤用户输入的首尾空格
     - 删除：`this.$delete(对象或数组,键名或序号)`
 
 
-· 计算属性（computed属性的值的属性名）
+## 计算属性（computed属性的值的属性名）
 （不可与data重名）
 getter作用：依赖几个数据生成另一个数据，并赋值给计算属性。
 getter的简写方法：在计算属性中直接写入无参数匿名函数，return一个值。
@@ -77,26 +83,28 @@ getter的简写方法：在计算属性中直接写入无参数匿名函数，re
 使用计算属性会进行缓存，函数只有当其依赖数据（使用的变量）改变时才会重新运行，多次调用只会调用计算结果而不会运行函数。
 
 
-· 计算属性的setter（set属性）
+## 计算属性的setter（set属性）
 要使用setter必须有一个getter（这种情况下要写为计算属性的get属性），setter只能以单参数匿名函数放于计算属性的set属性中，参数代表计算属性新赋的值，当直接操作计算属性的值时运行setter（get计算结果变化并不会运行setter）。
 任何方法都无法通过操作计算属性来改变其值，setter也不行。
 
 
-· watch属性（watcher）
+## watch属性（watcher）
+```
 watch: {
     监听变量A: function (代表监听变量A的参数) {
         函数内容
     }
 }
-watcher中的匿名函数为单参数时，被监听变量一旦改变就执行函数内容，单参数代表监听变量变化后的值；匿名函数为双参数时，前一个参数代表变化后的监听变量，后一个代表变化前的。  
-这种格式的watch无法发现数组、对象的后代内容变化，也无法输出后代内容。  
-监听子项：监听变量处用字符串写法，子项前只能用点，数组的话在点后写序号。监听对象属性的话，该属性消失后也会触发回调。  
+```
+watcher中的匿名函数为单参数时，被监听变量一旦改变就执行函数内容，单参数代表监听变量变化后的值；匿名函数为双参数时，前一个参数代表变化后的监听变量，后一个代表变化前的。
+这种格式的watch无法发现数组、对象的后代内容变化，也无法输出后代内容。
+监听子项：监听变量处用字符串写法，子项前只能用点，数组的话在点后写序号。监听对象属性的话，该属性消失后也会触发回调。
 如果watch的值是布尔值的话，初次渲染时也会执行回调
 
 
-
-· watch的深度监听
+## watch的深度监听
 专用于数组、对象，每一次后代内容变化都会触发，也可以输出后代内容，格式为：
+```
 watch:{
     arrayName:{//个站中有用不同格式写法
         handler:function(val,oldval){ // “handler:”为固定格式一部分
@@ -105,61 +113,63 @@ watch:{
         deep:true //这句为固定格式一部分
     }
 }
-
-· methods属性
-Vue对象中methods属性的 属性 可以匿名函数为值，在Mustache中输入该属性名加() 则可执行函数，例：“属性名()”，可在js中直接调用，例：“Vue对象名.属性名()”。
-使用methods属性不会进行缓存，函数在每次调用、依赖数据改变时都会重新运行。
+```
 
 
-· v-bind:a="b"
-在标签中插入以上内容让标签中显示出加入a属性，属性值为b的内容（b为data中的对象，b对象的值将作为标签中a属性的属性值）。a可以是html中原本不能显示的非法属性，加了v-bind后就能显示（看起来好像没什么用）。
-若不加v-bind直接在标签中写a="b"，那么渲染后将原封不动如字符串一般展示出a="b"
-若要只显示a属性不要属性值，可直接在标签中写a，无需加上v-bind。
-b可以是一个三元表达式，以此选择出现的属性值
+## methods属性
+Vue对象中methods属性的 属性 可以匿名函数为值，在Mustache中输入该属性名加() 则可执行函数，例：“属性名()”，可在js中直接调用，例：“Vue对象名.属性名()”。  
+使用methods属性不会进行缓存，函数在每次调用、依赖数据改变时都会重新运行。  
 
 
-· v-bind:class
-标签中输入v-bind:class="{ a:b }"，b为真时class="a"；
-v-bind:class="['a','b']"，class="a,b"；
-v-bind:class=""中可直接写data中的属性名来调用（属性值可为数组可为对象）；
-v-bind:class="[ a , b ]"，这种写法调用data中的a、b属性；a、b处也可以写三元表达式
-以上两行亦可调用计算属性；
-class的值可以直接写三元表达式
-v-bind不会覆盖组件已有样式
+## v-bind:a="b"
+在标签中插入以上内容让标签中显示出加入a属性，属性值为b的内容（b为data中的对象，b对象的值将作为标签中a属性的属性值）。a可以是html中原本不能显示的非法属性，加了v-bind后就能显示（看起来好像没什么用）。  
+若不加v-bind直接在标签中写a="b"，那么渲染后将原封不动如字符串一般展示出a="b"  
+若要只显示a属性不要属性值，可直接在标签中写a，无需加上v-bind。  
+b可以是一个三元表达式，以此选择出现的属性值  
 
 
-· v-bind:style
-使用驼峰式，书写规则参照jq样式，其余与v-bind:class相同，对于需要hack的属性会自动增加前缀。如：
-v-bind:style="{ color: activeColor, fontSize: fontSize + 20 + 'px' }"
-三元表达式例子：
-    :style="true?{marginBottom:45+'px'}:null"
+## v-bind:class
+标签中输入v-bind:class="{ a:b }"，b为真时class="a"；  
+v-bind:class="['a','b']"，class="a,b"；  
+v-bind:class=""中可直接写data中的属性名来调用（属性值可为数组可为对象）；  
+v-bind:class="[ a , b ]"，这种写法调用data中的a、b属性；a、b处也可以写三元表达式  
+以上两行亦可调用计算属性；  
+class的值可以直接写三元表达式  
+v-bind不会覆盖组件已有样式  
 
 
-· v-if、v-else、v-else-if
-<h1 v-if="ok">Yes</h1>
-<div v-if="type === 'A'">
-复用性：除非标签名或者标签中key属性不一样，不然都只会更改标签中改有差异的部分，被更改的部分不会进行缓存(如jq写的style、input输入的内容)
-这写属性前面不用加:也能获取代理的内容，加了反而会有问题
+## v-bind:style
+使用驼峰式，书写规则参照jq样式，其余与v-bind:class相同，对于需要hack的属性会自动增加前缀。如：  
+v-bind:style="{ color: activeColor, fontSize: fontSize + 20 + 'px' }"  
+三元表达式例子：  
+    :style="true?{marginBottom:45+'px'}:null"  
 
 
-· v-show
-语法等同v-if，通过css选择显示隐藏，不支持else，不支持在template标签中多次切换【？】
+## v-if、v-else、v-else-if
+`<h1 v-if="ok">Yes</h1>`  
+`<div v-if="type === 'A'">`  
+复用性：除非标签名或者标签中key属性不一样，不然都只会更改标签中改有差异的部分，被更改的部分不会进行缓存(如jq写的style、input输入的内容)  
+这写属性前面不用加:也能获取代理的内容，加了反而会有问题  
 
 
-· v-for【】格式待整理
-在标签内加入v-for="(a,b) in c"（in可更改为of），可以循环生成该标签。
-生成标签间固定加入部分可以是data中的数据。
-在mustache或v-html里输入c、b、a分别表示：
-c写在data中，可为数组可为对象，长度决定了循环次数。
-b:c为数组或数字时，b为序号（从0开始，可在mustache中运算）
-  c为对象时，b为序号对应属性的属性名
-a:c为数组时，a为每次循环中c数组中对应序号中的内容。如果是a.xx，则代表c数组中对应序号内容的xx属性的属性值,若循环到内容中没有名为xx的对象，则a.xx处不生成任何代码。
-  c为对象时，a为序号对应属性的属性值。这种情况下，要输出序号的话v-for中应写为(a,b,e) in c,{{e}}就会输出序号。
-如无需序号，可写为v-for="a in c"
-v-for也可单纯用来输出序号，v-for="n in 10"，{{ n }}将会循环生成1到10。
+## v-show
+语法等同v-if，通过css选择显示隐藏，不支持else，不支持在template标签中多次切换【】？  
 
 
-· 用函数对v-for循环进行筛选
+## v-for【】格式待整理
+在标签内加入v-for="(a,b) in c"（in可更改为of），可以循环生成该标签。  
+生成标签间固定加入部分可以是data中的数据。  
+在mustache或v-html里输入c、b、a分别表示：  
+c写在data中，可为数组可为对象，长度决定了循环次数。  
+b:c为数组或数字时，b为序号（从0开始，可在mustache中运算）  
+  c为对象时，b为序号对应属性的属性名  
+a:c为数组时，a为每次循环中c数组中对应序号中的内容。如果是a.xx，则代表c数组中对应序号内容的xx属性的属性值,若循环到内容中没有名为xx的对象，则a.xx处不生成任何代码。  
+  c为对象时，a为序号对应属性的属性值。这种情况下，要输出序号的话v-for中应写为(a,b,e) in c,{{e}}就会输出序号。  
+如无需序号，可写为v-for="a in c"  
+v-for也可单纯用来输出序号，v-for="n in 10"，{{ n }}将会循环生成1到10。  
+
+
+## 用函数对v-for循环进行筛选
 v-for="a in computedC"中computedC可为计算属性，计算属性中写
 function () {
     return this.c.filter(function (c) {
@@ -185,33 +195,33 @@ methods: {
 
 
 ## 事件
-事件里也可以直接写函数，不过无法使用window，this指向与组件实例相同【】与下面的说法冲突
+事件里也可以直接写函数，不过无法使用window，this指向与组件实例相同【】与下面的说法冲突  
 
 
-· 事件处理方法
+## 事件处理方法
 <button v-on:click="greet">Greet</button>
-1、click处（个人）称为“事件触发条件”，已知的有click、submit、keyup、input（未测试，估计是文本框专用的，输入内容一变化就触发）
-   keyup只能给文本框使用`keyup.你要的按键（字母、空格、方向键等）`，详见：https://cn.vuejs.org/v2/guide/events.html#按键修饰符
-   （除此外可能还有更多的事件触发条件，没有深入研究。事件触发条件应该是vue规定的，很多html事件不可用）
-2、greet处（个人）称为“事件命令”
-   可以输入脚本语句，也可以输入函数名（官方称函数名为“事件处理方法”）
-   只在这里放一个函数名的话可以不加括号，但在多个函数名或者与脚本语句混用的情况下，要加括号，如：
-   “<a @click="脚本语句,函数名()">分配完毕</a>”
-   用分号“;”或者逗号“,”做间隔
-   
+1、click处（个人）称为“事件触发条件”，已知的有click、submit、keyup、input（未测试，估计是文本框专用的，输入内容一变化就触发）  
+   keyup只能给文本框使用`keyup.你要的按键（字母、空格、方向键等）`，详见：https://cn.vuejs.org/v2/guide/events.html#按键修饰符  
+   （除此外可能还有更多的事件触发条件，没有深入研究。事件触发条件应该是vue规定的，很多html事件不可用）  
+2、greet处（个人）称为“事件命令”  
+   可以输入脚本语句，也可以输入函数名（官方称函数名为“事件处理方法”）  
+   只在这里放一个函数名的话可以不加括号，但在多个函数名或者与脚本语句混用的情况下，要加括号，如：  
+   “<a @click="脚本语句,函数名()">分配完毕</a>”  
+   用分号“;”或者逗号“,”做间隔  
+
    这里的data等也不需要加`this.`
 
 
-· 事件修饰符
-在v-on:XX后加入的.XXX称为事件修饰符
-.stop  阻止事件冒泡，如单击子元素只触发子元素的事件而不触发父元素的事件
-.prevent  让表单提交不重新加载页面
-.capture  让默认事件方式从冒泡阶段中监听改为捕获阶段中监听，例如：@click.capture="a($event)"的嵌套中会让从里到外触发even.currentTarget变为从外到里触发
-.self  只在当前元素触发事件，比如单击子元素不触发事件
-.once  事件执行一次
+## 事件修饰符
+在v-on:XX后加入的.XXX称为事件修饰符  
+.stop  阻止事件冒泡，如单击子元素只触发子元素的事件而不触发父元素的事件  
+.prevent  让表单提交不重新加载页面  
+.capture  让默认事件方式从冒泡阶段中监听改为捕获阶段中监听，例如：@click.capture="a($event)"的嵌套中会让从里到外触发even.currentTarget变为从外到里触发  
+.self  只在当前元素触发事件，比如单击子元素不触发事件  
+.once  事件执行一次  
 
 
-· 组件注册
+## 组件注册
 全局注册：要在父实例前注册才有效
          Vue.component('my-component', {
            template: '<div>A custom component!</div>'
@@ -223,38 +233,43 @@ methods: {
                      template:'<div>A custom component!</div>'}
              }
          })
-字符串模版（js中的名称）可用大小驼峰或者kebab-case (短横线隔开式) 命名，在非字符串模板（html中的名称）中用kebab-case都能捕获到。
-（就算在html中使用模板语法，也只有引号内可以分辨大小写，引号外依旧不分别）
-（template在实例中也可用，会把捕获到的dom内容替换为template中内容）
+字符串模版（js中的名称）可用大小驼峰或者kebab-case (短横线隔开式) 命名，在非字符串模板（html中的名称）中用kebab-case都能捕获到。  
+（就算在html中使用模板语法，也只有引号内可以分辨大小写，引号外依旧不分别）  
+（template在实例中也可用，会把捕获到的dom内容替换为template中内容）  
 
 
-· 组件的单文件
+## 组件的单文件
 可以单文件化，放进.vue文件里
 
 
-· 组件html标签中的规则
+## 组件html标签中的规则
 写普通的html属性可以在渲染后显示，但是写vue的专属属性有特别的一套规则（与非组件的html标签的vue规则完全不同），在下文进行介绍。
 
 
-· 让组件在超出html标签嵌套规则的情况下正常使用
-在需要组件的地方先写一个符合 标签嵌套规则 的标签，加上is属性，如：
+## 让组件在超出html标签嵌套规则的情况下正常使用
+在需要组件的地方先写一个符合 标签嵌套规则 的标签，加上is属性，如：  
+```
 <table>
     <tbody is="little"></tbody>
 </table>
-这样组件就能在table标签中显示了
+```
+这样组件就能在table标签中显示了  
 
 
-· 组件的data属性
+## 组件的data属性
 必须是函数，在其中写入“return{a:1}”可以让所有同名组件拥有独立的a数据（值为1）
 
 
-· 接收父组件数据/在template模板中传值进组件内部
-在组件标签上属性部分写“A属性='XX内容'”就可以将组件的props选项的A属性（不能在声明的时候赋值）改为XX内容字符串，若要将父组件data动态传入子组件则需在前面加上冒号“:”
-【测试不可用】若写“:A属性.sync='XX内容'”则可以将子组件的A属性与父组件的XX内容进行双向绑定【测试不可用】
-每次父组件变化都会更新子组件的props中的属性，如果想要 继承数据 在继承后不随着 父组件数据 更新，可使用如下方法使用SON_A：
+## 接收父组件数据/在template模板中传值进组件内部
+在组件标签上属性部分写“A属性='XX内容'”就可以将组件的props选项的A属性（不能在声明的时候赋值）改为XX内容字符串，若要将父组件data动态传入子组件则需在前面加上冒号“:”  
+【测试不可用】若写“:A属性.sync='XX内容'”则可以将子组件的A属性与父组件的XX内容进行双向绑定【测试不可用】  
+每次父组件变化都会更新子组件的props中的属性，如果想要 继承数据 在继承后不随着 父组件数据 更新，可使用如下方法使用SON_A：  
+```
 data: function () {
   return { SON_A: this.a }
-}  （这种方法修改子组件数据可以规避控制台警告，目前建议使用这种方式）
+}  
+```
+（这种方法修改子组件数据可以规避控制台警告，目前建议使用这种方式）
 让 继承数据 经过处理后再显示有三种方法：
 1、直接在{{}}里写表达式，效果与第二点相同
 2、computed: {
@@ -268,12 +283,12 @@ data: function () {
    }
 
 
-· Prop验证
+## Prop验证
 作为子组件设置props中的属性时可用 “propA: Number” 限制传入数据的类型，如不合规格则会在控制台发出提醒，可限制为多种类型，可自定义函数来验证，详见：
 https://cn.vuejs.org/v2/guide/components.html#Prop-验证
 
 
-· 组件向外传值
+## 组件向外传值
 组件外methods中写好outsidefn单参数函数，组件标签内写好 “@daili='outsidefn'” ，传值方法分为：1、用组件内的watch传值。2、用组件内的methods传值。
 1、用组件内的watch传值：
     watch:{
@@ -299,7 +314,7 @@ https://cn.vuejs.org/v2/guide/components.html#Prop-验证
 用这种方法向组件外传值是可以发生引用传递的，因引用传递导致组件外数据变化时甚至能用watch监听到（未做详细测试）
 
 
-· 在子组件上触发methods中的函数（在html子组件上用本地事件触发method中的函数）
+## 在子组件上触发methods中的函数（在html子组件上用本地事件触发method中的函数）
 在子组件标签中写好“@click.native="b"”就会在点击后触发b函数
 
 
@@ -307,22 +322,22 @@ https://cn.vuejs.org/v2/guide/components.html#Prop-验证
 https://cn.vuejs.org/v2/guide/components.html#杂项
 
 
-· 用.$on()创建自定义事件
+## 用.$on()创建自定义事件
 实例名.$on('自定义事件名',function(接收参数){函数内容})
 实例名.$emit('自定义事件名',发送的参数)可以触发创建的自定义事件
 以上两条可以在任何位子书写
 （任何组件通信都可以靠以上两条来完成）
 
 
-· this.$parent、this.$children与this.$refs.
+## this.$parent、this.$children与this.$refs.
 可以完全修改。
 在子组件html标签中写 “ref='a'” ，再通过this.$refs.a就能完全修改这个子组件
 
 
-· 实例名.$el.textContent = 该实例dom里所有文本内容
+## 实例名.$el.textContent = 该实例dom里所有文本内容
 
 
-· .nextTick
+## .nextTick
 1、Vue.nextTick(function () {...})
    页面中所有dom渲染好之后立即执行当中函数内容，（由于vue的智能渲染，直接运行的函数会先运行，然后再渲染dom，所以nextTick中获取的数值都是先运行这些函数后才获得的）
    setTimeout延迟0毫秒效果同上。延迟更长时间就能获取到更长时间后改变的数据，这点nextTick做不到。
@@ -330,19 +345,19 @@ https://cn.vuejs.org/v2/guide/components.html#杂项
    实例中套与不套好像没什么差别
 
 
-· （增删）过渡效果
+## （增删）过渡效果
 - 所有显示/不显示切换都可以带上该种过渡效果
 - 需加效果部分须在transition标签内
 - 可以在transition标签中加入appear来设置节点在初始渲染的过渡
 - 可以使用css的animation属性
 
 
-· 用name属性设置一套效果
+## 用name属性设置一套效果
 使用前提： 以name属性值为前缀的css class要先写好一套
 各样式后缀功能见： https://cn.vuejs.org/v2/guide/transitions.html#过渡的-CSS-类名
 
 
-· 用标签属性单独设置过渡效果各个阶段的css class
+## 用标签属性单独设置过渡效果各个阶段的css class
 在transition标签中加入一系列属性来达成该目的，这种方法的优先级高于普通的类名。
 可与Animate.css结合使用，使用方法：
     属性名="animated 效果名"
@@ -359,13 +374,13 @@ leave-active-class
 leave-to-class
 
 
-· 显性地设置过渡持续时间
+## 显性地设置过渡持续时间
 在transition标签中加入属性来设置，拥有最高优先级的权重，两种方法的例子：
 1、 “:duration="1000"”
 2、 “:duration="{ enter: 500, leave: 800 }"”
 
 
-· 用js设置过渡效果
+## 用js设置过渡效果
 在transition标签中加入 @XX 属性来设置各个阶段执行代码，代码放在methods中。
 （推荐在仅用JS过渡的transition标签中添加 v-bind:css="false"，Vue 会跳过 CSS 的检测。这也可以避免过渡过程中 CSS 的影响。）
 可加属性如下：
@@ -384,7 +399,7 @@ leave-cancelled
 【教程未提及】methods中的直接写法（教程只有结合Velocity.js的写法）【教程未提及】
 
 
-· 结合 Velocity.js 后用js操作过渡效果的methods部分写法
+## 结合 Velocity.js 后用js操作过渡效果的methods部分写法
 例子：
 methods: {
             beforeEnter: function (el) {//这个不加ie9无法运行
@@ -414,19 +429,19 @@ velocity引进地址：
 
 
 
-· 过渡模式
+## 过渡模式
 transition标签中的mode属性，值可为
 in-out: （默认）离开过渡与进入过渡同时进行
 out-in: 离开过渡完成后开始进入过渡
 
 
-· 列表过渡transition-group
+## 列表过渡transition-group
 用法和transition基本相同，不过在需要v-for循环元素拥有动画效果的话，只能选择transition-group。（注意在用v-for时要在循环元素上加上key属性）
 transition-group默认会渲染成span标签，可在标签中通过 “tag” 属性修改渲染成的标签。
 比transition标签用法的过渡效果类名多一个v-move，作用是：当循环生成元素位子发生改变后，用css属性transition控制其过渡动画。（实现方式是FLIP，即首末倒置）（解决删除行内元素后无动画的方法：v-leave-active中加入 “position: absolute;” ）
 
 
-· 混合mixins
+## 混合mixins
 存在于Vue.extend中，所以实例、组件都可以使用，使用例子：
 var mixin = { //先声明要混合的部分
   created: function () {
@@ -452,7 +467,7 @@ new Vue({
     })
 
 
-· 自定义指令
+## 自定义指令
 （有文章说用于DOM操作）
 对使用自定义指令的对象执行函数。
 使用方法：在需要使用的标签中添加 “v-指令名” 属性
@@ -492,7 +507,7 @@ update：当其中语句依赖的数据发生改变后才会触发（应该是�
     })
 
 
-· 指令与vuex的结合使用
+## 指令与vuex的结合使用
 方法一：
 局部引入其他文件指令，且指令中引入store的情况下，例子如下：
     store,
@@ -506,7 +521,7 @@ update：当其中语句依赖的数据发生改变后才会触发（应该是�
 【有需要再试验】能不能在指令中使用所有能在实例中用的vuex功能
 
 
-· render函数（渲染函数，组件中的一个选项）【其实并不了解，需要一些实操后再整理】
+## render函数（渲染函数，组件中的一个选项）【其实并不了解，需要一些实操后再整理】
 代替template渲染html（如与template同时存在template将会失效）
 例子：
     render: function (createElement) {
@@ -531,14 +546,14 @@ update：当其中语句依赖的数据发生改变后才会触发（应该是�
 写字符串就生成文本节点，也可以再写一个createElement生成一个子标签（再写createElement的话一定要包裹在数组中），也可以写变量来达到前两种效果，也可以写一个数组生成多个内容
 
 
-· render函数小知识点
+## render函数小知识点
 VNodes必须唯一【测来测去好像多个VNodes也没什么问题】
 在createElement生成的标签中写vue的html部分只会被当成普通html
 render函数完成v-model功能，地址： https://cn.vuejs.org/v2/guide/render-function.html#v-model
 【render函数就看到这里，其余的以后再研究】
 
 
-· 模块
+## 模块
 从.vue文件导入的模块会渲染为局部注册格式，而局部注册格式与全局注册格式不同（组件和自定义指令的全局注册都是传参格式而局部注册是对象格式），所以从.vue文件导入的模块都只能局部注册
 
 将自定义指令写在.vue文件中时，export default内可以套directives: {}也可以不套
@@ -569,10 +584,10 @@ directives: {
 
 
 ## input框
-- 处理数字建议用InputNumber组件  
-  InputNumber组件把按钮隐藏后对数字的各方面操作基本都强于Input组件  
+- 处理数字建议用InputNumber组件
+  InputNumber组件把按钮隐藏后对数字的各方面操作基本都强于Input组件
   如果在监听 Input组件绑定值 的计算属性中给 Input组件绑定值 赋值，那后续再输入一次，这个值就会变成字符串（因为绑定值在Input组件内其实都是字符串，因此容易出现这种bug）
-- InputNumber组件  
+- InputNumber组件
   如果绑定值为null的话这个组件会将绑定值改为0（会触发视图更新）（undefined的话则不会被更改）
 
 
@@ -583,7 +598,7 @@ directives: {
 
 
 ## 表单
-- 某一项改变后其他项也会重新赋值  
+- 某一项改变后其他项也会重新赋值
   不过因为vue的数据是集中智能异步渲染的，这个 智能 使改变后全等的值不会触发视图更新也不会触发watch，所以平时基本感觉不到重新赋值【】这个智能渲染有空可以做专门测试（虽然是集中渲染，不过监听还是挺可靠的。比如：改变了a，a的watch中emit改变了b，b传入一个组件，这个组件中watch了b，这时watch都能正确运行）
   不过在赋值为依赖某项重新计算得到的数组或对象时，这就会体现出差别了
 - 验证
@@ -597,21 +612,21 @@ directives: {
   一条验证规则可以有的属性：type、required、message等，其中message可以是jsx
   在async-validator里（网址是：https://github.com/yiminghe/async-validator）
   说到某个属性在不同类型下表现不同时，其实指的是**这一条验证规则**的type属性传入不同类型时这个类型的表现不同
-  - 自定义验证规则  
-    就是validator方法（与type、required、message等同级）  
-    validator方法形参为：rule、 value、 callback、 source、 options  
+  - 自定义验证规则
+    就是validator方法（与type、required、message等同级）
+    validator方法形参为：rule、 value、 callback、 source、 options
     rule中有与validator同级的type、required、message等信息
     value是要验证的值
     callback是验证方法（validate）的回调，不传参代表符合验证条件，有传参则代表不符合验证条件，会触发相关视图效果
     callback是单参数的，这个传参是控制台提示信息，会在不符合验证时在控制台进行打印
-- `:model`是必填的  
-  prop也要填model传入对象的属性  
-  表单的各种操作都是依据model和prop完成的（包括清空表单）  
+- `:model`是必填的
+  prop也要填model传入对象的属性
+  表单的各种操作都是依据model和prop完成的（包括清空表单）
   （虽然个人感觉没必要设计model）
-- 重置表单  
-  `this.$refs.表单ref值.resetFields()`  
-  会把表单绑定data的各属性还原成默认值（也就是写在data方法里的值）（属性值为对象或数组的话无法还原）  
-  
+- 重置表单
+  `this.$refs.表单ref值.resetFields()`
+  会把表单绑定data的各属性还原成默认值（也就是写在data方法里的值）（属性值为对象或数组的话无法还原）
+
 
 ## 表格
 - 自定义单元格内容
@@ -626,7 +641,7 @@ directives: {
   scope中还有一些其他数据
   template改成其他标签也可以
   el-table-column标签上无法加样式与类名
-  
+
 
 ## 导航框
 el-menu
@@ -644,6 +659,6 @@ lin
 # iview
 - 有几率bug
   template做if else时，其中第一个formitem 下无法验证，调用局部验证还会报错“第一个参数不是字符串”
-  
+
 
 
