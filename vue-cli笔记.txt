@@ -1,11 +1,11 @@
-ÎÄµµµØÖ·£ºhttps://github.com/vuejs/vue-cli
+å®˜æ–¹æ–‡æ¡£åœ°å€ï¼šhttps://cli.vuejs.org/zh/guide/
 
 
-vue-cliº¬ÓĞÄ£°å£ºhttps://github.com/vuejs-templates
+vue-cliå«æœ‰æ¨¡æ¿ï¼šhttps://github.com/vuejs-templates
 
 
-ÃüÁî½øĞĞÖĞ¿ÉÒÔÈ¡ÏûµôÖØĞÂÊ¹ÓÃ£¬ÄÜ½â¾ö²¿·ÖÎÊÌâ£¬ÈçÒÔÏÂÃüÁî£º
-¡°vue init webpack-simple foo¡±
+å‘½ä»¤è¿›è¡Œä¸­å¯ä»¥å–æ¶ˆæ‰é‡æ–°ä½¿ç”¨ï¼Œèƒ½è§£å†³éƒ¨åˆ†é—®é¢˜ï¼Œå¦‚ä»¥ä¸‹å‘½ä»¤ï¼š
+â€œvue init webpack-simple fooâ€
 
 
 
