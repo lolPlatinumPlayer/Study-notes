@@ -475,6 +475,9 @@ sessionStorage除以上限定外，还限定与窗口，窗口关闭则数据销
 - JSONP
   对于json的话可以用JSONP技术获取跨域资源，js和css估计也可以  
   实现方法就是用js创建一个标签来获取json文件，然后获取加载的文件中的内容（因为标签发起的get请求不会受到同源协议限制，所以能实现）  
+- 将浏览器设置为允许跨域  
+  如：https://blog.csdn.net/caoyan0829/article/details/81064142  
+  也可以参考：https://stackoverflow.com/questions/3102819/disable-same-origin-policy-in-chrome
 
 
 ## 下载跨域文件
