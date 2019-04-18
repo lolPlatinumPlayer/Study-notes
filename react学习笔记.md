@@ -1,27 +1,27 @@
 ## JSX
+> 每个 JSX 元素只是调用 React.createElement(component, props, ...children) 的语法糖。
 1. JSX中的style={XX}的XX应该一个对象，可以用变量代理
 1. JSX最原本的样子：
-    ```
-        ReactDOM.render(
-            <div>
-                <h1>11111111111</h1>
-                <h2>11111111111</h2>
-            </div>
-            ,
-            document.getElementById('example')
-        );
-	```
-   这一段都可以用引入js的方法达到效果，例子：
+   ```
+   ReactDOM.render(
+       <div>
+           <h1>11111111111</h1>
+           <h2>11111111111</h2>
+       </div>
+       ,
+       document.getElementById('example')
+   );
+   ```
+   这一段都可以用引入js的方法达到效果，例子：  
    `<script type="text/babel" src="你的名字.js"></script>`
 1. jsx标签中{}可放置代码有
     1. 表达式（表达式不折行情况下都是单行语句）
     1. 函数（静态函数或方法函数数都可以）  //方法函数即为组件中内容是函数的方法
     1. 要加多条语句的话可以用闭包
 1. 点击等事件
-   jsx标签中加入onClick属性，语法：`
-    onClick={() => alert('click')}
-   `
-   onClick中接收一个方法函数或者箭头函数
+   jsx标签中加入onClick属性，语法：  
+   `onClick={() => alert('click')}`  
+   onClick中接收一个方法函数或者箭头函数  
    1. 直接写方法函数无法传参
    1. 把方法函数包在箭头函数中可以传参
    1. 箭头函数中可以直接写多行语句
@@ -33,21 +33,15 @@
 
 ## 组件
 `class 组件名 extends React.Component {.. }`
-1. 因类的相关原因，所以每个周期函数间不能加逗号
+1. 类的每个方法间不能加逗号
 1. render的return后马上换行的话应该用()把标签包裹起来 
-1. 设置初始Props
-   语法：`
-    static defaultProps = {
-        prop名: prop值
-    };
-`
 1. 渲染子组件
    除了可以直接写以外还可以有动态渲染方法：
    写一个函数return这个组件
    然后在jsx的html中用`{this.函数名}`的方法使用子组件
 1. 组件声明只有render的话可以这么简写：     
    ```      
-        const App = () => (
+        const App = (单参数) => ( // 单参数就是组件的传参，相当于class写法的this.props
             <div>11111111111</div>
         )
    ```
@@ -67,22 +61,34 @@
 1. 设置初始state：
    不设置初始值后续也可以操作
     1. ```
-        constructor(props) {//如果需要使用this.props的话这两行必须加props，否则不需要
-            super(props) //必须在constructor所有语句前加上这一句
-            this.state = { 
-                state名: state值
-            } 
-        }
+       constructor(props) {//如果需要使用this.props的话这两行必须加props，否则不需要
+           super(props) //必须在constructor所有语句前加上这一句
+           this.state = { 
+               state名: state值
+           } 
+       }
     1. ```
-        class 组件名 extends React.Component {
-          state={
-            state名: state值
-          }
-          ...
+       class 组件名 extends React.Component {
+           state={
+               state名: state值
+           }
+           ...
+       }
 1. 改变state`this.setState({state名:state值})`
    这个方法是异步的，据说是因为react要收集所有对state的改变请求然后一次性改变
    render中无法使用
 1. 读取 `this.state.state名`
+
+
+## props
+类型验证及默认值完整内容见：https://zh-hans.reactjs.org/docs/typechecking-with-proptypes.html#proptypes
+1. 设置初始Props
+   语法：
+   ```
+   static defaultProps = {
+       prop名: prop值
+   };
+   ````
 
 
 ## 其他
