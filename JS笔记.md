@@ -702,6 +702,7 @@ Foo.bar() // hello
   执行super意味着执行父类的构造函数，并添加父类属性、方法，最终创建this  
   所以super前不能用this  
   （super()只能写在构造函数里，而且只能写一次；不能用`super`这种形式直接存在；在构造函数里`super.静态方法`只会返回undefined）
+  【】super的传参有空写一下
 - 子类new出来的对象，同时是父类与子类的示例，instanceof 父类或子类都是true
 
 
