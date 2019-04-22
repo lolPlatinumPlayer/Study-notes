@@ -35,15 +35,16 @@
 `class 组件名 extends React.Component {.. }`
 1. 类的每个方法间不能加逗号
 1. render的return后马上换行的话应该用()把标签包裹起来 
-1. 渲染子组件
-   除了可以直接写以外还可以有动态渲染方法：
-   写一个函数return这个组件
-   然后在jsx的html中用`{this.函数名}`的方法使用子组件
-1. 组件声明只有render的话可以这么简写：     
+1. 调用组件  
+   除了直接写以外还可以用动态渲染的方法：  
+   写一个函数return这个组件  
+   然后在jsx的html中用`{this.函数名}`的方法调用组件  
+1. 组件只有render的话可以用函数写：     
    ```      
-        const App = (单参数) => ( // 单参数就是组件的传参，相当于class写法的this.props
-            <div>11111111111</div>
-        )
+        const App = (单参数) => { // 单参数就是组件的传参，相当于class写法的this.props
+	    // js代码
+	    return jsx
+        }
    ```
 1. 可向组件内传递参数  
 1. 方法函数    
