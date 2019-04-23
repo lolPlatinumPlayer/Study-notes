@@ -2,7 +2,8 @@
 
 
 ## connect
-> `connect([mapStateToProps], [mapDispatchToProps], [mergeProps], [options])(组件)`  
+> `connect([mapStateToProps], [mapDispatchToProps], [mergeProps], [options])(组件)`
+
 参数说明：
 - `mapStateToProps(state, [ownProps])`  
   一个函数。返回对象的属性会加到props里  
