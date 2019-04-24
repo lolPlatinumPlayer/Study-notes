@@ -506,10 +506,10 @@ sessionStorage除以上限定外，还限定与窗口，窗口关闭则数据销
 
 
 ## <<、>>、<<<、>>>
-按位移动运算符。
-在二进制位移，返回十进制。
-向左的即为左移，在右侧加上位移数个数的0，反之同理
-a<<b在数学中相当于a=a*2^b，反之类似
+按位移动运算符。  
+在二进制位移，返回十进制。  
+向左的即为左移，在右侧加上位移数个数的0，反之同理  
+a<<b在数学中相当于a=a*2^b，反之类似  
 
 
 
@@ -519,144 +519,158 @@ a<<b在数学中相当于a=a*2^b，反之类似
 	   
 	   
 
-· 模块
-import和export
-大部分浏览器无法实现，不过webpack中可用
-以下提到的 变量 包括 函数（函数名后不应加括号）
+## 模块
+import和export  
+大部分浏览器无法实现，不过webpack中可用  
+以下提到的 变量 包括 函数（函数名后不应加括号）  
 
 
-· 模块的地址表示
-1、../xx代表上一级目录中的文件
-2、若地址中只写到文件夹而没有写到具体文件，则代表该文件夹中的index.js文件（各处文档均未提及，不过确实可用）
+## 模块的地址表示
+- ../xx代表上一级目录中的文件
+- 若地址中只写到文件夹而没有写到具体文件，则代表该文件夹中的index.js文件（各处文档均未提及，不过确实可用）
 
 
-· export负责输出
-两种格式：
-    1、export{a,b}
-    就算只export一个变量也要用括号，之后import也要带括号
-    2、export var a='xx'
-    这种格式不能用as在输出时重命名变量
-两种格式 变量在export前或export时都必须定义，且不可重复定义
-export可以位于模块顶层任何位置（即不能放在块级作用域内），import命令也是如此
+## export负责输出
+两种格式：  
+1. export{a,b}  
+   就算只export一个变量也要用括号，之后import也要带括号
+2. export var a='xx'  
+   这种格式不能用as在输出时重命名变量  
+   
+两种格式 变量在export前或export时都必须定义，且不可重复定义  
+export可以位于模块顶层任何位置（即不能放在块级作用域内），import命令也是如此  
 
 
-· 动态绑定
-例子：export var foo = 'bar';
-      setTimeout(() => foo = 'baz', 500);
-用webpack【测试失败】，原因可能是其遵循的是来自nodeJS的CommonJS规范
-可能加babel或者vue-cli后可以成功
+## 动态绑定
+例子：
+```javascript
+export var foo = 'bar';
+setTimeout(() => foo = 'baz', 500);
+```
+用webpack【测试失败】，原因可能是其遵循的是来自nodeJS的CommonJS规范  
+可能加babel或者vue-cli后可以成功  
 
 
-· as负责重命名
-不管在export还是import中，as前的都是原变量名，as后的都是重命名后变量名
-as可以将一个变量重命名为多个变量
+## as负责重命名
+不管在export还是import中，as前的都是原变量名，as后的都是重命名后变量名  
+as可以将一个变量重命名为多个变量  
 
 
-· import负责输入
-语法：
-    1、import {a} from './s2'
-    这种语法针对export的输出，可以引入多个变量
-    2、import b from './s3'
-    这种语法针对export default的输出，意思为 导入./s3模块并命名为b
-    3、import {a} from 'util';
-    这种语法需配置，配置方法与nodeJS自定义模块一致
-    4、import * as a from './b';
-    针对export输出，将./b中的变量都重命名为a.x1、a.x2等
-import from的地址可以省略.js，（慕课react实战里说是脚手架的功能）
-import在静态解析阶段执行，所以它是一个模块之中最早执行的。
-由于import是静态执行，所以不能使用 表达式、变量 这种只有在运行时才能得到结果的语法结构。
-而export可以用export var i = k这种语句
+## import负责输入
+语法：  
+- `import {a} from './s2'`  
+  这种语法针对export的输出，可以引入多个变量  
+- `import b from './s3'`  
+  这种语法针对export default的输出，意思为 导入./s3模块并命名为b  
+- `import {a} from 'util'`  
+  这种语法需配置，配置方法与nodeJS自定义模块一致  
+- `import * as a from './b'`  
+  针对export输出，将./b中的变量都重命名为a.x1、a.x2等  
+  
+import from的地址可以省略.js，（慕课react实战里说是脚手架的功能）  
+import在静态解析阶段执行，所以它是一个模块之中最早执行的。  
+由于import是静态执行，所以不能使用 表达式、变量 这种只有在运行时才能得到结果的语法结构。  
+而export可以用export var i = k这种语句  
 
 
-· export default
-与nodeJS的module.exports类似，不过不同的是export default可以与export共同使用，在引入时还有简写import a, {b,c as d} from 'only_name';
-export default本质是输出一个叫default的变量，所以不能使用export default var a = 1这种写法，而可以使用export default 1这种写法
-export default可以输出类【未测试export行不行】
+## export default
+与nodeJS的module.exports类似，不过不同的是export default可以与export共同使用，在引入时还有简写import a, {b,c as d} from 'only_name';  
+export default本质是输出一个叫default的变量，所以不能使用export default var a = 1这种写法，而可以使用export default 1这种写法  
+export default可以输出类【未测试export行不行】  
 
 
-· export 与 import 的复合写法
-1、import { foo, bar } from 'my_module';
-   export { foo, bar };
-   可以简写为export { foo, bar } from 'my_module';
-可以用as，甚至可以用as让具体接口和默认接口互相转换
-和*
-默认接口的写法为：export { default } from 'foo';
+## export 与 import 的复合写法
+- `import { foo, bar } from 'my_module'`  
+  `export { foo, bar }`  
+  可以简写为`export { foo, bar } from 'my_module'`  
+  
+可以用as，甚至可以用`as`让具体接口和默认接口互相转换  
+和`*`  
+默认接口的写法为：`export { default } from 'foo'`  
 
-关于模块还有更多内容在http://es6.ruanyifeng.com/#docs/module
-暂时研究到这
-
-
-· “:function(a)” 可缩写为 “(a)”
+关于模块还有更多内容在http://es6.ruanyifeng.com/#docs/module  
+暂时研究到这  
 
 
-· 箭头函数
-简化 “function(){return(函数内容)}” 的写法
-无参数：  ()=>函数内容  相当于  function(){return(函数内容)}
-单参数：  x=>函数内容  相当于  function(x){return(函数内容)}
-多参数：  (x,y)=>函数内容  相当于  function(x,y){return(函数内容)}
-多行值：()=>(值)  相当于  function(){return(值)}
-多行语句：()=>{函数内容}  相当于  function(){函数内容}
-bug写法：`()=>对象字面量`  估计是因为这里的花括号会被解析成语句块的花括号
+## “:function(a)” 可缩写为 “(a)”
 
 
-· 属性名简写
-属性名与属性值变量名相同时可以只写一个
-属性名与属性值的函数名相同时可以直接写 “函数名(xxx){.. }”
-如果属性值是匿名函数好像也可以直接写“属性名(){.. }”
+## 箭头函数
+- 简化 “function(){return(函数内容)}” 的写法
+- 无参数：  ()=>函数内容  相当于  function(){return(函数内容)}
+- 单参数：  x=>函数内容  相当于  function(x){return(函数内容)}
+- 多参数：  (x,y)=>函数内容  相当于  function(x,y){return(函数内容)}
+- 多行值：()=>(值)  相当于  function(){return(值)}
+- 多行语句：()=>{函数内容}  相当于  function(){函数内容}
+- bug写法：`()=>对象字面量`  估计是因为这里的花括号会被解析成语句块的花括号
 
 
-· 声明与作用域
-var：若在块内声明，则与块外同名变量为两个不同变量；若块内没有声明，不管块外声明与否，块内外同名变量都为同一个变量
-函数嵌套：规则如上，块为声明函数处的闭包。详细说就是：若A函数中使用了B函数，则这两个函数中变量的作用域都遵从以下准则：有声明的在函数内自成作用域，没声明的与声明该函数处外部作用域一致。
+## 属性名简写
+属性名与属性值变量名相同时可以只写一个  
+属性名与属性值的函数名相同时可以直接写 “函数名(xxx){.. }”  
+如果属性值是匿名函数好像也可以直接写“属性名(){.. }”  
+
+
+## 声明与作用域
+var：若在块内声明，则与块外同名变量为两个不同变量；若块内没有声明，不管块外声明与否，块内外同名变量都为同一个变量  
+函数嵌套：规则如上，块为声明函数处的闭包。详细说就是：若A函数中使用了B函数，则这两个函数中变量的作用域都遵从以下准则：有声明的在函数内自成作用域，没声明的与声明该函数处外部作用域一致。  
 let/const与var区别：
 1. let/const在声明语句前使用会直接报错“is not defined”，而var会返回undefined，因为var的声明会提升至作用域顶部，而赋值不会提升
 2. var可以重复声明，而let/const会报错“has already been declared”
 3. var不会在在花括号形成独立作用域，而let/const会（这个花括号包括条件语句、循环语句中的花括号以及直接写的花括号）
 4. var声明变量会给window的原型加属性，而let、const不会
-let与var仅有以上区别，const除了以上区别外，const在声明时必须赋值，而且其声明的变量不能在其他地方赋值。
-但是有两种情况可以让声明后的const看起来像被改变：（其实对常量赋值的引用并没有被改变，被改变的是引用另一头的内容）
-   1. 常量依赖的变量改变
-   2. 常量是个数组或对象，其子项可以被改变或增删
+
+let与var仅有以上区别，const除了以上区别外，const在声明时必须赋值，而且其声明的变量不能在其他地方赋值。  
+但是有两种情况可以让声明后的const看起来像被改变：（其实对常量赋值的引用并没有被改变，被改变的是引用另一头的内容）  
+1. 常量依赖的变量改变
+2. 常量是个数组或对象，其子项可以被改变或增删
 
 
-· 解构赋值
-1、
-var a, b, rest;
-[a, b] = [10, 20];
-console.log(a); // 10
-console.log(b); // 20
-2、
-[a, b, ...rest] = [10, 20, 30, 40, 50];
-console.log(a); // 10
-console.log(b); // 20
-console.log(rest); // [30, 40, 50]
-3、
-({ a, b } = { b: 10, c:111,a: 20 }); //这个语法等号前不能用数组形式
-console.log(a); // 10
-console.log(b); // 20
-4、
-({a, b, ...rest} = {a: 10, d: 30,  b: 20,c: 40});
-console.log(a); // 10
-console.log(b); // 20
-console.log(rest); //{d: 40 , c: 30}
-以上测试数组都可以用变量代理【数组中的变量名要不要用字符串格式？】
-5、函数（对象式、有默认值）传参
-function move({x = 1, y = 1} = {}) {
-    console.log('x:',x);
-    console.log('y:',y);
-}//用这个语法就可以跳出按顺序传参的限制，可以只传想要的参数
-使用时函数参数应为对象形式，如下：
-move({ y: 8});
-若无传参，或传参格式不正确，都会使用默认值，会使用默认值的情况如下：
-move({});
-move();
-move(11,22);
-move(11);
-move([11,22]);
-move([11]);
-6、解构实参（以下是自己测试的结果，在《ECMAScript6入门-阮一峰》里没找到相关内容）
-`function Fn({x}){函数内容}`
-函数内x就直接代表实参（对象）的x属性
+## 解构赋值
+- ```javascript
+  var a, b, rest;
+  [a, b] = [10, 20];
+  console.log(a); // 10
+  console.log(b); // 20
+  ```
+- ```javascript
+  [a, b, ...rest] = [10, 20, 30, 40, 50];
+  console.log(a); // 10
+  console.log(b); // 20
+  console.log(rest); // [30, 40, 50]
+  ```
+- ```javascript
+  ({ a, b } = { b: 10, c:111,a: 20 }); //这个语法等号前不能用数组形式
+  console.log(a); // 10
+  console.log(b); // 20
+  ```
+- ```javascript
+  ({a, b, ...rest} = {a: 10, d: 30,  b: 20,c: 40});
+  console.log(a); // 10
+  console.log(b); // 20
+  console.log(rest); //{d: 40 , c: 30}
+  ```
+  以上测试数组都可以用变量代理【数组中的变量名要不要用字符串格式？】
+- 函数（对象式、有默认值）传参
+  ```javascript
+  function move({x = 1, y = 1} = {}) {
+      console.log('x:',x);
+      console.log('y:',y);
+  }//用这个语法就可以跳出按顺序传参的限制，可以只传想要的参数
+  ```
+  使用时函数参数应为对象形式，如下：  
+  - `move({ y: 8})`  
+  
+  若无传参，或传参格式不正确，都会使用默认值，会使用默认值的情况如下：  
+  - `move({})`  
+  - `move()`  
+  - `move(11,22)`  
+  - `move(11)`  
+  - `move([11,22])`  
+  - `move([11])`  
+- 解构实参（以下是自己测试的结果，在《ECMAScript6入门-阮一峰》里没找到相关内容）
+  `function Fn({x}){函数内容}`
+  函数内x就直接代表实参（对象）的x属性
 
 
 ## 类
