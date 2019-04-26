@@ -19,3 +19,8 @@
   这里的dispatch就是触发reducer的方法，要传入action  
   【】官网教程一大段看不懂
   
+
+## reducer
+- 编写  
+  第一个参数是state（有可能是总state上的部分state）  
+  第二个参数是`dispatch`传过来的对象
