@@ -1,5 +1,6 @@
 ## 综述
-dva很多东西是直接从三个库（redux、redux-saga、react-router）里引入的，有相关用法直接查这三个库就行
+dva很多东西是直接从三个库（redux、redux-saga、react-router）里引入的，有相关用法直接查这三个库就行  
+本笔记里没有记录的内容可以上[官方教程](https://dvajs.com/guide/)找
 
 
 ## `dva()`的传参
