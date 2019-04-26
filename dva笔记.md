@@ -10,3 +10,6 @@ dva很多东西是直接从三个库（redux、redux-saga、react-router）里�
 ## 不正常的样式问题
 - **原因**：源自dva依赖的 **roadhog** ，roadhog默认开启 **css module** ,css module极大地改变了样式编写方式，就有了这个问题
 - **解决办法**：在webpack的配置文件中加入一行`"disableCSSModules": true,`，没有这个文件的话在.roadhogrc里加应该也可以  
+
+## 状态上与redux不同部分
+- `dispatch`传来对象的type属性应该对应reducer的函数名
