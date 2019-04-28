@@ -129,8 +129,14 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 `git merge 分支名`
 
 
-
-
+## 忽略文件
+> .gitignore文件只能忽略那些原来没有被track的文件，如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。
+那么解决方法就是先把本地缓存删除（改变成未track状态），然后再提交。 —— 引用自《福信富通GIT使用帮助》
+```
+git rm -r --cached .
+git add .
+git commit -m 'update .gitignore'
+```
 
 
 
