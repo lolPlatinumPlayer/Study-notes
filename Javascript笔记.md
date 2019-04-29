@@ -917,6 +917,19 @@ function a(p0,p1='p1'){
 （更多内容见http://es6.ruanyifeng.com/#docs/array#扩展运算符）
 
 
+## 装饰器
+看了一个例子后感觉像语法糖  
+可以把  
+```
+export default connect(函数)(组件)
+```
+变成  
+```
+@connect(函数) // 这句要在export default前
+export default 组件
+```
+
+
 # 【算法】
 
 
