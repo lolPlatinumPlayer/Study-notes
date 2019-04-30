@@ -834,7 +834,8 @@ Promise对象是一个构造函数，用来生成Promise实例。
         //一些操作
     })
 ```
-请求非本地json的话目前有跨域问题
+fetch据说可以全面替代xhr（js请求除了xhr就是fetch），完整见mdn  
+get方法不能拥有body属性，传参只能写在请求地址里（这点网上资料都没提到）  
 
 
 ## new request（未测试不用new request是否能成功）
