@@ -93,18 +93,6 @@
 1. 可以传函数，甚至函数可以改变状态
 
 
-## 路由
-在web端react-router或react-router-dom都行  
-react-router-dom应该更简单，而且协作开发者（Tim Dorr）说大部分场景可以满足要求  
-react-router-dom教程：
-- https://www.jianshu.com/p/8954e9fb0c7e  
-  说的清晰易懂，作者说涵盖了所有用法。还没验证是否可用
-- https://wurh.github.io/2018/08/28/20180828/  
-  主要说配置方法，看起来靠谱。还没验证是否可用
-
-react-router官方教程：http://react-guide.github.io/react-router-cn/docs/API.html  
-
-
 ## 其他
 1. 构建的话将ReactDOM.render()简写为render()的方法
    引入react-dom时写为`
