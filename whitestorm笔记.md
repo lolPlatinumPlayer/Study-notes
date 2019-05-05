@@ -39,7 +39,7 @@
 - 组件进行extends后，build形参除了实参以外还会返回extends的whs组件自带的属性，在实参处也可以直接传这些自带的属性
 - position、rotation可以整体赋值，不需要three的给一个向量  
 - 获取父级  
-  和three一样用`parent`方法就能获取，不同的是，whs组件不能在添加到场景后立即获取父级内容，立即获取会返回`undefined`
+  和three一样用`parent`属性就能获取。不同的是，whs组件不能在添加到场景后立即获取父级内容，立即获取会返回`undefined`
 
 
 ## 组（组件有的方法属性基本都有）
