@@ -78,6 +78,7 @@ scene.add(cube); // 将对象加进场景中
   - 网格：`new THREE.Mesh(形状, 材质)`
   - 线：`new THREE.Line(形状, 材质)`
 - 删除对象：`父内容.remove(组件)`
+- 找到父级：`对象.parent`
 - 让物体永远处于最前：`物体.material.depthTest=false`（new材质时也可以设置）（depthWrite也可以）
   （bug：whs平面有时候会挡在depthTest=false的物体上，这个时候给需要最前的物体的材质设置transparent:true就行）
 
