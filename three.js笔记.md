@@ -10,6 +10,9 @@ z轴指向屏幕外
 - 创建：`let scene=new THREE.Scene()`
 - 添加内容：`scene.add(a,b,c)`
   可以同时添加不限个数的对象、光源，也可以多次添加
+- 改变背景色  
+  `scene.background = new THREE.Color( 十六进制或字符串 )`  
+  这里字符串色值可以缩写
 
 
 ## 相机
