@@ -32,9 +32,11 @@
 - 添加：`组件.addTo(应用或者组)`
   （用与three一致的add方法也可以）
 - build
-  这是一个很多组件都有的生命周期（但是基组件、组上没有），组件有new就会执行一次，出现多次也只会执行一次（个人猜测）  
-  相当于普通类的constructor，但是whs组件不能写constructor  
-  必须返回一个three物体（组的话可以返回WHS.Group 的.native）（这种方法建组，中间带自建sprite实例的话，组实例.children[0].material全等于sprite实例.spriteMaterial）  
+  这是一个很多组件都有的生命周期（但是基组件、组上没有），组件有new就会执行一次  
+  可返回内容：
+  - three物体（组的话可以返回WHS.Group 的.native）（这种方法建组，中间带自建sprite实例的话，组实例.children[0].material全等于sprite实例.spriteMaterial）  
+  - promise对象  
+    返回promise对象的话这个promise也会执行  
 - native属性：组件的three对象
 - 组件进行extends后，build形参除了实参以外还会返回extends的whs组件自带的属性，在实参处也可以直接传这些自带的属性
 - position、rotation可以整体赋值，不需要three的给一个向量  
