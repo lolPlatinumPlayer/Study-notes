@@ -92,3 +92,18 @@ loop.start(应用)和loop.stop(应用)可以开启、暂停动画（不过目前
 ## 其他
 - 平面组件rgba不支持透明度
 
+
+# 不常用内容
+摘自官网与源码，都没有验证过
+
+
+## `Component`类
+网格组件、相机、灯光 都继承自`Component`类
+- **`isDeffered`取值函数**
+  查看组件内的promise是否全部执行完毕
+- **`_wait`实例属性**
+  查看组件内未执行完毕的promise
+  
+  
+## 网格组件
+即`MeshComponent`类
