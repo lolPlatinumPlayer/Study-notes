@@ -89,6 +89,19 @@ loop.start(应用)和loop.stop(应用)可以开启、暂停动画（不过目前
 	- `物体.on(.. )`
 
 
+## 导入3d模型文件
+```
+new Importer({
+  url:文件地址,
+  loader:对应文件格式的加载器, // 默认是JSON的，obj格式的话用`new THREE.OBJLoader()`
+  parser(geometry, material) { // 传入加载器处理后的数据
+    return new THREE.Mesh(geometry, material); // 返回（接近）最终放入场景的内容。应该要求是mesh对象
+  },
+}).addTo(app);
+```
+更多操作看官网和源码
+
+
 ## 其他
 - 平面组件rgba不支持透明度
 
