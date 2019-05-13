@@ -39,7 +39,7 @@ z轴指向屏幕外
 
 
 ## 对象
-``` // 例子为立方体
+```javascript // 例子为立方体
 var geometry = new THREE.BoxGeometry(1, 1, 1); // 设置形状
 var material = new THREE.MeshBasicMaterial({color: 0x00ff00}); // 设置材质（这里直接上色，颜色值要么16进制数字要么非缩写字符串，字符串可以用单词）
 var cube = new THREE.Mesh(geometry, material); // 依据形状和材质新建对象
@@ -55,12 +55,12 @@ scene.add(cube); // 将对象加进场景中
     side默认为单面显示
   - 线：
     线和点的尺寸似乎都不会随着相机远近而改变
-    ```
+    ```javascript
     new THREE.Geometry()
     geometry.vertices.push(new THREE.Vector3(-10,0,0));
     geometry.vertices.push(new THREE.Vector3(0,10,0));
     geometry.vertices.push(new THREE.Vector3(10,0,0));
-    可以加更多节点...
+    // 可以加更多节点...
     ```
     这里的节点会按顺序连成线，但是首尾不会相连
     （`new THREE.Vector3(x,y,z)`是three里面表达向量的一种方法，还有2维4维向量。目前不知道更简便地加线条节点的方法）
@@ -84,7 +84,7 @@ scene.add(cube); // 将对象加进场景中
 
 
 ## Sprite对象（总朝着摄像机的一个平面）（Points对象也有相同效果）
-```
+```javascript
 var spriteMap = new THREE.TextureLoader().load("图片地址") // 这个加载是异步的
 var spriteMaterial = new THREE.SpriteMaterial({map: spriteMap,rotation:1,color:'red'}) // color会与map相乘
 var sprite = new THREE.Sprite(spriteMaterial)
@@ -101,7 +101,7 @@ var sprite = new THREE.Sprite(spriteMaterial)
 
 
 ## 光源
-```
+```javascript
 var light = new THREE.PointLight( 'white' );
 light.position.set( 10, 0, 25 );
 scene.add( cube,light );
@@ -109,7 +109,7 @@ scene.add( cube,light );
 
 
 ## 动画
-```
+```javascript
 function animate() {
     requestAnimationFrame( animate ); // 1/60秒后调用其中回调（js专门给动画做的定时器，各方面比普通定时器都有优化）
 
@@ -122,7 +122,7 @@ animate();
 
 
 ## 鼠标拾取（鼠标碰了什么物体）
-```
+```javascript
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 function onMouseMove( event ) {
