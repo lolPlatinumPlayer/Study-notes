@@ -23,6 +23,7 @@
         }, {shadow: true}),
         new WHS.OrbitControlsModule(),
         new WHS.ResizeModule(),
+	// 其他模块..
     ])
 ```
 
@@ -77,16 +78,15 @@ loop.start(应用)和loop.stop(应用)可以开启、暂停动画（不过目前
 
 
 ## 原生模块
-- 鼠标事件
-  `const mouse = new WHS.VirtualMouseModule()`
-  - app增加事件步骤
-    - 加入mouse模块 （目前这步会导致控制台报错：THREE.Camera: .getWorldDirection() target is now required）
-	- `app.on(不带on的字符串事件名, 回调)`
-      回调有一个参数，代表鼠标事件  
-  - 物体增加事件步骤（组不是物体）
-    - 所在app加mouse模块
-    - `mouse.track(物体)`
-	- `物体.on(.. )`
+- **增加鼠标事件方法**  
+  1. `const mouse = new WHS.VirtualMouseModule()`  
+  2. 应用的模块中加入mouse （目前这步会导致控制台报错：`THREE.Camera: .getWorldDirection() target is now required`）  
+  3. - **加在应用上的话**  
+       `应用.on(不带on的字符串事件名, 回调)`  
+       回调有一个参数，代表鼠标事件  
+     - **加在物体上的话**（组不是物体）  
+       `mouse.track(物体)`  
+       `物体.on(.. )`（格式与应用的on一致）  
 
 
 ## 导入3d模型文件
