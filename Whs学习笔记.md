@@ -5,7 +5,7 @@
 子项中加入new WHS.OrbitControlsModule()可以拥有控制相机的交互  
 `应用.start()`运行（加不加动画这行都是必须的）  
 整体例子：  
-```
+```javascript
     const app = new WHS.App([
         new WHS.ElementModule({container:document.getElementById('app')}), // 这是2个教程里都仅存的写法，不过曾经个人用过一个写法：`new WHS.ElementModule(document.getElementById('app')),`
         new WHS.SceneModule(),
@@ -52,7 +52,7 @@
 
 
 ## 动画
-```
+```javascript
 const loop=new WHS.Loop(() => {
     动画代码
 })
@@ -90,7 +90,7 @@ loop.start(应用)和loop.stop(应用)可以开启、暂停动画（不过目前
 
 
 ## 导入3d模型文件
-```
+```javascript
 new Importer({
   url:文件地址,
   loader:对应文件格式的加载器, // 默认是JSON的，obj格式的话用`new THREE.OBJLoader()`
