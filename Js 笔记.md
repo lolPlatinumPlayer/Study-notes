@@ -876,8 +876,12 @@ get方法不能拥有body属性，传参只能写在请求地址里（这点网�
             myImage.src = objectURL;
         })
 ```
-- 将json文件转为对象或数组
-  `json文件.json()`
+
+
+## 读取json类文件的内容
+`请求返回内容.json()`  
+`json()`方法只能用于`请求返回内容`，会返回一个promise，它的then会返回文件中的json内容  
+详见[mdn](https://developer.mozilla.org/en-US/docs/Web/API/Body/json)
 
 
 ## Object.assign(object1,object2,object3等等)
