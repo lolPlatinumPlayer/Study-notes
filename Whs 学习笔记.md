@@ -1,10 +1,10 @@
 
 ## 应用
-`const 应用 =new WHS.App([各子项])`  
-功能：将渲染器和场景做好、一次性设置并添加多个组件  
-子项中加入new WHS.OrbitControlsModule()可以拥有控制相机的交互  
+`const 应用 =new WHS.App([各模块])`  
 `应用.start()`运行（加不加动画这行都是必须的）  
-整体例子：  
+功能：将渲染器和场景做好、一次性设置并添加多个组件、等等  
+模块：加入`new WHS.OrbitControlsModule()`模块可以拥有控制相机的交互  
+可运行例子：  
 ```javascript
     const app = new WHS.App([
         new WHS.ElementModule({container:document.getElementById('app')}), // 这是2个教程里都仅存的写法，不过曾经个人用过一个写法：`new WHS.ElementModule(document.getElementById('app')),`
@@ -28,12 +28,12 @@
 ```
 
 
-
 ## 组件
+【】组件等名词的定义
 - 添加：`组件.addTo(应用或者组)`
   （用与three一致的add方法也可以）
 - build
-  这是一个很多组件都有的生命周期（但是基组件、组上没有），组件有new就会执行一次  
+  这是一个很多组件都有的生命周期（但是`Component`组件、`Group`组件没有），组件有`new`就会执行一次  
   可返回内容：
   - three物体（组的话可以返回WHS.Group 的.native）（这种方法建组，中间带自建sprite实例的话，组实例.children[0].material全等于sprite实例.spriteMaterial）  
   - promise对象  
@@ -107,7 +107,7 @@ new Importer({
 
 
 # 不常用内容
-摘自官网与源码，都没有验证过
+（摘自官网与源码，都没有验证过）
 
 
 ## `Component`类
