@@ -131,9 +131,9 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 > .gitignore文件只能忽略那些原来没有被track的文件，如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。
 那么解决方法就是先把本地缓存删除（改变成未track状态），然后再提交。 —— 引用自《福信富通GIT使用帮助》
 ```
-git rm -r --cached .
+git rm -r --cached . // `git rm -r --cached 文件或文件夹`是可行的，前一个没试过
 git add .
-git commit -m 'update .gitignore'
+git commit -m 'xxx'
 ```
 
 
