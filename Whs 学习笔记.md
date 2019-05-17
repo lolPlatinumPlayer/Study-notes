@@ -34,6 +34,7 @@
 - **模块**：`new`应用时传参的各数组元素，或生成数组元素的类
 - **组件**：所有有继承`Component`类的类、以及这些类的实例都可以称为组件  
 - **物体**：各种几何体或几何体组成的东西，不管是依赖three生成的还是依赖whs生成的，都可以称为物体  【】
+- **bridge**：模块的`bridge`属性的各方法都称为“bridge”  
 
 
 ## 组件
@@ -72,12 +73,17 @@ loop.start(应用)和loop.stop(应用)可以开启、暂停动画（不过目前
   加入模块的组件每new一次执行一次生命周期  
   顺序是：constructor、manager、integrate、build、渲染（bridge中的方法的话是调用applyBridge时执行）  
 - constructor  
-  在其中给this添加的内容可以在生成模块的类间通用（实例上不能用）  
-  bridge中通过第二个参数调用（一般命名为self）  
-  integrate中通过唯一传参调用  
-  manager中直接写this  
-  - bridge：存放函数，通过`this.applyBridge()`调用其中的函数  
-    applyBridge方法目前感觉相当于一个默认的实例方法  
+  在其中**给this添加的内容**可以在生成模块的类间通用（实例上不能用）  
+  - bridge中通过第二个参数调用（一般命名为self）  
+  - integrate中通过唯一传参调用  
+  - manager中直接写this  
+- bridge  
+  - **声明**  
+    模块的`bridge`属性接收一个对象为值，这个对象拥有多个方法，这些方法称为“bridge”  
+  - **调用**  
+    实例上通过`this.applyBridge(对象)`调用bridge  
+    这个对象可以有多个属性，属性名就是bridge名，属性值就是传给bridge的第一个实参  
+    `applyBridge`执行完毕后返回这个对象，对象的值会改为各个bridge的计算结果  
 - integrate  
   - 其中给this添加的内容都会到实例上，这里操作this也相当于操作实例  
   - 除了实例，增加了这个模块的类的build方法里也能通过`this.属性名`调用这些内容，也可以给这些内容赋值
