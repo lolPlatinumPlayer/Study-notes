@@ -836,7 +836,7 @@ Promise对象是一个构造函数，用来生成Promise实例。
       为`"resolved"`代表`resolve`已经运行完毕  
     - promise的`[[PromiseValue]]`的值为promise返回的值  
   - 如果在倒二行的`=`后加上`await`  
-    倒二行就会阻塞，aa的值也会变为promise的resolve的return值
+    倒二行就会阻塞，aa的值也会变为promise的resolve的返回值
 3.
 	```javascript
         async function getBorderCanvas({width,height,lineWidth,color}) {
@@ -856,6 +856,13 @@ Promise对象是一个构造函数，用来生成Promise实例。
         }
 	```
         如果要获取加了async的函数return值，必须用await
+
+
+## 将多个promise合为一个
+`Promise.all(多个promise组成的数组)`（数组部分元素不是promise好像也可以）  
+这个promise的then的形参是一个数组，子项为各个promise处理后的返回值  
+不知道是串联还是并联  
+（不用Promise.all不进入回调地域似乎无法做出Promise.all的功能）
 
 
 ## catch
