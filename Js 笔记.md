@@ -816,7 +816,7 @@ Promise对象是一个构造函数，用来生成Promise实例。
 2.
 	```javascript
 	async function drawBuilding() { // 要用await，其所在函数体外一定要加async
-	    const result = await timeout(1100).then((value) => { // 在函数前加await可以让函数在完成前让语句保持阻塞
+	    const result = await timeout(1100).then((value) => { // 在函数前加await可以让函数在完成前让语句保持阻塞 // 【】 这个timeout是undefined
 		return value
 	    })
 	    console.log(result); // done
