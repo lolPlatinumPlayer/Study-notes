@@ -815,16 +815,28 @@ Promise对象是一个构造函数，用来生成Promise实例。
 	```
 2.
 	```javascript
-	async function drawBuilding() { // 要用await，其所在函数体外一定要加async
-	    const result = await timeout(1100).then((value) => { // 在函数前加await可以让函数在完成前让语句保持阻塞 // 【】 这个timeout是undefined
-		return value
-	    })
-	    console.log(result); // done
-	    return result;
-	}
-	const aa= drawBuilding()
-	console.log(aa); // Promise对象
+        async function drawBuilding() { // 要用await，其所在函数体外一定要加async
+          const result = await (new Promise((resolve) => { // 在函数前加await可以让函数在完成前让语句保持阻塞
+            setTimeout(resolve, 1111, 'done')
+          })).then((value) => {
+            return value
+          })
+          console.log(result); // done
+          return result;
+        }
+     
+        const aa = drawBuilding() // 倒二行
+        console.log(aa); // 倒一行
 	```
+  - 这样写的话  
+    从倒二倒一行都不会阻塞  
+    `aa`的结果为一个promise  
+    - promise的`[[PromiseStatus]]`属性  
+      为`"pending"`代表promise还未结束运行  
+      为`"resolved"`代表`resolve`已经运行完毕  
+    - promise的`[[PromiseValue]]`的值为promise返回的值  
+  - 如果在倒二行的`=`后加上`await`  
+    倒二行就会阻塞，aa的值也会变为promise的resolve的return值
 3.
 	```javascript
         async function getBorderCanvas({width,height,lineWidth,color}) {
