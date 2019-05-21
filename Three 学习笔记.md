@@ -145,5 +145,10 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 ```
 
 
+## 组
+不能像whs的组那样用`new Group(子元素1,子元素2,子元素3)`  
+只能使用`Object3D`的`add`添加子元素（`子元素.addTo(组)`也可以）  
+
+
 ## 其他
 - 材质的颜色值有set方法（应该所有值都能用set设置）
