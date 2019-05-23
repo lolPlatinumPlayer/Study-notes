@@ -83,21 +83,31 @@ scene.add(cube); // 将对象加进场景中
   （bug：whs平面有时候会挡在depthTest=false的物体上，这个时候给需要最前的物体的材质设置transparent:true就行）
 
 
-## Sprite对象（总朝着摄像机的一个平面）（Points对象也有相同效果）
+## Sprite对象（总朝着相机的一个平面）
 ```javascript
 var spriteMap = new THREE.TextureLoader().load("图片地址") // 这个加载是异步的
 var spriteMaterial = new THREE.SpriteMaterial({map: spriteMap,rotation:1,color:'red'}) // color会与map相乘
 var sprite = new THREE.Sprite(spriteMaterial)
 ```
-- 尺寸
-  sprite对象建好后都是宽1高1的，需要用scale放大至需要的尺寸
-- 旋转
+- **近大远小**  
+  默认会。`sizeAttenuation`设置为`false`后不会  
+- **尺寸**  
+  sprite对象建好后都是宽1高1的，需要用`scale`放大至需要的尺寸（`sizeAttenuation`设置为`false`的情况未测试）
+- **旋转**  
   只能通过`spriteMaterial.rotation`旋转
   增加的话是逆时针
-- center（只有sprite有）
-  值是three二维向量
-  xy为0时在左下角，为1时在右上角，值的大小不限
-  之后旋转位移缩放等都会以此为中心
+- **`center`**（只有sprite有）  
+  值是three二维向量  
+  xy为0时在左下角，为1时在右上角，值的大小不限  
+  之后旋转位移缩放等都会以此为中心  
+  
+  
+## Points对象（总朝着相机的一个平面）
+- **近大远小**  
+  不会（就算`sizeAttenuation`设为`true`还是不会）
+> **曾用名**  
+  `Points`曾用名有`PointCloud`、`ParticleSystem`  
+  `PointsMaterial`曾用名有`PointCloudMaterial`、`ParticleBasicMaterial`、`ParticleSystemMaterial`  
 
 
 ## 光源
@@ -129,7 +139,7 @@ function onMouseMove( event ) {
     // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 to +1)
     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-    // 通过摄像机和鼠标位置更新射线
+    // 通过相机和鼠标位置更新射线
     raycaster.setFromCamera( mouse, camera );
     // 鼠标所在位置投线触碰到所有物体的数组
     var intersects = raycaster.intersectObjects( scene.children );
@@ -143,6 +153,7 @@ function onMouseMove( event ) {
 }
 window.addEventListener( 'mousemove', onMouseMove, false );
 ```
+如果物体添加到组里的话，鼠标是拾取不到的
 
 
 ## 组
