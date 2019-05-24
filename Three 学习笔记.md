@@ -163,3 +163,18 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 
 ## 其他
 - 材质的颜色值有set方法（应该所有值都能用set设置）
+
+
+# 配合使用工具
+
+
+## stats
+功能：提供一个帧率显示面板  
+地址：https://github.com/mrdoob/stats.js  
+
+
+## dat.gui
+功能：提供一个可以控制指定数据的面板  
+地址：https://github.com/dataarts/dat.gui  
+
+
