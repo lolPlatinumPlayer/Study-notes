@@ -178,3 +178,8 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 地址：https://github.com/dataarts/dat.gui  
 
 
+## OrbitControls
+功能：鼠标控制相机  
+地址：可能是https://github.com/fibo/three-orbitcontrols  
+three仓库里有源码，路径为“examples/js/controls/OrbitControls.js”
+
