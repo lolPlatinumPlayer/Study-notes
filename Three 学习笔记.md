@@ -47,23 +47,6 @@ scene.add(cube); // 将对象加进场景中
 ```
 - 移动与旋转操作方法与相机相同、旋转比相机多了`物体.lookAt(new THREE.Vector3(0,0,2))`这种方法
   （在whs组件中返回的组件中，这些操作要在setTimeout0里才能生效）
-- 设置形状：
-  - 立方体：`new THREE.BoxGeometry(1, 1, 1)` 参数对应立方体x、y、z边的长度
-  - 圆：`new THREE.CircleGeometry( 半径, 圆弧上的节点数 )`
-  - 面：
-    `new THREE.PlaneBufferGeometry(x长,y长,side: THREE.DoubleSide)`
-    side默认为单面显示
-  - 线：
-    线和点的尺寸似乎都不会随着相机远近而改变
-    ```javascript
-    new THREE.Geometry()
-    geometry.vertices.push(new THREE.Vector3(-10,0,0));
-    geometry.vertices.push(new THREE.Vector3(0,10,0));
-    geometry.vertices.push(new THREE.Vector3(10,0,0));
-    // 可以加更多节点...
-    ```
-    这里的节点会按顺序连成线，但是首尾不会相连
-    （`new THREE.Vector3(x,y,z)`是three里面表达向量的一种方法，还有2维4维向量。目前不知道更简便地加线条节点的方法）
 - 设置材质
   纹理（map）与颜色等合起来变成材质
   - 网格：
@@ -81,6 +64,43 @@ scene.add(cube); // 将对象加进场景中
 - 找到父级：`对象.parent`
 - 让物体永远处于最前：`物体.material.depthTest=false`（new材质时也可以设置）（depthWrite也可以）
   （bug：whs平面有时候会挡在depthTest=false的物体上，这个时候给需要最前的物体的材质设置transparent:true就行）
+
+
+## 对象的形状
+- **立方体**  
+  `new THREE.BoxGeometry(1, 1, 1)`  
+  参数对应立方体x、y、z边的长度  
+- **圆**  
+  `new THREE.CircleGeometry( 半径, 圆弧上的节点数 )`  
+- **矩形**（面）  
+  `new THREE.PlaneBufferGeometry(x长,y长,side: THREE.DoubleSide)`  
+  side默认为单面显示  
+- **以点绘面**  
+  ```javascript
+  const x = 0, y = 0;
+  const heartShape = new THREE.Shape();
+  heartShape.moveTo( x + 5, y + 5 );
+  heartShape.bezierCurveTo( x + 5, y + 5, x + 4, y, x, y );
+  heartShape.bezierCurveTo( x - 6, y, x - 6, y + 7,x - 6, y + 7 );
+  heartShape.bezierCurveTo( x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19 );
+  heartShape.bezierCurveTo( x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7 );
+  heartShape.bezierCurveTo( x + 16, y + 7, x + 16, y, x + 10, y );
+  heartShape.bezierCurveTo( x + 7, y, x + 5, y + 5, x + 5, y + 5 );
+  new THREE.ShapeGeometry( heartShape );
+  ```
+- **线**  
+  线和点的尺寸似乎都不会随着相机远近而改变  
+  ```javascript
+  new THREE.Geometry()
+  geometry.vertices.push(new THREE.Vector3(-10,0,0));
+  geometry.vertices.push(new THREE.Vector3(0,10,0));
+  geometry.vertices.push(new THREE.Vector3(10,0,0));
+  // 可以加更多节点...
+  ```
+  这里的节点会按顺序连成线，但是首尾不会相连  
+  （`new THREE.Vector3(x,y,z)`是three里面表达向量的一种方法，还有2维4维向量。目前不知道更简便地加线条节点的方法）  
+- **任意形状**  
+  ParametricGeometry
 
 
 ## Sprite对象（总朝着相机的一个平面）
