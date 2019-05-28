@@ -133,11 +133,15 @@ var sprite = new THREE.Sprite(spriteMaterial)
 
 
 ## 光源
-```javascript
-var light = new THREE.PointLight( 'white' );
-light.position.set( 10, 0, 25 );
-scene.add( cube,light );
-```
+- **点光源**  
+  ```javascript
+  var light = new THREE.PointLight( 'white' );
+  light.position.set( 10, 0, 25 );
+  scene.add( cube,light );
+  ```
+- **平行光**  
+  `new THREE.DirectionalLight(光线颜色, 光照强度)`  
+  光照方向：从position处射向空间中心  
 
 
 ## 动画
