@@ -2,8 +2,10 @@
 https://threejs.org/docs/index.html#manual/zh/introduction/WebGL-compatibility-check
 
 
-## 坐标系
-z轴指向屏幕外
+## 坐标系（默认情况下）
+x轴向右  
+y轴向上  
+z轴向屏幕外  
 
 
 ## 场景
