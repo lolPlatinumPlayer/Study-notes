@@ -79,17 +79,22 @@ scene.add(cube); // 将对象加进场景中
   side默认为单面显示  
 - **以点绘面**  
   ```javascript
-  const x = 0, y = 0;
-  const heartShape = new THREE.Shape();
-  heartShape.moveTo( x + 5, y + 5 );
-  heartShape.bezierCurveTo( x + 5, y + 5, x + 4, y, x, y );
-  heartShape.bezierCurveTo( x - 6, y, x - 6, y + 7,x - 6, y + 7 );
-  heartShape.bezierCurveTo( x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19 );
-  heartShape.bezierCurveTo( x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7 );
-  heartShape.bezierCurveTo( x + 16, y + 7, x + 16, y, x + 10, y );
-  heartShape.bezierCurveTo( x + 7, y, x + 5, y + 5, x + 5, y + 5 );
-  new THREE.ShapeGeometry( heartShape );
+  const shape = new THREE.Shape(/*[
+    new THREE.Vector2(-22,22),
+    new THREE.Vector2(0,22),
+    new THREE.Vector2(22,22),
+    new THREE.Vector2(22,0),
+    new THREE.Vector2(0,-22)
+  ]*/);
+  shape.moveTo(-22,22);
+  shape.lineTo(0,22);
+  shape.lineTo(22,22);
+  shape.lineTo(22,0);
+  shape.lineTo(0,-22);
+  new THREE.ShapeGeometry( shape );
   ```
+  这个例子中 **构造函数传参** 和 **`moveTo`、`lineTo`组合** 的效果一致  
+  如果第一个`moveTo`替换为`lineTo`，则将会从中心点连线到第一个坐标，而不是以第一个坐标为 **起始/终止点**  
 - **线**  
   线和点的尺寸似乎都不会随着相机远近而改变  
   ```javascript
