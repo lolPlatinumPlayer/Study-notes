@@ -152,6 +152,7 @@ var sprite = new THREE.Sprite(spriteMaterial)
   light.position.set( 10, 0, 25 );
   scene.add( cube,light );
   ```
+  【】目前点光源似乎无法照亮漫反射材质，有空看下《官方点光源例子.html》
 - **平行光**  
   `new THREE.DirectionalLight(光线颜色, 光照强度)`  
   光照方向：从position处射向空间中心  
