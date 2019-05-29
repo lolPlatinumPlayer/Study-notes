@@ -41,6 +41,7 @@ z轴向屏幕外
 
 
 ## 对象
+这里的对象是指`Object3D`的实例，组也是`Object3D`的实例
 ```javascript // 例子为立方体
 var geometry = new THREE.BoxGeometry(1, 1, 1); // 设置形状
 var material = new THREE.MeshBasicMaterial({color: 0x00ff00}); // 设置材质（这里直接上色，颜色值要么16进制数字要么非缩写字符串，字符串可以用单词）
@@ -64,6 +65,13 @@ scene.add(cube); // 将对象加进场景中
   - 线：`new THREE.Line(形状, 材质)`
 - 删除对象：`父内容.remove(组件)`
 - 找到父级：`对象.parent`
+- 遍历
+  - 遍历对象及其后代  
+    `对象.traverse(callback)`  
+  - 遍历可见对象及其可见后代  
+    `对象.traverseVisible(callback)`  
+  - 遍历对象的祖先  
+    `对象.traverseAncestors(callback)`  
 - 让物体永远处于最前：`物体.material.depthTest=false`（new材质时也可以设置）（depthWrite也可以）
   （bug：whs平面有时候会挡在depthTest=false的物体上，这个时候给需要最前的物体的材质设置transparent:true就行）
 
