@@ -275,8 +275,9 @@ this不会指向返回的数组
 map似乎全面领先forEach。map可以return，而forEach不行，而且forEach似乎有兼容性问题 
 
 
-## break
-break可以跳出for循环、switch（其他没测试）
+## break、return
+break、return可以跳出for循环、switch，  
+无法跳出`map`、`forEach`
 
 
 ## filter
