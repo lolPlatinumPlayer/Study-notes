@@ -197,8 +197,9 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 
 
 ## 组
-不能像whs的组那样用`new Group(子元素1,子元素2,子元素3)`  
-只能使用`Object3D`的`add`添加子元素（`子元素.addTo(组)`也可以）  
+只有两个添加子项的方法：  
+1. 使用`Object3D`的`add`添加子项
+2. `子项.addTo(组)`  
 
 
 ## 其他
