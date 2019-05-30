@@ -54,9 +54,11 @@
 
 
 ## 组（组件有的方法属性基本都有）
+**声明**： `const group = new WHS.Group(实参);`  
+**实参构成**： 参数数量任意，一个参数代表一个子项，子项可以是three对象也可以是whs组件实例  
+**增加子项的方法**： `add`或`addTo`都行  
 组件添加到组后就不能再添加进应用，不过还能单独对组中的某个组件进行控制  
-声明： `const group = new WHS.Group(任意数量的组件或three物体);` 组件用数组或多参数都可以  
-虽然源码上继承自`MeshComponent`，但是组不能通过直接传参position、rotation等进行改变  
+（虽然组源码上继承自`MeshComponent`，但是组不能通过直接传参position、rotation等进行改变）  
 
 
 ## 动画
