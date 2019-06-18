@@ -80,7 +80,7 @@ scene.add(cube); // 将对象加进场景中
   （bug：whs平面有时候会挡在depthTest=false的物体上，这个时候给需要最前的物体的材质设置transparent:true就行）
 
 
-## 对象的形状
+## 几何体
 - **立方体**  
   `new THREE.BoxGeometry(1, 1, 1)`  
   参数对应立方体x、y、z边的长度  
@@ -118,7 +118,34 @@ scene.add(cube); // 将对象加进场景中
   这里的节点会按顺序连成线，但是首尾不会相连  
   （`new THREE.Vector3(x,y,z)`是three里面表达向量的一种方法，还有2维4维向量。目前不知道更简便地加线条节点的方法）  
 - **任意形状**  
-  ParametricGeometry
+  ```javascript
+  function parametricFunc(u, v,target) {
+    let x = u*10;
+    let y = v*10;
+    let z = 0;
+    if (
+      u > 0.1 && u < 0.2
+      ||
+      v > 0.3 && v < 0.5
+    ){
+      z=1
+    }
+    target.set( x, y, z );
+  }
+  const pg = new THREE.ParametricGeometry(parametricFunc, 100, 100);
+  const pm = new THREE.MeshPhongMaterial({color: 0x00ff00});
+  const p = new THREE.Mesh(pg, pm);
+  scene.add(p);
+  ```
+  - **中文名**：参数化几何体  
+  - **原理**：生成一个平面，再将这个平面的每个点进行坐标转换，最终面中的每个点的坐标我们都可以控制，控制时可以获得原平面的x坐标与y坐标。  
+  - **参数**：`new THREE.ParametricGeometry(点坐标转换函数, 原平面x坐标分段数, 原平面y坐标分段数)`  
+  - **点坐标转换函数**：  
+    原平面的每个点都会调用这个函数而后生成新的点。  
+    三个形参分别为：原平面x坐标、原平面y坐标、target  
+    原平面x坐标和原平面y坐标的值都是从0到1  
+    函数中要调用`target.set(最终x坐标,最终y坐标,最终z坐标)`来生成最终的点  
+    最终坐标的单位与three空间一致  
 
 
 ## Sprite对象（总朝着相机的一个平面）
