@@ -60,6 +60,10 @@ scene.add(cube); // 将对象加进场景中
   - 线：`new THREE.LineDashedMaterial({color:'red'})`
   - 更换贴图：给material.map赋值新new的图片或者新new的canvas
     （不过在whs的精灵组件中可以给spriteMaterial.map赋值）
+  - 单双面：  
+    材质默认都是单面  
+    要双面的话需要将`side`设置为`THREE.DoubleSide`  
+    给`side`属性赋值也能改变单双面  
 - 新建对象
   - 网格：`new THREE.Mesh(形状, 材质)`
   - 线：`new THREE.Line(形状, 材质)`
@@ -83,8 +87,7 @@ scene.add(cube); // 将对象加进场景中
 - **圆**  
   `new THREE.CircleGeometry( 半径, 圆弧上的节点数 )`  
 - **矩形**（面）  
-  `new THREE.PlaneBufferGeometry(x长,y长,side: THREE.DoubleSide)`  
-  side默认为单面显示  
+  `new THREE.PlaneBufferGeometry(x长,y长)`  
 - **以点绘面**  
   ```javascript
   const shape = new THREE.Shape(/*[
