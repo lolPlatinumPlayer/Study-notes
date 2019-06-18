@@ -60,10 +60,10 @@ scene.add(cube); // 将对象加进场景中
   - 线：`new THREE.LineDashedMaterial({color:'red'})`
   - 更换贴图：给material.map赋值新new的图片或者新new的canvas
     （不过在whs的精灵组件中可以给spriteMaterial.map赋值）
-  - 单双面：  
-    材质默认都是单面  
-    要双面的话需要将`side`设置为`THREE.DoubleSide`  
-    给`side`属性赋值也能改变单双面  
+  - 面的渲染：  
+    默认都只渲染正面  
+    面的渲染有三个选项：正面（`THREE.FrontSide`）、反面（`THREE.BackSide`）、双面（`THREE.DoubleSide`）
+    设置面的渲染有两个方法：在new材质时配置side选项、new材质后给side属性赋值  
 - 新建对象
   - 网格：`new THREE.Mesh(形状, 材质)`
   - 线：`new THREE.Line(形状, 材质)`
