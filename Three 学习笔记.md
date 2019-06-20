@@ -250,6 +250,20 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 - 材质的颜色值有set方法（应该所有值都能用set设置）
 
 
+# three辅助方法
+
+
+## 渲染几何体所有面的法线
+```javascript
+geometry = new THREE.BoxGeometry( 10, 10, 10, 2, 2, 2 );
+material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+box = new THREE.Mesh( geometry, material );
+helper = new THREE.FaceNormalsHelper( box, 2, 0x00ff00, 1 );
+// scene.add( box );
+scene.add( helper );
+```
+
+
 # 配合使用工具
 
 
