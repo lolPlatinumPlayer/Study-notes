@@ -24,7 +24,7 @@ z轴向屏幕外
 - 移动：
   给`camera.position.x或y或z`赋值、camera.position.setX或setY或setZ(距离)
   要一次性设置三个参数的话用position.set(x值,y值,z值)
-  （无法直接给camera.position赋值）
+  （无法直接给camera.position赋值、如果`position.set`传参数量不足，则几何体不会出现，但也不报错）
 - 旋转与移动同理，就是把`position`改为`rotation`，three的角度单位都是弧度
 - 缩放：scale
 - quaternion暂不理解
