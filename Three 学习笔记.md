@@ -8,10 +8,14 @@ y轴向上
 z轴向屏幕外  
 
 
+## `Object3D`
+很多类都继承自`Object3D`（如场景类、组类、对象类等）  
+`add`方法：可以同时添加不限个数的对象、光源，也可以多次添加  
+
+
 ## 场景
 - 创建：`let scene=new THREE.Scene()`
-- 添加内容：`scene.add(a,b,c)`
-  可以同时添加不限个数的对象、光源，也可以多次添加
+- 添加内容：`Object3D`的`add`方法
 - 改变背景色  
   `scene.background = new THREE.Color( 十六进制或字符串 )`  
   这里字符串色值可以缩写
@@ -242,7 +246,7 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 
 ## 组
 只有两个添加子项的方法：  
-1. 使用`Object3D`的`add`添加子项
+1. `Object3D`的`add`方法
 2. `子项.addTo(组)`  
 
 
