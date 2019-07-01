@@ -373,6 +373,10 @@ function(key, value) {
   return value;
 }
 ```
+面对特殊值时的处理情况：
+- 数组元素为`undefined`、`NaN`、`empty`的会转为`null`
+- 对象属性值为`undefined`的属性不会打印
+- 对象属性值为`NaN`的会转为`null`
 
 
 ## 正则的方法
