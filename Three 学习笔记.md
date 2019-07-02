@@ -167,9 +167,9 @@ scene.add(cube); // 将对象加进场景中
 
 ## Sprite对象（总朝着相机的一个平面）
 ```javascript
-var spriteMap = new THREE.TextureLoader().load("图片地址") // 这个加载是异步的
-var spriteMaterial = new THREE.SpriteMaterial({map: spriteMap,rotation:1,color:'red'}) // color会与map相乘
-var sprite = new THREE.Sprite(spriteMaterial)
+const spriteMap = new THREE.TextureLoader().load("图片地址") // 这个加载是异步的
+const spriteMaterial = new THREE.SpriteMaterial({map: spriteMap,rotation:1,color:'red'}) // color会与map相乘
+const sprite = new THREE.Sprite(spriteMaterial)
 ```
 - **近大远小**  
   默认会。`sizeAttenuation`设置为`false`后不会  
@@ -185,8 +185,15 @@ var sprite = new THREE.Sprite(spriteMaterial)
   
   
 ## Points对象（总朝着相机的一个平面）
+```javascript
+const pG = new THREE.Geometry();
+pG.vertices.push( new THREE.Vector3(0,0,0) );
+const pM = new THREE.PointsMaterial({ color:'red',size:11})
+const p = new THREE.Points(pG,pM)
+```
 - **近大远小**  
-  不会（就算`sizeAttenuation`设为`true`还是不会）
+  默认会。`sizeAttenuation`设置为`false`后不会  
+  但是在GeoGL7月1日版本时`sizeAttenuation`为`true`时仍有比较接近的最大尺寸和最小尺寸
 > **曾用名**  
   `Points`曾用名有`PointCloud`、`ParticleSystem`  
   `PointsMaterial`曾用名有`PointCloudMaterial`、`ParticleBasicMaterial`、`ParticleSystemMaterial`  
