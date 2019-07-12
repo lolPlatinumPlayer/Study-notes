@@ -66,8 +66,10 @@ scene.add(cube); // 将对象加进场景中
     `对象.traverseVisible(callback)`  
   - 遍历对象的祖先  
     `对象.traverseAncestors(callback)`  
-- 让物体永远处于最前：`物体.material.depthTest=false`（new材质时也可以设置）（depthWrite也可以）
-  （bug：whs平面有时候会挡在depthTest=false的物体上，这个时候给需要最前的物体的材质设置transparent:true就行）
+- 让物体永远处于最前：  
+  `物体.material.depthTest=false`（new材质时也可以设置）（depthWrite也可以）  
+  （bug：whs平面有时候会挡在depthTest=false的物体上，这个时候给需要最前的物体的材质设置transparent:true就行）  
+  有时候three环境depthTest也会失效，具体分析看[文章](https://blog.csdn.net/qq_30100043/article/details/79737692)  
 
 
 ## 材质
