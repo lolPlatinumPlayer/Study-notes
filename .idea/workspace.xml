@@ -1,5 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0112b360-1d5f-4c61-a2db-dd3568d358f5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/babel及其它工具笔记.txt" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/babel及其它工具笔记.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dva笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/dva笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jQuery学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/jQuery学习笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/npm笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/npm笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/php学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/php学习笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react-router.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/react-router.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/react学习笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/redux学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/redux学习笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue-cli笔记.txt" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/vue-cli笔记.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue-loader笔记.txt" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/vue-loader笔记.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue-router笔记.txt" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/vue-router笔记.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vuex笔记.txt" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/vuex笔记.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/vue笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web workers 学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/web workers 学习笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webpack笔记与记录.txt" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/webpack笔记与记录.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/whs 学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/whs 学习笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/测试github的md.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/测试github的md.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/英语词汇.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/英语词汇.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/英语语法.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/英语语法.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/菜谱.txt" beforeDir="false" afterPath="$PROJECT_DIR$/不重要/菜谱.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/要准备的问题.md" beforeDir="false" afterPath="$PROJECT_DIR$/不重要/要准备的问题.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/项目日志.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/项目日志.md" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/.tmp/" />
+    <ignored path="$PROJECT_DIR$/temp/" />
+    <ignored path="$PROJECT_DIR$/tmp/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Three 学习笔记.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+            <state split_layout="FIRST">
+              <first_editor relative-caret-position="175">
+                <caret line="70" column="10" lean-forward="true" selection-start-line="70" selection-start-column="10" selection-end-line="70" selection-end-column="10" />
+              </first_editor>
+              <second_editor>
+                <markdownNavigatorState />
+              </second_editor>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/Three 学习笔记.md" />
+      </list>
+    </option>
+  </component>
   <component name="JsFlowSettings">
     <service-enabled>true</service-enabled>
     <exe-path />
@@ -7,11 +70,30 @@
     <auto-save>true</auto-save>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="324" />
-    <option name="width" value="1596" />
+    <option name="x" value="549" />
+    <option name="width" value="1371" />
     <option name="height" value="1040" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Study-notes" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Study-notes" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="D:/work/ddc_git" />
@@ -19,7 +101,121 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\open_source_repositories\Study-notes\近期不用" />
+      <recent name="D:\open_source_repositories\Study-notes\不重要" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0112b360-1d5f-4c61-a2db-dd3568d358f5" name="Default Changelist" comment="" />
+      <created>1562915185540</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1562915185540</updated>
+      <workItem from="1562915187984" duration="433000" />
+      <workItem from="1563088610029" duration="273000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="706000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="549" y="0" width="1371" height="1040" extended-state="0" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24039187" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.44431818" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.32954547" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="MAXIMUM_HISTORY_ROWS" value="200" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/不重要/要准备的问题.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor>
+            <markdownNavigatorState />
+          </second_editor>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/不重要/菜谱.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Three 学习笔记.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="175">
+            <caret line="70" column="10" lean-forward="true" selection-start-line="70" selection-start-column="10" selection-end-line="70" selection-end-column="10" />
+          </first_editor>
+          <second_editor>
+            <markdownNavigatorState />
+          </second_editor>
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>
