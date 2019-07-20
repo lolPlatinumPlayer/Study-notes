@@ -1,27 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0112b360-1d5f-4c61-a2db-dd3568d358f5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GLSL学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/GLSL 学习笔记.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webGL学习笔记 .md" beforeDir="false" afterPath="$PROJECT_DIR$/webGL 学习笔记 .md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/三维矩阵学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/三维矩阵 学习笔记.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/babel及其它工具笔记.txt" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/babel及其它工具 学习笔记.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/canvas学习笔记 .md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/canvas 学习笔记 .md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/dva笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/dva 学习笔记.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/jQuery学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/jQuery 学习笔记.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/npm笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/npm 学习笔记.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/php学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/php 学习笔记.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/react-router.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/react-router 学习笔记.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/react学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/React 学习笔记.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/redux学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/redux 学习笔记.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/vue-cli笔记.txt" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/vue-cli 学习笔记.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/vue-loader笔记.txt" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/vue-loader 学习笔记.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/vue-router笔记.txt" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/vue-router 学习笔记.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/vuex笔记.txt" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/vuex 学习笔记.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/vue笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/Vue 笔记.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/近期不用/webpack笔记与记录.txt" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/webpack 笔记与记录.txt" afterDir="false" />
-    </list>
+    <list default="true" id="0112b360-1d5f-4c61-a2db-dd3568d358f5" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -32,22 +12,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Three 学习笔记.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-            <state split_layout="FIRST">
-              <first_editor relative-caret-position="283">
-                <caret line="74" column="9" selection-start-line="74" selection-start-column="9" selection-end-line="74" selection-end-column="9" />
-              </first_editor>
-              <second_editor>
-                <markdownNavigatorState />
-              </second_editor>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -127,12 +92,12 @@
       <updated>1562915185540</updated>
       <workItem from="1562915187984" duration="433000" />
       <workItem from="1563088610029" duration="1425000" />
-      <workItem from="1563090235066" duration="280000" />
+      <workItem from="1563090235066" duration="407000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2138000" />
+    <option name="totallyTimeSpent" value="2265000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="549" y="0" width="1371" height="1040" extended-state="0" />
@@ -262,11 +227,21 @@
     <entry file="file://$PROJECT_DIR$/近期不用/vuex 学习笔记.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/git 笔记.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor>
+            <markdownNavigatorState />
+          </second_editor>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Three 学习笔记.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="FIRST">
-          <first_editor relative-caret-position="283">
-            <caret line="74" column="9" selection-start-line="74" selection-start-column="9" selection-end-line="74" selection-end-column="9" />
+          <first_editor relative-caret-position="-5629">
+            <caret line="72" column="31" selection-start-line="72" selection-start-column="31" selection-end-line="72" selection-end-column="31" />
           </first_editor>
           <second_editor>
             <markdownNavigatorState />

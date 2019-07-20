@@ -53,14 +53,19 @@ var cube = new THREE.Mesh(geometry, material); // 依据形状和材质新建对
 scene.add(cube); // 将对象加进场景中
 ```
 - 移动与旋转操作方法与相机相同、旋转比相机多了`物体.lookAt(new THREE.Vector3(0,0,2))`这种方法
-  （在whs组件中返回的组件中，这些操作要在setTimeout0里才能生效）
+  （在whs组件中返回的组件中，这些操作要在setTimeout0里才能生效，不然会被覆盖）
+  
 - 新建对象
   - 网格：`new THREE.Mesh(形状, 材质)`
   - 线：`new THREE.Line(形状, 材质)`
+  
 - 删除对象：`父内容.remove(组件)`
+
 - 替换对象
   直接把原对象覆盖掉，然后`parent`属性设为父对象  
+  
 - 找到父级：`对象.parent`
+
 - 遍历
   - 遍历对象及其后代
     `对象.traverse(callback)`
@@ -68,11 +73,15 @@ scene.add(cube); // 将对象加进场景中
     `对象.traverseVisible(callback)`
   - 遍历对象的祖先
     `对象.traverseAncestors(callback)`
+  
 - 让物体靠前显示：
-  `物体.material.depthTest=false`（new材质时也可以设置）（depthWrite也可以）
-  （bug：whs平面有时候会挡在depthTest=false的物体上，这个时候给需要最前的物体的材质设置transparent:true就行）
-  有时候three环境除了`depthTest`还需要在对象上设置`renderOrder`靠前
-  具体分析看[文章](https://blog.csdn.net/qq_30100043/article/details/79737692)
+  `物体.material.depthTest=false`（new材质时也可以设置）（depthWrite也可以）  
+  （bug：whs平面有时候会挡在depthTest=false的物体上，这个时候给需要最前的物体的材质设置transparent:true就行）  
+  有时候three环境除了`depthTest`还需要在对象上设置`renderOrder`靠前   
+  
+  有时候只设置`renderOrder`就行
+  
+- 具体分析看[文章](https://blog.csdn.net/qq_30100043/article/details/79737692)
 
 
 ## 材质
@@ -197,8 +206,7 @@ const pM = new THREE.PointsMaterial({ color:'red',size:11})
 const p = new THREE.Points(pG,pM)
 ```
 - **近大远小**
-  默认会。`sizeAttenuation`设置为`false`后不会
-  但是在GeoGL7月1日版本时`sizeAttenuation`为`true`时仍有比较接近的最大尺寸和最小尺寸
+  默认会。`sizeAttenuation`设置为`false`后不会  
 > **曾用名**
   `Points`曾用名有`PointCloud`、`ParticleSystem`
   `PointsMaterial`曾用名有`PointCloudMaterial`、`ParticleBasicMaterial`、`ParticleSystemMaterial`

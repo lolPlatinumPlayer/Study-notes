@@ -1,8 +1,8 @@
 
 
 # 【JS】ES5
-		   
-		   
+
+
 ## undefined
 用undefined赋值可以把原有内容覆盖掉  
 但是对对象的某个属性赋值undefined并不会将这个属性删除
@@ -10,9 +10,11 @@
 
 ## delete
 `delete obj.attr`
+
 1. 删除对象的属性
 2. 删除对象
    以下两种对象可以用delete删除
+   
     1. `window.obj='attr'`用这种方法声明的对象
     2. 不声明直接赋值的对象
 3. delete后直接跟变量名的话就相当于对这个变量本身进行操作
@@ -23,7 +25,7 @@
 > `prop in object`  
 如果指定的属性在指定的对象或其原型链中，则in 运算符返回true。  
 **`prop`**： 一个字符串类型或者 symbol 类型的属性名或者数组索引（非symbol类型将会强制转为字符串）。  
-   
+
 
 ## 与、或
 - `&&`与前为true 时解析与后
@@ -71,7 +73,7 @@ console.log('a[3]',a[3]) // undefined
    立即执行函数不会给window的原型增加方法
     1. `(function(){... }())`
     2. `(function(){... })()`
-		   
+		
 ## 函数的其他内容
 - 形参与实参的关系相当于`形参=实参`，所以是会发生引用传递的
 - 函数都有一个name属性，值为函数名（es5中如果把函数表达式赋值给变量，这个函数的name属性将是空字符串）
@@ -139,7 +141,8 @@ console.log('a[3]',a[3]) // undefined
        `let a=1`后a获得的就是一个非映射引用，引用的指向是原始值——1。  
        之后把a赋值给任何变量，这些变量的引用都是相同的。  
        如果赋值给a的是广义对象，那就有可能发生下文说的引用传递  
-	   
+	
+
 这么设计的原因：  
 引用值的大小会改变，所以不能把它放在栈中，否则会降低变量查寻的速度。相反，放在变量的栈空间中的值是该对象存储在堆中的地址。地址的大小是固定的，所以把它存储在栈中对变量性能无任何负面影响。  
 
@@ -473,8 +476,8 @@ sessionStorage除以上限定外，还限定与窗口，窗口关闭则数据销
 
 ## cookie
 受同源策略限制，不过与请求文件的同源策略可能稍有不同
-  
-  
+
+
 ## 跨域
 在前端用脚本加载资源的话会受到同源协议限制，要真正打破这个限制的话只有让后端加跨域头部一个方法（前端不用加任何东西，包括fetch，不过非“简单请求”应该要有些改动）
 - 后端增加跨域头部方法
@@ -532,9 +535,9 @@ a<<b在数学中相当于a=a*2^b，反之类似
 
 
 #  【JS】ES6
-	   
-	   
-	   
+
+
+​	   
 
 ## 模块
 import和export  
@@ -554,6 +557,7 @@ import和export
 2. export var a='xx'  
    这种格式不能用as在输出时重命名变量  
    
+
 两种格式 变量在export前或export时都必须定义，且不可重复定义  
 export可以位于模块顶层任何位置（即不能放在块级作用域内），import命令也是如此  
 
@@ -574,6 +578,7 @@ as可以将一个变量重命名为多个变量
 - `import * as a from './b'`  
   针对export输出，将./b中的变量都重命名为a.x1、a.x2等  
   
+
 import from的地址可以省略.js，（慕课react实战里说是脚手架的功能）  
 import在静态解析阶段执行，所以它是一个模块之中最早执行的。  
 由于import是静态执行，所以不能使用 表达式、变量 这种只有在运行时才能得到结果的语法结构。  
@@ -605,6 +610,7 @@ export default可以输出类【未测试export行不行】
   `export { foo, bar }`  
   可以简写为`export { foo, bar } from 'my_module'`  
   
+
 可以用as，甚至可以用`as`让具体接口和默认接口互相转换  
 和`*`  
 默认接口的写法为：`export { default } from 'foo'`  
@@ -713,6 +719,7 @@ class 类名 {
   - 方法则会加在this的原型链上  
 - 类中非静态的内容都是给实例调用的，而静态的内容都是给类调用的  
 - 类构造函数也可以`return`一个对象，这样的话实例就会是这个对象  
+- 类不会像普通函数一样变量提升
 
 
 ## 类的静态方法
@@ -818,10 +825,11 @@ Promise对象是一个构造函数，用来生成Promise实例。
     - onRejected
       可选。承诺被拒绝时要运行的错误处理程序函数。
 【】测试加载图片的异步功能能不能用高阶函数代替promise实现
-   
+  
 
 ## Promise相关可行的例子
 1.
+	
 	```javascript
 	const go= new Promise((resolve, reject) => {
 	    setTimeout(resolve, 555, 'done')
@@ -831,19 +839,20 @@ Promise对象是一个构造函数，用来生成Promise实例。
 	})
 	```
 2.
+	
 	```javascript
-        async function drawBuilding() { // 要用await，其所在函数体外一定要加async
-          const result = await (new Promise((resolve) => { // 在函数前加await可以让函数在完成前让语句保持阻塞
-            setTimeout(resolve, 1111, 'done')
-          })).then((value) => {
-            return value
-          })
-          console.log(result); // done
-          return result;
-        }
-     
-        const aa = drawBuilding() // 倒二行
-        console.log(aa); // 倒一行
+	    async function drawBuilding() { // 要用await，其所在函数体外一定要加async
+	      const result = await (new Promise((resolve) => { // 在函数前加await可以让函数在完成前让语句保持阻塞
+	        setTimeout(resolve, 1111, 'done')
+	      })).then((value) => {
+	        return value
+	      })
+	      console.log(result); // done
+	      return result;
+	    }
+	
+	    const aa = drawBuilding() // 倒二行
+	    console.log(aa); // 倒一行
 	```
   - 这样写的话  
     从倒二倒一行都不会阻塞  
@@ -855,7 +864,8 @@ Promise对象是一个构造函数，用来生成Promise实例。
   - 如果在倒二行的`=`后加上`await`  
     倒二行就会阻塞，aa的值也会变为promise的resolve的返回值
 3.
-	```javascript
+	
+    ```javascript
         async function getBorderCanvas({width,height,lineWidth,color}) {
             // ......
             const afterLoading= new Promise((resolve) => {
@@ -865,14 +875,15 @@ Promise对象是一个构造函数，用来生成Promise实例。
                     ctx.drawImage(img,0,0,canvasWidth,canvasHeight)
                     resolve()
                 }
-            })
-
+        })
+    
             return await afterLoading.then(() => {
                 return canvas
             })
-        }
-	```
-        如果要获取加了async的函数return值，必须用await
+	    }
+    ```
+    加了`async`的函数会返回一个promise，并且会异步执行  
+    如果要获取加了`async`的函数return值，需要用await【】有空试下then
 
 
 ## 将多个promise合为一个
