@@ -101,12 +101,12 @@ console.log('a[3]',a[3]) // undefined
           let c=obj.bar
           console.log(c()()) // 结果：window。因为箭头函数产生于c()，上下文是window
        ```
-3. 使用new的构造函数中
-   this代表这个构造函数创建的对象，初始值是`{}`
-4. `bind`方法
-   `函数.bind(x)`返回一个this是x的函数
-   不过bind似乎无法改变箭头函数的this
-   （mdn上还有 传参、new等内容）
+3. 使用`new`的构造函数中  
+   this代表这个构造函数创建的对象，初始值是`{} ` 
+4. `bind`方法  
+   `函数.bind(x)`返回一个this是x的函数  
+   不过bind似乎无法改变箭头函数的this  
+   （mdn上还有 传参、new等内容）  
 5. **`apply`**方法  
    `函数.apply(对象,数组)`  
    执行函数，但是函数的this替换为第一个实参，而函数使用的参数为`...第二个实参`  
@@ -221,6 +221,10 @@ let obj1 = new createObj()
 原型也可以拥有原型，这样一直往后追溯的原型的链条就称为原型链  
 - 原型链上的属性或方法对象都可以直接调用
 
+- 原型链上的成员可以与对象本身上的成员重名  
+
+  但是直接按这些成员名进行调用会调到对象本身上的成员
+
 
 constructor（译文：构造函数）
 prototype（译文：原型）
@@ -249,13 +253,20 @@ prototype（译文：原型）
 es5中对非对象使用会报错，而es6会返回内容（如：对字符串使用则会返回一个从0开始的数组，数组长度与字符串长度一致）
 
 
-## for(const 变量 in 对象) （变量前面最好加上声明关键字，不然编译后chrome会报错且js无法运行）
-- 遍历一个对象的可枚举属性，在每次迭代时会将本次循环到的属性名分配给变量
-- 对于数组也可以使用`for(const 序号 in 数组)`
+## for(const 属性名 in 对象) 
+遍历一个对象的可枚举属性【】？？？
+
+- 属性名前面最好加上声明关键字，不然编译后chrome会报错且js无法运行
+
+- 对于数组也可以使用`for(const 序号 in 数组)`  
+  
+    其特性如下：  
+    
     - 所有被赋值的子项都会进入循环
     - 如果遇到数组元素为空时，不会执行本次循环
-    - 序号是字符串
+    - 循环体内获得的序号是字符串
     - 对数组并不会一定按顺序遍历
+    
 - 对象或数组.hasOwnProperty(attr)判断对象或者数组自身(不包括原型链)是否具有指定名称的属性或序号，返回布尔值（该方法属于Object对象，由于所有的对象都"继承"了Object的对象实例，因此几乎所有的实例对象都可以使用该方法）
 
 
@@ -280,9 +291,11 @@ this不会指向返回的数组
 map似乎全面领先forEach。map可以return，而forEach不行，而且forEach似乎有兼容性问题   
 
 
-## break、return
-break、return可以跳出for循环、switch，  
-无法跳出`map`、`forEach`
+## `break`、`return`
+`break`、`return`可以跳出for循环、`switch`，  
+无法跳出`map`、`forEach`  
+
+`return` 可以跳出函数，`break`只能存在于指定位子
 
 
 ## filter
@@ -432,16 +445,19 @@ setInterval和setTimeout
   详见https://developer.mozilla.org/zh-CN/docs/Web/API/Document/querySelector
 - 多个元素
   `document.querySelectorAll(字符串格式的css选择器)`
-  
 
 ## 事件
-这里列出最正规的方法
+这里写的是最正规的方法
 以下事件名不加on
-第三个参数可以传入布尔值选择是否冒泡
+
 - 增加事件
   `元素.addEventListener(字符串事件名, 函数名)`
 - 移除事件
   `元素.removeEventListener(字符串事件名, 函数名)`
+
+元素可以是`window`、dom和[XMLHttpRequest](https://developer.mozilla.org/zh-cn/DOM/XMLHttpRequest)  
+
+后面还有几个选项
 
 
 ## 数字操作
@@ -524,6 +540,29 @@ sessionStorage除以上限定外，还限定与窗口，窗口关闭则数据销
 ## throw exception
 抛出一个自定义错误，exception为错误内容，可以是对象、数组、字符串、错误对象等
 
+## try catch finally
+
+```javascript
+try{
+    // 一些代码
+}catch (e) {
+    // try语句块阻塞报错则执行
+    // 这里return和再外一层return表现是一致的
+}finally{
+    // 上面两块都走完就执行（没有错误也会执行）
+}
+```
+
+- try语句块中阻塞报错的话整体代码不会阻塞
+- 这个方法可以跳出`forEach`
+- 等于then处理承诺被拒绝的功能
+
+## Date对象
+
+- **`getTime()`**  
+
+  返回时间戳，单位：毫秒
+
 
 ## <<、>>、<<<、>>>
 按位移动运算符。  
@@ -541,8 +580,8 @@ a<<b在数学中相当于a=a*2^b，反之类似
 
 ## 模块
 import和export  
-大部分浏览器无法实现，不过webpack中可用  
-以下提到的 变量 包括 函数（函数名后不应加括号）  
+大部分浏览器无法实现，不过大部分打包工具中可用  
+以下提到的**变量**包括**函数**（函数名后不应加括号），不包括**属性**  
 
 
 ## 模块的地址表示
@@ -556,7 +595,6 @@ import和export
    就算只export一个变量也要用括号，之后import也要带括号
 2. export var a='xx'  
    这种格式不能用as在输出时重命名变量  
-   
 
 两种格式 变量在export前或export时都必须定义，且不可重复定义  
 export可以位于模块顶层任何位置（即不能放在块级作用域内），import命令也是如此  
@@ -893,10 +931,6 @@ Promise对象是一个构造函数，用来生成Promise实例。
 （不用Promise.all不进入回调地域似乎无法做出Promise.all的功能）
 
 
-## catch
-等于then处理承诺被拒绝的功能
-	
-	
 ## fetch
 ```javascript
     fetch(这里可以放请求、php文件或其他文件,{ // 加第二个参数可以规避在跨域时的报错，但并没有解决跨域获取不到东西的问题
@@ -1024,7 +1058,7 @@ export default 组件
 
 ## 递归
 - 不引入函数外变量，不用引用传递的话，单次递归返回全部处理后的树的方法
-    ```
+    ```javascript
     const 模拟数据=[
         [
             112,

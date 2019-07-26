@@ -49,24 +49,34 @@ const 属性序号 = gl.getAttribLocation(着色器程序, 字符串的属性名
 gl.enableVertexAttribArray(属性序号) // 开启属性
 const 缓冲 = gl.createBuffer(); // 创建缓冲
 gl.bindBuffer(gl.ARRAY_BUFFER, 缓冲); // 将缓冲绑定到绑定点（gl.ARRAY_BUFFER）
+gl.vertexAttribPointer( 属性序号, size, gl.FLOAT, false, 0, 0) // 设置属性如何从缓冲中读取数据（size规定了一次读取数组的几个元素，如果size小于属性的向量分量数的话，那么一个属性中没有从缓冲中读取数据的部分将会取默认值）（执行这个方法前绑定点上要有缓冲）
+
 gl.bufferData(gl.ARRAY_BUFFER, 强类型数据 , 使用方法); // 通过绑定点（gl.ARRAY_BUFFER）给缓冲传输强类型数据（“最初例子”用的使用方法是`gl.STATIC_DRAW`）
-gl.vertexAttribPointer( 属性序号, size, gl.FLOAT, false, 0, 0) // 让属性从缓冲中读取数据（size规定了一次读取数组的几个元素，如果size小于属性的向量分量数的话，那么一个属性中没有从缓冲中读取数据的部分将会取默认值）
 ```
 
 ## 使用全局变量（uniform）
 
 ```javascript
-const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution"); // 启用某个uniform
+const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution"); // 获取指定uniform在着色器程序中的序号（不确定是否有“启用uniform”的功能）
 gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height); // 给某个uniform赋值
 ```
 
+- **赋值**   
 
+  方法：gl.uniform+数字+i或f+可选的v  
+
+  目前看到不加v的情况都是给向量赋值，
+
+  详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/uniform)
 
 ## 运行着色器
 
 `gl.drawArrays(图元类型, 0, 顶点着色器运行次数)`  
 
 - 图元类型决定了顶点会生成什么样的图形  
+
+  可以选择各种的点、线、三角形
+
 - 顶点着色器运行几次就会生成几个顶点  
 
 
@@ -81,3 +91,5 @@ gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height); // �
 
 
 # 疑问点
+
+- 有多个`attribute`时绑定点（`gl.ARRAY_BUFFER`）够用吗
