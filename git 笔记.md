@@ -6,7 +6,6 @@ cd d:nospace/learngit
 
 · 不要使用windows自带记事本编辑文件
 
-
 · Git专有名词英文
 版本库 repository
 暂存区 stage（或index）
@@ -50,7 +49,6 @@ $ git commit -m "remark information"
    如暂存区与分支一致，则会在结尾打印“nothing added to commit”
 4、如果一切正常，则会打印“nothing to commit, working tree clean”
    （一切正常意为工作区所有文件都与分支一致且暂存区无内容）
-   
 
 · 文件名说明型前缀
 “deleted: ”
@@ -78,12 +76,13 @@ $ git commit -m "remark information"
 · $ git log
 查看所有提交的版本
 
-
 · 回退到上个版本
 git reset --hard HEAD^
+
+【】--hard 似乎很有问题
+
 如果commit后有做修改，那执行这个命令就会回到这个commit
 HEAD后面`^`的数量代表回退2的`^`数量次方步，可以用^199这种简写（简写似乎不行）
-
 
 · 变成未来某个版本
 $ git reset --hard 2b595d5eac

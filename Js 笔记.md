@@ -314,7 +314,7 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/type
 `arr.push(xx)`
 没输入xx则不执行这个方法
 只要有输入xx，不管值是什么都会向arr末尾增加一个值为xx的子项
-可以输入多个xx
+可以输入多个子项，用逗号隔开
 不可用于对象
 
 
@@ -346,7 +346,7 @@ arrayObject.concat(arrayX,arrayX,......,arrayX)
  `arr或str.slice(begin,end)`  
 - 数组  
   返回一个数组，其元素从arr[begin]开始到arr[end]结尾（不包含arr[end]）  
-  可以不输入end，end不大于begin时返回空数组  
+  可以不输入end，end小于或等于begin时返回空数组  
   输入负数则代表从末尾开始数（-n代表倒数第n个）  
   返回数组子项顺序与原数组一致  
 - 字符串  

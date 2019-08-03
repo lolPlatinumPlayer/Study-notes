@@ -58,15 +58,17 @@ gl.bufferData(gl.ARRAY_BUFFER, 强类型数据 , 使用方法); // 通过绑定�
 
 ```javascript
 const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution"); // 获取指定uniform在着色器程序中的序号（不确定是否有“启用uniform”的功能）
-gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height); // 给某个uniform赋值
+gl.uniform2f(resolutionUniformLocation, 向量第一位, 向量第二位); // 给某个uniform赋值
 ```
 
 - **赋值**   
 
-  方法：gl.uniform+数字+i或f+可选的v  
+  方法：gl.uniform+数字+i或f+可选的v   
 
-  目前看到不加v的情况都是给向量赋值，
+  `i`代表整数，`f`代表浮点数  
 
+  目前看到不加v的情况都是给向量赋值，加v的都是给矩阵赋值  
+  
   详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/uniform)
 
 ## 运行着色器

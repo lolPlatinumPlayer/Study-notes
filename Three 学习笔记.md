@@ -109,7 +109,7 @@ scene.add(cube); // 将对象加进场景中
 - 网格：？
   - 直接上色：MeshBasicMaterial  
     什么情况下都固定颜色
-  - 漫反射：MeshLambertMaterial、MeshPhongMaterial（两个目前不知道区别）  
+  - 漫反射：MeshLambertMaterial、MeshPhongMaterial（MeshPhongMaterial会反光而MeshLambertMaterial不会，MeshPhongMaterial还多了很多成员）  
     没有光源的话将不显示
   - 特别花的花纹：MeshDistanceMaterial  
   - 
@@ -343,6 +343,12 @@ window.addEventListener( 'mousemove', onMouseMove, false );
   **关键帧轨道**有多种类型  
 
   更多内容详见[官网](https://threejs.org/docs/index.html#api/zh/animation/KeyframeTrack)   
+
+## 性能提升
+
+- 使用引用材质
+- 去除阴影
+- 把`MeshPhongMaterial`改为`MeshLambertMaterial`
 
 
 ## 其他
