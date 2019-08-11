@@ -29,7 +29,11 @@ z轴向屏幕外
   给`camera.position.x或y或z`赋值、camera.position.setX或setY或setZ(距离)  
   要一次性设置三个参数的话用position.set(x值,y值,z值)  
   （无法直接给camera.position赋值、如果`position.set`传参数量不足，则几何体不会出现，但也不报错）
-- 旋转与移动同理，就是把`position`改为`rotation`，three的角度单位都是弧度
+- 旋转与移动同理，就是把`position`改为`rotation`，three的角度单位都是弧度，正值是逆时针旋转，多轴赋值旋转公式不明。
+  - 四元数
+    - 方向也是逆时针
+    - 可以与rotation同时生效
+    - `applyQuaternion`一次是在原角度上进行旋转2
 - 缩放：scale
 - quaternion暂不理解
 
@@ -114,7 +118,11 @@ scene.add(cube); // 将对象加进场景中
   - 特别花的花纹：MeshDistanceMaterial  
   - 
   
-- 线：`new THREE.LineDashedMaterial({color:'red'})`
+- 线：  
+
+  `new THREE.LineDashedMaterial({color:'red'})`  
+
+  线的宽度基本只能是1像素，size是无法生效的，官网有提到具体原因  
 
 - 更换贴图：给material.map赋值新new的图片或者新new的canvas  
   （不过在whs的精灵组件中可以给spriteMaterial.map赋值）
@@ -139,7 +147,7 @@ scene.add(cube); // 将对象加进场景中
   `new THREE.BoxGeometry(1, 1, 1)`  
   参数对应立方体x、y、z边的长度
 - **圆**  
-  `new THREE.CircleGeometry( 半径, 圆弧上的节点数 )`
+  `new THREE.CircleGeometry( 半径, 边缘上的节点数 )`
 - **矩形**  
   `new THREE.PlaneBufferGeometry(x长,y长)`
 - **线**  

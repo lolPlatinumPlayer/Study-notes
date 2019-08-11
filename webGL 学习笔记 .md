@@ -43,7 +43,6 @@ gl.compileShader(着色器)
 
 
 ## 使用属性（attribute）
-（不确定`uniform`和`varying`适不适用）  
 ```javascript
 const 属性序号 = gl.getAttribLocation(着色器程序, 字符串的属性名) // 获取指定属性在着色器程序中的序号
 gl.enableVertexAttribArray(属性序号) // 开启属性
@@ -61,15 +60,23 @@ const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution")
 gl.uniform2f(resolutionUniformLocation, 向量第一位, 向量第二位); // 给某个uniform赋值
 ```
 
-- **赋值**   
+- **向量赋值**   
 
   方法：gl.uniform+数字+i或f+可选的v   
 
   `i`代表整数，`f`代表浮点数  
 
-  目前看到不加v的情况都是给向量赋值，加v的都是给矩阵赋值  
+  （v用处未知）
   
   详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/uniform)
+  
+- **矩阵赋值**   
+
+  方法：gl.uniformMatrix+数字+fv  
+
+  传参：`(uniform在着色器程序中的序号,false,普通数组)`
+
+  详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/uniformMatrix)
 
 ## 运行着色器
 
@@ -95,3 +102,4 @@ gl.uniform2f(resolutionUniformLocation, 向量第一位, 向量第二位); // �
 # 疑问点
 
 - 有多个`attribute`时绑定点（`gl.ARRAY_BUFFER`）够用吗
+- 坐标系

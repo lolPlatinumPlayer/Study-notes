@@ -256,8 +256,6 @@ es5中对非对象使用会报错，而es6会返回内容（如：对字符串�
 ## for(const 属性名 in 对象) 
 遍历一个对象的可枚举属性【】？？？
 
-- 属性名前面最好加上声明关键字，不然编译后chrome会报错且js无法运行
-
 - 对于数组也可以使用`for(const 序号 in 数组)`  
   
     其特性如下：  
@@ -849,20 +847,21 @@ Promise对象是一个构造函数，用来生成Promise实例。
             reject(error);
         }
     });
+
+`resolve`和`reject`都只能有一个实参，多了在`then`里也不会体现出来  
+
 - then（来源于Promise，以下都是个人猜测，未经验证）
   then解决了两个问题
   - 如果要一个函数运行后获取其计算出的值，再对这个值进行操作。
     - 无then的情况：就要多一层嵌套，而且代码也要多一行以上
     - 可以让**计算出这个值后的语句**对**再之后的语句**行成异步，可以缩短部分运算时间
   - 语法
-    promise.then(onCompleted, onRejected);
-    - promise
-      必需。Promise 对象。
+    `promise对象.then(onCompleted, onRejected)`
     - onCompleted
-      必需。承诺成功完成时要运行的履行处理程序函数。
+      必需。`resolve`就是执行这个函数
     - onRejected
-      可选。承诺被拒绝时要运行的错误处理程序函数。
-【】测试加载图片的异步功能能不能用高阶函数代替promise实现
+      可选。`reject`就是执行这个函数
+    【】测试加载图片的异步功能能不能用高阶函数代替promise实现
   
 
 ## Promise相关可行的例子
@@ -899,6 +898,7 @@ Promise对象是一个构造函数，用来生成Promise实例。
       为`"pending"`代表promise还未结束运行  
       为`"resolved"`代表`resolve`已经运行完毕  
     - promise的`[[PromiseValue]]`的值为promise返回的值  
+    
   - 如果在倒二行的`=`后加上`await`  
     倒二行就会阻塞，aa的值也会变为promise的resolve的返回值
 3.
@@ -921,13 +921,52 @@ Promise对象是一个构造函数，用来生成Promise实例。
 	    }
     ```
     加了`async`的函数会返回一个promise，并且会异步执行  
-    如果要获取加了`async`的函数return值，需要用await【】有空试下then
+    如果要获取加了`async`的函数return值，需要用await【】有空试下then  
+    
+    对于map用了await后每个子项会变成promise，要写for循环才行，例子如下
+    
+    ```javascript
+    const a=new Promise(resolve=>{
+              setTimeout(()=>resolve(9),1111)
+            })
+            
+            
+            async function ss(){
+              let arr=[1,2,3,4]
+              let b=await arr.map(async ()=>{
+                return await a.then(aaaa=>aaaa)
+              })
+              /*let b=[]
+              for (let i=0;i<arr.length;i++){
+                b.push(await a.then(aaaa=>aaaa))
+              }*/
+              console.log(b)
+            }
+    
+            ss()
+    ```
+    
+    
 
 
-## 将多个promise合为一个
-`Promise.all(多个promise组成的数组)`（数组部分元素不是promise好像也可以）  
-这个promise的then的形参是一个数组，子项为各个promise处理后的返回值  
-不知道是串联还是并联  
+## Promise.all
+- **语法** 
+
+  `Promise.all(多个promise组成的数组)`（数组部分元素不是promise对象好像也可以）  
+
+- **功能**  
+
+  相当于一个新的promise对象  
+
+  这个新的promise对象的`then`的执行时间：在输入的所有promise对象的`then`执行之后执行  
+
+- **`then`的回调的形参**  
+  这个形参会返回一个数组  
+
+  数组的子项为各输入promise对象的`resolve`或`reject`的实参  
+
+  子项顺序与输入promise对象顺序一致  
+
 （不用Promise.all不进入回调地域似乎无法做出Promise.all的功能）
 
 

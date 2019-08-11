@@ -5,6 +5,12 @@ webGL在一个容器里会生成一个**裁剪空间**，这个**裁剪空间**�
 - 裁剪空间轴方向与平面坐标系相同
 - 坐标值区间是[-1,1]
 
+## gl_PointSize
+
+顶点显示的方块的尺寸
+
+（用ps魔棒测量时记得把“消除锯齿”去掉，不然会多选几个像素）
+
 ## gl_Position
 
 - `gl_Position`应该就是顶点着色器最终输出结果  
@@ -79,17 +85,59 @@ void main() {
 
 - 可以用数字与向量进行加减，这时数字就相当于每个分量都等于其数字值的向量
 
+## 向量取值
+
+- vec4.x, vec4.y, vec4.z, vec4.w 通过x，y，z，w可以分别取出4个值。
+
+- vec4.xy, vec4.xx, vec4.xz, vec4.xyz 任意组合可以取出多种维度的向量。
+
+- vec4.r, vec4.g, vec4.b, vec4.a 还可以通过r，g，b，a分别取出4个值，同上可以任意组合。
+
+- vec4.s, vec4.t, vec4.p, vec4.q 还可以通过s，t，p，q分别取出4个值，同上可以任意组合。
+
+- vec3和vec2也是类似，只是变量相对减少，比如vec3只有x，y，z，vec2只有x，y。
+
+## 乘法顺序
+
+- 矩阵与向量相乘，矩阵要放前面，不然平移矩阵不会生效
+- 不同顺序的矩阵相乘会产生不同的结果
+
 ## 其他
 
 - 除了数组序号与分量值外，所有数字都要带小数点。  
 
-  不然会报前一个运算符“wrong operand types”，而且整个着色器无法运行
+  不然会报前一个运算符“wrong operand types”，而且整个着色器无法运行  
+  
+  （也有可能是因为声明为浮点数的值必须带小数点）
+  
+- 只有同类型数据才能进行四则运算
 
 
 # 疑问
 - 着色器中找不到来源的的变量和函数、关键字都是什么
-  - 这些变量包括但不限于uv、projectionMatrix、modelViewMatrix
+  - 这些变量包括但不限于uv、projectionMatrix、modelViewMatrix、position
+    
+    - projectionMatrix、modelViewMatrix、position估计都是three提供的  
+    
+      - **projectionMatrix**  
+    
+        投影矩阵
+    
+      - **modelViewMatrix**  
+    
+        视图矩阵与模型矩阵的乘积
+    
+      - **position**  
+    
+        模型点坐标（四维向量）  
+      
+        `position`可能只能在顶点着色器使用
+      
+      来源：[掘金博客](https://juejin.im/post/5b0ace63f265da0db479270a)
   - 这些函数包括但不限于perspectiveDepthToViewZ、viewZToOrthographicDepth
-  - 这些关键字包括但不限于#include
-
+  
+- 这些关键字包括但不限于#include
+  
 - `attribute`有什么`uniform`没有的功能
+
+- 坐标系
