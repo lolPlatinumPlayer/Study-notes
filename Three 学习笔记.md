@@ -10,7 +10,7 @@ z轴向屏幕外
 
 ## `Object3D`
 很多类都继承自`Object3D`（如场景类、组类、对象类等）  
-`add`方法：可以同时添加不限个数的对象、光源，也可以多次添加
+`add`方法：可以同时添加不限个数的对象、光源，也可以多次添加  
 
 
 ## 场景
@@ -233,7 +233,7 @@ const sprite = new THREE.Sprite(spriteMaterial)
 - **近大远小**  
   默认会。`sizeAttenuation`设置为`false`后不会
 - **尺寸**  
-  sprite对象建好后都是宽1高1的，需要用`scale`放大至需要的尺寸（`sizeAttenuation`设置为`false`的情况未测试）
+  sprite对象建好后都是宽1高1的，需要用`scale`放大至需要的尺寸（`sizeAttenuation`设置为`false`时也可以用`scale`，而且会受到祖先缩放的影响，没有`size`属性）
 - **旋转**  
   只能通过`spriteMaterial.rotation`旋转  
   增加的话是逆时针  
@@ -352,6 +352,60 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 
   更多内容详见[官网](https://threejs.org/docs/index.html#api/zh/animation/KeyframeTrack)   
 
+## 矩阵
+
+- **新建矩阵**  
+
+  ```javascript
+  const m = new Matrix4()
+  m.set( 11, 12, 13, 14,
+         21, 22, 23, 24,
+         31, 32, 33, 34,
+         41, 42, 43, 44 )
+  ```
+
+  元素数组elements将存储为:
+
+  ```javas
+  [ 11, 21, 31, 41,
+    12, 22, 32, 42,
+    13, 23, 33, 43,
+    14, 24, 34, 44 ]
+  ```
+
+  `set`时的顺序是从左到右书写的，而`elements`中是从上到下书写的  
+
+- **向量乘矩阵**  
+
+  `向量.applyMatrix4(矩阵)`  
+
+  向量会乘以矩阵，并且会返回新的向量值
+
+- **矩阵相乘**  
+
+  - 正乘：`物体.multiply(矩阵)`  
+  - 反乘：`物体.premultiply(矩阵)`  
+  
+  将调用方法的矩阵改造成结果，并返回结果  
+  
+  *位移、缩放、改变透视畸变 的话，正乘和反乘效果并没有差别*  
+  
+- **物体的矩阵**  
+
+  - **`matrix`属性**  
+
+    相当于GLSL中说的“模型矩阵”  
+
+    该属性改变后下一帧就会按照这个属性绘制  
+
+    *前提是物体的`matrixAutoUpdate`要设为`false`，不然乘矩阵将不会产生效果（估计是因为每一帧的重新计算）*  
+
+  - **`matrixWorld`属性**  
+
+    世界变换矩阵  
+
+    应该代表：物体中的向量直接乘以这个矩阵就会变成实际显示的向量
+
 ## 性能提升
 
 - 使用引用材质
@@ -361,20 +415,19 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 
 ## 其他
 - 材质的颜色值有set方法（应该所有值都能用set设置）
+- `setTimeout(callback,0)`可以跳到下一帧绘制后
 
 
-# three辅助方法
-
-
-## 渲染几何体所有面的法线
-```javascript
-geometry = new THREE.BoxGeometry( 10, 10, 10, 2, 2, 2 );
-material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-box = new THREE.Mesh( geometry, material );
-helper = new THREE.FaceNormalsHelper( box, 2, 0x00ff00, 1 );
-// scene.add( box );
-scene.add( helper );
-```
+## three辅助方法
+- 渲染几何体所有面的法线
+    ```javascript
+    geometry = new THREE.BoxGeometry( 10, 10, 10, 2, 2, 2 );
+    material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+    box = new THREE.Mesh( geometry, material );
+    helper = new THREE.FaceNormalsHelper( box, 2, 0x00ff00, 1 );
+    // scene.add( box );
+    scene.add( helper );
+    ```
 
 
 # 配合使用工具
