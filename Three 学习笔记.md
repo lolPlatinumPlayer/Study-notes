@@ -32,8 +32,14 @@ z轴向屏幕外
 - 旋转与移动同理，就是把`position`改为`rotation`，three的角度单位都是弧度，正值是逆时针旋转，多轴赋值旋转公式不明。
   - 四元数
     - 方向也是逆时针
+    
     - 可以与rotation同时生效
+    
     - `applyQuaternion`一次是在原角度上进行旋转2
+    
+    - 四元数的变化都是在原来基础上进一步变换（同一变换应用两次，旋转角度就会乘2）  
+    
+      有一些把欧拉变换转为四元数变换再应用的方法也是这样的
 - 缩放：scale
 - quaternion暂不理解
 
@@ -109,14 +115,26 @@ scene.add(cube); // 将对象加进场景中
 
 
 ## 材质
-材质由纹理（map）与颜色等构成
+物体的`material`属性可以使用`material`实例，也可以使用由`material`实例组成的数组  
+
+- **使用数组**  
+
+  长度不定，不管是什么数组基本都不会报错  
+
+  比如立方体，数组头六位的`material`实例就会作为相应面的材质  
+
+  如果头六位中有部分空缺，或不是`material`实例，那么对应面将不会被渲染
+
+- `material`实例由纹理（map）与颜色等构成
+
+- `copy`方法：只能在属于同一个类的材质间使用
+
 - 网格：？
   - 直接上色：MeshBasicMaterial  
     什么情况下都固定颜色
   - 漫反射：MeshLambertMaterial、MeshPhongMaterial（MeshPhongMaterial会反光而MeshLambertMaterial不会，MeshPhongMaterial还多了很多成员）  
     没有光源的话将不显示
   - 特别花的花纹：MeshDistanceMaterial  
-  - 
   
 - 线：  
 
@@ -232,11 +250,20 @@ const sprite = new THREE.Sprite(spriteMaterial)
 ```
 - **近大远小**  
   默认会。`sizeAttenuation`设置为`false`后不会
+  
 - **尺寸**  
-  sprite对象建好后都是宽1高1的，需要用`scale`放大至需要的尺寸（`sizeAttenuation`设置为`false`时也可以用`scale`，而且会受到祖先缩放的影响，没有`size`属性）
+  sprite对象建好后都是宽1高1的，需要用`scale`放大至需要的尺寸 
+  
+  其中`map`也会挤压成宽1高1   
+  
+  `sizeAttenuation`设置为`false`时也可以用`scale`，而且会受到祖先缩放的影响，没有`size`属性  
+  
+  sprite的`scale`也是三维向量，虽然z轴没发现有什么作用
+  
 - **旋转**  
   只能通过`spriteMaterial.rotation`旋转  
   增加的话是逆时针  
+  
 - **`center`**（只有sprite有）  
   值是three二维向量  
   xy为0时在左下角，为1时在右上角，值的大小不限  
@@ -414,7 +441,14 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 
 
 ## 其他
-- 材质的颜色值有set方法（应该所有值都能用set设置）
+- **向量的`set`方法**  
+
+  可以通过`set`改变向量的值  
+
+  注意：若`向量.set(...undefined)`的话，将报js阻塞错误——“Cannot convert undefined or null to object”  
+
+  three中`position`、`scale`、颜色等内容都是向量
+
 - `setTimeout(callback,0)`可以跳到下一帧绘制后
 
 
