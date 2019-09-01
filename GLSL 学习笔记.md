@@ -69,7 +69,7 @@ void main() {
 }
 ```
 
-- 只有在main中才能进行赋值，不然将会报错“syntax error”或“global variable initializers must be constant expressions”   
+- 只有在main中才能给已声明变量赋值，不然将会报错“syntax error”或“global variable initializers must be constant expressions”   
 
   并且着色器无法运行  
 
@@ -110,14 +110,34 @@ void main() {
   
   （也有可能是因为声明为浮点数的值必须带小数点）
   
-- 只有同类型数据才能进行四则运算
+- 只有同类型数据才能进行运算、比较等操作  
+
+  不然报不存在两个数据之间的那个操作符
+
+- **普通声明**  
+
+  *自己定义的概念：attribute、uniform、varying以外的声明*
+
+  普通声明在任何地方都可以
+
+  甚至可以在main外进行带四则运算的赋值
+  
+  可以在声明时不赋值，使用未赋值的变量程序也能正常运行
+
+## 运算符
+
+基本与js一致
+
+## 条件语句相关
+
+基本与js一致
 
 
 # 疑问
 - 着色器中找不到来源的的变量和函数、关键字都是什么
   - 这些变量包括但不限于uv、projectionMatrix、modelViewMatrix、position
     
-    - projectionMatrix、modelViewMatrix、position估计都是three提供的  
+    - projectionMatrix、modelViewMatrix、position估计都是three提供的 attribute 
     
       - **projectionMatrix**  
     
@@ -129,11 +149,13 @@ void main() {
     
       - **position**  
     
-        模型点坐标（四维向量）  
+        模型点坐标（三维向量）（之前写是四维）  
       
         `position`可能只能在顶点着色器使用
       
       来源：[掘金博客](https://juejin.im/post/5b0ace63f265da0db479270a)
+      
+      `modelViewMatrix*vec4( position,1.)`的中心点位于canvas中央，单位和`position`没有区别
   - 这些函数包括但不限于perspectiveDepthToViewZ、viewZToOrthographicDepth
   
 - 这些关键字包括但不限于#include

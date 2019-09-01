@@ -161,7 +161,7 @@ scene.add(cube); // 将对象加进场景中
 
 
 ## 形状
-- **立方体 **  
+- **立方体**  
   `new THREE.BoxGeometry(1, 1, 1)`  
   参数对应立方体x、y、z边的长度
 - **圆**  
@@ -169,13 +169,13 @@ scene.add(cube); // 将对象加进场景中
 - **矩形**  
   `new THREE.PlaneBufferGeometry(x长,y长)`
 - **线**  
-  线和点的尺寸似乎都不会随着相机远近而改变
+  线的尺寸似乎不会随着相机远近而改变
   
   ```javascript
-  new THREE.Geometry()
-  geometry.vertices.push(new THREE.Vector3(-10,0,0));
-  geometry.vertices.push(new THREE.Vector3(0,10,0));
-  geometry.vertices.push(new THREE.Vector3(10,0,0));
+  const lineG=new THREE.Geometry()
+  lineG.vertices.push(new THREE.Vector3(-10,0,0));
+  lineG.vertices.push(new THREE.Vector3(0,10,0));
+  lineG.vertices.push(new THREE.Vector3(10,0,0));
   // 可以加更多节点...
   ```
   这里的节点会按顺序连成线，但是首尾不会相连  
@@ -436,6 +436,7 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 ## 性能提升
 
 - 使用引用材质
+  - 1
 - 去除阴影
 - 把`MeshPhongMaterial`改为`MeshLambertMaterial`
 
