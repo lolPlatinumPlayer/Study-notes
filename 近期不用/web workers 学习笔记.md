@@ -25,3 +25,4 @@
 ## worker中执行主线程的函数
 主线程中`w.onmessage=一个函数(形参)`  
 worker中用`postMessage(实参的data属性)`函数的执行就是执行赋值给`onmessage`的函数  
+*（这里`onmessage`估计用`addEventListener`、`removeEventListener`操作`'message'`也有同等效果）*

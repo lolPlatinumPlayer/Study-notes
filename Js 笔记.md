@@ -303,8 +303,12 @@ map似乎全面领先forEach。map可以return，而forEach不行，而且forEac
 
 `return` 可以跳出函数，`break`只能存在于指定位子
 
+## `continue`
 
-## filter
+可以在for循环中正常使用
+
+
+## `filter`
 `var XX = arr.filter(callback)`
 callback中返回的是布尔值，为真的子项会进入新数组
 单参数代表前面的arr
@@ -363,6 +367,7 @@ arrayObject.concat(arrayX,arrayX,......,arrayX)
 ## splice
 `arr.splice(index,howmany,item1,.....,itemX)`
 从数组中添加/删除项目，然后返回被删除的项目
+
 1. index	添加/删除项目的位置（包含），使用负数可从数组结尾处规定位置
 1. howmany	要删除的项目数量。如果设置为 0，则不会删除项目
 1. item1, ..., itemX	（可选）向数组添加的新项目
@@ -454,8 +459,12 @@ setInterval和setTimeout
   },111)
   ```
 
+- `setTimeout(fn,0)`  
+
+  可以达到异步的效果，不过注意这样做的操作在画面里会有卡顿感
 
 ## 选择器
+
 - 单个元素
   `document.querySelector(字符串格式的css选择器)`   
   详见https://developer.mozilla.org/zh-CN/docs/Web/API/Document/querySelector
@@ -578,6 +587,10 @@ try{
 - **`getTime()`**  
 
   返回时间戳，单位：毫秒
+
+## π
+
+`Math.PI`长度没占满，所以将`Math.PI`除一些数两边也能全等
 
 
 ## <<、>>、<<<、>>>
@@ -984,6 +997,8 @@ Promise对象是一个构造函数，用来生成Promise实例。
   数组的子项为各输入promise对象的`resolve`或`reject`的实参  
 
   子项顺序与输入promise对象顺序一致  
+  
+  【】不过每个子项彼此间似乎都是异步的，所以执行完毕的时间并不是按顺序来的
 
 （不用Promise.all不进入回调地域似乎无法做出Promise.all的功能）
 
@@ -1148,6 +1163,7 @@ export default 组件
     }
     ```
 
+## 三角函数算不出0却算得出1
 
 # 其他
 

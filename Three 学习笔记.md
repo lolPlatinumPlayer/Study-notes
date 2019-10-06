@@ -158,16 +158,25 @@ scene.add(cube); // 将对象加进场景中
   2. 将`wireframe`属性赋值为`true`  
   
   适用材质：大部分几何体或面的材质
+  
+- **带透明度的材质**  
+
+  `transparent`要先设置为`true`  
+
+  `alphaTest`设置了效果更好，不然有的透明物体的透明部分也会挡住其他物体，暂时都用`0.5`
 
 
 ## 形状
 - **立方体**  
   `new THREE.BoxGeometry(1, 1, 1)`  
   参数对应立方体x、y、z边的长度
+  
 - **圆**  
   `new THREE.CircleGeometry( 半径, 边缘上的节点数 )`
+  
 - **矩形**  
   `new THREE.PlaneBufferGeometry(x长,y长)`
+  
 - **线**  
   线的尺寸似乎不会随着相机远近而改变
   
@@ -180,6 +189,7 @@ scene.add(cube); // 将对象加进场景中
   ```
   这里的节点会按顺序连成线，但是首尾不会相连  
   （`new THREE.Vector3(x,y,z)`是three里面表达向量的一种方法，还有2维4维向量。目前不知道更简便地加线条节点的方法）
+  
 - **任意形状的平面**
   ```javascript
   const shape = new THREE.Shape(/*[
@@ -198,15 +208,68 @@ scene.add(cube); // 将对象加进场景中
   ```
   这个例子中 **构造函数传参** 和 **`moveTo`、`lineTo`组合** 的效果一致  
   如果第一个`moveTo`替换为`lineTo`，则将会从中心点连线到第一个坐标，而不是以第一个坐标为 **起始/终止点**
+  
+  - **如果首尾点连线穿过了一条线段**  
+    那么效果如下  
+    ![首尾点连线穿过了一条线段](图片\首尾点连线穿过了一条线段.png)  
+    
+  - **如果中间有些线穿过了其他线**  
+    ![捕获](图片\捕获.png)  
+    
+    `side`取任意值的结果都是一致的  
+    
+    ```javascript
+    const shape = new THREE.Shape([
+      new THREE.Vector2(0, 2),
+      new THREE.Vector2(20, 2),
+      new THREE.Vector2(20, 0),
+      new THREE.Vector2(15, 4),
+      new THREE.Vector2(10, 0),
+      new THREE.Vector2(0, 0),
+    ]);
+    const shapeG = new THREE.ShapeGeometry(shape);
+    const shapeM = new THREE.MeshPhongMaterial({color: 'yellow', transparent: true, opacity: 0.3});
+    const sss = new THREE.Mesh(shapeG, shapeM)
+    scene.add(sss);
+    ```
+    
+  - **如果面对下面这种连线**  
+    ![捕获3](图片\捕获3.png)  
+    那么效果如下  
+    ![捕获2](图片\捕获2.png)  
+    
+    `side`取任意值的结果都是一致的  
+    
+    ```javascript
+    const shape = new THREE.Shape([
+      new THREE.Vector2(0, 2),
+      new THREE.Vector2(20, 2),
+      new THREE.Vector2(20, 0),
+      new THREE.Vector2(10, 0),
+      new THREE.Vector2(15, -5),
+      new THREE.Vector2(13, -7),
+      new THREE.Vector2(4, 2),
+      new THREE.Vector2(20, 2),
+      new THREE.Vector2(20, 0),
+      new THREE.Vector2(0, 0),
+    ]);
+    const shapeG = new THREE.ShapeGeometry(shape);
+    const shapeM = new THREE.MeshPhongMaterial({color: 'yellow', transparent: true, opacity: 0.3,});
+    const sss = new THREE.Mesh(shapeG, shapeM)
+    scene.add(sss);
+    ```
+  
 - **任意形状的平面加厚成的几何体**
   `new THREE.ExtrudeGeometry( THREE.Shape实例, js对象 )`
   `js对象`的常用属性：  
   
   - depth：厚度  
   - steps：加厚部分的分段数  
+  
 - bevelEnabled：控制是否使用斜角（默认为true）
   
   更多属性及其他内容见[three官网](https://threejs.org/docs/#api/zh/geometries/ExtrudeGeometry)
+  
 - **任意的面**
   ```javascript
   function parametricFunc(u, v,target) {
@@ -249,7 +312,7 @@ const spriteMaterial = new THREE.SpriteMaterial({
 const sprite = new THREE.Sprite(spriteMaterial)
 ```
 - **近大远小**  
-  默认会。`sizeAttenuation`设置为`false`后不会
+  默认会。`sizeAttenuation`设置为`false`后不会。设置为`false`后鼠标无法拾取
   
 - **尺寸**  
   sprite对象建好后都是宽1高1的，需要用`scale`放大至需要的尺寸 

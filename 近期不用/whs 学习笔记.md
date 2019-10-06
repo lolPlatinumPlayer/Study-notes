@@ -63,7 +63,7 @@
 
 ## 动画
 ```javascript
-const loop=new WHS.Loop(() => {
+const loop=new WHS.Loop((three的Clock对象) => {
     动画代码
 })
 ```
