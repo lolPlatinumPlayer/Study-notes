@@ -199,7 +199,7 @@ methods: {
 
 
 ## 事件处理方法
-<button v-on:click="greet">Greet</button>
+`<button v-on:click="greet">Greet</button>`
 1、click处（个人）称为“事件触发条件”，已知的有click、submit、keyup、input（未测试，估计是文本框专用的，输入内容一变化就触发）  
    keyup只能给文本框使用`keyup.你要的按键（字母、空格、方向键等）`，详见：https://cn.vuejs.org/v2/guide/events.html#按键修饰符  
    （除此外可能还有更多的事件触发条件，没有深入研究。事件触发条件应该是vue规定的，很多html事件不可用）  
@@ -209,7 +209,8 @@ methods: {
    “<a @click="脚本语句,函数名()">分配完毕</a>”  
    用分号“;”或者逗号“,”做间隔  
 
-   这里的data等也不需要加`this.`
+   这里的data等也不需要加`this.`  
+   这里直接写语句的话是没有this的，也获取不到window对象（不过放箭头函数里可以获取到this，而window不行）
 
 
 ## 事件修饰符

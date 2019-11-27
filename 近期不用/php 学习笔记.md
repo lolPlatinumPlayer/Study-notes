@@ -18,7 +18,20 @@
 - Parse error（解析错误）会导致整个php脚本失效，情况有：（不加 ; 、使用类似 1=1+1; 语句等）
 - 自定义错误处理器无法处理Parse error和Fatal error
   
-  
+## 头部
+
+- **跨域**
+
+  ```php
+  header("Access-Control-Allow-Origin: http://127.0.0.1:8080 （星号代表所有）");
+  header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
+  header('Access-Control-Allow-Headers:x-requested-with,content-type');
+  header('Access-Control-Allow-Credentials:true');
+  ```
+
+- **让php支持中文**
+  `header("content-type:text/html;charset=utf-8");`
+
 ## 引号
 - 单引号内部 变量、/n换行符 不解析，而双引号会解析（就算变量被单引号包围也会解析）
 - 单、双引号中要打出单、双引号字符串要使用 /' 或 /" 
@@ -124,4 +137,14 @@ php接收字段中有数组的话，接收后赋值给变量的都会变成php�
 - 部分存在godaddy数据库里的中文不能查看到正确文字，但是不影响读取
   
 
+## 猜测
 
+- 前后端传输数据其实都只能单级，并且每个字段只能是数字或者字符串
+
+
+## 未归纳
+
+- 请求同级文件的写法
+  - `'qshydl.json'`
+  - `'./qshydl.json'`
+- phpstudy默认不能获取中文名文件

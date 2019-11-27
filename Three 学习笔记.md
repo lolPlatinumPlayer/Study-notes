@@ -22,7 +22,7 @@ z轴向屏幕外
 
 
 ## 相机
-- 创建：`let camera=new THREE.PerspectiveCamera(视角，获取图像宽高比，最近渲染距离，最远渲染距离)`
+- 创建：`let camera=new THREE.PerspectiveCamera(视角,获取图像宽高比,最近渲染距离,最远渲染距离)`
   - 获取图像宽高比：就是相机捕获到的图像的宽高比，猜测：一般这个图像会拉伸着塞进canvas里
   - 是否渲染：只有同时在渲染距离与视角内的物体才会被渲染
 - 移动：  
@@ -161,12 +161,18 @@ scene.add(cube); // 将对象加进场景中
   
 - **带透明度的材质**  
 
-  `transparent`要先设置为`true`  
+  `transparent`设置为`true`的材质才能拥有透明度  
 
-  `alphaTest`设置了效果更好，不然有的透明物体的透明部分也会挡住其他物体，暂时都用`0.5`
+  默认情况下透明的内容大部分时候会覆盖其他透明的内容，即使完全透明也是如此  
+  
+  `alphaTest`属性可以改变这个情况，值在0到1之间  
+  
+  不透明度低于`alphaTest`的部分将不渲染，所以可以改善这个情况
 
 
 ## 形状
+mesh的geometry在赋值新的bufferGeometry后会变成新的形状【】更广泛的场景待测试
+
 - **立方体**  
   `new THREE.BoxGeometry(1, 1, 1)`  
   参数对应立方体x、y、z边的长度
