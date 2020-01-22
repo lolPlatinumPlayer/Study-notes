@@ -4,21 +4,23 @@ cd d:nospace/learngit
 学习进度：学完https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013745374151782eb658c5a5ca454eaa451661275886c6000
 
 
-· 不要使用windows自带记事本编辑文件、webStorm的git相关功能挺好用的
+## 杂项
+- 不要使用windows自带记事本编辑文件、webStorm的git相关功能挺好用的
+- git bash中按q键退出
 
-· Git专有名词英文
-版本库 repository
-暂存区 stage（或index）
-分支 branch
-有改动的文件 modified
+## Git专有名词英文
 
-· $ git init
+- 版本库 repository
+- 暂存区 stage（或index）
+- 分支 branch
+- 有改动的文件 modified
+
+## `$ git init`
 把这个目录变成Git可以管理的仓库（表述可能不正确）
 （内含工作区与版本库，.git文件夹以外都是工作区，.git是版本库）
 并创建了一个master分支
 
-
-· 把文件提交到分支
+## 把文件提交到分支
 （使用下面两个命令前先要确保这个文件存在）
 $ git add readme.txt
 $ git commit -m "wrote a readme file"
@@ -29,50 +31,50 @@ commit -m后的内容是对这次提交的说明性文字
 （测试提交未更改的文件，似乎失败了）
 
 
-· 同时在版本库和工作区（本地）删除的文件
-$ git rm XX
-要同步到分支的话要加上
-$ git commit -m "remark information"
+## 同时在版本库和工作区（本地）删除的文件
+`$ git rm XX`  
+要同步到分支的话要加上  
+`$ git commit -m "remark information"`  
 
 
-· $ git status
+## `$ git status`
 改命令用于查看状态
-1、如工作区有文件未提交到版本库且未被添加到暂存区里，则会打印“Untracked files:”
+1. 如工作区有文件未提交到版本库且未被添加到暂存区里，则会打印“Untracked files:”  
    并在后面列出文件名（文件名的中文部分会以8进制形式显示）
-2、如工作区有文件与分支不一致则会打印“Changes not staged for commit”
-   并在后面列出文件名
+2. 如工作区有文件与分支不一致则会打印“Changes not staged for commit”  
+   并在后面列出文件名  
    （文件名前会出现说明型前缀）
-3、如暂存区与分支不一致，则会打印“Changes to be committed:”
-   并在后面列出文件名
-   （文件名前会出现说明型前缀）
+3. 如暂存区与分支不一致，则会打印“Changes to be committed:”  
+   并在后面列出文件名  
+   （文件名前会出现说明型前缀）  
    如暂存区与分支一致，则会在结尾打印“nothing added to commit”
-4、如果一切正常，则会打印“nothing to commit, working tree clean”
-   （一切正常意为工作区所有文件都与分支一致且暂存区无内容）
+4. 如果一切正常，则会打印“nothing to commit, working tree clean”  
+   （一切正常意为工作区所有文件都与分支一致且暂存区无内容）  
 
-· 文件名说明型前缀
-“deleted: ”
-工作区没有而版本库有 或 暂存区没有而分支有
-“new file: ”
-暂存区有而分支没有
-“modified: ”
-工作区文件内容与版本库不一致 或 暂存区文件内容与分支不一致
-“renamed: ”
+## 文件名说明型前缀
+“deleted: ”  
+工作区没有而版本库有 或 暂存区没有而分支有  
+“new file: ”  
+暂存区有而分支没有  
+“modified: ”  
+工作区文件内容与版本库不一致 或 暂存区文件内容与分支不一致  
+“renamed: ”  
 （出现过一次，不过不知道触发机制。
 测试了 工作区与暂存区不同、工作区与分支不同、暂存区与分支不同 都没触发）
 
-· $ git diff
-若暂存区有内容，则将工作区与暂存区比较
-若暂存区无内容，则将工作区与分支比较
-比较后的打印内容会显示 是否有不同、不同之处在哪
+## `$ git diff`
+若暂存区有内容，则将工作区与暂存区比较  
+若暂存区无内容，则将工作区与分支比较  
+比较后的打印内容会显示 是否有不同、不同之处在哪  
 
-· $ git diff --cached
-比较暂存区与分支的不同
-比较后的打印内容会显示 是否有不同、不同之处在哪
+## `$ git diff --cached`
+比较暂存区与分支的不同  
+比较后的打印内容会显示 是否有不同、不同之处在哪  
 
-· $ git log
+## `$ git log`
 查看所有提交的版本
 
-按q键退出
+
 
 
 
@@ -113,19 +115,23 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 （廖雪峰中说用`switch`更科学）
 
 
-## 从服务端下载某分支代码并将其与当前分支进行合并
-`git pull origin 分支名`（不清楚分支名是服务端还是本地的）  
+## 从服务端下载指定分支代码并将其与当前分支进行合并
+`git pull origin 远程主机分支名`  （这里origin是远程主机名）
 
 即使当前不在要pull的分支也能执行完毕
 
 
-## 还原某个文件的更改到上一次commit
+## 还原某个文件到上一次commit
 `git checkout -- 文件名`  
 `--`可以省略  
 可以输入多个文件，文件间用空格隔开  
 文件名中有空格的话文件要用单引号包起来  
 文件名处可以改成`.`来选择所有文件  
 **文件在已追踪未add状态下可以，已add状态没试过**  
+
+## 还原某个文件夹到上一次commit
+
+用上一段的方法不行，但是用webstorm的撤销方法可以（叫什么忘记了）
 
 
 ## 提交分支代码到服务端

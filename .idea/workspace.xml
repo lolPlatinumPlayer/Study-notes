@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0112b360-1d5f-4c61-a2db-dd3568d358f5" name="Default Changelist" comment="" />
+    <list default="true" id="0112b360-1d5f-4c61-a2db-dd3568d358f5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Js 笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/Js 笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Three 学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/Three 学习笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vue 笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/Vue 笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/babel及其它工具 学习笔记.txt" beforeDir="false" afterPath="$PROJECT_DIR$/babel及其它工具 学习笔记.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/git 学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/git 学习笔记.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue-router 学习笔记.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vuex 学习笔记.txt" beforeDir="false" afterPath="$PROJECT_DIR$/vuex 学习笔记.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/综合/综合.md" beforeDir="false" afterPath="$PROJECT_DIR$/综合/综合.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/近期不用/canvas 学习笔记 .md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/canvas 学习笔记 .md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/近期不用/php 学习笔记.md" beforeDir="false" afterPath="$PROJECT_DIR$/近期不用/php 学习笔记.md" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -12,7 +23,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375" />
+    <leaf />
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>uap</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -41,7 +57,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -53,6 +68,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -93,11 +109,12 @@
       <workItem from="1562915187984" duration="433000" />
       <workItem from="1563088610029" duration="1425000" />
       <workItem from="1563090235066" duration="407000" />
+      <workItem from="1578897817751" duration="441000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2265000" />
+    <option name="totallyTimeSpent" value="2706000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="549" y="0" width="1371" height="1040" extended-state="0" />
@@ -168,86 +185,17 @@
     <option name="MAXIMUM_HISTORY_ROWS" value="200" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/不重要/要准备的问题.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor>
-            <markdownNavigatorState />
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/不重要/要准备的问题.md" />
     <entry file="file://$PROJECT_DIR$/不重要/菜谱.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/近期不用/dva 学习笔记.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor>
-            <markdownNavigatorState />
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/近期不用/react-router 学习笔记.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor>
-            <markdownNavigatorState />
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/近期不用/React 学习笔记.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-2146" />
-          <second_editor>
-            <markdownNavigatorState />
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/近期不用/Vue 笔记.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-16641" />
-          <second_editor>
-            <markdownNavigatorState />
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/近期不用/vue-cli 学习笔记.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/近期不用/vuex 学习笔记.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/git 笔记.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor>
-            <markdownNavigatorState />
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Three 学习笔记.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="FIRST">
-          <first_editor relative-caret-position="-5629">
-            <caret line="72" column="31" selection-start-line="72" selection-start-column="31" selection-end-line="72" selection-end-column="31" />
-          </first_editor>
-          <second_editor>
-            <markdownNavigatorState />
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/近期不用/dva 学习笔记.md" />
+    <entry file="file://$PROJECT_DIR$/近期不用/react-router 学习笔记.md" />
+    <entry file="file://$PROJECT_DIR$/近期不用/React 学习笔记.md" />
+    <entry file="file://$PROJECT_DIR$/近期不用/Vue 笔记.md" />
+    <entry file="file://$PROJECT_DIR$/近期不用/vue-cli 学习笔记.txt" />
+    <entry file="file://$PROJECT_DIR$/近期不用/vuex 学习笔记.txt" />
+    <entry file="file://$PROJECT_DIR$/git 笔记.md" />
+    <entry file="file://$PROJECT_DIR$/Three 学习笔记.md" />
   </component>
 </project>

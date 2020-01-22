@@ -184,7 +184,6 @@ mesh的geometry在赋值新的bufferGeometry后会变成新的形状【】更广
   `new THREE.PlaneBufferGeometry(x长,y长)`
   
 - **线**  
-  线的尺寸似乎不会随着相机远近而改变
   
   ```javascript
   const lineG=new THREE.Geometry()
@@ -193,6 +192,8 @@ mesh的geometry在赋值新的bufferGeometry后会变成新的形状【】更广
   lineG.vertices.push(new THREE.Vector3(10,0,0));
   // 可以加更多节点...
   ```
+  线宽固定是一像素  
+  
   这里的节点会按顺序连成线，但是首尾不会相连  
   （`new THREE.Vector3(x,y,z)`是three里面表达向量的一种方法，还有2维4维向量。目前不知道更简便地加线条节点的方法）
   

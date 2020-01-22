@@ -107,7 +107,7 @@ watcher中的匿名函数为单参数时，被监听变量一旦改变就执行�
 ```
 watch:{
     arrayName:{//个站中有用不同格式写法
-        handler:function(val,oldval){ // “handler:”为固定格式一部分
+        handler:function(val,oldval){ // “handler:”为固定格式一部分，【】一次监听state时oldval和val是一致的
             console.log(val.name.y1)
         },
         deep:true //这句为固定格式一部分
@@ -331,7 +331,8 @@ https://cn.vuejs.org/v2/guide/components.html#杂项
 
 ## this.$parent、this.$children与this.$refs.
 可以完全修改。
-在子组件html标签中写 “ref='a'” ，再通过this.$refs.a就能完全修改这个子组件
+在子组件html标签中写 “ref='a'” ，再通过this.$refs.a就能完全修改这个子组件  
+`this.$refs.`在mounted中获取不到，要加个`this.$nextTick(() => {})`才行
 
 
 ## 实例名.$el.textContent = 该实例dom里所有文本内容
@@ -662,3 +663,6 @@ lin
 
 
 
+3.0Page组件@on-change并不是完全可靠，有一次用中文方法名就不行
+
+替代方案：监听:current.sync

@@ -2,8 +2,12 @@
 
 # 【JS】ES5
 
+## 未分类
+
+- 异步执行的代码里的变量取的值都是执行时的值，而不是异步代码生成时的值
 
 ## undefined
+
 用undefined赋值可以把原有内容覆盖掉  
 但是对对象的某个属性赋值undefined并不会将这个属性删除
 
@@ -365,7 +369,7 @@ arrayObject.concat(arrayX,arrayX,......,arrayX)
 
 ## splice
 `arr.splice(index,howmany,item1,.....,itemX)`
-从数组中添加/删除项目，然后返回被删除的项目
+从数组中添加/删除项目，然后返回被删除的项目，会改变原数组
 
 1. index	添加/删除项目的位置（包含），使用负数可从数组结尾处规定位置
 1. howmany	要删除的项目数量。如果设置为 0，则不会删除项目
@@ -378,7 +382,8 @@ arrayObject.concat(arrayX,arrayX,......,arrayX)
 1. 输入数字代表缩进（缩进个数为0到10）
 2. 输入字符串则代表缩进用字符串进行填充（也是0到10个字符，可输入转义字符）
 这个方法不能直接对有循环引用的内容使用，否则阻塞报错“Converting circular structure to JSON”
-遇到这情况在第二个参数传入如下函数后即可正常返回
+遇到这情况在第二个参数传入如下函数后即可正常返回  
+3. 不要第二个参数可以传`null`
 ```javascript
 //（这个例子不行）
 function(key, value) {
@@ -403,6 +408,13 @@ function(key, value) {
 - 数组元素为`undefined`、`NaN`、`empty`的会转为`null`
 - 对象属性值为`undefined`的属性不会打印
 - 对象属性值为`NaN`的会转为`null`
+
+## `toString`
+
+多种数据类型都可以执行这个方法来返回字符串
+
+- **用于数字类型时**  
+  可以传一个参数来进行进制转换，可以把十进制转为指定进制的字符串  
 
 
 ## 正则的方法
@@ -435,17 +447,23 @@ function(key, value) {
   
   
 ## 正则核心
-- 正则的[]几乎可以把中间所有原来有功能的符号转为无功能的（包括空格）
+- 正则的[]几乎可以把中间所有原来有功能的符号转为无功能的（包括空格）（[微信](https://mp.weixin.qq.com/s/nTXcPdrqW4H-g8baKlWXrw)上说是反义的说法不对）
+- **不包含**  
+   `(?!不想包含的内容).`  
+   `.`应该可以换成其他代表数量的符号
 - 匹配中文  
   php和js的匹配方法不一致，php不能用js的方法的原因是：PHP正则表达式中不支持下列 Perl 转义序列：\L, \l, \N, \P, \p, \U, \u, or \X  
   js不能用php的方法的原因未知  
   js方法：`\u4e00-\u9fa5`  
   php方法：`\x80-\xff`  
+- `+`和`* `  
+   `*`匹配重复任意次(可能是0次)，而 `+`则匹配重复1次或更多次。 ——https://mp.weixin.qq.com/s/nTXcPdrqW4H-g8baKlWXrw
 
 
 ## 定时器
 setInterval和setTimeout  
-- 定时器获取的变量值都是其执行时的变量值
+- 定时器执行的回调是定时器生成时的回调，而不是执行时的回调
+
 - 清除定时器循环的例子：  
   ```javascript
   let sss=1
@@ -487,6 +505,13 @@ setInterval和setTimeout
 ## 数字操作
 四舍五入 Math.round(7.25)
 取出大的值 Math.max(2,4)
+
+## WebSocket
+
+- 内容不多，见菜鸟教程
+- 测试网站：http://www.websocket-test.com/
+- 个人记录
+  - 服务器返回的数据存在`形参.data`里
 
 
 ## 请求的头部
@@ -731,23 +756,27 @@ let与var仅有以上区别，const除了以上区别外，const在声明时必�
 
 
 ## 解构赋值
+结构赋值可以多级嵌套使用
 - ```javascript
   var a, b, rest;
   [a, b] = [10, 20];
   console.log(a); // 10
   console.log(b); // 20
   ```
+  
 - ```javascript
   [a, b, ...rest] = [10, 20, 30, 40, 50];
   console.log(a); // 10
   console.log(b); // 20
   console.log(rest); // [30, 40, 50]
   ```
+  
 - ```javascript
   ({ a, b } = { b: 10, c:111,a: 20 }); //这个语法等号前不能用数组形式
   console.log(a); // 10
   console.log(b); // 20
   ```
+  
 - ```javascript
   ({a, b, ...rest} = {a: 10, d: 30,  b: 20,c: 40});
   console.log(a); // 10
@@ -755,6 +784,7 @@ let与var仅有以上区别，const除了以上区别外，const在声明时必�
   console.log(rest); //{d: 40 , c: 30}
   ```
   以上测试数组都可以用变量代理【数组中的变量名要不要用字符串格式？】
+  
 - 函数（对象式、有默认值）传参
   ```javascript
   function move({x = 1, y = 1} = {}) {
@@ -772,9 +802,13 @@ let与var仅有以上区别，const除了以上区别外，const在声明时必�
   - `move(11)`  
   - `move([11,22])`  
   - `move([11])`  
+  
 - 解构实参（以下是自己测试的结果，在《ECMAScript6入门-阮一峰》里没找到相关内容）
   `function Fn({x}){函数内容}`
   函数内x就直接代表实参（对象）的x属性
+  
+- **用新的变量名来接收值**  
+  `const{对象中属性名:想要的变量名}=对象`
 
 
 ## 类
@@ -891,7 +925,13 @@ Promise对象是一个构造函数，用来生成Promise实例。
 
 `resolve`和`reject`都只能有一个实参，多了在`then`里也不会体现出来  
 
-`promise.then(fn)`还会是一个promise
+`promise.then(fn)`还会是一个promise  
+
+`promise`回调都是同步执行的  
+如果`promise`执行完毕的话，`promise.then`里的`return`值就是`promise.then`的值  
+似乎无法用js获得`promise`的状态，只能在控制台获得  
+
+new promise中的代码都是直接执行的
 
 - then（来源于Promise，以下都是个人猜测，未经验证）
   then解决了两个问题
@@ -908,32 +948,28 @@ Promise对象是一个构造函数，用来生成Promise实例。
   
 
 ## Promise相关可行的例子
-1.
-	
-	```javascript
-	const go= new Promise((resolve, reject) => {
-	    setTimeout(resolve, 555, 'done')
-	})
-	go.then((value) => {
-	    alert(value)
-	})
-	```
-2.
-	
-	```javascript
-	    async function drawBuilding() { // 要用await，其所在函数体外一定要加async
-	      const result = await (new Promise((resolve) => { // 在函数前加await可以让函数在完成前让语句保持阻塞
-	        setTimeout(resolve, 1111, 'done')
-	      })).then((value) => {
-	        return value
-	      })
-	      console.log(result); // done
-	      return result;
-	    }
-	
-	    const aa = drawBuilding() // 倒二行
-	    console.log(aa); // 倒一行
-	```
+1. ```javascript
+   const go= new Promise((resolve, reject) => {
+   setTimeout(resolve, 555, 'done') // setTimeout改成await也可以
+    })
+    go.then((value) => {
+   alert(value)
+    })
+   ```
+2. ```javascript
+   async function drawBuilding() { // 要用await，其所在函数体外一定要加async
+      const result = await (new Promise((resolve) => { // 在函数前加await可以让函数在完成前让语句保持阻塞
+        setTimeout(resolve, 1111, 'done')
+      })).then((value) => {
+        return value
+      })
+      console.log(result); // done
+      return result;
+    }
+
+    const aa = drawBuilding() // 倒二行
+    console.log(aa); // 倒一行
+   ```
   - 这样写的话  
     从倒二倒一行都不会阻塞  
     `aa`的结果为一个promise  
@@ -941,12 +977,11 @@ Promise对象是一个构造函数，用来生成Promise实例。
       为`"pending"`代表promise还未结束运行  
       为`"resolved"`代表`resolve`已经运行完毕  
     - promise的`[[PromiseValue]]`的值为promise返回的值  
-    
   - 如果在倒二行的`=`后加上`await`  
-    倒二行就会阻塞，aa的值也会变为promise的resolve的返回值
-3.
-	
-    ```javascript
+    倒二行就会阻塞，aa的值也会变为promise的resolve的返回值  
+  - 如果要包含`await`的代码异步，只要套一层`Promise`就行（`then`和`resolve`都不需要加）  
+    如果要在这些代码全部执行完毕后执行其他代码，只需要对这些`promise`进行`Promise.all`就行（`promise`里有要`resolve`）
+3. ```javascript
         async function getBorderCanvas({width,height,lineWidth,color}) {
             // ......
             const afterLoading= new Promise((resolve) => {
@@ -964,7 +999,7 @@ Promise对象是一个构造函数，用来生成Promise实例。
 	    }
     ```
     加了`async`的函数会返回一个promise，并且会异步执行  
-    如果要获取加了`async`的函数return值，需要用await【】有空试下then  
+    如果要获取加了`async`的函数return值，需要用`await`或`then`
     
     对于map用了await后每个子项会变成promise，要写for循环才行，例子如下
     
@@ -995,7 +1030,8 @@ Promise对象是一个构造函数，用来生成Promise实例。
 ## Promise.all
 - **语法** 
 
-  `Promise.all(多个promise组成的数组)`（数组部分元素不是promise对象好像也可以）  
+  `Promise.all(多个promise组成的数组)`  
+  数组元素不是promise的话会被转为立即执行的promise
 
 - **功能**  
 
@@ -1020,15 +1056,20 @@ Promise对象是一个构造函数，用来生成Promise实例。
     fetch(这里可以放请求、php文件或其他文件,{ // 加第二个参数可以规避在跨域时的报错，但并没有解决跨域获取不到东西的问题
         method: "GET",
         mode: "no-cors",
+        //body:xxx
     }).then((请求返回的内容)=>{
-            return 请求返回的内容.对于这个内容的方法()//这里可选的方法详见https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#Body
-        })
-        .then((上一个then return出来的东西)=>{
+        return 请求返回的内容.对于这个内容的方法()//这里可选的方法详见https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#Body
+    }).then((上一个then return出来的东西)=>{
         //一些操作
     })
 ```
-fetch据说可以全面替代xhr（js请求除了xhr就是fetch），完整见mdn  
-get方法不能拥有body属性，传参只能写在请求地址里（这点网上资料都没提到）  
+- **普通post请求**  
+  各参数放进一个对象转为字符串后放进`body`属性
+- **form的post请求**  
+  `body`里放`FormData`实例  
+  每个参数用实例的`append`方法加
+- get方法不能拥有body属性，传参只能写在请求地址里（这点网上资料都没提到）  
+- fetch据说可以全面替代xhr（js请求除了xhr就是fetch），完整见mdn  
 
 
 ## new request（未测试不用new request是否能成功）
