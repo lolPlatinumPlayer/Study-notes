@@ -1,5 +1,9 @@
+## 简介
+
+> “WebGL是使用JS来实现OpenGL ES 2.0” —— 《交互式计算机图形学  基于WebGL的自顶向下方法 （第七版）》
 
 ## 上下文对象
+
 `let gl =canvas.getContext("webgl")`
 
 - 所有的实际性内容都要从上下文对象里调用（猜测一个canvas标签只能用一个上下文）

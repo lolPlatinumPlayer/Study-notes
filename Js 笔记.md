@@ -1170,7 +1170,7 @@ export default 组件
 ```
 
 
-# 【算法】
+# 【计算相关】
 
 
 ## 取余（%）
@@ -1181,72 +1181,4 @@ export default 组件
   a%b=c 意味着 a=b*某个整数+(-c) 且 0>=c>=-(b-1) 也就是 c为用a绝对值取余b的结果的相反数
 
 
-## 递归
-- 不引入函数外变量，不用引用传递的话，单次递归返回全部处理后的树的方法
-    ```javascript
-    const 模拟数据=[
-        [
-            112,
-            213,
-            [
-                334,
-                544
-            ]
-        ],
-        772,
-        [
-            888
-        ]
-    ]
-    console.log('结果',kk(模拟数据))
-    
-    function kk(arr) {
-        let resultOfThisLevel=[]
-        if(isArr(arr)){
-            for (let i=0;i<arr.length;i++){
-                resultOfThisLevel=[...resultOfThisLevel,...kk(arr[i])]
-            }
-            return resultOfThisLevel
-        }else {
-            return [arr]
-        }
-    }
-    function isArr (o) {
-        return Object.prototype.toString.call(o) === '[object Array]';
-    }
-    ```
-
 ## 三角函数算不出0却算得出1
-
-# 其他
-
-
-## chrome控制台
-- 断点  
-  程序运行到断点处就会进行阻断  
-  之后可以（在source选项卡）查看各变量的值（有时不准确，比如.vue文件中部分变量值会显示为undefined）  
-  且在console选项卡的后续上下文环境就会变为断点处的  
-  打断点的两种方法：
-  - 代码里写debugger  
-    执行到debugger时就进行阻断  
-  - source选项卡中点击某行代码行首数字  
-    相当于在行尾加上`;debugger`  
-    （似乎只有真正运行的文件才可以这样操作，比如.vue文件就不行）  
-  
-- 谷歌控制台值显示为`...`的属性似乎都是点击时获取的
-
-- 有时候打印结果是异步的
-
-- 进入断点有时会导致程序运行结果不同  
-
-  比如需要获取当前时间的程序
-
-- 控制台输入函数即使不回车也会让函数执行（未做进一步测试）
-
-
-## MVC与MVP
-MVC中V（视图）需承担显示以外的功能
-MVP中V（视图）无需承担显示以外的功能
-两个模式中M与P、M与C分界都比较模糊，但存放数据的功能都是由M完成
-
-

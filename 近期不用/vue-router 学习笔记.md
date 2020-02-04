@@ -65,7 +65,7 @@ $route.name：routes中与path同级的name属性的属性值。
 以上两条适用与所有与path同级的路由属性（已验证：重定向redirect、别名alias【目前只学了这两个】）
 
 ## 编程式的导航
-router.push()与<router-link :to="...">效果一致
+router.push()与`<router-link :to="...">`效果一致
 括号中常写的有2种情况：
 
 - 直接写字符串，这个字符串是path（前面要有`/`）

@@ -25,16 +25,17 @@
 
 
 ## 实例的生命周期钩子（函数）
-作为对象写在实例中（也就是）new Vue({})中，例子：
+![](图片\vue-lifecycle.png)作为方法写在实例中（也就是）new Vue({})中，例子：
 ```
 mounted: function () {
     this.show = false
 }
 ```
-mounted中的函数在这个实例一切准备好也渲染好之后执行。
-（其他生命周期钩子暂未测试）
-疑似bug：mounted中如果引用methods中函数前有语句的话，会报错
-        解决方法：在这些函数后面加上分号“;”
+- mounted中的函数在这个实例一切准备好也渲染好之后执行。
+- updated：data变更时调用*【】未实测、未测试prop改变的情况、未测试data变而视图不变的情况*
+
+- 疑似bug：mounted中如果引用methods中函数前有语句的话，会报错
+          解决方法：在这些函数后面加上分号“;”
 
 
 ## “Mustache” 语法
