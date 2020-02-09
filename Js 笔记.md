@@ -773,8 +773,8 @@ let与var仅有以上区别，const除了以上区别外，const在声明时必�
   
 - ```javascript
   ({ a, b } = { b: 10, c:111,a: 20 }); //这个语法等号前不能用数组形式
-  console.log(a); // 10
-  console.log(b); // 20
+  console.log(a); // 20
+  console.log(b); // 10
   ```
   
 - ```javascript
