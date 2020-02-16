@@ -137,10 +137,11 @@ console.log('a[3]',a[3]) // undefined
      ```javascript
      function 高阶函数(){
          let 父级作用域变量=0
-         function 造出的函数(){
+         function 要造出的函数(){
              父级作用域变量++
              console.log('父级作用域变量：',父级作用域变量)
          }
+         return 要造出的函数
      }
      
      const 第1个造出的函数=高阶函数()
