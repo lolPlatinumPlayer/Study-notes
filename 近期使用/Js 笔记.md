@@ -1,6 +1,6 @@
-
-
 # 【ES5】
+
+
 
 ## 未分类
 
@@ -131,7 +131,7 @@ console.log('a[3]',a[3]) // undefined
 
   1. 用一份代码制造多个函数，并且制造出来的函数都有独立的父级作用域  
      类似功能如果不用高阶函数就只能用面向对象的写法实现，比如：返回含方法的对象的函数、构造函数、类  
-     用高阶函数写则更为简洁  
+     但用高阶函数写则更为简洁  
      代码如下：  
 
      ```javascript
@@ -157,7 +157,7 @@ console.log('a[3]',a[3]) // undefined
 
 
 ## 数据类型
-在 javascript 中数据类型可以分为下面两类（犀牛书中称为原始值和对象）
+在es5中数据类型可以分为下面两类（犀牛书中称为原始值和对象）（es6多了Symbol）
 1. 原始数据类型值(primitive type)，有五种：Undefined、Null、Boolean、Number、String。
 2. 引用类型值，也就是对象类型(Object type)，除了5种原始值外一切皆对象，比如Object、Array、Function、Date。
 
@@ -662,8 +662,40 @@ a<<b在数学中相当于a=a*2^b，反之类似
 
 #  【ES6】
 
-
 ​	   
+
+## Symbol
+
+【】学到[这](https://es6.ruanyifeng.com/#docs/symbol#%E5%AE%9E%E4%BE%8B%EF%BC%9A%E6%B6%88%E9%99%A4%E9%AD%94%E6%9C%AF%E5%AD%97%E7%AC%A6%E4%B8%B2)之前
+
+Symbol是第七种数据类型  
+任何Symbol值都不会与其他值相等（包括其他Symbol值）  
+可以用来当对象的属性名  
+
+- **生成Symbol值的方法**  
+  `let 变量=Symbol(描述字符串)`  
+  描述字符串是可选的  
+  
+- **类型转换**  
+  Symbol值不会隐式转换，在其他值会隐式转换的场景下会报错  
+  Symbol值只能显式转换为字符串或布尔值
+  
+  - 字符串转换结果：`"Symbol(描述)"`
+  - 布尔值转换结果：`true`
+  
+- **读取描述**  
+  除了转字符串读取外还可以通过调用`description`属性来读取  
+  *`description`是ES2019提出来的*
+  
+- **参与声明对象**  
+
+  ```javascript
+  let 变量 = {
+    [Symbol值]: 属性值
+  };
+  ```
+
+  
 
 ## 模块
 import和export  
@@ -1138,7 +1170,10 @@ function a(p0,p1='p1'){
 ```
 
 
+
 #  【ES7】
+
+
 
 
 ## 对象展开运算符（或称扩展运算符）（Object rest spread）
@@ -1198,7 +1233,10 @@ export default 组件
 ```
 
 
+
 # 【计算相关】
+
+
 
 
 ## 取余（%）

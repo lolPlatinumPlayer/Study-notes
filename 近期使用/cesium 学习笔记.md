@@ -1,6 +1,6 @@
 ## 学习进度
 
-Story的中间部分没有看
+[Create xxxx Cesium Stories](https://www.cesium.com/docs/tutorials/stories-introduction/)的中间部分没有看
 
 ## 学习上的记录
 
