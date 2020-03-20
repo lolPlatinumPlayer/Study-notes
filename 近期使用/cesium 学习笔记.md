@@ -1,6 +1,6 @@
 ## 学习进度
 
-[Create xxxx Cesium Stories](https://www.cesium.com/docs/tutorials/stories-introduction/)的中间部分没有看
+下次从https://www.cesium.com/docs/tutorials/cesium-workshop/ 的Setup开始学
 
 ## 学习上的记录
 
@@ -22,6 +22,59 @@
   ```
   就拥有了地形
 
+## 代码项目
+
+- 直接cdn引入就能写，且不需要token、帐号等额外的东西
+
+## 资源上传（My Assets）
+
+资源传完就能在代码里通过id来用了
+
+- **上传地址**  
+  这两个页面可以传，最终是传进资源仓库
+
+  - [ion页面](https://cesium.com/ion)  
+    拖拽进网页就行  
+似乎在这页面的所有子页面都可以
+  
+- [addasset页面](https://cesium.com/ion/addasset)  
+  
+    （*这个页面是点“My Assets”选项卡的“Add data”按钮出来的*）  
+  点击“Add files...”按钮  
+  
+- “reference terrain”选项的选择  
+  选“Cesium World Terrain”
+  
+- [可上传文件的说明](https://www.cesium.com/docs/tutorials/uploading/)
+
+- **在代码项目里使用资源**  
+    需要申请一个token（不花钱也能申请）  
+    用如下语法引入  
+    `Cesium.IonResource.fromAssetId(资源的id)`
+
+## Story
+
+可以加模型、地图等内容。  
+可以发布为一个网址，发布后也可以继续修改，也可以选择关闭  
+可以把story嵌入你的开发页面。（不知道是不是只能用iframe标签嵌入）  
+在编辑界面点“Present”按钮可以进行预览
+
+- **轮播**（silde）  
+  已知内容有：标题、信息框和初始视角  
+  标题和信息框是可选的  
+  可以点击左上角“Capture View ”按钮来设置初始视角。  
+  如果不输入标题和Infobox的话轮播框将不会出现
+- **添加资源**  
+  “Assets”部分点“Add asset...”选择具体资源后完成添加  
+  *（资源都来自于ion账户）*  
+  每个轮播都可以独立配置需要显示的资源，通过切换勾选框来完成  
+  点资源后的放大镜来将镜头移动到资源所在位置
+- **展示页面的各按钮**  
+  - **左下角**  
+    ![cesium-展示页面-左下角](..\图片\cesium-展示页面-左下角.PNG)
+  - **右上角**  
+    ![cesium-展示页面-右上角](..\图片\cesium-展示页面-右上角.PNG)
+
 ## 下方仪表盘和时间轴
 
 用来控制时间的
@@ -35,44 +88,10 @@
 - **时间轴**  
   拖动手柄以选择到哪个时间
 
-## 资源上传（My Assets）
-
-资源传完就能在代码里通过id来用了
-
-- **上传地址**  
-  这两个页面可以传，最终是传进资源仓库
-
-  - [ion页面](https://cesium.com/ion)  
-    拖拽进网页就行
-
-  - [addasset页面](https://cesium.com/ion/addasset)  
-
-    （*这个页面是点“My Assets”选项卡的“Add data”按钮出来的*）  
-    点击“Add files...”按钮  
-
-- “reference terrain”选项的选择  
-  选“Cesium World Terrain”
-
-## Story
-
-可以加模型、地图等内容。  
-可以发布为一个网址，也可以把story嵌入你的开发页面。  
-在编辑界面点“Present”按钮可以进行预览
-
-- **轮播**（silde）  
-  由标题、信息框和初始视角构成  
-  标题和信息框是可选的  
-  可以点击左上角“Capture View ”按钮来设置初始视角。  
-- **展示页面的各按钮**  
-  - **左下角**  
-    ![cesium-展示页面-左下角](图片\cesium-展示页面-左下角.PNG)
-  - **右上角**  
-    ![cesium-展示页面-右上角](图片\cesium-展示页面-右上角.PNG)
-
 ## 相关文件格式
 
 - **KML**（Keyhole Markup Language）  
-  最初由Keyhole公司开发的XML语言  
+  Keyhole公司开发并维护的XML语言（Keyhole是谷歌旗下的）  
   用于描述地理空间数据(如点、线、面、多边形和模型等)
   
 - **KMZ**  
@@ -85,9 +104,12 @@
   > “COLLADA FX支持OpenGL ES“”——[百度百科](https://baike.baidu.com/item/COLLADA/2359440?fr=aladdin)
 
 - **CZML**  
-
+是“Cesium Language”的缩写
+  
   > “Cesium与CZML的关系就如同Google Earth和KML的关系”
   >
   > “CZML是一种用来描述动态场景的JSON架构的语言”
   >
   > ——[某篇博客](https://www.cnblogs.com/mazhenyu/p/8315840.html)
+  
+  甚至可以包含快速衰减的精灵文字和投影（投影是指在其他物体上上色）

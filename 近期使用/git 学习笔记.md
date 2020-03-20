@@ -24,18 +24,24 @@ cd d:nospace/learngit
 
 将远程库克隆到本地  
 这个`地址`都是以`.git`结尾的  
-会在输入这命令时所在文件夹里新建一个文件夹  
+会在输入命令时所在文件夹里新建一个文件夹  
 文件夹名应该就是`.git`前的那级路径  
 
 ## 把文件提交到分支
 （使用下面两个命令前先要确保这个文件存在）
-$ git add readme.txt
-$ git commit -m "wrote a readme file"
-add就是把文件修改添加到暂存区
-commit就是把暂存区的所有内容提交到当前分支
-commit -m后的内容是对这次提交的说明性文字
-因此可以多次add后一次性commit来提交
-（测试提交未更改的文件，似乎失败了）
+
+先`add`后`commit`
+
+- **`add`**
+  `git add readme.txt`
+  add就是把文件修改添加到暂存区  
+  全部添加的话使用`git add -A`，因为`git add .`在1.x版本上不会提交被删除的文件，2.x版本的话两个命令是一致的
+- **`commit`**  
+  `git commit -m "wrote a readme file"`
+  把暂存区的所有内容提交到当前分支
+  commit -m后的内容是对这次提交的说明性文字
+  因此可以多次add后一次性commit来提交
+  （测试提交未更改的文件，似乎失败了）
 
 
 ## 同时在版本库和工作区（本地）删除的文件
@@ -90,7 +96,7 @@ commit -m后的内容是对这次提交的说明性文字
   `git reset --hard commit的id`
 
 · 回退到上个版本
-git reset --hard HEAD^
+`git reset --hard HEAD^`
 
 【】--hard 似乎很有问题
 
@@ -134,7 +140,8 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 可以输入多个文件，文件间用空格隔开  
 文件名中有空格的话文件要用单引号包起来  
 文件名处可以改成`.`来选择所有文件  
-**文件在已追踪未add状态下可以，已add状态没试过**  
+**文件在已追踪未add状态下可以**  
+未追踪或已add都不行
 
 ## 还原某个文件夹到上一次commit
 
@@ -162,7 +169,7 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 那么解决方法就是先把本地缓存删除（改变成未track状态），然后再提交。 —— [引用自《福信富通GIT使用帮助》](https://git.fxft.net/fxft/help/src/master/README.md#gitignore%E6%96%87%E4%BB%B6%E7%9A%84%E4%BD%BF%E7%94%A8)
 ```
 git rm -r --cached . // `git rm -r --cached 文件或文件夹`是可行的，前一个没试过
-git add .
+git add -A
 git commit -m 'xxx'
 ```
 
