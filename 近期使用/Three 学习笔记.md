@@ -504,6 +504,11 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 
     应该代表：物体中的向量直接乘以这个矩阵就会变成实际显示的向量
 
+## 着色器
+
+用`ShaderMaterial`  
+`attribute`估计来自`BufferGeometry`或`InstancedBufferGeometry`的`setAttribute`方法（以前可能叫`addAttribute`）
+
 ## 性能提升
 
 - 使用引用材质
@@ -522,6 +527,10 @@ window.addEventListener( 'mousemove', onMouseMove, false );
   three中`position`、`scale`、颜色等内容都是向量
 
 - `setTimeout(callback,0)`可以跳到下一帧绘制后
+
+- **InstancedBufferGeometry**  
+
+  - `copy`方法都是对各种BufferGeometry用的
 
 
 ## three辅助方法
@@ -558,3 +567,8 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 地址：可能是https://github.com/fibo/three-orbitcontrols
 three仓库里有源码，路径为“examples/js/controls/OrbitControls.js”
 
+## postprocessing
+
+似乎是在渲染器上做后期效果的
+
+github主页：https://github.com/vanruesc/postprocessing

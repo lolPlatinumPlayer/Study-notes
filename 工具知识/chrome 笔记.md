@@ -62,3 +62,22 @@
   本地存有书签的文件有C:\Users\Administrator\AppData\Local\Google\Chrome\User Data\Default文件夹下的『Bookmarks.bak文件』和『Bookmarks文件』  
   两个文件的内容是完全一致的
 
+## 快捷键
+
+- 打开新窗口  
+  ctrl+n
+- 打开新标签
+  - ctrl+t  
+    开启一个
+  - ctrl+shift+t  
+    打开刚才关闭的一个或者多个标签页
+- 关闭标签  
+  ctrl+f4
+- 切换标签页
+  - ctrl+tab
+  - ctrl+shift+tab
+  - ctrl+数字（1到8）  
+    跳到窗口中第n个标签
+  - ctrl+9  
+    跳到窗口中最后一个标签
+

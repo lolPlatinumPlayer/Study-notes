@@ -57,6 +57,10 @@ ctx.stroke();
 
 `ctx.beginPath()`可能意味着不清空之前的绘画，而继续进行接下来的绘制（看[慕课](https://www.imooc.com/video/3479)时产生的想法）
 
+## 复制canvas
+
+`cloneNode`复制的canvas不会拥有原canvas的画面
+
 ## 其他
 
 - canvas宽高改变后会自动清空画布
