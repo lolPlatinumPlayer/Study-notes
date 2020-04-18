@@ -661,6 +661,7 @@ lin
 # iview
 - 有几率bug
   template做if else时，其中第一个formitem 下无法验证，调用局部验证还会报错“第一个参数不是字符串”
+- 3.0的Layout 布局没什么卵用，用了反而增加开发成本
 
 
 

@@ -1,6 +1,8 @@
 ## 学习进度
 
-下次从https://www.cesium.com/docs/tutorials/cesium-workshop/ 的Setup开始学
+- 下次从https://www.cesium.com/docs/tutorials/cesium-workshop/ 的Setup开始学
+- 连接webpack的教程学到[这](https://www.cesium.com/docs/tutorials/cesium-and-webpack/#manage-cesiumjs-static-files)之前  
+  本地代码地址为：[地址](D:\learning_materials\cesium\code\cesium-webpack-app)
 
 ## 学习上的记录
 
@@ -25,6 +27,9 @@
 ## 代码项目
 
 - 直接cdn引入就能写，且不需要token、帐号等额外的东西
+- **关于多次初始化**  
+  目前做法：用删dom作为退出操作，重新开始就从头执行一遍代码  
+  目前做法的测试结果：多次『退出进入』后一切正常，cpu也不会多用，但内存可能会稍微多占一些
 
 ## 资源上传（My Assets）
 

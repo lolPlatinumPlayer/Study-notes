@@ -1,7 +1,3 @@
-## 其他
-
-核心在图层，图层还待详细了解
-
 ## 地图
 
 通过实例化`mapboxgl.Map`来初始化地图  
@@ -47,9 +43,23 @@
 - **api**  
   有以下内容的api  
   GeoJSON、图片、视频、canvas  
-  canvas应该是对图片的扩展（因为canvas描述里有一句话“Extends ImageSource”）
-
+  - canvas  
+  可以传入dom id也可以传入未插入文档的dom  
+    可以监听canvas进行实时更新  
+    coordinates输入四个坐标（从左上角起）  
+    <span style='opacity: 0.5'>canvas应该是对图片的扩展（因为canvas描述里有一句话“Extends ImageSource”）</span>
+  
 - **聚类**  
   应该只能用于GeoJSON数据源  
   可以通过数据源的配置项和数据源的方法来控制  
   配置项查阅规范、方法查阅api文档
+
+## 其他
+
+- 核心在图层，图层还待详细了解
+- 似乎可以在一个页面开启多个mapbox的canvas（开图多次）  
+  想法基于[博客](https://www.cnblogs.com/lilei2blog/p/8961564.html)
+- `queryRenderedFeatures`  
+  查询范围内可见要素，返回它们的一些信息  
+  可以查单点也可以查矩形，可以加其他的限定条件  
+  对raster图层无效
