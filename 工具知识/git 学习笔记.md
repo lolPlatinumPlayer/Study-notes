@@ -5,7 +5,7 @@ cd d:nospace/learngit
 
 
 ## 杂项
-- 不要使用windows自带记事本编辑文件、webStorm的git相关功能挺好用的
+- 不要使用windows自带记事本编辑文件（可能是因为会把编码改为GBK）、webStorm的git相关功能挺好用的
 - git bash中按q键退出
 
 ## Git专有名词英文
@@ -163,12 +163,23 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 
 `git checkout 另一个分支名 文件路径`
 
+### 忽略文件
 
-## 忽略文件
+增加`.gitignore`文件，在里面写上希望忽略的文件或文件夹  
+
+- **忽略第一级内容**  
+  直接写文件夹名或者文件名（含后缀名）  
+  被忽略的文件夹里边的内容也都会被忽略
+- **编码**  
+  `.gitignore`文件支持多种编码  
+  如果编码不是`utf-8`的话，在`.gitignore`文件里的中文操作将会失效
+
+##### 忽略文件已track文件
+
 > .gitignore文件只能忽略那些原来没有被track的文件，如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。
 那么解决方法就是先把本地缓存删除（改变成未track状态），然后再提交。 —— [引用自《福信富通GIT使用帮助》](https://git.fxft.net/fxft/help/src/master/README.md#gitignore%E6%96%87%E4%BB%B6%E7%9A%84%E4%BD%BF%E7%94%A8)
 ```
-git rm -r --cached . // `git rm -r --cached 文件或文件夹`是可行的，前一个没试过
+git rm -r --cached . // `git rm -r --cached 文件或文件夹`
 git add -A
 git commit -m 'xxx'
 ```
