@@ -84,36 +84,62 @@ console.log('a[3]',a[3]) // undefined
 - 函数中写`arguments`似乎能返回以这个函数的实参组成的数组
 
 
-## this
-（要注意对象都会发生引用传递）
-1. 非箭头函数
-   谁调用就是谁
-   比如`a.b()`调用者就是a
-   `c=a.b;c()`如果在最外层的话调用者就是window
-2. 箭头函数
-   在哪产生就指向哪的上下文（如果是对象的某一层属性，那指向的就是对象所在的上下文）
-   （所以如果一个函数的this不是window，那么在产生这个函数的过程中一定用了非箭头函数或者改变this的方法）
-   例子：
-    1. `let a={b:()=>this}`a.b不管怎么调用返回都是window
-    2. ```javascript
-          var obj={
-            bar:function () {
-              return ()=>this
-            }
-          }
-          console.log(obj.bar()()) // 箭头函数是在obj.bar()产生的，所以this与obj.bar()一致
-          let c=obj.bar
-          console.log(c()()) // 结果：window。因为箭头函数产生于c()，上下文是window
-       ```
-3. 使用`new`的构造函数中  
-   this代表这个构造函数创建的对象，初始值是`{} ` 
-4. `bind`方法  
-   `函数.bind(x)`返回一个this是x的函数  
-   不过bind似乎无法改变箭头函数的this  
-   （mdn上还有 传参、new等内容）  
-5. **`apply`**方法  
-   `函数.apply(对象,数组)`  
-   执行函数，但是函数的this替换为第一个实参，而函数使用的参数为`...第二个实参`  
+## `this`
+##### 特性
+
+1. 对`this`赋值将会导致阻塞报错
+   
+1. 普通方法中的`this`  
+   谁调用就是谁  
+   比如`a.b()`调用者就是`a`  
+   `c=a.b;c()`如果在最外层的话调用者就是`window`  
+<span style='opacity:.5'>要注意有些js方法是挂在`window`下面的，如：`setTimeout`、`setInterval`  </span>
+   
+1. 使用`new`的构造函数中  
+   `this`代表这个构造函数创建的对象，初始值是`{} ` 
+
+##### 相关方法
+
+1. **`apply`**  
+   `函数.apply(thisArg,数组)`  
+   让`thisArg`使用`...数组`作为实参去调用函数
+   
+1. **`call`**  
+   `函数.call(thisArg[, arg1[, arg2[, ...]]])`  
+   让`thisArg`使用『第一个参数以外的参数』作为实参去调用函数
+
+1. **`bind`**  
+   `函数.bind(thisArg[, arg1[, arg2[, ...]]])`  
+   创建并返回一个绑定函数  
+   
+   - 几种传参情况
+     - `bind`没有实参的话  
+       不建议这样使用  
+       试了几个例子，最终执行结果都是`window`，这和MDN上说的不一样  
+       <span style='opacity:.5'>MDN上写“执行作用域的 `this` 将被视为新函数的 `thisArg`”  </span>
+     - `bind`有实参的话  
+       第一个参数会作为绑定函数的`this`
+     - `bind`有多个实参的话  
+       除了第一个参数以外的参数，都会作为新创建函数的初始参数  
+       <span style='opacity:.5'>初始参数：给函数传的参数都会排在初始参数的后面  </span>
+     
+   - 绑定函数  
+     > 绑定函数不管怎么调用，都有同样的 **this** 值  —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#%E5%88%9B%E5%BB%BA%E7%BB%91%E5%AE%9A%E5%87%BD%E6%95%B0)  
+     
+     
+     一些内部属性如下：
+     
+     - `[[TargetFunction]]`  
+       原函数
+     - `[[BoundThis]]`  
+       `bind`的第一个实参
+     - `[[BoundArguments]]`  
+       初始参数组成的数组
+     
+     其他内容：
+     
+     - 绑定函数的`name`属性是：`'bound '+原函数name属性`  
+     - 依据控制台结果来看，箭头函数不是绑定函数，打印结果跟普通函数比较相似
 
 
 ## 高阶函数
@@ -834,7 +860,15 @@ export default可以输出类【未测试export行不行】
 
 
 ## 箭头函数
-- 简化 “function(){return(函数内容)}” 的写法
+> 箭头函数没有自己的this —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
+
+自己没有`this`就意味着：
+
+1. 其内部写的`this`其实是外部的`this`
+2. `call`、`apply`、`bind`的第一个参数将失效
+
+语法：
+
 - 无参数：  ()=>函数内容  相当于  function(){return(函数内容)}
 - 单参数：  x=>函数内容  相当于  function(x){return(函数内容)}
 - 多参数：  (x,y)=>函数内容  相当于  function(x,y){return(函数内容)}
