@@ -1,9 +1,9 @@
 
-## 上下文对象
+### 上下文对象
 所有的实际性内容都要从上下文对象里调用（猜测一个canvas标签只能用一个上下文）
 `let ctx =canvas.getContext("2d")`
 
-## 矩形
+### 矩形
 
 - 设置填充颜色  
 
@@ -29,7 +29,7 @@
 
   `ctx.fillRect(10, 10, 100, 100)`
 
-## 径向渐变填充
+### 径向渐变填充
 
 `var ggg = ctx.createRadialGradient(六个参数)`  
 
@@ -45,7 +45,7 @@
 
 最后调用填充矩形的方法进行绘制
 
-## 画线
+### 画线
 
 ```javascript
 ctx.beginPath();
@@ -57,11 +57,26 @@ ctx.stroke();
 
 `ctx.beginPath()`可能意味着不清空之前的绘画，而继续进行接下来的绘制（看[慕课](https://www.imooc.com/video/3479)时产生的想法）
 
-## 复制canvas
+### 画图
+
+canvas上下文的`drawImage`方法  
+最简demo：
+
+```javascript
+var imageObj = new Image();
+imageObj.onload = function() {
+  context.drawImage(imageObj, 绘制起点x坐标, 绘制起点y坐标,绘制区域宽,绘制区域高);
+};
+imageObj.src = 图片地址;
+```
+
+`drawImage`参数只有头三个是必填的
+
+### 复制canvas
 
 `cloneNode`复制的canvas不会拥有原canvas的画面
 
-## 其他
+### 其他
 
 - canvas宽高改变后会自动清空画布
 

@@ -46,7 +46,7 @@
   - canvas  
   可以传入dom id也可以传入未插入文档的dom  
     可以监听canvas进行实时更新  
-    coordinates输入四个坐标（从左上角起）  
+    coordinates输入四个坐标（从左上角起，顺时针）  
     <span style='opacity: 0.5'>canvas应该是对图片的扩展（因为canvas描述里有一句话“Extends ImageSource”）</span>
   
 - **聚类**  
