@@ -2,6 +2,8 @@
 
 > “WebGL是使用JS来实现OpenGL ES 2.0” —— 《交互式计算机图形学  基于WebGL的自顶向下方法 （第七版）》
 
+笔记里只记关键部分，完整api查看mdn或者其他网站
+
 ## 上下文对象
 
 `let gl =canvas.getContext("webgl")`
@@ -34,7 +36,7 @@ gl.compileShader(着色器)
 
 
 ## 着色器程序
-一个顶点着色器和一个片段着色器组合起来叫一个着色程序  
+一个顶点着色器和一个片段着色器组合起来叫一个着色程序（mapbox demo备注里称为WebGL program）  
 - 创建  
   ```javascript
   const 着色器程序 = gl.createProgram()
@@ -52,9 +54,17 @@ const 属性序号 = gl.getAttribLocation(着色器程序, 字符串的属性名
 gl.enableVertexAttribArray(属性序号) // 开启属性
 const 缓冲 = gl.createBuffer(); // 创建缓冲
 gl.bindBuffer(gl.ARRAY_BUFFER, 缓冲); // 将缓冲绑定到绑定点（gl.ARRAY_BUFFER）
-gl.vertexAttribPointer( 属性序号, size, gl.FLOAT, false, 0, 0) // 设置属性如何从缓冲中读取数据（size规定了一次读取数组的几个元素，如果size小于属性的向量分量数的话，那么一个属性中没有从缓冲中读取数据的部分将会取默认值）（执行这个方法前绑定点上要有缓冲）
+/*
+设置属性如何从缓冲中读取数据（执行这个方法前绑定点上要有缓冲）
+- size规定了一次读取数组的几个元素，如果size小于属性的向量分量数的话，那么一个属性中没有从缓冲中读取数据的部分将会取默认值）
+*/
+gl.vertexAttribPointer( 属性序号, size, gl.FLOAT, false, 0, 0) 
 
-gl.bufferData(gl.ARRAY_BUFFER, 强类型数据 , 使用方法); // 通过绑定点（gl.ARRAY_BUFFER）给缓冲传输强类型数据（“最初例子”用的使用方法是`gl.STATIC_DRAW`）
+/*
+通过绑定点（gl.ARRAY_BUFFER）给缓冲传输强类型数据
+（“最初例子”用的『使用方法』是`gl.STATIC_DRAW`）
+*/
+gl.bufferData(gl.ARRAY_BUFFER, 强类型数据 , 使用方法);
 ```
 
 ## 使用全局变量（uniform）
@@ -88,7 +98,8 @@ gl.uniform2f(resolutionUniformLocation, 向量第一位, 向量第二位); // �
 
 - 图元类型决定了顶点会生成什么样的图形  
 
-  可以选择各种的点、线、三角形
+  可以选择点、线、三角形  
+  线和三角形有不同的绘制方式可以选择
 
 - 顶点着色器运行几次就会生成几个顶点  
 

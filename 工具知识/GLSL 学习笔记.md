@@ -42,11 +42,15 @@ webGL在一个容器里会生成一个**裁剪空间**，这个**裁剪空间**�
 ## attribute
 中文名：属性（暂定）  
 
-可在js与顶点着色器之间共享
+可在js与顶点着色器之间共享  
+一个attribute有可能一次执行只用一部分，执行多次才全部用完
 
 
 ## uniform
-中文名：全局变量（暂定）  
+中文名：全局变量（暂定，webglfundamentals里这样叫）  
+
+uniform就是一个定值，在各个地方都一样  
+uniform属于一个着色器程序
 
 - GLSL中uniform声明的变量需要全部添加到ShaderMaterial的uniforms配置项下  
 - 着色器运行前就要从js中获取这些变量值  

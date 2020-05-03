@@ -54,12 +54,78 @@
   可以通过数据源的配置项和数据源的方法来控制  
   配置项查阅规范、方法查阅api文档
 
-## 其他
+## 未归类
 
 - 核心在图层，图层还待详细了解
+
 - 似乎可以在一个页面开启多个mapbox的canvas（开图多次）  
   想法基于[博客](https://www.cnblogs.com/lilei2blog/p/8961564.html)
+  
 - `queryRenderedFeatures`  
   查询范围内可见要素，返回它们的一些信息  
   可以查单点也可以查矩形，可以加其他的限定条件  
   对raster图层无效
+  
+- 地图里的画面，画在墨卡托上都是等边梯形
+
+- mapbox用梯形图层承载矩形canvas时画面分成两个三角形，两个三角形的内容都被扭曲，且扭曲方向不同，中间能看到明显界限
+
+- 可以用json文件配置地图样式
+
+- **绑定元素位置方法**  
+
+  ```javascript
+  var popup = new mapboxgl.Popup({ closeOnClick: false })
+  .setLngLat([-96, 37.8])
+  .setHTML('<h1>Hello World!</h1>')
+  .addTo(map);
+  ```
+
+- 倾斜是以穿过画面中心点的水平线为基准进行的  
+  就是说这条“基准线”的墨卡托长度不会因为倾斜地图而变化（测试代码得到的结果在小数点后第六位开始有变化，mapbox原生经纬度最后几位也有偏差）
+
+## 记录
+
+- 源码可以跑了，但是当前`yarn install` 时有报错（下方记录可能会多一些换行）  
+报错里似乎有说明原因：Chromium下载失败
+  
+    ```
+    error D:\learning_materials\map_box\Mapbox_GL_JS\open_source_repositories\mapbox-gl-js-master2020.4.22\node_modules\puppeteer: Command failed.
+    Exit code: 1
+    Command: node install.js
+    Arguments:
+    Directory: D:\learning_materials\map_box\Mapbox_GL_JS\open_source_repositories\mapbox-gl-js-master2020.4.22\node_modules
+    \puppeteer
+    Output:
+    ERROR: Failed to download Chromium r686378! Set "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD" env variable to skip download.
+    { Error: read ECONNRESET
+        at TLSWrap.onStreamRead (internal/stream_base_commons.js:111:27)
+      -- ASYNC --
+        at BrowserFetcher.<anonymous> (D:\learning_materials\map_box\Mapbox_GL_JS\open_source_repositories\mapbox-gl-js-mast
+    er2020.4.22\node_modules\puppeteer\lib\helper.js:111:15)
+        at Object.<anonymous> (D:\learning_materials\map_box\Mapbox_GL_JS\open_source_repositories\mapbox-gl-js-master2020.4
+    .22\node_modules\puppeteer\install.js:64:16)
+        at Module._compile (internal/modules/cjs/loader.js:778:30)
+        at Object.Module._extensions..js (internal/modules/cjs/loader.js:789:10)
+        at Module.load (internal/modules/cjs/loader.js:653:32)
+        at tryModuleLoad (internal/modules/cjs/loader.js:593:12)
+        at Function.Module._load (internal/modules/cjs/loader.js:585:3)
+        at Function.Module.runMain (internal/modules/cjs/loader.js:831:12)
+    ```
+
+- `yarn run build-prod-min`时有提示（下方记录可能会多一些换行）  
+
+  ```
+  $ rollup -c --environment BUILD:production,MINIFY:true
+  
+  src/index.js, src/source/worker.js → rollup/build/mapboxgl...
+  (!) Circular dependencies
+  src\util\ajax.js -> src\util\mapbox.js -> src\util\ajax.js
+  src\style-spec\expression\parsing_context.js -> src\style-spec\expression\compound_expression.js -> src\style-spec\expre
+  ssion\parsing_context.js
+  src\style-spec\validate\validate.js -> src\style-spec\validate\validate_function.js -> src\style-spec\validate\validate.
+  js
+  ...and 10 more
+  ```
+
+  

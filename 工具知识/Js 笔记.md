@@ -1213,7 +1213,8 @@ Promise对象是一个构造函数，用来生成Promise实例。
     })
 ```
 - **普通post请求**  
-  各参数放进一个对象转为字符串后放进`body`属性
+  各参数放进一个对象转为字符串后放进`body`属性  
+  【】Content-Type是 text/plain;charset=UTF-8，已学的node方法没办法接收到数据
 - **form的post请求**  
   `body`里放`FormData`实例  
   每个参数用实例的`append`方法加
