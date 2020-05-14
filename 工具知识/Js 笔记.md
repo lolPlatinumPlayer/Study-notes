@@ -779,6 +779,12 @@ Symbol是第七种数据类型
 import和export  
 大部分浏览器无法实现，不过大部分打包工具中可用  
 以下提到的**变量**包括**函数**（函数名后不应加括号），不包括**属性**  
+东西导来导去都还会是原来的东西（比如变量在导来导去后它的引用地址还是不会发生改变）
+
+- webpack4的模块可能和es6的有些出入  
+  详见[印记中文webpack文档](https://webpack.docschina.org/api/module-methods#import)
+- es6还有一些其他的模块语法  
+  详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/import)
 
 
 ## 模块的地址表示
@@ -816,7 +822,7 @@ as可以将一个变量重命名为多个变量
   这种语法需配置，配置方法与nodeJS自定义模块一致  
   
 - `import * as a from './b'`  
-  针对export输出，将./b中的变量都重命名为a.x1、a.x2等  
+  针对`export`输出，将./b中的变量都重命名为a.x1、a.x2等  
   
 
 import from的地址可以省略.js，（慕课react实战里说是脚手架的功能）  
@@ -841,8 +847,7 @@ setTimeout(() => foo = 'baz', 500);
 
 ## export default
 与nodeJS的module.exports类似，不过不同的是export default可以与export共同使用，在引入时还有简写import a, {b,c as d} from 'only_name';  
-export default本质是输出一个叫default的变量，所以不能使用export default var a = 1这种写法，而可以使用export default 1这种写法  
-export default可以输出类【未测试export行不行】  
+export default本质是输出一个叫default的变量，所以不能使用export default var a = 1这种写法，而可以使用export default 1这种写法
 
 
 ## export 与 import 的复合写法
@@ -1015,6 +1020,7 @@ Foo.bar() // hello
     a=1
   }
   ```
+  
 - **静态属性**  
   静态属性除了用`类.静态属性=属性值`这种方法添加外，也可以定义在类的最顶层，如：
   
@@ -1024,6 +1030,13 @@ Foo.bar() // hello
   }
   ```
   类中可以调用自己的静态属性
+  
+- **待整理**  
+  类的外部无法对私有字段进行读写（js中），原生js在控制台里可以读取私有字段
+  私有字段必须声明后使用
+  babel的私有字段在控制台里无法查看
+  实例属性、公有字段、私有字段
+  https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes#%E5%AD%97%E6%AE%B5%E5%A3%B0%E6%98%8E
 
 
 ## 类的继承
@@ -1066,7 +1079,6 @@ Foo.bar() // hello
   在读取属性值时运行的函数，这个读取行为包括在chrome控制台点开“(...)”  
   return的值是最终读取到的值  
   如果不写取值函数，实例就不会拥有这个属性，不过还是可以给这个属性赋值  
-  
 
 ## Promise
 Promise对象是一个构造函数，用来生成Promise实例。

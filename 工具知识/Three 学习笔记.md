@@ -30,16 +30,22 @@ z轴向屏幕外
   要一次性设置三个参数的话用position.set(x值,y值,z值)  
   （无法直接给camera.position赋值、如果`position.set`传参数量不足，则几何体不会出现，但也不报错）
 - 旋转与移动同理，就是把`position`改为`rotation`，three的角度单位都是弧度，正值是逆时针旋转，多轴赋值旋转公式不明。
-  - 四元数
+  - 四元数  
+    
+    ```javascript
+    const quaternion = new THREE.Quaternion();
+    quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI/4);
+    obj.applyQuaternion(quaternion);
+    ```
+    
     - 方向也是逆时针
     
     - 可以与rotation同时生效
     
-    - `applyQuaternion`一次是在原角度上进行旋转2
+    - `applyQuaternion`一次是在原角度上进行旋转
     
     - 四元数的变化都是在原来基础上进一步变换（同一变换应用两次，旋转角度就会乘2）  
-    
-      有一些把欧拉变换转为四元数变换再应用的方法也是这样的
+    有一些把欧拉变换转为四元数变换再应用的方法也是这样的
 - 缩放：scale
 - quaternion暂不理解
 
@@ -153,9 +159,9 @@ scene.add(cube); // 将对象加进场景中
 - 将对象渲染为线框  
   方法：
   
-  1. 将`wireframe`配置项设为`true` 
+  1. 将材质`wireframe`配置项设为`true` 
   
-  2. 将`wireframe`属性赋值为`true`  
+  2. 将材质`wireframe`属性赋值为`true`  
   
   适用材质：大部分几何体或面的材质
   
@@ -545,6 +551,11 @@ window.addEventListener( 'mousemove', onMouseMove, false );
     ```
 
 
+
+# 记录
+
+- i5 5代核显对sprite和mesh重叠颜色时可能出现问题
+
 # 配合使用工具
 
 
@@ -556,6 +567,19 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 ## dat.gui
 功能：提供一个可以控制指定数据的面板
 地址：https://github.com/dataarts/dat.gui
+
+##### 自写教程
+
+- `const gui = new dat.GUI()`  
+  `gui.add(对象,对象的键名,最小值,最大值)`  
+  这样就能生成完毕。  
+  在拖动拖拽轴的时候，会实时给`对象[对象的键名]`赋值
+
+
+
+
+
+
 
 
 ## OrbitControls
