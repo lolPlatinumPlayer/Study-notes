@@ -87,6 +87,7 @@
 - **显隐图层**  
   `map.setLayoutProperty(图层id, 'visibility', 是否显示?'visible':'none');`
   
+- 数据源可以用任意值作为id，图层只能用字符串作id
 
 ## 记录
 
