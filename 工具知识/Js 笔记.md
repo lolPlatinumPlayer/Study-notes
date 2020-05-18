@@ -83,8 +83,10 @@ console.log('a[3]',a[3]) // undefined
 		
 ## 函数的其他内容
 - 形参与实参的关系相当于`形参=实参`，所以是会发生引用传递的
-- 函数都有一个name属性，值为函数名（es5中如果把函数表达式赋值给变量，这个函数的name属性将是空字符串）
-- 函数中写`arguments`似乎能返回以这个函数的实参组成的数组
+- 函数都有一个`name`属性，值为函数名（es5中如果把函数表达式赋值给变量，这个函数的name属性将是空字符串）
+- `arguments`对象是所有（非箭头）函数中都可用的局部变量  
+  特性近似于包含所有实参的数组  
+  详见[mdn](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/arguments)
 
 
 ## `this`
@@ -105,7 +107,7 @@ console.log('a[3]',a[3]) // undefined
 
 1. **`apply`**  
    `函数.apply(thisArg,数组)`  
-   让`thisArg`使用`...数组`作为实参去调用函数
+   让`thisArg`以`...数组`作为实参去调用函数
    
 1. **`call`**  
    `函数.call(thisArg[, arg1[, arg2[, ...]]])`  
@@ -223,6 +225,12 @@ mdn的说明是判断构造函数的prototype属性是否出现在对象的原�
 - 属性名：可以是任意字符串  
 - 方法：对象的属性值是函数时这个属性被称为方法  
 
+## 对象的相关api
+
+- **`Object.create(proto)`**  
+  返回一个空对象，对象的`__proto__`是`proto`  
+  第二个参数及更多内容见[mdn](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/create)
+
 
 ## 引用传递（有时也被称为“引用传值”）
 - 定义：将一个变量赋值给另一个变量后，使其中一个变量的一部分发生改变， 这个变化会同步到另一个变量上，那就说发生了引用传递
@@ -230,8 +238,7 @@ mdn的说明是判断构造函数的prototype属性是否出现在对象的原�
 - 规避方法：
     1. 浅拷贝：规避操作第一层子项时的引用传递
     2. 深拷贝：规避操作所有层子项时的引用传递
-3. `Object.create()`似乎可以
-	
+    
 	
 ## 浅拷贝方法
 - `...`（最优方案）
@@ -239,17 +246,18 @@ mdn的说明是判断构造函数的prototype属性是否出现在对象的原�
   x处根据赋值变量的值是数组还是对象来选择是输入空数组还是空对象
 - objectA = { a: objectB.a, b: objectB.b, c: objectB.c }
 - `b=[].concat(a)`
-  
+- `Object.create()`  
+  这是一个虚假的浅拷贝方案
 
 ## 深拷贝方法
-- $.extend(objectA, objectB )//等待重新测试
-   （使用这种方法的前提是：objectA是空对象，对象类型是对象。这是一个jq方法）
+- `$.extend(objectA, objectB )//【】等待重新测试`  
+   （使用这种方法的前提是：`objectA`是空对象，对象类型是对象。这是一个jq方法）
 - A=JSON.parse(JSON.stringify(B))
 - 自己写函数一层一层赋值
 
 
-## 制造对象
-最原始的方法如下（基本不会用这种方法，这种方法创建的对象.constructor不会显示函数中的代码，只会显示`? Object() { [native code] }`）
+## 依据模板制造对象
+最原始的方法如下（基本不会用这种方法，这种方法创建的对象`.constructor`不会显示函数中的代码，只会显示`ƒ Object() { [native code] }`）
 ```javascript
 function createObj(){
   let obj = {}
@@ -269,14 +277,14 @@ let obj1 = new createObj()
 
 
 ## 在原型上增加属性
-方法：在构造函数外给`构造函数名.prototype.属性名`赋值 【】语言整理下就行
+方法：在构造函数外给`构造函数.prototype.属性名`赋值 
 - 这种方法会给这条语句后所有由该构造函数创建的对象的`__proto__`属性增加属性（`__proto__`属性应该就是原型）
 - 这条语句后的对象可以用访问普通属性的方法访问这些属性（前提是普通属性中没有和这些属性同名的）
 - 上面两条的限定条件为：
   - 在这个语句后生效
   - 这个语句前新建的对象在这语句后也能生效
 - 对Array、Object、Date等原生构造函数也能进行这样的操作（就算在某个作用域内也会对所有目标生效，要注意`{}`字面量无法使用`.`运算符）
-- 这种方法增加的方法互相之间是全等的，比在构造函数里增加更节省资源（构造函数里增加的方法在不同对象间是独立的）
+- 这种方法增加的方法在不同对象之间是全等的，比在构造函数里增加更节省资源（构造函数里增加的方法在不同对象间是不同的）
 
 
 ## 原型链
