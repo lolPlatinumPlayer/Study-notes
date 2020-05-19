@@ -1,0 +1,178 @@
+# 程序
+
+### 类
+
+这里的“类”是leaflet自己用js实现的，基类是`L.Class`  
+详细内容看[官网](https://leafletjs.com/reference-1.6.0.html#class)  
+实例的`__proto__`上可以看到类创建的内容，父类创建的内容则在`__proto__.__proto__`上
+
+- **initialize**方法  
+  构造函数  
+  和es6不同的是，它不调用父类构造函数也是允许的
+- **options**属性  
+  是一个对象，会与父类的`options`进行合并（父类的`options`会作为子类`options`的`__proto__`）  
+  - `setOptions(this, options)`  
+    将`options`参数与`this.options`进行上文说到的『合并』  
+    可以通过`L`或者`L.Util`调用  
+- **Includes**  
+  操作方法：includes属性、include静态方法  
+  混合  
+  遇到同名属性时覆盖优先级为：include静态方法>普通属性>includes中的属性
+- **addInitHook**方法  
+  继承`L.Class`的类可以使用该方法（`L.Class`自身使用该方法将不生效）  
+  该方法用于增加『在`initialize`方法执行完毕后执行的代码』  
+  可以输入函数，也可以输入字符串的方法名
+
+*leaflet里的类基本都有工厂方法。使用工厂方法可以比使用类少用一个`new`关键字，工厂方法名字就是类名的小写版*
+
+### 事件
+
+`L.Evented`  
+有普通的on、off、fire方法  
+`listens`方法用于查看是否有指定事件  
+`_events`属性里有所有的事件  
+addEventParent和removeEventParent2个方法还没看
+
+### 图层
+
+##### 介绍
+
+可以addTo`L.Map`的实例，和`L.Map`的实例产生互动  
+有插入html的一些内容（插入位子是多个pane之一）  
+pane的dom结构应该都如下
+
+![leaflet-pane](..\图片\leaflet-pane.png)
+
+如果用的renderer是`L.canvas()`的话  
+所有矢量内容都会在一个canvas上（就算用了图层组也一样）
+
+##### 情况
+
+`L.Layer`是一个重要的类，以下内容继承了该类
+
+- egis.layer.GraphicsLayer -> L.LayerGroup-> L.Layer
+- egis.Graphic -> L.Path -> L.Layer
+- L.TileLaye -> L.GridLayer -> L.Layer
+- leaflet的Marker、Polygon、Popup等
+
+##### 阅读
+
+Layer的阅读重点在Methods和Extension methods  
+Extension methods的意思是：希望子类有的方法
+
+### 图层组
+
+`L.layerGroup(图层组成的数组)`  
+作用：将多个图层合并作一个图层处理
+
+### `L.Path`
+
+> 一个抽象类。其中包含矢量叠加层（多边形，折线和圆）之间共享的选项和常量。不要直接使用它——官网
+
+Path -> Layer -> Evented -> Class
+
+继承该类的类如下
+
+1. Polygon -> Polyline -> Path
+2. Circle -> CircleMarker -> Path
+
+### Circle、CircleMarker 
+
+区别：
+
+- CircleMarker的radius单位是屏幕像素，Circle的是米
+- Circle传参有三传参的方式（功能相同）
+- Circle多了getBounds方法
+
+### Util
+
+- **stamp**  
+  制造id
+- **trim**  
+  去掉头尾空格
+- **splitWords**  
+  输入字符串，返回一个数组  
+  这个数组是用空格切割字符串后得到的
+
+
+
+
+
+
+
+
+
+# API
+
+
+
+
+### 初始化
+
+`const map = L.map(div的id)`
+
+### 增加底图
+
+添加一个瓦片图层到地图上
+
+```javascript
+L.tileLayer(url模板, {
+  id: 'mapbox.streets'
+}).addTo(map);
+```
+
+第二个参数可能叫options（本笔记中就这么叫）
+
+- url模板还是少改好，按照leaflet官网改mapbox的url会导致底图无法加载
+- url模板中`{字符串}`字样似乎会被options中同名属性替换  
+  比如`{accessToken}`就可以被`accessToken`属性值替换
+- 第二个参数的renderer属性指定绘制矢量图层的默认方法  
+  有两个选值：`L.canvas()`和`L.svg()`
+
+### 一些添加物
+
+- 标记：`var marker = L.marker([51.5, -0.09]).addTo(map)`  
+  用img标签实现的
+
+- 圆  
+
+  ```javascript
+  var circle = L.circle([51.508, -0.11], {
+      color: 'red',
+      fillColor: '#f03',
+      fillOpacity: 0.5,
+      radius: 500
+  }).addTo(map)
+  ```
+
+  用svg实现的
+
+- 多边形  
+
+  ```javascript
+  var polygon = L.polygon([
+      [51.509, -0.08],
+      [51.503, -0.06],
+      [51.51, -0.047]
+  ]).addTo(map)
+  ```
+
+  用svg实现的
+
+- 弹窗  
+
+  ```javascript
+  var popup = L.popup()
+      .setLatLng([51.5, -0.09])
+      .setContent("I am a standalone popup.")
+      .openOn(map)
+  ```
+
+  用html实现的
+
+  - 点击指定物体进行弹窗：`其他添加物.bindPopup("弹窗文本")`
+
+### 事件
+
+`map.on('click', 函数)`  
+还有很多内容，看[文档](https://leafletjs.com/reference-1.6.0.html#map-baselayerchange)（文档其他位子估计也有相关内容）
