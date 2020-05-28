@@ -24,9 +24,10 @@
   `map.on`方法  
 - **给地图增加事件**  
     `map.on(事件名,回调)`
-  
 - **给图层增加事件**  
     `map.on(事件名,图层id,回调)`
+- **注意**  
+    回调的`this`会变成map（只测试了地图事件）
 
 
 ## 数据源
@@ -89,6 +90,17 @@
   
 - 数据源可以用任意值作为id，图层只能用字符串作id
 
+- **编译**  
+
+  - `yarn run build-prod-min`生成`mapbox-gl.js`及其map文件
+  - `yarn run build-dev`生成`mapbox-gl-dev.js`
+
+- 找到所有图层  
+  `map.getStyle().layer`
+
+- 找到所有数据源  
+  `map.getStyle().sources`
+
 ## 记录
 
 - 源码可以跑了，但是当前`yarn install` 时有报错（下方记录可能会多一些换行）  
@@ -134,3 +146,4 @@
   ```
 
   
+

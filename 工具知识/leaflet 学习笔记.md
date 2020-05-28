@@ -104,7 +104,7 @@ Path -> Layer -> Evented -> Class
 
 # API
 
-
+文档里说的上下左右方向和屏幕呈现的一致，坐标似乎与canvas一致
 
 
 ### 初始化
@@ -176,3 +176,28 @@ L.tileLayer(url模板, {
 
 `map.on('click', 函数)`  
 还有很多内容，看[文档](https://leafletjs.com/reference-1.6.0.html#map-baselayerchange)（文档其他位子估计也有相关内容）
+
+### 地图
+
+- `getSize`  
+  返回地图像素单位的宽高，用`L.Point`实例表示
+- `containerPointToLayerPoint`  
+  应该没什么卵用，输入什么返回什么  
+  应该只有在动画时有用（因为dom被缩放或偏移了）
+
+### `bounds`
+
+- 实例化时传入2个点，点可以是数组形式也可以是`L.Point`实例  
+- 实例化后实例立即拥有两个属性——min与max，是两个`L.Point`实例  
+  分别是x、y值都是最小的点与最大的点
+- `getSize`方法  
+  返回`L.Point`实例，x是x跨度，y是y跨度
+- 其他方法看[官网](https://leafletjs.com/reference-1.0.3.html#bounds)就能理解
+
+### 其他
+
+- point.round()  
+  返回一个副本，该副本的xy都是整数（由原point四舍五入后得到）
+- point的add与subtract方法  
+  分别是向量相加与向量相减
+

@@ -552,6 +552,15 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 
 
 
+
+
+# 未归类
+
+- three中在纹理和贴图间没有明显的界限，经常会叫“纹理贴图”  
+  英文就是Texture，有时候是map  
+  纹理贴图都是要传入一个图片或者canvas，但是对于传入的『图片或者canvas』并没有一个名称
+
+
 # 记录
 
 - i5 5代核显对sprite和mesh重叠颜色时可能出现问题

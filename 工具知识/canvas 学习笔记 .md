@@ -62,7 +62,7 @@ ctx.stroke();
 - 设置线宽  
   `ctx.lineWidth = 线宽`
 
-### 画图
+### 加图片
 
 canvas上下文的`drawImage`方法  
 最简demo：
@@ -76,6 +76,12 @@ imageObj.src = 图片地址;
 ```
 
 `drawImage`参数只有头三个是必填的
+
+### 画布操作
+
+- 移动之后绘制的坐标系中心点  
+  `ctx.translate(x,y)`  
+  可以多次使用进行叠加移动
 
 ### 复制canvas
 
