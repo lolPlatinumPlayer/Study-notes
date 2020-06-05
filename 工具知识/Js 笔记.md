@@ -765,6 +765,7 @@ sessionStorage除以上限定外，还限定与窗口，窗口关闭则数据销
 抛出一个自定义错误
 
 - exception为错误内容，可以是对象、数组、字符串、错误对象等
+- 会阻断程序
 
 ## try catch finally
 
@@ -868,12 +869,16 @@ Symbol是第七种数据类型
 
 ## 模块
 import和export  
-大部分浏览器无法实现，不过大部分打包工具中可用  
+大部分浏览器无法实现，可以在打包工具中使用  
 以下提到的**变量**包括**函数**（函数名后不应加括号），不包括**属性**  
 东西导来导去都还会是原来的东西（比如变量在导来导去后它的引用地址还是不会发生改变）
 
 - webpack4的模块可能和es6的有些出入  
   详见[印记中文webpack文档](https://webpack.docschina.org/api/module-methods#import)
+- **让html支持es6模块**  
+  *已在chrome进行过验证*  
+  script标签加入“ type="module"”就能使用es6的模块了  
+  不过这种方法不能省略.js，而且地址要以./或../开头（../未验证）
 - es6还有一些其他的模块语法  
   详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/import)
 

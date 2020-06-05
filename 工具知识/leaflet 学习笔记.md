@@ -1,3 +1,43 @@
+
+
+
+
+# 概念
+
+### 名词定义
+
+- 地图容器：实例化地图时挂载的dom元素
+- containerPoint：  
+  相对于地图容器左上角的像素坐标  
+  坐标轴与[html的canvas](https://developer.mozilla.org/zh-CN/docs/Glossary/Canvas)一致
+- origin pixel：  
+  *这是一个虚拟的点*  
+  在地图实例化完毕后这个点在地图容器的左上角  
+  鼠标拖拽的话会让这个点随地图移动  
+  （滚轮操作不会改变这个点）
+- layerPoint：  
+  相对于origin pixel的像素坐标  
+  坐标轴与canvas一致
+
+### 特性
+
+- 不需要canvas renderer的话不会在overlay pane里插入canvas（比如添加物只有marker时）
+
+- 绘制完毕后canvas尺寸都是固定的  
+  width比地图容器多267，height比地图容器多60  
+  猜测：这个多出部分应该是由renderer的padding和地图容器尺寸共同决定的
+
+- canvas中心点与地图容器的中心点并不一定是一致的（重绘后也是这样）
+
+- 镜头动画都是通过改变各dom的css实现的  
+  镜头动画结束时会对canvas进行重绘
+
+- 移动镜头时可能进行多个『镜头动画-重绘』
+
+  
+
+
+
 # 程序
 
 ### 类
@@ -32,6 +72,15 @@
 `listens`方法用于查看是否有指定事件  
 `_events`属性里有所有的事件  
 addEventParent和removeEventParent2个方法还没看
+
+
+
+### renderer
+
+- `_bounds`属性  
+  其`min`于`max`属性分别是canvas左上角与右下角的layerPoint
+
+
 
 ### 图层
 
@@ -182,8 +231,7 @@ L.tileLayer(url模板, {
 - `getSize`  
   返回地图像素单位的宽高，用`L.Point`实例表示
 - `containerPointToLayerPoint`  
-  应该没什么卵用，输入什么返回什么  
-  应该只有在动画时有用（因为dom被缩放或偏移了）
+  输入containerPoint返回layerPoint
 
 ### `bounds`
 
@@ -194,10 +242,12 @@ L.tileLayer(url模板, {
   返回`L.Point`实例，x是x跨度，y是y跨度
 - 其他方法看[官网](https://leafletjs.com/reference-1.0.3.html#bounds)就能理解
 
-### 其他
+### `point`
 
-- point.round()  
+- round方法  
   返回一个副本，该副本的xy都是整数（由原point四舍五入后得到）
-- point的add与subtract方法  
-  分别是向量相加与向量相减
+- add方法  
+  向量相加
+- subtract方法  
+  向量相减
 
