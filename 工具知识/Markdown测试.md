@@ -201,7 +201,20 @@
 
 - $左右各一个美元号开启行内数学公式^{112}$  
 
+- 用两个美元符开启多行数学公式  
+  $$
+  \begin{align*}
+  y = y(x,t) &= A e^{i\theta} \\
+  &= A (\cos \theta + i \sin \theta) \\
+  &= A (\cos(kx - \omega t) + i \sin(kx - \omega t)) \\
+  &= A\cos(kx - \omega t) + i A\sin(kx - \omega t)  \\
+  &= A\cos \Big(\frac{2\pi}{\lambda}x - \frac{2\pi v}{\lambda} t \Big) + i A\sin \Big(\frac{2\pi}{\lambda}x - \frac{2\pi v}{\lambda} t \Big)  \\
+  &= A\cos \frac{2\pi}{\lambda} (x - v t) + i A\sin \frac{2\pi}{\lambda} (x - v t)
+  \end{align*}
+  $$
+
 - `^`号开启上标  
+
 - 开方：$\sqrt[开方数]{被开方数}$
 
 - 像上标、开方这种符号默认都是取符号后第一个字符进入数学符号  

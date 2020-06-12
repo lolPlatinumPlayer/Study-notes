@@ -27,8 +27,12 @@
 主线程中`w.onmessage=一个函数(形参)`  
 worker中用`postMessage(实参)`函数的执行就是执行赋值给`onmessage`的函数  
 postMessage的实参会放进onmessage形参的`data`属性里  
-*（这里`onmessage`估计用`addEventListener`、`removeEventListener`操作`'message'`也有同等效果）*  
-注意：不能把`onmessage`的形参再传给`postMessage`
+*（这里`onmessage`估计用`addEventListener`、`removeEventListener`操作`'message'`也有同等效果）*
+
+注意：
+
+- 不能把`onmessage`的形参再传给`postMessage`
+- 形参或者形参的后代不能是函数
 
 ## 主线程执行worker中函数
 

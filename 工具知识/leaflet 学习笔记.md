@@ -40,6 +40,10 @@
 
 # 程序
 
+### 编码规范
+
+- 非方法成员除了`options`以外，命名全以`_`开头
+
 ### 类
 
 这里的“类”是leaflet自己用js实现的，基类是`L.Class`  
@@ -54,6 +58,9 @@
   - `setOptions(this, options)`  
     将`options`参数与`this.options`进行上文说到的『合并』  
     可以通过`L`或者`L.Util`调用  
+  - 语义：  
+    用户实例化时的配置项  
+    leaflet内部都不会去修改`options`的属性
 - **Includes**  
   操作方法：includes属性、include静态方法  
   混合  
@@ -239,7 +246,7 @@ L.tileLayer(url模板, {
 - 实例化后实例立即拥有两个属性——min与max，是两个`L.Point`实例  
   分别是x、y值都是最小的点与最大的点
 - `getSize`方法  
-  返回`L.Point`实例，x是x跨度，y是y跨度
+  返回一个`L.Point`实例，`x`是x轴方向跨度，`y`是y轴方向跨度
 - 其他方法看[官网](https://leafletjs.com/reference-1.0.3.html#bounds)就能理解
 
 ### `point`

@@ -871,7 +871,10 @@ Symbol是第七种数据类型
 import和export  
 大部分浏览器无法实现，可以在打包工具中使用  
 以下提到的**变量**包括**函数**（函数名后不应加括号），不包括**属性**  
-东西导来导去都还会是原来的东西（比如变量在导来导去后它的引用地址还是不会发生改变）
+
+- 变量导来导去都是同一份东西  
+  不过感觉导出后就都是“模块”了，和原有的东西有一些细微差异  
+  导出[『原始数据类型值』](##数据类型)并在另一个文件导入后，这个东西似乎只有getter没有setter（目前没想到好的验证这一条的方法）
 
 - webpack4的模块可能和es6的有些出入  
   详见[印记中文webpack文档](https://webpack.docschina.org/api/module-methods#import)
@@ -881,6 +884,7 @@ import和export
   不过这种方法不能省略.js，而且地址要以./或../开头（../未验证）
 - es6还有一些其他的模块语法  
   详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/import)
+- `export`和`import`可以位于模块顶层任何位置（即不能放在块级作用域内）
 
 
 ## 模块的地址表示
@@ -890,13 +894,19 @@ import和export
 
 ## export负责输出
 两种格式：  
-1. export{a,b}  
+1. `export{a,b}`  
    就算只export一个变量也要用括号，之后import也要带括号
-2. export var a='xx'  
+2. `export var a='xx'`  
    这种格式不能用as在输出时重命名变量  
 
-两种格式 变量在export前或export时都必须定义，且不可重复定义  
-export可以位于模块顶层任何位置（即不能放在块级作用域内），import命令也是如此  
+两种格式 变量在`export`前或`export`时都必须定义，且不可重复定义  
+
+- `import`后`export`的简写方式：  
+
+  - `export {Vec2,getLen,LineFn,} from './math'`
+  - `export * from './math'`
+
+  上面这2中简写的测试环境：`math.js`里都是用`export`导出的
 
 
 ## as负责重命名
@@ -1181,7 +1191,7 @@ Foo.bar() // hello
   如果不写取值函数，实例就不会拥有这个属性，不过还是可以给这个属性赋值  
 
 ## Promise
-Promise对象是一个构造函数，用来生成Promise实例。
+`Promise`对象是一个构造函数，用来生成Promise实例。
 
 `resolve`和`reject`都只能有一个实参，多了在`then`里也不会体现出来  
 
@@ -1190,6 +1200,7 @@ Promise对象是一个构造函数，用来生成Promise实例。
 
 - 实例化`Promise`时传入的回调都是同步执行的    
   包括其中的『异步代码』以及『reslove之后的代码』，都和在promise外的表现是一致的
+- 回调如果是普通函数的话，this指向将和外层的不同
 
 如果`promise`执行完毕的话，`promise.then`里的`return`值就是`promise.then`的值  
 似乎无法用js获得`promise`的状态，只能在控制台获得  
@@ -1206,7 +1217,10 @@ Promise对象是一个构造函数，用来生成Promise实例。
     - onRejected
       可选。`reject`就是执行这个函数
     【】测试加载图片的异步功能能不能用高阶函数代替promise实现
-  
+
+**未归类**
+
+- promise就算已经reslove，`then`的回调也是异步执行的
 
 ## Promise相关可行的例子
 1. ```javascript
@@ -1377,6 +1391,8 @@ function a(p0,p1='p1'){
 缺点是创建时、打印时结构没那么直观、也无法输出成字面量  
 除了键名外并没有比普通对象多出什么功能 
 
+**api**
+
 - **实例化**  
 
   ```javascript
@@ -1385,6 +1401,8 @@ function a(p0,p1='p1'){
       [键名2,键值2],
   ])
   ```
+
+  在遇到键名相同时只会保留最后一个键值对
 
 - **常用方法**
 
@@ -1396,6 +1414,10 @@ function a(p0,p1='p1'){
   回调第一个参数是值，第二个是键
 - **查看键的数量**  
   `Map对象.size`
+
+**特性**
+
+- 1
 
 #  【ES7】
 
@@ -1468,7 +1490,10 @@ export default 组件
 
 # 【计算相关】
 
+## `++`
 
+`a++`返回自增前的  
+`++a`返回自增后的
 
 
 ## 取余（%）
