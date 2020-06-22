@@ -15,3 +15,12 @@
   加`meta`标签即可解决，以下两个标签都可以
   1. `<meta charset="UTF-8">`
   2. `<meta http-equiv="Content-Type" content="charset=utf-8"/>`
+
+
+
+# 综合
+
+- **标签的id**  
+  所有标签的id值都会作为键增加到`window`变量下  
+  这个增加的属性的属性值就是标签对应的dom  
+  <span style='opacity:.5'>可以通过window调用到这个增加的属性，不过当前未在打印出的window对象上找到这些属性</span>

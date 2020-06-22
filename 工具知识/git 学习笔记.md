@@ -5,7 +5,16 @@ cd d:nospace/learngit
 
 
 ## 杂项
-- 不要使用windows自带记事本编辑文件（可能是因为会把编码改为GBK）、webStorm的git相关功能挺好用的
+- 不要使用windows自带记事本编辑文件（可能是因为会把编码改为GBK）
+- webStorm的git相关功能挺好用的  
+  - commit  
+    提交前会进行代码检查（比如会检测出无用代码）  
+    似乎无法提交忽略文件
+  - add  
+    似乎无法add忽略文件
+  - 忽略文件  
+    上面2条说的忽略文件都会显示在“Ignored Files”里  
+    关于忽略文件的检测似乎有点问题，和git的表现不一致（版本2018.3）
 - git bash中按q键退出
 
 ## Git专有名词英文
@@ -129,6 +138,10 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 ## 切换分支
 `git checkout 分支名`  
 （廖雪峰中说用`switch`更科学）
+
+### 删除分支
+
+`$ git branch -d [branch-name]`
 
 
 ## 从服务端下载指定分支代码并将其与当前分支进行合并

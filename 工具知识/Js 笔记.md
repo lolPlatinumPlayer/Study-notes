@@ -8,8 +8,8 @@
 
 ## undefined
 
-用undefined赋值可以把原有内容覆盖掉  
-但是对对象的某个属性赋值undefined并不会将这个属性删除
+用`undefined`赋值可以把原有内容覆盖掉  
+但是对对象的某个属性赋值`undefined`并不会将这个属性删除
 
 
 ## delete
@@ -123,7 +123,8 @@ console.log('a[3]',a[3]) // undefined
        试了几个例子，绑定函数的`this`都是`window`，这和MDN上说的不一样  
        <span style='opacity:.5'>MDN上写“执行作用域的 `this` 将被视为新函数的 `thisArg`”  </span>
      - `bind`有实参的话  
-       第一个参数会作为绑定函数的`this`
+       第一个参数会作为绑定函数的`this`  
+       <span style='opacity:.5'>补充：绑定的是引用值（被绑定对象改变后，函数也是按改变后的值执行的）</span>
      - `bind`有多个实参的话  
        除了第一个参数以外的参数，都会作为新创建函数的初始参数  
        <span style='opacity:.5'>初始参数：给函数传的参数都会排在初始参数的后面  </span>
@@ -277,7 +278,14 @@ mdn的说明是判断构造函数的prototype属性是否出现在对象的原�
   })
   ```
 
-  
+- 冻结对象  
+  `Object.freeze(对象)`  
+  冻结后对象不能被修改，不过对象的属性可以  
+
+  - `对象.属性=1`这种写法不生效  
+    不过`对象.属性.属性=1`可以生效
+
+  似乎原型链也会被冻结，详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze)
 
 ## 引用传递（有时也被称为“引用传值”）
 
@@ -868,27 +876,26 @@ Symbol是第七种数据类型
   
 
 ## 模块
-import和export  
-大部分浏览器无法实现，可以在打包工具中使用  
+一般在打包工具中使用，部分浏览器也支持了es6模块  
 以下提到的**变量**包括**函数**（函数名后不应加括号），不包括**属性**  
 
-- 变量导来导去都是同一份东西  
-  不过感觉导出后就都是“模块”了，和原有的东西有一些细微差异  
-  导出[『原始数据类型值』](##数据类型)并在另一个文件导入后，这个东西似乎只有getter没有setter（目前没想到好的验证这一条的方法）
-
-- webpack4的模块可能和es6的有些出入  
-  详见[印记中文webpack文档](https://webpack.docschina.org/api/module-methods#import)
 - **让html支持es6模块**  
   *已在chrome进行过验证*  
   script标签加入“ type="module"”就能使用es6的模块了  
-  不过这种方法不能省略.js，而且地址要以./或../开头（../未验证）
+  不过这种方法不能省略.js，而且地址要以./或../开头（../未验证）  
+  这种标签里的函数，html里的事件（比如onclik属性）访问不到
+- 变量导来导去都是同一份东西  
+  不过感觉导出后就都是“模块”了，和原有的东西有一些细微差异  
+  导出[『原始数据类型值』](##数据类型)并在另一个文件导入后，这个东西似乎只有getter没有setter（目前没想到好的验证这一条的方法）
+- webpack4的模块可能和es6的有些出入  
+  详见[印记中文webpack文档](https://webpack.docschina.org/api/module-methods#import)
 - es6还有一些其他的模块语法  
   详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/import)
 - `export`和`import`可以位于模块顶层任何位置（即不能放在块级作用域内）
 
 
 ## 模块的地址表示
-- ../xx代表上一级目录中的文件
+- `../xx`代表上一级目录中的文件
 - 若地址中只写到文件夹而没有写到具体文件，则代表该文件夹中的index.js文件（各处文档均未提及，不过确实可用）
 
 
@@ -957,13 +964,17 @@ export default本质是输出一个叫default的变量，所以不能使用expor
 
 
 ## export 与 import 的复合写法
-- `import { foo, bar } from 'my_module'`  
-  `export { foo, bar }`  
-  可以简写为`export { foo, bar } from 'my_module'`  
-  
+- ```javascript
+  import { foo, bar } from 字符串路径
+  export { foo, bar }
+  ```
 
-可以用as，甚至可以用`as`让具体接口和默认接口互相转换  
-和`*`  
+  可以简写为`export { foo, bar } from 'my_module'`  
+
+- `export * as Browser from './Browser'`这种语法是不支持的（在webpack4做了验证）
+
+可以用`as`，甚至可以用`as`让具体接口和默认接口互相转换  
+和`*`【】？？  
 默认接口的写法为：`export { default } from 'foo'`  
 
 关于模块还有更多内容在http://es6.ruanyifeng.com/#docs/module  
@@ -1418,6 +1429,19 @@ function a(p0,p1='p1'){
 **特性**
 
 - 1
+
+## 可迭代对象
+
+- 转数组的方法  
+  - `Array.from(可迭代对象)`
+  - `[...可迭代对象]`  
+    这种方法会把可迭代对象中的内容清空（把每一项都移除）
+
+
+
+
+
+
 
 #  【ES7】
 
