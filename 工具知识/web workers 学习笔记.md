@@ -11,8 +11,10 @@
 请求某个js文件，并在 **Worker线程** 执行其中代码。  
 文件中可以执行`postMessage`函数 
 
-
 ## 关闭 Web Worker 线程
+
+这个关闭应该只是关闭一次，并不是销毁worker实例（未测试）
+
 - 主线程中  
   `(Web Worker 对象).terminate()`
 - worker线程中  

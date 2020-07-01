@@ -1428,7 +1428,9 @@ function a(p0,p1='p1'){
 
 **特性**
 
-- 1
+- 与`for of`结合使用  
+  `for (var arr of map)`  
+  arr的第一项是key，第二项是值
 
 ## 可迭代对象
 
