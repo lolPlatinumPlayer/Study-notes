@@ -189,15 +189,16 @@ console.log('a[3]',a[3]) // undefined
 
 
 ## 数据类型
-在es5中数据类型可以分为下面两类（犀牛书中称为原始值和对象）（es6多了Symbol）
-1. 原始数据类型值(primitive type)，有五种：Undefined、Null、Boolean、Number、String。
-2. 引用类型值，也就是对象类型(Object type)，除了5种原始值外一切皆对象，比如Object、Array、Function、Date。
+在es5中数据类型可以分为下面两类
+1. 原始类型值有6种：undefined、null、boolean、number、string、symbol（es6新增）  
+   其实还有一个bigInt类型，但是不是所有浏览器都支持（比如IE），而且操作感觉没有那么流畅
+2. 引用类型值，也就是对象类型(Object type)，除了5种原始值外一切皆对象，比如Object、Array、Function、Date、RegExp、Error。
 
 声明变量时不同的内存分配：  
-1. 原始值：  
+1. 原始类型值：  
    存储在栈(stack)中的不可变数据，每个原始值在栈中都有独立的空间来存储。  
    除了字符串外，不可能有两个全等的原始值；就算两次用相同的字符串字面量给变量赋值，js也会在栈中开辟两个位子存放这两个字符串（个人猜想）  
-2. 引用值：  
+2. 引用类型值：  
    存储在堆(heap)中，引用的结果是栈中的值或另一个引用  
    引用分两种：  
     1. 映射的引用：比如数组和狭义上的对象。数组的子项通过序号映射到一个原始值，而狭义对象通过字符串映射到原始值  
@@ -207,8 +208,15 @@ console.log('a[3]',a[3]) // undefined
        如果赋值给a的是广义对象，那就有可能发生下文说的引用传递  
 	
 
-这么设计的原因：  
-引用值的大小会改变，所以不能把它放在栈中，否则会降低变量查寻的速度。相反，放在变量的栈空间中的值是该对象存储在堆中的地址。地址的大小是固定的，所以把它存储在栈中对变量性能无任何负面影响。  
+这么设计的原因
+
+引用值的大小会改变，所以不能把它放在栈中，否则会降低变量查寻的速度。相反，放在变量的栈空间中的值是该对象存储在堆中的地址。地址的大小是固定的，所以把它存储在栈中对变量性能无任何负面影响。
+
+关于命名  
+
+- 犀牛书中称为原始类型（primitive type）和对象类型（object type）
+- [MDN](https://developer.mozilla.org/zh-CN/docs/Glossary/Primitive)中中文译名为：基本类型（基本数值、基本数据类型）  
+  英文名为：primitive (primitive value, primitive data type) 
 
 
 ## instanceof
@@ -1081,10 +1089,24 @@ let与var仅有以上区别，const除了以上区别外，const在声明时必�
   
 - 解构实参（以下是自己测试的结果，在《ECMAScript6入门-阮一峰》里没找到相关内容）
   `function Fn({x}){函数内容}`
-  函数内x就直接代表实参（对象）的x属性
+  函数内x就直接代表实参（对象）的x属性  
+  甚至可以多级解构，如：  
+  
+  ```javascript
+  function Fn({x:{
+    属性名a,
+    属性名b,
+    属性名c,
+  }}){
+    函数内容
+  }
+  ```
+  
+  
   
 - **用新的变量名来接收值**  
-  `const{对象中属性名:想要的变量名}=对象`
+  `const{对象中属性名:想要的变量名}=对象`  
+  
 
 
 ## 类
@@ -1177,6 +1199,7 @@ Foo.bar() // hello
     而且要在这之后才能用`this`和`super`，不然阻塞报错  
   - 不能用`super`这种形式直接存在，不然阻塞报错  
 - 子类new出来的对象，同时是父类与子类的实例，instanceof 父类或子类都是true  
+- 可以继承js原生的构造函数（没有测试过）
 
 
 ## 类的存值函数和取值函数
@@ -1396,6 +1419,22 @@ function a(p0,p1='p1'){
 }
 ```
 
+
+
+## Set对象
+
+> `Set`对象是值的集合，你可以按照插入的顺序迭代它的元素。 Set中的元素只会**出现一次**，即 Set 中的元素是唯一的。—— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Set)
+
+- 构造函数  
+  可以传入可迭代对象或者`null`  
+  传`null`或者不传入内容时，新的set为空
+
+- set认为`NaN`间是相等的
+
+有一些显而易见的API，具体看[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Set)
+
+
+
 ## Map对象
 
 比普通对象的优点是可以拿任意值作为键名，引用值也可以。可以迭代到symbol键，数字作为键值时也不会转为字符串  
@@ -1432,16 +1471,61 @@ function a(p0,p1='p1'){
   `for (var arr of map)`  
   arr的第一项是key，第二项是值
 
-## 可迭代对象
+## 迭代
+
+阮一峰ES6中对相关名词的使用是不严格的
+
+
+
+### 可迭代对象
+
+iterable object  
+必须有一个键值为`Symbol.iterator`的@@iterator方法
 
 - 转数组的方法  
   - `Array.from(可迭代对象)`
   - `[...可迭代对象]`  
     这种方法会把可迭代对象中的内容清空（把每一项都移除）
 
+### @@iterator方法
+
+[阮一峰ES6](https://es6.ruanyifeng.com/#docs/iterator#%E9%BB%98%E8%AE%A4-Iterator-%E6%8E%A5%E5%8F%A3)中称为Iterator接口  
+该方法会返回一个迭代器
 
 
 
+### 生成器
+
+generator
+
+生成迭代器的函数（暂时的理解，实际上应该不是）
+
+【】把备忘录里的记录先过一遍
+
+
+
+### 迭代器
+
+iterator
+
+> 迭代器是一个对象 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Iterators_and_generators#%E8%BF%AD%E4%BB%A3%E5%99%A8)
+
+[阮一峰ES6](https://es6.ruanyifeng.com/#docs/iterator#Iterator%EF%BC%88%E9%81%8D%E5%8E%86%E5%99%A8%EF%BC%89%E7%9A%84%E6%A6%82%E5%BF%B5)中称为：Iterator、遍历器、遍历器对象
+
+描述
+
+- 迭代器有一个`next`方法，调用这个方法表示进行一次迭代
+
+- 外部可以判断迭代器是否迭代完成
+
+诞生来由
+
+- 有时候需要使用复杂的迭代方案（比如按指定顺序遍历深度对象）  
+  这个时候就需要用for循环、while等api编写迭代方案  
+  把迭代部分代码封装成对象，那这个对象就被称为迭代器
+- 可以一次一次迭代，es5-迭代api都是遍历的
+
+感觉有点牵强↑↑↑↑↑↑
 
 
 

@@ -40,7 +40,7 @@
 
 有很多内容，这里只写一部分，详细信息查阅[规范](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/)及[api文档](https://www.mapbox.cn/mapbox-gl-js/api/#sources)  
 可以用于图层，也可以用于地图  
-有五种类型：矢量瓦片、栅格瓦片、GeoJSON、图片、视频  
+有7种类型：矢量瓦片、栅格瓦片、 raster-dem、GeoJSON、图片、视频（官网写了前6种，实际上还有第七种：canvas）  
 使用方式有很多种
 
 - **瓦片**  
@@ -50,11 +50,17 @@
   有以下内容的api  
   GeoJSON、图片、视频、canvas  
   - canvas  
-  可以传入dom id也可以传入未插入文档的dom  
-    可以监听canvas进行实时更新  
-    coordinates输入四个坐标（从左上角起，顺时针）  
-    <span style='opacity: 0.5'>canvas应该是对图片的扩展（因为canvas描述里有一句话“Extends ImageSource”）</span>  
-    coordinates的4个坐标不能一致
+  - 可以传入dom id也可以传入未插入文档的dom  
+    - 可以监听canvas进行实时更新  
+      方法有2种：
+      - `animate`配置项  
+        true开启，默认值未测
+      - `play`与`pause`方法  
+        可以开启或关闭监听  
+        经过测试数据量小时更新canvas可以用开启后立刻关闭的方法，但是数据量大的时候基本不可用，数据量大的时候需要把关闭方法放进`requestAnimationFrame`里
+    - coordinates输入四个坐标（从左上角起，顺时针）  
+      <span style='opacity: 0.5'>canvas应该是对图片的扩展（因为canvas描述里有一句话“Extends ImageSource”）</span>  
+      coordinates的4个坐标不能一致
 - **聚类**  
   应该只能用于GeoJSON数据源  
   可以通过数据源的配置项和数据源的方法来控制  
@@ -76,6 +82,74 @@
   - 加的话  
     在数组中 把第一个图层移动到第二个图层的前面  
     在视图中 把第一个图层移动到第二个图层的后面  
+
+
+
+# 表达式
+
+**前置名词定义**
+
+- 表达式运算符  
+  官网用词是：expression operator  
+  中文名是百度翻译来的  
+  类似于js的函数名
+
+`[表达式运算符, 表达式运算符的第一个参数, 表达式运算符的第二个参数, ...]`
+
+**操作**
+
+- 可嵌套  
+  表达式运算符的参数还可以是一个表达式
+
+**运算符**
+
+- get  
+  可以获取数据源properties的属性  
+  不太懂，也不懂和properties间的联系
+
+**学习资料**
+
+[官方教程](https://docs.mapbox.com/help/tutorials/mapbox-gl-js-expressions/)和[官方文档](https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions/)
+
+
+
+
+
+
+
+# 例子
+
+### 批量绘制文本
+
+用symbol图层接收单点geojson数据源，然后使用类似下面的`layout`  
+
+```javascript
+{
+  "symbol-placement": "line", // 默认point，point代表一个点一个文本，line代表沿着线画文本（geojson的单线、多线及Polygon数据都可以）
+  "text-ignore-placement": false, // 设置为 true 时，其他注记即使碰撞到此文本标注也会显示。
+  'text-field': '{name}', // name处写的是数据源properties的一个属性名，也可以直接写一个字符串或表达式，不能写数字
+  'text-size': 18,
+  'text-anchor': 'center', // 文本锚点位置
+  'text-allow-overlap': false, // 设置为 true 时，文本标注即使碰撞到其他绘制的注记也会显示。
+  'text-max-width': 8, // 文本换行的最大宽度。（在沿线画文本时无效）
+  'text-padding': 18, // 文本框四周的额外空间，用以检测注记碰撞。（在沿线画文本时有效，但是数值跨度要大一点）
+  "text-font": ['Microsoft YaHei Regular'],
+}
+```
+
+可以辅助使用`paint`来修改样式，下面是一个例子  
+
+```javascript
+{
+  'text-color': "#000000",
+  'text-halo-color': "#ffffff", // 文字描边颜色
+  'text-halo-width': 1.88, // 文字描边宽度
+}
+```
+
+
+
+
 
 
 
