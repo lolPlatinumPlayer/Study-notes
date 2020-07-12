@@ -210,3 +210,40 @@ git commit -m 'xxx'
   `git checkout 标签名`
 
 [点这看更多内容](https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E6%89%93%E6%A0%87%E7%AD%BE)
+
+
+
+
+
+# 码云上的教学
+
+#### 简易的命令行入门教程:
+
+Git 全局设置:
+
+```
+git config --global user.name "王佳星"
+git config --global user.email "417783514@qq.com"
+```
+
+创建 git 仓库:
+
+```
+mkdir front-dev-framework
+cd front-dev-framework
+git init
+touch README.md
+git add README.md
+git commit -m "first commit"
+git remote add origin https://gitee.com/IDontDrive/front-dev-framework.git
+git push -u origin master
+```
+
+已有仓库?
+
+```
+cd existing_git_repo
+git remote add origin https://gitee.com/IDontDrive/front-dev-framework.git
+git push -u origin master
+```
+
