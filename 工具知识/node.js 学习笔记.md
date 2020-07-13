@@ -32,3 +32,20 @@ https://www.cnblogs.com/whybxy/p/8690246.html
 ### 未归类
 
 - `res.send`和`res.end`有着类似的功能（环境：有用express）
+
+
+
+
+
+### 文件系统
+
+**读取文件**
+
+```javascript
+const fs = require("fs");
+const json内容=JSON.parse(fs.readFileSync("./package.json"))
+```
+
+- 同步读取文件用`fs`的`readFileSync`方法
+- 读json的话，还要再用`JSON.parse`方法
+
