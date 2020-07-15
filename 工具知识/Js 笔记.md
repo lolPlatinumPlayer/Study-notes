@@ -5,6 +5,8 @@
 ## 未分类
 
 - 异步执行的代码里的变量取的值都是执行时的值，而不是异步代码生成时的值
+- 使用未定义的变量会导致阻塞报错  
+  `Uncaught ReferenceError: 变量名 is not defined`
 
 ## undefined
 
@@ -662,6 +664,18 @@ setInterval和setTimeout
 元素可以是`window`、dom和[XMLHttpRequest](https://developer.mozilla.org/zh-cn/DOM/XMLHttpRequest)  
 
 后面还有几个选项
+
+**增加自定义事件**
+
+<span style='opacity:.5'>这里用代码来说明</span>
+
+```javascript
+元素.addEventListener("自定义事件名", (事件对象)=>{}); // 增加事件。具体用法看上面
+var event = new CustomEvent("自定义事件名", 事件对象);
+元素.dispatchEvent(event); // 触发事件
+```
+
+
 
 
 ## 数字操作

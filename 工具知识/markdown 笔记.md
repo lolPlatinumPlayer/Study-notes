@@ -240,3 +240,30 @@
   可以解析表格  
   没有目录  
   样式不好看
+
+### 生成文档
+
+- **gitbook**  
+  功能完整  
+  可以把整个项目变成一个电子书  
+  电子书的目录依据最外层的`SUMMARY.md`生成
+
+  - `SUMMARY.md`的使用方式看下面这个例子就懂了  
+
+    ```markdown
+      # Summary
+    
+      * [Introduction](README.md)
+      * [预备周：基于认知科学的信息训练法](ch0/preface.md)
+          * [检索实操](ch0/RepSearchPractice.md)
+          * [基础任务](ch0/RepTaskBasic.md)_
+          * [进阶任务](ch0/RepTaskAdvanced.md)
+          * [个人教程](ch0/handbook.md)
+      * [第一讲：从现实问题到学科信息](ch1/README.md)
+          * [检索实操](ch0/RepSearchPractice.md)
+          * [基础任务](ch1/RepTaskBasic.md)
+          * [进阶任务](ch1/RepTaskAdvanced.md)
+          * [个人教程](ch1/handbook.md)
+    ```
+
+    

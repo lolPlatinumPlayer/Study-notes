@@ -15,6 +15,10 @@
   加`meta`标签即可解决，以下两个标签都可以
   1. `<meta charset="UTF-8">`
   2. `<meta http-equiv="Content-Type" content="charset=utf-8"/>`
+- 可以通过插入`script`、`link`这种js或css的标签来使js或css生效
+  - 电气符号库与GeoGL的鉴权服务就用了插入标签来执行js的方法
+  - css  
+    吉奥这有人用这种方式使css生效（个人未做详细测试）
 
 
 
