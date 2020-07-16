@@ -101,9 +101,28 @@ cd d:nospace/learngit
 
 
 
+### 在各个commit间来回跳转
+
+用`checkout`就行，后面跟commit id（版本号）
+
 
 
 ### 回退版本
+
+[思否文章](https://segmentfault.com/a/1190000020863861)有详细描述
+
+
+
+**用`checkout`**
+
+`checkout 版本号`（版本号就是指commit id）  
+会新建一个未命名分支  
+后面再切到其他分支的话，这个未命名分支就会消失了
+
+
+
+**用`reset --hard`**
+
 - 退到指定commit  
   `git reset --hard commit的id`
 
@@ -121,6 +140,10 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 
 · $ git reflog
 显示记录的每次命令（上次关机前的命令都会保存），每条命令前都会有这条命令所在的版本号
+
+
+
+
 
 # 下方是做电动车项目后记录的
 

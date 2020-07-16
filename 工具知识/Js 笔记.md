@@ -1269,6 +1269,7 @@ Foo.bar() // hello
 **未归类**
 
 - promise就算已经reslove，`then`的回调也是异步执行的
+- 【】finally方法待了解，至少可以避免then与catch的重复代码
 
 ## Promise相关可行的例子
 1. ```javascript
