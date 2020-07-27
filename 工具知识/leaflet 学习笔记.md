@@ -78,11 +78,24 @@
 
 ### 事件
 
+##### 内置事件
+
+在[这里](https://leafletjs.com/reference-1.0.3.html#map-event)应该能查到所有内置事件  
+还有很多内容，看[文档](https://leafletjs.com/reference-1.6.0.html#map-baselayerchange)（文档其他位子估计也有相关内容）
+
+- （其中'preclick'事件在实现上单纯就是：在该触发'click'的代码前触发了一下而已）
+
+##### 事件基类
+
 `L.Evented`  
 有普通的on、off、fire方法  
-`listens`方法用于查看是否有指定事件  
-`_events`属性里有所有的事件  
-addEventParent和removeEventParent2个方法还没看
+
+- `fire`方法可以选择是否冒泡到 事件祖先对象上
+- `listens`方法用于判断目标是否有指定事件  
+  除了可以在目标自身上判断，还可以选择在目标及目标事件祖先上判断
+- `_events`属性里有所有的事件  
+- `addEventParent`和`removeEventParent`2个方法还没看  
+  不过应该是用来增减事件上级对象的
 
 
 
@@ -232,10 +245,7 @@ L.tileLayer(url模板, {
 
   - 点击指定物体进行弹窗：`其他添加物.bindPopup("弹窗文本")`
 
-### 事件
 
-`map.on('click', 函数)`  
-还有很多内容，看[文档](https://leafletjs.com/reference-1.6.0.html#map-baselayerchange)（文档其他位子估计也有相关内容）
 
 ### 地图
 

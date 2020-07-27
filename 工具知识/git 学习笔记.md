@@ -33,6 +33,8 @@ cd d:nospace/learngit
     1. 在commit上右键
     2. 点击“Reword...”
     3. 在弹框里输入新的信息
+    
+    如果已经提交到远程仓库的话，“Reword...”按钮将是不可点击的
 - git bash中按q键退出
 
 ### Git专有名词英文
@@ -119,9 +121,7 @@ cd d:nospace/learngit
 
 
 
-### 在各个commit间来回跳转
-
-用`checkout`就行，后面跟commit id（版本号）
+### 在不同commit间切换
 
 
 
@@ -135,7 +135,9 @@ cd d:nospace/learngit
 
 `checkout 版本号`（版本号就是指commit id）  
 会新建一个未命名分支  
-后面再切到其他分支的话，这个未命名分支就会消失了
+可以多次`checkout 版本号`  
+要退出这个未命名分支的话只要再`checkout`到普通分支就行了  
+`checkout`到普通分支后未命名分支就会消失
 
 
 
