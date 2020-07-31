@@ -6,7 +6,11 @@ cd d:nospace/learngit
 
 ### 杂项
 - 不要使用windows自带记事本编辑文件（可能是因为会把编码改为GBK）
-- webStorm的git相关功能挺好用的  
+
+- WebStorm的git相关功能挺好用的  
+  
+  - WebStorm命令行和『Git Bash』相比也各有千秋
+    
   - 可以完成git的各种操作
     - commit  
       提交前会进行代码检查（比如会检测出无用代码）（可以选择点review来拒绝提交而进行检查）  
@@ -33,8 +37,9 @@ cd d:nospace/learngit
     1. 在commit上右键
     2. 点击“Reword...”
     3. 在弹框里输入新的信息
-    
+  
     如果已经提交到远程仓库的话，“Reword...”按钮将是不可点击的
+  
 - git bash中按q键退出
 
 ### Git专有名词英文

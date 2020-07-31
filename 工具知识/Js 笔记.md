@@ -315,6 +315,10 @@ mdn的说明是判断构造函数的prototype属性是否出现在对象的原�
 - `Object.create()`  
   这是一个虚假的浅拷贝方案
 
+面对Map对象的方案
+
+- `new Map(原map.entries())`
+
 ## 深拷贝方法
 - `$.extend(objectA, objectB )//【】等待重新测试`  
    （使用这种方法的前提是：`objectA`是空对象，对象类型是对象。这是一个jq方法）

@@ -1,11 +1,13 @@
 # 待学习
 
+- 调试  
+  （目前webstorm打断点、写debugger都不好使）  
+  学的时候先看：https://nodejs.org/zh-cn/docs/guides/debugging-getting-started/  
+  以及书签里的2个页面
+- 确认requestListener的req和res的文档
 - 接收请求
   - node接收各种请求
   - express接收各种请求
-- 调试  
-  （目前webstorm打断点、写debugger都不好使）  
-  学的时候先看：https://nodejs.org/zh-cn/docs/guides/debugging-getting-started/
 
 
 
@@ -13,7 +15,10 @@
 
 # node
 
-学习版本：10.16.3
+学习版本：10.16.3（工作电脑）、10.22.0（其他电脑）
+
+第10版在2018-04-24有了第一个commit  
+而12版在2019-04-23有了第一个commit
 
 
 
@@ -50,13 +55,40 @@ server.listen(port, hostname, () => {
 <span style='opacity:.5'>这个方法一般只用`requestListener`就行了</span>  
 `requestListener`是一个回调，会在收到请求后被调用<span style='opacity:.5'>（[Node.js中文网](http://nodejs.cn/api/http.html#http_http_createserver_options_requestlistener)里的说法是：`requestListener`会被自动添加到 [`'request'`](http://nodejs.cn/s/2qCn57) 事件）</span>  
 `requestListener`有2个参数：`req`和`res`  
-`req`是前端发来的请求，`res`是对前端请求的响应  【】继续研究“请求处理”
+<span style='opacity:.5'>这2个参数没有找到详细说明资料，下面是一些自己收集的内容</span>  
+【】
+
+1. 从官方api例子里研究这2个参数  
+   结果：`req`应该对应文档里的“request”，而`res`应该对应文档里的“response”
+2. 继续研究“请求处理”
+
+
+
+
 
 - `req`  
-  - url模块的`parse`方法可以解析这个`req.url`为`Url`实例  
-    `Url`实例包含请求的一些信息，详见http://nodejs.cn/api/url.html  
-    其中`query`属性是请求的参数
-- `res.send`和`res.end`有着类似的功能（环境：有用express）
+  可以通过这个参数获取到接收的请求的信息
+
+  - 
+
+  - url模块的`parse`方法可以解析这个`req.url`为`Url`实例（【】未在无express环境下测试）   
+    - `Url`实例包含请求的一些信息，详见http://nodejs.cn/api/url.html  
+      其中`query`属性是请求的参数
+
+- `res`  
+  有很多响应请求的方法  
+  方法如下：
+  
+  - `res.setHeader('Content-Type', 'text/html')`
+  - `res.writeHead(200, { 'Content-Type': 'text/plain' })`
+  - `res.end('okay')`  
+    可以不传参数
+  - `res.send`和`res.end`有着类似的功能（环境：有用express）
+  
+  非方法成员如下：
+  
+  - `res.socket.remoteAddress`
+  - `res.socket.remotePort`
 
 
 
@@ -192,3 +224,8 @@ https://www.cnblogs.com/whybxy/p/8690246.html
 # 未归类
 
 - post的接收看起来有点诡异，要分别监听data和end，【】高并发或者网络错误不会有问题吗
+- node升级版本  
+  不同操作系统的方案是不同的  
+  - windows下的方案  
+    先看这个博文：https://blog.csdn.net/weixin_43254676/article/details/95469937  
+    不行的话再搜索
