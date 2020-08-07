@@ -52,8 +52,8 @@ cd d:nospace/learngit
 ### `$ git init`
 把这个目录变成Git可以管理的仓库（表述可能不正确）
 （内含工作区与版本库，.git文件夹以外都是工作区，.git是版本库）
-这时候并没有真正创建master分支(git branch看不到任何东西)  
-要第一次add、commit之后才有  
+这时候并没有真正创建master分支(`git branch`看不到任何东西)  
+要第一次`add`、`commit`之后才有  
 要有master之后才能创建其他分支
 
 ### `git clone 地址`

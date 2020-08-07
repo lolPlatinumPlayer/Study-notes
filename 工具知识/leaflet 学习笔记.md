@@ -161,11 +161,33 @@ Path -> Layer -> Evented -> Class
 
 - **stamp**  
   制造id
+  
 - **trim**  
   去掉头尾空格
+  
 - **splitWords**  
   输入字符串，返回一个数组  
   这个数组是用空格切割字符串后得到的
+  
+- **求平面上点与线段的距离**  
+  `pointToSegmentDistance`  
+
+  ```js
+  /**
+   * 求平面上点与线段的距离
+   * @param {array} inputPoint 点
+   * @param {array} segment 线段
+   * @returns {number}
+   **/
+  function getDistance(inputPoint,segment) {
+    const lPoint=L.point(...inputPoint)
+    const lLinePointA=L.point(...segment[0])
+    const lLinePointB=L.point(...segment[1])
+    return L.LineUtil.pointToSegmentDistance(lPoint,lLinePointA,lLinePointB)
+  }
+  ```
+
+  
 
 
 

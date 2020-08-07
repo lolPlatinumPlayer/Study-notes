@@ -6,7 +6,7 @@
 **地图方位的配置项**
 
 这些内容如果在实例化地图时没有传入，那就会去『地图样式』中进行查找  
-『地图样式』中没有的话默认就是0
+『地图样式』中没有的话默认就是`0`
 
 - bearing  
   是逆时针旋转地图的角度（在不倾斜地图的情况下也是顺时针转镜头的角度）
@@ -19,7 +19,20 @@
 **改变地图样式**
 
 - 改变后会清空地图上所有图层  
-  `map.once('idle',fn)`的`fn`里加图层的话可以避免图层被清空
+  `map.once('idle',fn)`的`fn`可以确保在『清空图层』动作结束后执行
+
+**一些mapbox底图的实现方式**
+
+用[图层](#图层)实现的  
+这些图层的数据源要么是`undefined`要么是同一个`vector`[数据源](#数据源)  
+数据源背后使用的数据：
+
+- mapbox应该是pbf文件
+- epgis应该是sg文件
+
+目前还没有找到在web中把这些数据转成geojson等可读性数据的方法
+
+
 
 
 
@@ -60,7 +73,7 @@
 
 有很多内容，这里只写一部分，详细信息查阅[规范](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/)及[api文档](https://www.mapbox.cn/mapbox-gl-js/api/#sources)  
 可以用于图层，也可以用于地图  
-有7种类型：矢量瓦片、栅格瓦片、 raster-dem、GeoJSON、图片、视频（官网写了前6种，实际上还有第七种：canvas）  
+有7种类型： vector、raster、 raster-dem、GeoJSON、图片、视频（[规范](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/)写了前6种，实际上还有第七种：canvas）  
 使用方式有很多种
 
 - **瓦片**  
@@ -89,6 +102,29 @@
 
 
 # 图层
+
+
+
+### 自定义图层
+
+**裁剪空间坐标**
+
+整个自定义图层覆盖整个地图，左上角是00，右下角是11
+
+xy轴方向与canvas一致
+
+下面这个方法可以得到裁剪空间坐标
+
+```js
+mapboxgl.MercatorCoordinate.fromLngLat({
+  lng: 30.498,
+  lat: 50.541
+})
+```
+
+
+
+
 
 ### 图层数组
 

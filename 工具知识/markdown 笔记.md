@@ -128,13 +128,20 @@
 ## 行内链接和参考链接
 ### 可以打开同主机的文件
 直接写相对路径就行
-路径前加斜杠 “ / ” 可以 [点击文字](/Vue笔记.md) page for details.
+路径前加斜杠 “ / ” 可以 [点击文字](/vue 笔记.md) page for details.
 
-路径前不加斜杠 “ / ” 也可以 [点击文字](Vue笔记.md) page for details.
-#### 以下两种写法都能跳转到指定位置
-尝试跳转到文件的指定位子 [点击文字](Vue笔记.md#缩写) page for details.
+路径前不加斜杠 “ / ” 也可以 [点击文字](vue 笔记.md) page for details.
+#### 跳转到文件内指定位置
 
-尝试跳转到文件的指定位子 [点击文字](Vue笔记.md/#缩写) page for details.
+以下两种写法曾经都行，但是现在不行了
+
+- 尝试跳转到文件的指定位子 [点击文字](vue 笔记.md##缩写) page for details.
+- 尝试跳转到文件的指定位子 [点击文字](vue 笔记.md/##缩写) page for details.
+
+不行的环境是：
+
+- 版本：0.9.89(beta)
+- 日期：2020年8月7日
 
 ### 行内链接
 个人觉得行内链接比参考链接好 [example link](http://example.com/).

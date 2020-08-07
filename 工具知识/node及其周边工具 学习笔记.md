@@ -1,9 +1,5 @@
 # 待学习
 
-- 调试  
-  （目前webstorm打断点、写debugger都不好使）  
-  学的时候先看：https://nodejs.org/zh-cn/docs/guides/debugging-getting-started/  
-  以及书签里的2个页面
 - 确认requestListener的req和res的文档
 - 接收请求
   - node接收各种请求
@@ -49,11 +45,11 @@ server.listen(port, hostname, () => {
 
 ### 创建服务器
 
-更多内容详见：[Node.js中文网](http://nodejs.cn/api/http.html#http_http_createserver_options_requestlistener)
+更多内容详见：[nodejs.cn](http://nodejs.cn/api/http.html#http_http_createserver_options_requestlistener)
 
 `http.createServer([options][, requestListener])`  
 <span style='opacity:.5'>这个方法一般只用`requestListener`就行了</span>  
-`requestListener`是一个回调，会在收到请求后被调用<span style='opacity:.5'>（[Node.js中文网](http://nodejs.cn/api/http.html#http_http_createserver_options_requestlistener)里的说法是：`requestListener`会被自动添加到 [`'request'`](http://nodejs.cn/s/2qCn57) 事件）</span>  
+`requestListener`是一个回调，会在收到请求后被调用<span style='opacity:.5'>（[nodejs.cn](http://nodejs.cn/api/http.html#http_http_createserver_options_requestlistener)里的说法是：`requestListener`会被自动添加到 [`'request'`](http://nodejs.cn/s/2qCn57) 事件）</span>  
 `requestListener`有2个参数：`req`和`res`  
 <span style='opacity:.5'>这2个参数没有找到详细说明资料，下面是一些自己收集的内容</span>  
 【】
@@ -72,7 +68,7 @@ server.listen(port, hostname, () => {
   - 
 
   - url模块的`parse`方法可以解析这个`req.url`为`Url`实例（【】未在无express环境下测试）   
-    - `Url`实例包含请求的一些信息，详见http://nodejs.cn/api/url.html  
+    - `Url`实例包含请求的一些信息，详见[nodejs.cn](http://nodejs.cn/api/url.html)  
       其中`query`属性是请求的参数
 
 - `res`  
@@ -132,7 +128,7 @@ const json内容=JSON.parse(fs.readFileSync("./package.json"))
 
 ### 模块
 
-> 在 Node.js 模块系统中，每个文件都被视为一个独立的模块 —— [Node.js中文网](http://nodejs.cn/api/modules.html)
+> 在 Node.js 模块系统中，每个文件都被视为一个独立的模块 —— [nodejs.cn](http://nodejs.cn/api/modules.html)
 
 一些未做的测试：
 
@@ -200,6 +196,31 @@ hello.world();
 ```
 
 `require(‘./hello’) `引入了当前目录下的` hello.js `文件（`./` 为当前目录，`node.js 默认后缀为 js`）
+
+
+
+
+
+### 调试
+
+不能同时使用webstorm调试与chrome调试
+
+**[webstorm调试](其它工具 学习笔记.md##### node相关)**
+
+进↑这个链接查看
+
+**chrome调试**
+
+用如下命令启动js文件  
+`node --inspect js文件地址`
+
+2种进入调试页面的方式
+
+- 这时候新开的页面按F12后都会看到这样一个node图标![node图标](../图片/node图标.png)  
+  点开就到调试页面了
+- 或者在[chrome://inspect](chrome://inspect)页面，点“Open dedicated DevTools for Node”链接
+
+（还有更多调试操作没有探索）
 
 
 

@@ -136,13 +136,13 @@ history模式的网页只能在http服务器上运行，直接双击html文件�
        服务器上的图片、字体资源都是去底层目录上找
 
 ## 导航钩子
-相当于路由的生命周期钩子，注册分三种情况：全局、路由独享、组件独享。
-有三种钩子：beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave。
-beforeRouteEnter例子：
-beforeEach((to, from, next) => { ... })
-to代表下一个路由，from是跳转前路由。加点后面可以跟上 路由信息对象属性，并且可以打印出来。query和params可以再点下一级属性。（打印query、params、matched这些数组或对象时注意不要用加号连接，不然会转成字符串，从而打印内容变成 [object Object] ）
-钩子中一定要有next()才会正常到下一步，next(false)就是不到下一步（目前测试结果和不写 next() 没区别）。
-next()也可以用来路由，有两种写法：1、next('/xx') 2、next({name:'xx'})。（路由后会执行那个路由的钩子，如果有的话）
+相当于路由的生命周期钩子，注册分三种情况：全局、路由独享、组件独享。  
+有三种钩子：beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave。  
+beforeRouteEnter例子：  
+`beforeEach((to, from, next) => { ... })`  
+`to`代表下一个路由，`from`是跳转前路由。加点后面可以跟上 路由信息对象属性，并且可以打印出来。`query`和`params`可以再点下一级属性。  
+钩子中一定要有`next()`才会正常到下一步，`next(false)`就是不到下一步（目前测试结果和不写`next()`没区别）。  
+`next()`也可以用来路由，有两种写法：1、`next('/xx')` 2、`next({name:'xx'})`。（路由后会执行那个路由的钩子，如果有的话）
 
 ## 路由元信息
 定义路由（就是写routes中与path同级的属性）的时候可以配置meta字段（对象），meta中可以设置一级对象，对象名代表需要验证的参数，对象值经过if判断为非的不验证，if判断为是的验证。
