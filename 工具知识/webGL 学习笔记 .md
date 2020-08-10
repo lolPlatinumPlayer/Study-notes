@@ -69,24 +69,30 @@ gl.bufferData(gl.ARRAY_BUFFER, 强类型数据 , 使用方法);
 
 ## 使用全局变量（uniform）
 
-```javascript
-const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution"); // 获取指定uniform在着色器程序中的序号（不确定是否有“启用uniform”的功能）
-gl.uniform2f(resolutionUniformLocation, 向量第一位, 向量第二位); // 给某个uniform赋值
+```js
+gl.uniform2f( // 给某个uniform赋值
+  gl.getUniformLocation(program, "brightnessDelta"), // 获取指定uniform在着色器程序中的序号（不确定是否有“启用uniform”的功能）
+  向量第1位,向量第2位,
+)
 ```
 
 - **向量赋值**   
 
-  方法：gl.uniform+数字+i或f+可选的v   
+  方法：`gl.uniform+数字+i或f+可选的v`   
 
-  `i`代表整数，`f`代表浮点数  
-
-  （v用处未知）
+  - `数字` 
+    当前还没找到数字为`1`的成功案例，`2`倒是可以
+  - `i`代表整数
+  - `f`代表浮点数  
+  - `v`还没看，不过似乎是用来换一种传参方式的
   
   详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/uniform)
   
 - **矩阵赋值**   
 
-  方法：gl.uniformMatrix+数字+fv  
+  方法：`gl.uniformMatrix+数字+fv`  
+
+  - > `数字`可选值为：2、3、4分别代表4,9,16个浮点数的数组 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/uniformMatrix)
 
   传参：`(uniform在着色器程序中的序号,false,普通数组)`
 

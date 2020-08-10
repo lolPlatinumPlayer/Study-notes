@@ -63,7 +63,7 @@ ctx.stroke();
 - 设置线宽  
   `ctx.lineWidth = 线宽`
 
-### 加图片
+### 插入图像（用图片或canvas）
 
 canvas上下文的`drawImage`方法  
 最简demo：

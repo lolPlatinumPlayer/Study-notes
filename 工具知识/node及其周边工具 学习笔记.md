@@ -43,16 +43,25 @@ server.listen(port, hostname, () => {
 
 
 
-### 创建服务器
+### `http.createServer`
 
-更多内容详见：[nodejs.cn](http://nodejs.cn/api/http.html#http_http_createserver_options_requestlistener)
+功能：创建服务器  
+代码：`http.createServer([options][, requestListener])`  
+<span style='opacity:.5'>这个方法目前只用过`requestListener`</span>
 
-`http.createServer([options][, requestListener])`  
-<span style='opacity:.5'>这个方法一般只用`requestListener`就行了</span>  
-`requestListener`是一个回调，会在收到请求后被调用<span style='opacity:.5'>（[nodejs.cn](http://nodejs.cn/api/http.html#http_http_createserver_options_requestlistener)里的说法是：`requestListener`会被自动添加到 [`'request'`](http://nodejs.cn/s/2qCn57) 事件）</span>  
-`requestListener`有2个参数：`req`和`res`  
+**`requestListener`**
+
+这是一个回调，会在收到请求后被调用<span style='opacity:.5'>（[nodejs.cn](http://nodejs.cn/api/http.html#http_http_createserver_options_requestlistener)里的说法是：`requestListener`会被自动添加到 [`'request'`](http://nodejs.cn/s/2qCn57) 事件）</span>  
+
+- 执行时机  
+  服务器接收到请求后就会执行  
+  （要注意这个请求是包含页面自动请求的图标的，所以开启指向服务的页面时这个回调至少会被执行2次）
+
+有2个参数：`req`和`res`
+
+
+
 <span style='opacity:.5'>这2个参数没有找到详细说明资料，下面是一些自己收集的内容</span>  
-【】
 
 1. 从官方api例子里研究这2个参数  
    结果：`req`应该对应文档里的“request”，而`res`应该对应文档里的“response”
@@ -65,20 +74,31 @@ server.listen(port, hostname, () => {
 - `req`  
   可以通过这个参数获取到接收的请求的信息
 
-  - 
-
-  - url模块的`parse`方法可以解析这个`req.url`为`Url`实例（【】未在无express环境下测试）   
-    - `Url`实例包含请求的一些信息，详见[nodejs.cn](http://nodejs.cn/api/url.html)  
+  - url模块的`parse`方法可以解析这个`req.url`为`Url`实例
+    - `Url`实例包含请求的一些信息  
+      【】  
       其中`query`属性是请求的参数
 
 - `res`  
   有很多响应请求的方法  
   方法如下：
   
-  - `res.setHeader('Content-Type', 'text/html')`
+  - 设置头部  
+    下面是一个设置跨域头部的例子  
+  
+    ```js
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+    res.setHeader('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+    ```
+  
+    
+  
   - `res.writeHead(200, { 'Content-Type': 'text/plain' })`
+  
   - `res.end('okay')`  
     可以不传参数
+    
   - `res.send`和`res.end`有着类似的功能（环境：有用express）
   
   非方法成员如下：
@@ -88,7 +108,27 @@ server.listen(port, hostname, () => {
 
 
 
+### `Server`实例
 
+可以由`http.createServer`返回
+
+**`listen`方法**
+详见[官网](https://nodejs.org/docs/latest-v10.x/api/net.html#net_server_listen)  
+作用：为连接启动一个服务器监听  
+有几种传参，目前用过的是`server.listen([port[, host]][, callback])`  
+
+- `port`   
+  端口号
+- `host`  
+  - 可以省略  
+    省略的话以`127.`开头的ipv4地址都会被监听（`127.0.0.0`不会）  
+    和[官网](https://nodejs.org/docs/latest-v10.x/api/net.html#net_server_listen_port_host_backlog_callback)说的监听`0.0.0.0`的说法不一致，`0.0.0.0`这时候是无法访问的
+  - 官方例子用`hostname`作变量名，不过个人测试中感觉就是ip地址。  
+    而且ipv4的话必须以`127.`开头，原因未知（`127.0.0.0`地址不行，ipv6未测试）
+  
+  （上面提到`127.0.0.0`的情况并没有发现这个ip被占用。判断没被占用的依据是`netstat -ano`DOS命令）
+- `callback`  
+  应该是监听成功的时候会调用（也就是说`listen`方法成功执行后这个回调只会被调用一次）
 
 
 
@@ -101,7 +141,7 @@ server.listen(port, hostname, () => {
 【】内容会插进html  
 内容直接写json字符串前端就能收到json（未验证）
 
-##### api
+**api**
 
 - `res.end(内容)`  
   返回内容
@@ -219,6 +259,8 @@ hello.world();
 - 这时候新开的页面按F12后都会看到这样一个node图标![node图标](../图片/node图标.png)  
   点开就到调试页面了
 - 或者在[chrome://inspect](chrome://inspect)页面，点“Open dedicated DevTools for Node”链接
+
+<span style='opacity:.5'>（官网说要在[chrome://inspect](chrome://inspect)页面配置一些url之类的东西，但是实践来看是不需要的，甚至全都删了也可以）</span>
 
 （还有更多调试操作没有探索）
 
