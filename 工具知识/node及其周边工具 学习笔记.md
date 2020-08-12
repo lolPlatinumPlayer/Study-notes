@@ -74,10 +74,22 @@ server.listen(port, hostname, () => {
 - `req`  
   可以通过这个参数获取到接收的请求的信息
 
-  - url模块的`parse`方法可以解析这个`req.url`为`Url`实例
-    - `Url`实例包含请求的一些信息  
-      【】  
-      其中`query`属性是请求的参数
+  - `req.url`  
+    一个字符串  
+
+    - node有提供方法来将url字符串解析为对象  
+      目前应该有2套方案来实现解析，其中`url`模块的`parse`方法会在未来被废弃
+
+      - WHATWG API  
+        还未深入研究，详细文档有：
+
+        1. http://caibaojian.com/nodejs/s/kqg3Ut.html#url_url_strings_and_url_objects
+        2. [WHATWG官网](https://url.spec.whatwg.org/)
+
+        还可以研究下w3c背后控制人是谁
+
+      - `url`模块的`parse`方法  
+        部分详细内容可以看这个文档：[parse方法](https://nodejs.org/docs/latest-v10.x/api/url.html#url_url_parse_urlstring_parsequerystring_slashesdenotehost)
 
 - `res`  
   有很多响应请求的方法  
@@ -138,7 +150,6 @@ server.listen(port, hostname, () => {
 
 ### 返回内容
 
-【】内容会插进html  
 内容直接写json字符串前端就能收到json（未验证）
 
 **api**

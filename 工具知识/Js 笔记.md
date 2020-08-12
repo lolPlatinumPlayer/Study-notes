@@ -434,11 +434,41 @@ es5中对非对象使用会报错，而es6会返回内容（如：对字符串�
     *（该方法属于Object对象，由于所有的对象都"继承"了Object的对象实例，因此几乎所有的实例对象都可以使用该方法）*
 
 
-## forEach遍历数组
+
+
+
+
+## 跳出循环、跳出函数
+`break`、`return`可以跳出for循环、`switch`，  
+无法跳出`map`、`forEach`  
+
+`return` 可以跳出函数，`break`只能存在于指定位子
+
+## `continue`
+
+可以在for循环中正常使用
+
+
+
+
+## typeof a
+
+返回a的数据类型，返回值是字符串，优先级第二级，测试表如下：
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/typeof
+注意：对于数组返回的是和对象一样的'object'
+
+
+
+## 数组或对象的方法
+
+
+##### forEach遍历数组
+
 ```javascript
 array.forEach(function(currentValue, index, arr) {
 },this)
 ```
+
 花括号间可使用变量如下：（需先在函数参数中或者forEach第二个参数中写下，否则花括号内无法使用）
 
 【】this似乎会被改变
@@ -454,7 +484,8 @@ array.forEach(function(currentValue, index, arr) {
 - this处可以传入一个值，最好用对象或数组，数字或字符串不好处理
 
 
-## .map()
+##### map
+
 `arr.map(fun)`  
 将arr的每一项经过fun处理（return）后形成这一项新的内容，这些新的项集合成一个新的数组，最终返回这个新的数组 （注意是每一项，不管是否return，每一项的处理都会返回一个子项，就是说处理后的数组长度一定与调用map的数组长度一致）【】测试一下在回调中删掉this末尾项会如何  
 map面对空子项时不会执行回调，但是还是会返回一个空子项（这里指的是真正的“空”，没有任何内容，控制台打印也是empty，null、undefined这种不算空子项）  
@@ -463,23 +494,12 @@ this不会指向返回的数组
 map似乎全面领先forEach。map可以return，而forEach不行，而且forEach似乎有兼容性问题   
 
 
-## 跳出循环、跳出函数
-`break`、`return`可以跳出for循环、`switch`，  
-无法跳出`map`、`forEach`  
-
-`return` 可以跳出函数，`break`只能存在于指定位子
-
-## `continue`
-
-可以在for循环中正常使用
-
-
-## `filter`
+##### filter
 `var XX = arr.filter(callback)`
 callback中返回的是布尔值，为真的子项会进入新数组
 单参数代表前面的arr
 
-## `some`
+##### some
 
 `数组.some((当前子项,序号,数组)=>{return 布尔值})`
 
@@ -490,13 +510,9 @@ callback中返回的是布尔值，为真的子项会进入新数组
 如果遍历后没有一个回调结果是`true`那`some`返回的就是`false`
 
 
-## typeof a
-返回a的数据类型，返回值是字符串，优先级第二级，测试表如下：
-https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/typeof
-注意：对于数组返回的是和对象一样的'object'
 
 
-## push
+##### push
 `arr.push(xx)`
 没输入xx则不执行这个方法
 只要有输入xx，不管值是什么都会向arr末尾增加一个值为xx的子项
@@ -504,7 +520,7 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/type
 不可用于对象
 
 
-## join
+##### join
 arr.join(分隔符)返回一个字符串，这个字符串包含arr数组所有子项，子项间用分隔符分隔  
 如果不填分隔符，则用`,`分隔。可以用空串做分隔符  
 子项在各种类型下的情况：
@@ -514,7 +530,7 @@ arr.join(分隔符)返回一个字符串，这个字符串包含arr数组所有�
 （数组与对象的情况和直接输入到html的规则相同）  
 
 
-## split
+##### split
 返回一个数组，这个数组是输入字符串按separator分割后组成的
 格式：字符串.split(separator,howmany)
       separator是用来分割的字符串（结果不会包含separator）
@@ -522,7 +538,7 @@ arr.join(分隔符)返回一个字符串，这个字符串包含arr数组所有�
 若 用来分割的字符 在头或者在尾，则头或者尾一侧的子项为空字符串
 
 
-## concat
+##### concat
 只有字符串或数组能调用这个方法
 
 - 字符串调用的话  
@@ -535,7 +551,7 @@ arr.join(分隔符)返回一个字符串，这个字符串包含arr数组所有�
   【】？如果传进去的不是数组则会作为元素连接
 
 
-## slice
+##### slice
  `arr或str.slice(begin,end)`  
 - 数组  
   返回一个数组，其元素从arr[begin]开始到arr[end]结尾（不包含arr[end]）  
@@ -547,13 +563,23 @@ arr.join(分隔符)返回一个字符串，这个字符串包含arr数组所有�
   就是返回的是字符串，且在end不大于begin时返回空串
 
 
-## splice
+##### splice
 `arr.splice(index,howmany,item1,.....,itemX)`
 从数组中添加/删除项目，然后返回被删除的项目，会改变原数组
 
 1. index	添加/删除项目的位置（包含），使用负数可从数组结尾处规定位置
 1. howmany	要删除的项目数量。如果设置为 0，则不会删除项目
 1. item1, ..., itemX	（可选）向数组添加的新项目
+
+##### find
+
+返回数组中符合条件的第一个元素  
+`arr.find(fn)`  
+`fn`结果为`true`时代表符合条件
+
+
+
+
 
 
 ## JSON.stringify()

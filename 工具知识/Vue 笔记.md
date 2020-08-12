@@ -1,5 +1,7 @@
 
 
+
+
 支持ie9
 
 
@@ -17,15 +19,13 @@
 
 
 ## this
-实例中this会代理data、computed、method，其中代理的method后面要加括号
+实例中this会代理data、computed、method
 可以用于钩子、method、computed中
-所有用this代理的东西都可以在实例外通过 “实例名.XXX” 访问
-所有用this代理的东西都可以在控制台通过 “实例名.XXX” 打印
-（实例名就是new Vue()赋值给的变量）
+this就代表实例本身（也就是说可以在外部查看data等信息、调用method等方法）
 
 
 ## 实例的生命周期钩子（函数）
-![](图片\vue-lifecycle.png)作为方法写在实例中（也就是）new Vue({})中，例子：
+![](..\图片\vue\vue-lifecycle.png)作为方法写在实例中（也就是）new Vue({})中，例子：
 ```
 mounted: function () {
     this.show = false
@@ -67,13 +67,38 @@ trim:过滤用户输入的首尾空格
 
 
 ## data属性
-- Vue对象中data属性用来存放vue操作的数据，可在Mustache中写属性名直接打印，也可在其他vue属性中用 this.属性名 来调用，vue对象外可用 vue对象名.属性名 调用。
+- Vue对象中data属性用来存放vue操作的数据，可在Mustache中写属性名直接打印，也可在其他vue属性中用 this.属性名 来调用，vue对象外可用 `vue对象名.属性名` 调用。
 - 可用对象代理
 - 子项与视图更新
   - 子项变化会不会触发视图更新取决于子项在初始情况存不存在
   - 如果希望在操作初始不存在的子项后更新视图
-    - 赋值：`this.$set(对象或数组,键名或序号,新值)`
-    - 删除：`this.$delete(对象或数组,键名或序号)`
+    - 赋值：`vm.$set(对象或数组,键名或序号,新值)`
+    - 删除：`vm.$delete(对象或数组,键名或序号)`
+    
+    这两个方法在`Vue`全局对象上也是存在的
+
+**关于数组视图更新的研究**
+
+结果和上面说的“不会触发视图更新”是相反的，不过[vue官网](https://cn.vuejs.org/v2/guide/reactivity.html#%E5%AF%B9%E4%BA%8E%E6%95%B0%E7%BB%84)也确实说“给数组子项赋值是不会触发视图更新的”
+
+实验结果：  
+
+- $set、push在各方面都有着相同的表现  
+  <span style='opacity:.5'>具体有：更新视图、给子项属性赋值后更新视图、给子项赋值对象后更新视图、打印结果、给子项赋值对象后的打印结果、map循环遍历</span>
+- 测试中的所有情况都会触发视图更新  
+  除了上面↑列出来的内容外，`data名[0]=1`也是会更新的（这个data之前只用`[]`初始化过）
+- `$set`或push后的打印结果  
+  ![实验中$set或push后的data](../图片/vue/实验中$set或push后的data.png)
+- `$set`或push，给子项赋值对象后的打印结果  
+  ![实验中$set或push后，再给那个子项赋值对象后的data](../图片/vue/实验中$set或push后，再给那个子项赋值对象后的data.png)
+
+实验环境：
+
+- 无人机项目  
+  vue2.5.10
+- home页面  
+  `'/'`路由就是这个页面，不过`router.beforeEach`里进行了判断，一开始会跳到另一个页面
+- 控制台操作`vm`
 
 
 ## 计算属性（computed属性的值的属性名）
@@ -98,8 +123,11 @@ watch: {
 }
 ```
 watcher中的匿名函数为单参数时，被监听变量一旦改变就执行函数内容，单参数代表监听变量变化后的值；匿名函数为双参数时，前一个参数代表变化后的监听变量，后一个代表变化前的。
+
 这种格式的watch无法发现数组、对象的后代内容变化，也无法输出后代内容。
-监听子项：监听变量处用字符串写法，子项前只能用点，数组的话在点后写序号。监听对象属性的话，该属性消失后也会触发回调。
+
+监听子项：监听变量处用字符串写法，子项前只能用点，数组的话在点后写序号。可以监听一开始不存在的属性。监听对象属性的话，该属性消失后也会触发回调。
+
 如果watch的值是布尔值的话，初次渲染时也会执行回调
 
 
@@ -164,7 +192,8 @@ v-bind:style="{ color: activeColor, fontSize: fontSize + 20 + 'px' }"
 c写在data中，可为数组可为对象，长度决定了循环次数。  
 b:c为数组或数字时，b为序号（从0开始，可在mustache中运算）  
   c为对象时，b为序号对应属性的属性名  
-a:c为数组时，a为每次循环中c数组中对应序号中的内容。如果是a.xx，则代表c数组中对应序号内容的xx属性的属性值,若循环到内容中没有名为xx的对象，则a.xx处不生成任何代码。  
+a:c为数字时，a为从1开始的序号  
+   c为数组时，a为每次循环中c数组中对应序号中的内容。如果是a.xx，则代表c数组中对应序号内容的xx属性的属性值,若循环到内容中没有名为xx的对象，则a.xx处不生成任何代码。  
   c为对象时，a为序号对应属性的属性值。这种情况下，要输出序号的话v-for中应写为(a,b,e) in c,{{e}}就会输出序号。  
 如无需序号，可写为v-for="a in c"  
 v-for也可单纯用来输出序号，v-for="n in 10"，{{ n }}将会循环生成1到10。  
@@ -195,32 +224,8 @@ methods: {
 - 这种情况ref可以用动态生成，不过动态生成后找到组件的方法还是和上一条一致
 
 
-## 事件
-事件里也可以直接写函数，不过无法使用window，this指向与组件实例相同【】与下面的说法冲突  
 
 
-## 事件处理方法
-`<button v-on:click="greet">Greet</button>`
-1、click处（个人）称为“事件触发条件”，已知的有click、submit、keyup、input（未测试，估计是文本框专用的，输入内容一变化就触发）  
-   keyup只能给文本框使用`keyup.你要的按键（字母、空格、方向键等）`，详见：https://cn.vuejs.org/v2/guide/events.html#按键修饰符  
-   （除此外可能还有更多的事件触发条件，没有深入研究。事件触发条件应该是vue规定的，很多html事件不可用）  
-2、greet处（个人）称为“事件命令”  
-   可以输入脚本语句，也可以输入函数名（官方称函数名为“事件处理方法”）  
-   只在这里放一个函数名的话可以不加括号，但在多个函数名或者与脚本语句混用的情况下，要加括号，如：  
-   “<a @click="脚本语句,函数名()">分配完毕</a>”  
-   用分号“;”或者逗号“,”做间隔  
-
-   这里的data等也不需要加`this.`  
-   这里直接写语句的话是没有this的，也获取不到window对象（不过放箭头函数里可以获取到this，而window不行）
-
-
-## 事件修饰符
-在v-on:XX后加入的.XXX称为事件修饰符  
-.stop  阻止事件冒泡，如单击子元素只触发子元素的事件而不触发父元素的事件  
-.prevent  让表单提交不重新加载页面  
-.capture  让默认事件方式从冒泡阶段中监听改为捕获阶段中监听，例如：@click.capture="a($event)"的嵌套中会让从里到外触发even.currentTarget变为从外到里触发  
-.self  只在当前元素触发事件，比如单击子元素不触发事件  
-.once  事件执行一次  
 
 
 ## 组件注册
@@ -262,9 +267,24 @@ methods: {
 必须是函数，在其中写入“return{a:1}”可以让所有同名组件拥有独立的a数据（值为1）
 
 
-## 接收父组件数据/在template模板中传值进组件内部
-在组件标签上属性部分写“A属性='XX内容'”就可以将组件的props选项的A属性（不能在声明的时候赋值）改为XX内容字符串，若要将父组件data动态传入子组件则需在前面加上冒号“:”  
+
+
+## Prop验证
+
+作为子组件设置props中的属性时可用 “propA: Number” 限制传入数据的类型，如不合规格则会在控制台发出提醒，可限制为多种类型，可自定义函数来验证，详见：
+https://cn.vuejs.org/v2/guide/components.html#Prop-验证
+
+
+
+# 组件通信
+
+
+### 接收父组件数据/在template模板中传值进组件内部
+在组件标签上属性部分写“A属性='XX内容'”就可以将子组件的props选项的A属性改为XX内容字符串。  
+不能在声明的时候赋值。一次测试中在mounted里是可以获取到的（环境：无人机项目一个后期路由到的页面的子组件，如果一开始就跳到这个路由，结果也还是可以的）  
+若要将父组件data动态传入子组件则需在前面加上冒号“:”  
 每次父组件变化都会更新子组件的props中的属性，如果想要 继承数据 在继承后不随着 父组件数据 更新，可使用如下方法使用SON_A：  
+
 ```
 data: function () {
   return { SON_A: this.a }
@@ -284,62 +304,120 @@ data: function () {
    }
 
 
-## Prop验证
-作为子组件设置props中的属性时可用 “propA: Number” 限制传入数据的类型，如不合规格则会在控制台发出提醒，可限制为多种类型，可自定义函数来验证，详见：
-https://cn.vuejs.org/v2/guide/components.html#Prop-验证
 
 
-## 组件向外传值
+
+
+### 组件向外传值
 组件外methods中写好outsidefn单参数函数，组件标签内写好 “@daili='outsidefn'” ，传值方法分为：1、用组件内的watch传值。2、用组件内的methods传值。
-1、用组件内的watch传值：
-    watch:{
-        anyprop:function(d){//anyprop是组件中props中某个数据
-            this.$emit('daili',d)//（单参数d代表监听数据的新值），将单参数改成其它数值也能传递
-        }//这样在触发watch时就能触发outsidefn，且单参数等于watch传递的数值
-    }
-2、用组件内的methods传值：
-    methods: {//组件内写@xx='anymethods'就能触发
-        anymethods: function(d){
-            this.$emit('daili',d);
-        }
-    }
+
+1. 用组件内的watch传值：  
+
+   ```js
+   watch:{
+     anyprop:function(d){//anyprop是组件中props中某个数据
+       this.$emit('daili',d)//（单参数d代表监听数据的新值），将单参数改成其它数值也能传递
+     }//这样在触发watch时就能触发outsidefn，且单参数等于watch传递的数值
+   }
+   ```
+   
+2. 用组件内的methods传值：  
+
+   ```js
+   methods: {//组件内写@xx='anymethods'就能触发
+     anymethods: function(d){
+       this.$emit('daili',d);
+     }
+   }
+   ```
+
+   
 
 
-1、达成以上目的还有一个更通用但是稍长的办法：
-   组件标签内写 “v-model='b'”
-   触发父组件写 “this.$emit('input')”
-2、触发父组件函数时带上一个子组件数据
-“this.$emit('a',b)”中b就是能带上的内部数据，父组件methods中单参数函数中的单参数就能捕捉到内部数据b
+
+1. 达成以上目的还有一个更通用但是稍长的办法：  
+   组件标签内写`v-model='b' `   
+   触发父组件写`this.$emit('input')`
+2. 触发父组件函数时带上一个子组件数据
+   `this.$emit('a',b)`中b就是能带上的内部数据，父组件methods中单参数函数中的单参数就能捕捉到内部数据b
 
 
 用这种方法向组件外传值是可以发生引用传递的，因引用传递导致组件外数据变化时甚至能用watch监听到（未做详细测试）
 
 
-## 在子组件上触发methods中的函数（在html子组件上用本地事件触发method中的函数）
+### 在子组件上触发methods中的函数（在html子组件上用本地事件触发method中的函数）
 在子组件标签中写好“@click.native="b"”就会在点击后触发b函数
-
 
 【组件教程更新未看内容】
 https://cn.vuejs.org/v2/guide/components.html#杂项
 
 
-## 用.$on()创建自定义事件
-实例名.$on('自定义事件名',function(接收参数){函数内容})
-实例名.$emit('自定义事件名',发送的参数)可以触发创建的自定义事件
+
+
+
+
+### 事件
+
+事件里也可以直接写函数，不过无法使用window，this指向与组件实例相同【】与下面的说法冲突  
+
+
+### 事件处理方法
+
+`<button v-on:click="greet">Greet</button>`
+1、click处（个人）称为“事件触发条件”，已知的有click、submit、keyup、input（未测试，估计是文本框专用的，输入内容一变化就触发）  
+   keyup只能给文本框使用`keyup.你要的按键（字母、空格、方向键等）`，详见：https://cn.vuejs.org/v2/guide/events.html#按键修饰符  
+   （除此外可能还有更多的事件触发条件，没有深入研究。事件触发条件应该是vue规定的，很多html事件不可用）  
+2、greet处（个人）称为“事件命令”  
+   可以输入脚本语句，也可以输入函数名（官方称函数名为“事件处理方法”）  
+   只在这里放一个函数名的话可以不加括号，但在多个函数名或者与脚本语句混用的情况下，要加括号，如：  
+   “<a @click="脚本语句,函数名()">分配完毕</a>”  
+   用分号“;”或者逗号“,”做间隔  
+
+   这里的data等也不需要加`this.`  
+   这里直接写语句的话是没有this的，也获取不到window对象（不过放箭头函数里可以获取到this，而window不行）
+
+
+### 事件修饰符
+
+在v-on:XX后加入的.XXX称为事件修饰符  
+.stop  阻止事件冒泡，如单击子元素只触发子元素的事件而不触发父元素的事件  
+.prevent  让表单提交不重新加载页面  
+.capture  让默认事件方式从冒泡阶段中监听改为捕获阶段中监听，例如：@click.capture="a($event)"的嵌套中会让从里到外触发even.currentTarget变为从外到里触发  
+.self  只在当前元素触发事件，比如单击子元素不触发事件  
+.once  事件执行一次  
+
+
+### 用.$on()创建自定义事件
+`实例名.$on('自定义事件名',function(接收参数){函数内容})`
+`实例名.$emit('自定义事件名',发送的参数)`可以触发创建的自定义事件
 以上两条可以在任何位子书写
 （任何组件通信都可以靠以上两条来完成）
 
 
-## this.$parent、this.$children与this.$refs.
-可以完全修改。
-在子组件html标签中写 “ref='a'” ，再通过this.$refs.a就能完全修改这个子组件  
-`this.$refs.`在mounted中获取不到，要加个`this.$nextTick(() => {})`才行
+### `this.$parent`、`this.$children`与`this.$refs`
+这些方法可以获取到指定的vue组件实例
+
+**`this.$refs`**
+
+可以用于普通dom也可用于vue组件实例
+
+- 普通dom  
+  获取到的就是dom  
+  注意：如果对dom使用了v-if，if值如果刚设为true，那这时dom其实是不存在的。`this.$nextTick`中才会存在
+
+- vue组件实例  
+  操作方式：在子组件html标签中写 “ref='a'” ，再通过`this.$refs.a`获取到组件实例  
+  `this.$refs`在mounted中获取不到，要加个`this.$nextTick(() => {})`才行  
+  但是一次测试中是可以的。环境：无人机项目，一个后期通过路由导航到的页面，这页面的mounted里用`this.$refs.`可以立即获取到内容
 
 
-## 实例名.$el.textContent = 该实例dom里所有文本内容
+
+### 实例名.$el.textContent = 该实例dom里所有文本内容
+
+？？？
 
 
-## .nextTick
+## `.nextTick`
 1、Vue.nextTick(function () {...})
    页面中所有dom渲染好之后立即执行当中函数内容，（由于vue的智能渲染，直接运行的函数会先运行，然后再渲染dom，所以nextTick中获取的数值都是先运行这些函数后才获得的）
    setTimeout延迟0毫秒效果同上。延迟更长时间就能获取到更长时间后改变的数据，这点nextTick做不到。
@@ -444,7 +522,7 @@ transition-group默认会渲染成span标签，可在标签中通过 “tag” �
 
 
 ## 混合mixins
-存在于Vue.extend中，所以实例、组件都可以使用，使用例子：
+存在于Vue.extend中<span style='opacity:.5'>（？？？）</span>，所以实例、组件都可以使用，使用例子：
 
 ```js
 var mixin = { //先声明要混合的部分
@@ -460,14 +538,17 @@ new Vue({
 })
 ```
 
+- data和methods都可以用mixins进行拆分
+  
 - 同名钩子函数混合规则：  
   两个函数都保存，混合对象的钩子先调用，原钩子再调用。
 
-- 值为对象的（非自定义）选项的同名混合规则：  
+- 值为对象的（非自定义）选项的同名混合规则：（这个说的是data吧？？？）  
   对象键名冲突时，取原对象的键值对。
 
 - 值为对象的（自定义）选项的同名混合（的默认）规则：  
   不产生任何效果。
+  
 - 可以通过 “optionMergeStrategies” 自定义混合规则【还未研究】
 
 - 全局混合：（所有实例和组件都会受到混合）  
@@ -596,10 +677,14 @@ directives: {
 
 
 
-# element
+
+# 周边工具
 
 
-## input框
+### element
+
+
+##### input框
 - 处理数字建议用InputNumber组件
   InputNumber组件把按钮隐藏后对数字的各方面操作基本都强于Input组件
   如果在监听 Input组件绑定值 的计算属性中给 Input组件绑定值 赋值，那后续再输入一次，这个值就会变成字符串（因为绑定值在Input组件内其实都是字符串，因此容易出现这种bug）
@@ -607,13 +692,13 @@ directives: {
   如果绑定值为null的话这个组件会将绑定值改为0（会触发视图更新）（undefined的话则不会被更改）
 
 
-## 下拉框
+##### 下拉框
 - 让下拉框能转换没有显示的选项的方法
   v-for使用拥有所有能转换的数据
   v-show再过滤出需要显示的选项（这里用v-if的话就只能转换有显示的选项的数据）
 
 
-## 表单
+##### 表单
 - 某一项改变后其他项也会重新赋值
   不过因为vue的数据是集中智能异步渲染的，这个 智能 使改变后全等的值不会触发视图更新也不会触发watch，所以平时基本感觉不到重新赋值【】这个智能渲染有空可以做专门测试（虽然是集中渲染，不过监听还是挺可靠的。比如：改变了a，a的watch中emit改变了b，b传入一个组件，这个组件中watch了b，这时watch都能正确运行）
   不过在赋值为依赖某项重新计算得到的数组或对象时，这就会体现出差别了
@@ -626,8 +711,9 @@ directives: {
   }
   ```
   一条验证规则可以有的属性：type、required、message等，其中message可以是jsx
-  在async-validator里（网址是：https://github.com/yiminghe/async-validator）
-  说到某个属性在不同类型下表现不同时，其实指的是**这一条验证规则**的type属性传入不同类型时这个类型的表现不同
+  在async-validator里（网址是：https://github.com/yiminghe/async-validator）  
+  说到某个属性在不同类型下表现不同时，其实指的是**这一条验证规则**的type属性传入不同类型时这个类型的表现不同？？？在Element和async-validator文档里都没看到这句话
+  
   - 自定义验证规则
     就是validator方法（与type、required、message等同级）
     validator方法形参为：rule、 value、 callback、 source、 options
@@ -644,7 +730,7 @@ directives: {
   会把表单绑定data的各属性还原成默认值（也就是写在data方法里的值）（属性值为对象或数组的话无法还原）
 
 
-## 表格
+##### 表格
 - 自定义单元格内容
   ```
   <template slot-scope="scope">
@@ -659,20 +745,20 @@ directives: {
   el-table-column标签上无法加样式与类名
 
 
-## 导航框
+##### 导航框
 el-menu
 路由的话官网其实写错了，route属性的值就是路由到的地址（就相当于router-link标签的to属性）
 lin
 
 
-## 自动消失型提示
+##### 自动消失型提示
 - this.$message.error(参数)各种传参情况
   - 空串：空白
   - null、undefined、false、数字：提示不出现且控制台阻塞报错
   - 对象：传入对象的表现与给this.$message()传入对象的表现基本一致，其中传空对象也会提示，但没有提示内容
 
 
-# iview
+### iview
 - 有几率bug
   template做if else时，其中第一个formitem 下无法验证，调用局部验证还会报错“第一个参数不是字符串”
 - 3.0的Layout 布局没什么卵用，用了反而增加开发成本
@@ -682,3 +768,11 @@ lin
 3.0Page组件@on-change并不是完全可靠，有一次用中文方法名就不行
 
 替代方案：监听:current.sync
+
+
+
+### [async-validator](https://github.com/yiminghe/async-validator)
+
+一个用来做表单校验的库，被element与iview所依赖
+
+【】把element里的相关内容挪下来，iview中的表现和element里写的一致
