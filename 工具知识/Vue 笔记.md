@@ -765,6 +765,14 @@ lin
 
 
 
+##### 表单
+
+- 验证函数的`this`是一个对象  
+  这个对象有4个属性：`field`、`fullField`、`type`、`validator`  
+  验证函数直接写箭头函数是不会改变`this`指向的，不过用在`data`方法`return`外声明的箭头函数是可以改变`this`指向的
+
+
+
 3.0Page组件@on-change并不是完全可靠，有一次用中文方法名就不行
 
 替代方案：监听:current.sync

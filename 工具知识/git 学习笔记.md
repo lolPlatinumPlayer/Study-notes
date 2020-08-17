@@ -7,13 +7,13 @@ cd d:nospace/learngit
 ### 杂项
 - 不要使用windows自带记事本编辑文件（可能是因为会把编码改为GBK）
 
-- WebStorm的git相关功能挺好用的  
+- WebStorm的git相关功能挺好用的  【】这些东西有空整到webstorm的笔记里
   
   - WebStorm命令行和『Git Bash』相比也各有千秋
     
   - 可以完成git的各种操作
     - commit  
-      提交前会进行代码检查（比如会检测出无用代码）（可以选择点review来拒绝提交而进行检查）  
+      提交前会进行代码检查（比如会检测出无用代码、像没有`alt`属性的`img`标签这样不那么符合规范的代码）（可以选择点review来拒绝提交而进行检查）  
       似乎无法提交忽略文件
     - add  
       似乎无法add忽略文件

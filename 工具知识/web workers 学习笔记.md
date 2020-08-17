@@ -2,8 +2,6 @@
 
 ### 综述
 **Web Workers** 是js开多线程的方法  
-在worker内，不能直接操作DOM节点，也不能使用window对象的默认方法和属性。  
-可以用`console.log`
 
 - 参考材料：
   - [阮一峰博客](http://www.ruanyifeng.com/blog/2018/07/web-worker.html)  
@@ -11,6 +9,12 @@
     - 载入与主线程在同一个网页的代码（同页面的 Web Worker）
     - Worker 新建 Worker
     - ...
+
+##### 限制
+
+在worker内，不能直接操作DOM节点，也不能使用window对象的默认方法和属性。  
+可以用`console.log`  
+更多Web Worker的限制看[MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Worker)
 
 ##### 有2种web worker
 
@@ -26,35 +30,40 @@
 
 ### 关闭 Web Worker 线程
 
-这个关闭应该只是关闭一次，并不是销毁worker实例（未测试）
+关闭并不是销毁worker实例
+
+worker用完要手动关闭
+
+【】单实例多次开启线程、关闭线程的操作还未详细实践过。『`onmessage`事件内代码能不能改变worker内其他变量』未测试
 
 - 主线程中  
   `(Web Worker 对象).terminate()`
 - worker线程中  
   `worker最外层this.close()`
 
-
 ### 主线程与worker线程的通信
-通信是传值的（这意味着：Worker线程上对传来内容的修改不会影响主线程上的该内容）
 
+**特性描述：**
 
-### worker中执行主线程的函数
-主线程中`w.onmessage=一个函数(形参)`  
-worker中用`postMessage(实参)`函数的执行就是执行赋值给`onmessage`的函数  
-postMessage的实参会放进onmessage形参的`data`属性里  
+- 通信是传值的（这意味着：Worker线程上对传来内容的修改不会影响主线程上的该内容）
+
+- `Worker`实例与worker文件内都有`postMessage`方法与`onmessage`事件句柄  
+  <span style='opacity:.5'>（“事件句柄”这个词引用自[MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Worker#%E4%BA%8B%E4%BB%B6%E5%8F%A5%E6%9F%84)）</span>    
+  （事件句柄的意思是：如果要对这个事件进行监听的话，那就要对句柄赋值监听函数）  
+  主线程或worker线程向对方发送消息都是用`postMessage`方法  
+  调用`postMessage`方法就会触发对方线程的`onmessage`事件  
+  `onmessage`监听函数形参的`data`属性就是`postMessage`方法的第一个实参
+
+**操作指导：**
+
+主线程的`postMessage`方法与`onmessage`事件句柄存在于`Worker`实例上  
+worker线程的存在于worker文件的`postMessage`、`onmessage`全局变量上  
 *（这里`onmessage`估计用`addEventListener`、`removeEventListener`操作`'message'`也有同等效果）*
 
-注意：
+**注意：**
 
 - 不能把`onmessage`的形参再传给`postMessage`
 - 形参或者形参的后代不能是函数
-
-### 主线程执行worker中函数
-
-与上一条一样，就是反过来  
-worker中不管是`onmessage`还是`postMessage`，都是直接用，而在主线程中是作为`Worker`实例的方法来调用的  
-
-身。
 
 ### Worker 加载脚本
 

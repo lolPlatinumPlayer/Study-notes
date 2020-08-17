@@ -1,7 +1,15 @@
 
 ### 上下文对象
-所有的实际性内容都要从上下文对象里调用（猜测一个canvas标签只能用一个上下文）
 `const ctx =canvas.getContext("2d")`
+
+所有的实际性内容都要从上下文对象里调用
+
+（猜测一个canvas标签只能用一个上下文）  
+第一次使用`getContext`方法时就确定了上下文（比如说第二次使用`getContext`方法时不管第二个参数怎么传，其实都是没什么卵用的）
+
+
+一个canvas只能`getContext`一种类型（2d、webgl、webgl2、bitmaprenderer）  
+后`getContext`其他类型的话只会返回`null`。
 
 ### 矩形
 
@@ -77,7 +85,7 @@ imageObj.src = 图片地址;
 ```
 
 - `drawImage`参数只有头三个是必填的
-- `drawImage`第一个参数不仅可以接收 Image 对象，也可以接收另一个 Canvas 对象。  
+- `drawImage`第一个参数不仅可以接收 Image 对象，也可以接收另一个`'2d'`上下文的 Canvas 对象。  
   <span style='opacity:.5'>使用 Canvas 对象绘制的开销与使用 Image 对象的开销几乎一致</span>
 
 ### 画布操作
@@ -95,6 +103,72 @@ imageObj.src = 图片地址;
 直接给dom元素的width、height赋值就行  
 
 - 注意：canvas宽高改变后会自动清空画布
+
+
+
+### 像素操作
+
+> 兼容性不是完美的，比如`ImageData`的构造函数在IE和安卓上是不可用的（但是可以用`createImageData`方法来实例化） —— 2020.8.14 MDN
+
+
+
+##### 获得canvas部分的像素信息
+
+`ctx.getImageData(x, y, w, h)`
+
+详细解释：  
+在canvas上指定一个矩形区域，返回矩形区域内的像素信息（`ImageData`实例）
+
+参数说明：
+
+- x：矩形区域左上角x坐标
+- y：矩形区域左上角y坐标
+- w：矩形区域宽度
+- h：矩形区域高度
+
+
+
+##### `ImageData`
+
+包含canvas的像素信息，含有3个 **只读** 属性
+
+- `data`  
+  是一个一维数组  
+  是一个[Uint8ClampedArray](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray)实例  
+  按顺序存储了每个像素的r、g、b、a  
+  - 像素的排序规则是：  
+    左上角开始  
+    先从左到右，再到下一行
+- `width`  
+  canvas宽度
+- `height`  
+  canvas高度
+
+
+
+##### 依据像素信息填充canvas
+
+实现是用canvas上下文的`putImageData`方法
+
+必填参数：
+
+1. imageData：`ImageData`实例
+2. x：在canvas上填充内容的左上角的x坐标
+3. y：在canvas上填充内容的左上角的y坐标
+
+**先裁剪再填充**
+
+使用必填参数意味着直接用`ImageData`实例的像素信息去填充  
+也可以选择先把像素信息裁剪一下再去填充  
+`putImageData`方法提供了这个能力  
+需要使用裁剪能力的话需要加上后续全部的4个参数
+
+4. clipX：裁剪区域左上角x坐标
+5. clipY：裁剪区域左上角y坐标
+6. clipW：裁剪区域宽度
+7. clipH：裁剪区域高度
+
+
 
 ### 其他
 

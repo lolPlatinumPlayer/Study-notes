@@ -462,6 +462,12 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/type
 ## 数组或对象的方法
 
 
+
+数组内容建议查阅[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array#%E6%96%B9%E6%B3%95_2)
+
+
+
+
 ##### forEach遍历数组
 
 ```javascript
@@ -491,7 +497,32 @@ array.forEach(function(currentValue, index, arr) {
 map面对空子项时不会执行回调，但是还是会返回一个空子项（这里指的是真正的“空”，没有任何内容，控制台打印也是empty，null、undefined这种不算空子项）  
 四个参数与forEach一致，但是this经过多次测试都没成功  
 this不会指向返回的数组  
-map似乎全面领先forEach。map可以return，而forEach不行，而且forEach似乎有兼容性问题   
+map似乎全面领先forEach。map可以return，而forEach不行，而且forEach似乎有兼容性问题
+
+
+
+##### fill
+
+<span style='color:red'>`fill`广义对象时是会引用传递的，这个要非常小心</span>
+
+
+
+##### reduce
+
+```js
+arr.reduce((之前计算的结果,currentVal)=>{
+  return （给下一项调用的）结果
+})
+```
+
+从第二项开始给每个元素执行一次回调函数，并把上次回调函数的返回值放在一个暂存器中传给下次回调函数，并返回最后一次回调函数的返回值。
+
+回调基本都是命名为`reducer`
+
+更多内容看[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce)  
+还有一个类似但是是反着遍历的方法叫`reduceRight`
+
+
 
 
 ##### filter
@@ -499,20 +530,8 @@ map似乎全面领先forEach。map可以return，而forEach不行，而且forEac
 callback中返回的是布尔值，为真的子项会进入新数组
 单参数代表前面的arr
 
-##### some
-
-`数组.some((当前子项,序号,数组)=>{return 布尔值})`
-
-该方法返回一个布尔值
-
-调用这个方法会对数组的每一项执行回调，直到有一项回调的结果是`true`  
-就会结束遍历，并且`some`会返回`true`  
-如果遍历后没有一个回调结果是`true`那`some`返回的就是`false`
 
 
-
-
-##### push
 `arr.push(xx)`
 没输入xx则不执行这个方法
 只要有输入xx，不管值是什么都会向arr末尾增加一个值为xx的子项
@@ -558,6 +577,9 @@ arr.join(分隔符)返回一个字符串，这个字符串包含arr数组所有�
   可以不输入end，end小于或等于begin时返回空数组  
   输入负数则代表从末尾开始数（-n代表倒数第n个）  
   返回数组子项顺序与原数组一致  
+  （原数组不会被改变）
+  - 复制数组  
+    不输入参数
 - 字符串  
   规则与数组的类似  
   就是返回的是字符串，且在end不大于begin时返回空串
@@ -571,11 +593,34 @@ arr.join(分隔符)返回一个字符串，这个字符串包含arr数组所有�
 1. howmany	要删除的项目数量。如果设置为 0，则不会删除项目
 1. item1, ..., itemX	（可选）向数组添加的新项目
 
-##### find
+##### 在数组中查找单个元素
 
-返回数组中符合条件的第一个元素  
-`arr.find(fn)`  
-`fn`结果为`true`时代表符合条件
+- 返回数组中符合条件的第一个元素  
+  `arr.find(fn)`  
+  `fn`结果为`true`时代表符合条件
+- 查找元素在数组中的序号  
+  - 返回第一个符号条件的元素的序号  
+    `arr.findIndex(fn)`  
+    `fn`结果为`true`时代表符合条件  
+    如果没有元素符合条件，则返回`-1`
+  - 查找与输入值全等的元素  
+    下面这2个方法在没查找到元素时都是返回`-1`
+    - 查找第一个全等的元素的序号  
+      `arr.indexOf(值)`
+    - 查找最后一个全等的元素的序号  
+      `arr.lastIndexOf(值)`
+
+##### 测试数组
+
+测试函数返回（`return`）`true`的话表示符合条件  
+
+- 测试是否有元素符合条件  
+  `arr.some(fn)`  
+  调用这个方法会对数组的每一项执行回调，直到有一项回调的结果是`true` 
+- 测试是否每个元素都符合条件  
+  `arr.every(fn)`
+
+
 
 
 
@@ -888,6 +933,16 @@ a<<b在数学中相当于a=a*2^b，反之类似
 
 - `1e-2`等于0.01
 - `1e2`等于100
+
+
+
+## DOM
+
+##### 获得dom的属性值
+
+`dom.getAttribute(字符串属性名)`
+
+
 
 
 
