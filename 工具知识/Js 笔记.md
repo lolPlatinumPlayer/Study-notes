@@ -515,7 +515,8 @@ arr.reduce((之前计算的结果,currentVal)=>{
 })
 ```
 
-从第二项开始给每个元素执行一次回调函数，并把上次回调函数的返回值放在一个暂存器中传给下次回调函数，并返回最后一次回调函数的返回值。
+从第二项开始给每个元素执行一次回调函数，并把上次回调函数的返回值放在一个暂存器中传给下次回调函数，并返回最后一次回调函数的返回值。  
+（对第二项执行回调时2个参数分别为：第一项、第二项）
 
 回调基本都是命名为`reducer`
 
@@ -1704,6 +1705,35 @@ iterator
 - 可以一次一次迭代，es5-迭代api都是遍历的
 
 感觉有点牵强↑↑↑↑↑↑
+
+
+
+## [类型化数组](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypedArray)
+
+### [Uint8Array](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array)
+
+<span style='opacity:.5'>虽然是ES6的，但是chrome、firefox、node在非常早期的版本中就支持了</span>
+
+没发现任何修改器方法
+
+**创建方式**
+
+- `Uint8Array.from(xx)`  
+  MDN里关于该方法的介绍导向了[TypedArray.from](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/from)和[Array.from](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/from)  
+  xx要是一个类数组对象或可迭代对象  
+  如果xx子项不合法的话，uint8Array的子项会是0，且不报错
+
+### [Uint8ClampedArray](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray)
+
+应用场景：[canvas](canvas及2d 学习笔记 .md###像素操作)里的`ImageData`实例的`data`属性就是Uint8ClampedArray
+
+**创建方式**
+
+和上面的Uint8Array一致
+
+**特点**
+
+子项最大值为255，给子项赋值超过255的话会变成255且不报错
 
 
 

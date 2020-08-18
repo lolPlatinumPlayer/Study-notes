@@ -108,7 +108,7 @@ imageObj.src = 图片地址;
 
 ### 像素操作
 
-> 兼容性不是完美的，比如`ImageData`的构造函数在IE和安卓上是不可用的（但是可以用`createImageData`方法来实例化） —— 2020.8.14 MDN
+> 兼容性不是完美的，比如`ImageData`的构造函数在IE和安卓上是不可用的（但是可以用2d上下文的`createImageData`方法来实例化） —— 2020.8.14 MDN
 
 
 
@@ -128,9 +128,11 @@ imageObj.src = 图片地址;
 
 
 
-##### `ImageData`
+##### 像素信息
 
-包含canvas的像素信息，含有3个 **只读** 属性
+`ImageData`
+
+含有3个 **只读** 属性
 
 - `data`  
   是一个一维数组  
@@ -139,6 +141,9 @@ imageObj.src = 图片地址;
   - 像素的排序规则是：  
     左上角开始  
     先从左到右，再到下一行
+  - 可修改性  
+    虽然这个属性是只读的，但是这个属性的子项是可修改的  
+    <span style='opacity:.5'>（至少『对子项进行赋值』是允许的）</span>
 - `width`  
   canvas宽度
 - `height`  
@@ -150,7 +155,7 @@ imageObj.src = 图片地址;
 
 实现是用canvas上下文的`putImageData`方法
 
-必填参数：
+**必填参数：**
 
 1. imageData：`ImageData`实例
 2. x：在canvas上填充内容的左上角的x坐标
