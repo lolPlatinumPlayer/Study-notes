@@ -8,10 +8,7 @@
 - 使用未定义的变量会导致阻塞报错  
   `Uncaught ReferenceError: 变量名 is not defined`
 
-## undefined
 
-用`undefined`赋值可以把原有内容覆盖掉  
-但是对对象的某个属性赋值`undefined`并不会将这个属性删除
 
 
 ## delete
@@ -95,15 +92,15 @@ console.log('a[3]',a[3]) // undefined
 ##### 特性
 
 1. 对`this`赋值将会导致阻塞报错
-   
 1. 普通方法中的`this`  
    谁调用就是谁  
    比如`a.b()`调用者就是`a`  
    `c=a.b;c()`如果在最外层的话调用者就是`window`  
 <span style='opacity:.5'>要注意有些js方法是挂在`window`下面的，如：`setTimeout`、`setInterval`  </span>
-   
 1. 使用`new`的构造函数中  
    `this`代表这个构造函数创建的对象，初始值是`{} ` 
+1. 【】对象的方法居然可以用变量名调用自身，甚至用`const`声明的也一样。  
+   未详细测试（比如在另一个有同名变量的作用域内调用）
 
 ##### 相关方法
 
@@ -219,6 +216,13 @@ console.log('a[3]',a[3]) // undefined
 - 犀牛书中称为原始类型（primitive type）和对象类型（object type）
 - [MDN](https://developer.mozilla.org/zh-CN/docs/Glossary/Primitive)中中文译名为：基本类型（基本数值、基本数据类型）  
   英文名为：primitive (primitive value, primitive data type) 
+
+
+
+## undefined
+
+用`undefined`赋值可以把原有内容覆盖掉  
+但是对对象的某个属性赋值`undefined`并不会将这个属性删除
 
 
 ## instanceof
@@ -432,6 +436,98 @@ es5中对非对象使用会报错，而es6会返回内容（如：对字符串�
     `对象或数组.hasOwnProperty(attr)`判断对象或者数组自身(不包括原型链)是否具有指定名称的属性或序号  
     返回布尔值  
     *（该方法属于Object对象，由于所有的对象都"继承"了Object的对象实例，因此几乎所有的实例对象都可以使用该方法）*
+
+
+
+## `switch`
+
+**用例**
+
+```js
+switch(表达式){
+  case 0:
+    console.log(0)
+    break
+  case 1:
+  case 2:
+    console.log('1或2')
+  case 3:
+    console.log(3)
+  case 4:
+    console.log(4)
+    break
+  case 5:
+    console.log(5)
+    break
+  default:
+    console.log('default')
+}
+```
+
+**程序执行流程**
+
+1. 计算表达式结果
+2. 从上到下用`===`判断`case`后的值（`case`后好像也可以用表达式？）
+3. 判断结果为`true`的话开始执行后续“case语句块”的语句  
+   直到碰到`break`  
+   <span style='opacity:.5'>所有执行的“case语句块”为：</span>  
+   <span style='opacity:.5'>[判断结果为`true`的那个,结果为`true`的`case`所在行后面第一个`break`所在的“case语句块”]</span>
+
+**块级作用域**
+
+面对var时无所谓，反正重复声明也没影响。这里主要是针对`let`和`const`的使用场景  
+这个块级作用域具体是怎么样的没搞清楚  
+不过有以下2个例子：
+
+- ```js
+  function c(表达式){
+    const ssss=1
+    switch(表达式){
+      case 0: 
+        const ssss=2
+        console.log(ssss)
+        break  
+      case 4:
+        console.log(ssss)
+        break 
+    }
+  }
+  ```
+
+  `case 0`时正常走  
+  `case 4`时有如下报错  
+  ![未命名报错-a](../图片/未命名报错-a.png)
+
+- 每个“case语句块”都用大括号包裹的话，就可以在每个大括号内生成块级作用域  
+  MDN的示例代码如下：  
+
+  ```js
+  const action = 'say_hello';
+  switch (action) {
+    case 'say_hello': { // added brackets
+      let message = 'hello';
+      console.log(message);
+      break;
+    } // added brackets
+    case 'say_hi': { // added brackets
+      let message = 'hi';
+      console.log(message);
+      break;
+    } // added brackets
+    default: { // added brackets
+      console.log('Empty action received.');
+      break;
+    } // added brackets
+  }
+  ```
+
+  
+
+“块级作用域”这个名称引用自[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/switch#switch_%E8%AF%AD%E5%8F%A5%E5%86%85%E7%9A%84%E5%9D%97%E7%BA%A7%E4%BD%9C%E7%94%A8%E5%9F%9F)
+
+**提醒**
+
+`switch`语句内第一个`case`前不能加入任何语句
 
 
 
@@ -669,10 +765,14 @@ function(key, value) {
   可以传一个参数来进行进制转换，可以把十进制转为指定进制的字符串  
 
 
-## 正则的方法
+## js的正则api
 除了`test`以外其他方法都只能用在字符串上，`test`除了字符串还可以用在数字和数组上，用在数组上时会检测逗号但是不会检测中括号
 
+表达正则
+
 - 写法基本都用`/表达式/`这种方法写，虽然`new RegExp(字符串格式表达式)`效果基本一致，不过后者操作起来有点麻烦
+
+方法
 
 - 判断字符串中是否有内容被匹配到
   `表达式.test(字符串)`返回布尔值
@@ -680,7 +780,8 @@ function(key, value) {
   
 - 返回被匹配内容的序号
   `字符串.search(表达式)`
-  第一个字符就匹配到的话就是0，都没匹配到就是-1
+  第一个字符就匹配到的话就是0，都没匹配到就是-1  
+  `.search('|')`的话一直都是返回0，甚至空串也是
   
 - 返回匹配内容
   `字符串.match(正则)`
@@ -755,6 +856,7 @@ setInterval和setTimeout
   `元素.removeEventListener(字符串事件名, 函数名)`
 
 元素可以是`window`、dom和[XMLHttpRequest](https://developer.mozilla.org/zh-cn/DOM/XMLHttpRequest)  
+`window`的话可以省略`window.`
 
 后面还有几个选项
 
@@ -767,6 +869,13 @@ setInterval和setTimeout
 var event = new CustomEvent("自定义事件名", 事件对象);
 元素.dispatchEvent(event); // 触发事件
 ```
+
+**焦点相关**
+
+div上似乎没有聚焦、失焦事件  
+不过window有
+
+做『判断按键按下状态』时，可以增加对window焦点的监听，这样状态判断就万无一失了
 
 
 
@@ -869,6 +978,8 @@ sessionStorage除以上限定外，还限定与窗口，窗口关闭则数据销
 ## 错误对象（Error对象）
 未深入了解
 
+除了`Error`外还有8种错误对象，详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects#%E9%94%99%E8%AF%AF%E5%AF%B9%E8%B1%A1)
+
 - 生成错误对象
 
   - `Error(描述信息)`
@@ -943,7 +1054,18 @@ a<<b在数学中相当于a=a*2^b，反之类似
 
 `dom.getAttribute(字符串属性名)`
 
+##### 在文档上移除dom
 
+方法如下：
+
+- `dom.remove()`
+- `dom的父元素.removeChild(dom)`
+
+##### 其他
+
+- 找到元素的父元素：  
+  `dom.parentElement`
+- 多次document.body.appendChild一个dom，只会生效一次
 
 
 

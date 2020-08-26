@@ -22,20 +22,6 @@
 
 
 
-# DOM操作
-
-### 在文档上移除dom
-
-方法如下：
-
-- `dom.remove()`
-- `dom的父元素.removeChild(dom)`
-
-### 其他
-
-- 找到元素的父元素：  
-  `dom.parentElement`
-
 
 
 # 综合
