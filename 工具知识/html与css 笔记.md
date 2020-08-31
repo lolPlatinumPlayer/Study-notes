@@ -6,6 +6,14 @@
   纯css就算类名下没有样式，chrome控制台Elements->Styles标签里也会显示出该类名
 - transform可以使用两个translate，rotateX和rotateZ也可以同时使用——源自mapbox
 
+### 滚动条
+
+以下内容没有深入了解，并不保证100%正确
+
+`::-webkit-scrollbar`可以改变滚动条样式，不过无法在鼠标移动到滚动条上时改变光标外观，火狐与IE不支持，其他浏览器基本都支持
+
+ie也可以改变滚动条样式，不过仅限于颜色
+
 
 
 # HTML

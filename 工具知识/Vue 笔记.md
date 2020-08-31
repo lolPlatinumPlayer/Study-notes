@@ -178,8 +178,13 @@ update：当其中语句依赖的数据发生改变后才会触发（应该是�
 
 VNodes必须唯一【测来测去好像多个VNodes也没什么问题】
 在createElement生成的标签中写vue的html部分只会被当成普通html
-render函数完成v-model功能，地址： https://cn.vuejs.org/v2/guide/render-function.html#v-model
-【render函数就看到这里，其余的以后再研究】
+
+- 默认不支持`v-model`这样的双向数据绑定  
+  不过可以自己实现，[官方](https://cn.vuejs.org/v2/guide/render-function.html#v-model)有教
+
+**坑**
+
+- .vue文件里style标签的scoped影响不到渲染函数渲染出来的元素
 
 
 ### 模块
@@ -505,7 +510,12 @@ out-in: 离开过渡完成后开始进入过渡
 
 
 ### v-show
-语法等同v-if，通过css选择显示隐藏，不支持else，不支持在template标签中多次切换【】？  
+通过css选择显示隐藏
+
+**注意**
+
+- 不支持else
+- 不支持在template标签中多次切换【】？  
 
 
 ### v-for【】格式待整理
@@ -761,7 +771,12 @@ https://cn.vuejs.org/v2/guide/components.html#杂项
 
 ### Vue Devtools
 
-组件名优先找组件的name属性，其次找组件的文件名（起码"vue"后缀的文件是这样的）
+xml里组件名来源
+
+- 优先找组件的name属性
+- 其次找用组件时的名字  
+  （比如说在模板里这个组件叫`<Aa></Aa>`，那在devtools的xml里也会是这个名字）
+- 找不到名字的话就会叫`Anonymous`
 
 
 

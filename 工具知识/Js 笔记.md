@@ -534,15 +534,14 @@ switch(表达式){
 
 
 
-## 跳出循环、跳出函数
-`break`、`return`可以跳出for循环、`switch`，  
-无法跳出`map`、`forEach`  
+## 结束循环、跳出函数
+`break`、`return`可以结束for循环、`switch`  
+无法结束`map`、`forEach`  
+
+`continue`可以在for循环中跳过本次迭代的后续语句  
+（比如说循环3次，在第二次时执行`continue`，那么就会直接进入第三次的语句执行）
 
 `return` 可以跳出函数，`break`只能存在于指定位子
-
-## `continue`
-
-可以在for循环中正常使用
 
 
 

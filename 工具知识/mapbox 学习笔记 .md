@@ -191,8 +191,8 @@ mapboxgl.MercatorCoordinate.fromLngLat({
 {
   "symbol-placement": "line", // 默认point，point代表一个点一个文本，line代表沿着线画文本（geojson的单线、多线及Polygon数据都可以）
   "text-ignore-placement": false, // 设置为 true 时，其他注记即使碰撞到此文本标注也会显示。
-  'text-field': '{name}', // name处写的是数据源properties的一个属性名，也可以直接写一个字符串或表达式，不能写数字
-  'text-size': 18,
+  'text-field': '{name}', // name处写的是数据源properties的一个属性名，也可以直接写一个字符串或表达式，不能写数字。【】官方对这个属性并没有进行什么说明，官方对`'{name}'`这种写法也没有什么说明
+  'text-size': 18, // 可以用表达式，返回结果是数字就行，单位是像素
   'text-anchor': 'center', // 文本锚点位置
   'text-allow-overlap': false, // 设置为 true 时，文本标注即使碰撞到其他绘制的注记也会显示。
   'text-max-width': 8, // 文本换行的最大宽度。（在沿线画文本时无效）
