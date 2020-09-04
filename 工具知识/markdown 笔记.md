@@ -278,3 +278,20 @@
 # 待研究内容
 
 [typora画流程图、时序图(顺序图)、甘特图](https://jingyan.baidu.com/article/48b558e3035d9a7f38c09aeb.html)
+
+
+
+```mermaid
+graph LR
+
+A[方形] -->B(圆角)
+
+    B --> C{条件a}
+
+    C -->|a=1| D[结果1]
+
+    C -->|a=2| E[结果2]
+
+    F[横向流程图]
+```
+

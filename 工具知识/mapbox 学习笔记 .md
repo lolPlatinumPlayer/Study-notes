@@ -3,6 +3,22 @@
 通过实例化`mapboxgl.Map`来初始化地图  
 `mapboxgl.Map`实例就是地图
 
+
+
+### 改变镜头
+
+- **jumpTo**  
+  瞬间将镜头参数瞬间改成输入值
+- **easeTo**  
+  直线缓动成输入值
+- **flyTo**  
+  镜头切换过程是缓动的，且有一个跳离地面的效果  
+  `flyTo`是最灵活的改变镜头方法，比`easeTo`还多了如`curve`、`minZoom`等配置项
+- **stop**  
+  停止缓动动画
+
+
+
 **地图方位的配置项**
 
 这些内容如果在实例化地图时没有传入，那就会去『地图样式』中进行查找  
@@ -16,10 +32,18 @@
   地图放大的等级  
   （zoom越大，地图也越大）
 
-**改变地图样式**
+### 改变地图样式
 
-- 改变后会清空地图上所有图层  
-  `map.once('idle',fn)`的`fn`可以确保在『清空图层』动作结束后执行
+`map.setStyle(json或指向json的url)`  
+详细内容请参考[官网](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#setstyle)
+
+- 改变后会清空地图上所有图层与数据源  
+  而且清空后新生成的图层是由输入的json决定的  
+  `map.once('idle',fn)`的`fn`可以确保在『清空图层』动作结束后执行  
+  - 会清空所有图层与数据源的原因  
+    应该是因为`setStyle`实际上是更新style对象  
+    而所有图层与数据源（数据源应该是）都是style对象的一部分  
+    所以导致了这个情况
 
 **一些mapbox底图的实现方式**
 
@@ -35,50 +59,29 @@
 
 
 
-
-
-
-# 改变镜头
-
-- **jumpTo**  
-  瞬间将镜头参数瞬间改成输入值
-- **easeTo**  
-  直线缓动成输入值
-- **flyTo**  
-  镜头切换过程是缓动的，且有一个跳离地面的效果  
-  `flyTo`是最灵活的改变镜头方法，比`easeTo`还多了如`curve`、`minZoom`等配置项
-- **stop**  
-  停止缓动动画
-
-
-
-# 事件
-
-有很多，比如单双击、鼠标移入移出、鼠标移动等  
-应该都可以单独作用于图层（已经测过了双击和鼠标移动，这两个事件在说明里都没提到“图层”）  
-
-- **写法**  
-  `map.on`方法  
-- **给地图增加事件**  
-    `map.on(事件名,回调)`
-- **给图层增加事件**  
-    `map.on(事件名,图层id,回调)`
-- **注意**  
-    回调的`this`会变成map（只测试了地图事件）
-
-
-
-
 # 数据源
 
-有很多内容，这里只写一部分，详细信息查阅[规范](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/)及[api文档](https://www.mapbox.cn/mapbox-gl-js/api/#sources)  
+有很多内容，这里只写一部分，详细信息查阅[样式规范](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/)及[api文档](https://www.mapbox.cn/mapbox-gl-js/api/#sources)  
 可以用于图层，也可以用于地图  
-有7种类型： vector、raster、 raster-dem、GeoJSON、图片、视频（[规范](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/)写了前6种，实际上还有第七种：canvas）  
+有7种类型： vector、raster、 raster-dem、GeoJSON、图片、视频（[样式规范](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/)写了前6种，实际上还有第七种：canvas）  
 使用方式有很多种
 
 - **瓦片**  
-  目前看到都是出现在`"mapbox-xxxx"`对象中，但是并不知道该对象是什么  
-  api文档中并没有出现对瓦片数据源的操作方法
+
+  - raster数据源可以用瓦片  
+    下方是一个`source`属性值示例  
+
+    ```js
+    {
+      type: "raster",
+      url: "aegis://aegis.HillShade",//这个url是思极地图的，换成mapbox应该也一样
+      tileSize: 512
+    }
+    ```
+
+  - ？？？  
+    目前看到都是出现在`"mapbox-xxxx"`对象中，但是并不知道该对象是什么  
+    api文档中并没有出现对瓦片数据源的操作方法  
 - **api**  
   有以下内容的api  
   GeoJSON、图片、视频、canvas  
@@ -97,7 +100,33 @@
 - **聚类**  
   应该只能用于GeoJSON数据源  
   可以通过数据源的配置项和数据源的方法来控制  
-  配置项查阅规范、方法查阅api文档
+  配置项查阅[样式规范](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#geojson-cluster)、方法查阅api文档
+
+非重点内容
+
+- 找到地图用的所有数据源  
+  `map.style.sourceCaches.map(x=>x._source)`  
+  <span style='opacity: 0.5'>官网对此并没有描述，暂时也没找到其他方法</span>
+
+
+
+
+
+
+
+# 事件
+
+有很多，比如单双击、鼠标移入移出、鼠标移动等  
+应该都可以单独作用于图层（已经测过了双击和鼠标移动，这两个事件在说明里都没提到“图层”）  
+
+- **写法**  
+  `map.on`方法  
+- **给地图增加事件**  
+  `map.on(事件名,回调)`
+- **给图层增加事件**  
+  `map.on(事件名,图层id,回调)`
+- **注意**  
+  回调的`this`会变成map（只测试了地图事件）
 
 
 
@@ -310,5 +339,17 @@ mapboxgl.MercatorCoordinate.fromLngLat({
   ...and 10 more
   ```
 
-  
+- 有时候一个url既可以给`map.setStyle`用又可以给`raster`数据源用  
+  环境：
+
+  - 二开框架切换地图样式功能
+  - 思极地图
+  - url：`"aegis://aegis.Satellite512"`
+
+- 有时候`raster`数据源url的`.json`可以去掉也可以加上  
+  环境：
+
+  - 二开框架切换地图样式功能
+  - 思极地图
+  - url：`"aegis://aegis.HillShade.json"`
 
