@@ -1,4 +1,7 @@
 
+cmd不能用git命令、git bash和powershell可以用git命令
+
+
 
 # Git
 
