@@ -1,49 +1,14 @@
-cd d:nospace/learngit
 
 
-学习进度：学完https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013745374151782eb658c5a5ca454eaa451661275886c6000
+# Git
 
 
-### 杂项
-- 不要使用windows自带记事本编辑文件（可能是因为会把编码改为GBK）
 
-- WebStorm的git相关功能挺好用的  【】这些东西有空整到webstorm的笔记里
-  
-  - WebStorm命令行和『Git Bash』相比也各有千秋
-    
-  - 可以完成git的各种操作
-    - commit  
-      提交前会进行代码检查（比如会检测出无用代码、像没有`alt`属性的`img`标签这样不那么符合规范的代码）（可以选择点review来拒绝提交而进行检查）  
-      似乎无法提交忽略文件  
-      commit描述可以输入多行的
-    - add  
-      似乎无法add忽略文件
-    - 合并其他分支  
-      操作步骤：
-      1. 用git命令切换到需要合并其他分支的分支
-      2. 切换到“Log”选项卡
-      3. 在要合并的分支上右击
-      4. 移到“Branch 分支名”菜单上
-      5. 点击“Merge into Current”
-      6. 完成
-  - 忽略文件  
-    上面2条说的忽略文件都会显示在“Ignored Files”里  
-    关于忽略文件的检测似乎有点问题，和git的表现不一致（版本2018.3）
-  - 查看自上次commit后做了哪些修改  
-    看“Local Changes”选项卡
-  - 似乎能在`Console`面板看到git命令记录？
-  - 可以回退代码到上一次commit
-  - 更改某次commit的信息（msg）  
-    操作步骤如下：
-    1. 在commit上右键
-    2. 点击“Reword...”
-    3. 在弹框里输入新的信息
-  
-    如果已经提交到远程仓库的话，“Reword...”按钮将是不可点击的
-  
-- git bash中按q键退出
+### 未归类
 
-### Git专有名词英文
+- 一个远程仓库可以下载到一个电脑的不同路径上
+
+### Git英文的专有名词
 
 - 版本库 repository
 - 暂存区 stage（或index）
@@ -54,7 +19,7 @@ cd d:nospace/learngit
 把这个目录变成Git可以管理的仓库（表述可能不正确）
 （内含工作区与版本库，.git文件夹以外都是工作区，.git是版本库）
 这时候并没有真正创建master分支(`git branch`看不到任何东西)  
-要第一次`add`、`commit`之后才有  
+要第一次`add`、`commit`之后才有【】表达待整理  
 要有master之后才能创建其他分支
 
 ### `git clone 地址`
@@ -63,6 +28,9 @@ cd d:nospace/learngit
 这个`地址`都是以`.git`结尾的  
 会在输入命令时所在文件夹里新建一个文件夹  
 文件夹名应该就是`.git`前的那级路径  
+
+- 只`clone`一个分支  
+  `git clone -b branchA 地址`
 
 ### 把文件提交到分支
 （使用下面两个命令前先要确保这个文件存在）
@@ -147,7 +115,16 @@ cd d:nospace/learngit
 
 **不过在未命名分支里做修改的话似乎会导致严重的问题，暂时不要在未命名分支里做任何commit**
 
-
+- 一次“修改”后安全离开的经验  
+  都是在webstorm的控制台里操作的  
+  操作步骤如下：
+  1. 在一个分支上退了一个commit
+  2. 压缩了文件，又删了新产生的压缩包  
+     （没有add与commit）
+  3. 切换到落后当前分支很多的主支
+  4. 控制台报了错：  
+     `Your branch is up to date with 'origin/master'.`
+  5. 但是成功切换到主支，而且临时分支消失了
 
 
 
@@ -176,6 +153,12 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 
 
 # 下方是做电动车项目后记录的
+
+【】待整理到`# git`标签下
+
+
+
+
 
 
 ### 初次连接服务端
@@ -296,25 +279,85 @@ git commit -m 'xxx'
 
 # git相关的内容
 
+- 不要使用windows自带记事本编辑文件  
+  （可能是因为会把编码改为GBK）
 - 码云上多行commit信息的显示不好  
   一开始只会显示一行，要鼠标移上去一会才会显示全部内容
 
 
 
-# 码云上的教学
+### WebStorm的git相关功能
 
-#### 简易的命令行入门教程:
+【】这些东西有空整到webstorm的笔记里
 
-Git 全局设置:
+- WebStorm的git相关功能挺好用的    
+  WebStorm命令行和『Git Bash』相比也各有千秋
 
-```
+- 可以完成git的各种操作
+
+  - commit  
+    提交前会进行代码检查（比如会检测出无用代码、像没有`alt`属性的`img`标签这样不那么符合规范的代码）（可以选择点review来拒绝提交而进行检查）  
+    似乎无法提交忽略文件  
+    commit描述可以输入多行的
+  - add  
+    似乎无法add忽略文件
+  - 合并其他分支  
+    操作步骤：
+    1. 用git命令切换到需要合并其他分支的分支
+    2. 切换到“Log”选项卡
+    3. 在要合并的分支上右击
+    4. 移到“Branch 分支名”菜单上
+    5. 点击“Merge into Current”
+    6. 完成
+
+- 忽略文件  
+  上面2条说的忽略文件都会显示在“Ignored Files”里  
+  关于忽略文件的检测似乎有点问题，和git的表现不一致（版本2018.3）
+
+- 查看自上次commit后做了哪些修改  
+  看“Local Changes”选项卡
+
+- 似乎能在`Console`面板看到git命令记录？
+
+- 可以回退代码到上一次commit
+
+- 更改某次commit的信息（msg）  
+  操作步骤如下：
+
+  1. 在commit上右键
+  2. 点击“Reword...”
+  3. 在弹框里输入新的信息
+
+  如果已经提交到远程仓库的话，“Reword...”按钮将是不可点击的
+
+- 可以查看单个文件在git中的历史  
+  打开文件后点右上角的时钟按钮就行，下面是这个按钮的截图：  
+  ![webstorm查看文件在git中的历史的按钮](../图片/webstorm查看文件在git中的历史的按钮.png)
+
+
+
+# 学习
+
+cd d:nospace/learngit
+
+### 学习进度
+
+学完https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013745374151782eb658c5a5ca454eaa451661275886c6000
+
+
+
+### 码云上简易的命令行入门教程:
+
+##### Git 全局设置:
+
+```cmd
 git config --global user.name "王佳星"
 git config --global user.email "417783514@qq.com"
 ```
 
-创建 git 仓库:
+##### 创建 git 仓库:
 
-```
+```cmd
 mkdir front-dev-framework
 cd front-dev-framework
 git init
@@ -325,11 +368,18 @@ git remote add origin https://gitee.com/IDontDrive/front-dev-framework.git
 git push -u origin master
 ```
 
-已有仓库?
+##### 已有仓库的话做如下操作
 
-```
-cd existing_git_repo
+已经测试过，可用
+
+测试环境如下：
+
+- 文件夹名与参考名是否相同：不同
+- 是否执行过`git init`命令：是
+- 是否执行过`git commit`命令：是
+
+```cmd
 git remote add origin https://gitee.com/IDontDrive/front-dev-framework.git
-git push -u origin master
+git push -u origin 你要推送的分支名 // 推送一个分支就要执行一次这个命令
 ```
 

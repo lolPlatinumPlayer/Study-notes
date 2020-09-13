@@ -283,6 +283,20 @@ hello.world();
 
 
 
+### 设置头部
+
+用node的`res.setHeader`设置头部是无效的，要用下面的方法设置
+
+```js
+//设置跨域访问
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    next();
+});
+```
+
 
 
 ### 接收post3种格式
@@ -293,7 +307,11 @@ https://www.cnblogs.com/whybxy/p/8690246.html
 
 
 
+# 热更新
 
+### 使用`nodemon`包
+
+郑涛给的无锡项目模拟服务器代码里有用
 
 # 未归类
 

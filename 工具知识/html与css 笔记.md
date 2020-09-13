@@ -5,6 +5,8 @@
 - less会把空的样式去掉  
   纯css就算类名下没有样式，chrome控制台Elements->Styles标签里也会显示出该类名
 - transform可以使用两个translate，rotateX和rotateZ也可以同时使用——源自mapbox
+- 取消某个元素的交互能力  
+  `pointer-events: none;`
 
 ### 滚动条
 

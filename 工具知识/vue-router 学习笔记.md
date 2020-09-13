@@ -1,3 +1,5 @@
+【】需要整理，不方便查阅
+
 ## 杂项
 
 - vue-router直接引入不支持ie9，不过听说实际使用支持
@@ -65,7 +67,10 @@ $route.name：routes中与path同级的name属性的属性值。
 以上两条适用与所有与path同级的路由属性（已验证：重定向redirect、别名alias【目前只学了这两个】）
 
 ## 编程式的导航
-router.push()与`<router-link :to="...">`效果一致
+
+<span style='opacity:.5'>下面的`router`用`vue组件实例.$router`也是一样的</span>
+
+router.push()与`<router-link :to="...">`效果一致  
 括号中常写的有2种情况：
 
 - 直接写字符串，这个字符串是path（前面要有`/`）
@@ -82,7 +87,7 @@ router.go(n)：在历史记录中向前或者后退多少步。【知道这些�
 
 `router-view`本身不会渲染出一个标签，只会在`router-view`的位子渲染出需要的内容  
 
-`router-view`标签上所有属性都会传递到渲染出来的根标签上，除了name属性。  
+`router-view`标签上除了name属性外所有属性都会传递到渲染出来的根标签上。  
 
 ## `router-view`的`name`属性
 

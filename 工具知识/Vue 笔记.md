@@ -1,3 +1,7 @@
+# 待研究
+
+- created里执行的函数的this是undefined
+
 
 
 # 综合
@@ -499,7 +503,22 @@ out-in: 离开过渡完成后开始进入过渡
 
 
 
-# 条件语句
+### 样式作用域
+
+使用方式：在`style`标签上增加`scoped`属性
+
+效果：
+
+- `style`标签内的样式将只作用于当前组件
+
+vue实现这个功能的方式：给html标签加上随机属性，并将样式也加上对应的随机属性
+
+注意：
+
+- 加`scoped`后外部还是能控制内部样式的
+- 随机属性加不到渲染函数渲染出的标签上
+
+# 判断与循环
 
 
 ### v-if、v-else、v-else-if
@@ -645,6 +664,19 @@ https://cn.vuejs.org/v2/guide/components.html#Prop-验证
 
 
 
+##### 接收模板代码
+
+使用步骤：
+
+1. 在组件中写`<slot></slot>`
+2. 使用组件的时候，在组件首尾标签间的模板就会渲染到`<slot></slot>`处
+
+官方名称是：插槽
+
+（接收的模板并没有要求只有一个根元素）
+
+
+
 
 
 
@@ -776,7 +808,10 @@ xml里组件名来源
 - 优先找组件的name属性
 - 其次找用组件时的名字  
   （比如说在模板里这个组件叫`<Aa></Aa>`，那在devtools的xml里也会是这个名字）
-- 找不到名字的话就会叫`Anonymous`
+- 再次找路由的`path`  
+  如果路由到了一个前2条都找不到名字的组件  
+  那么`path`去掉`/`后首字母大写，就会是组件名
+- 还找不到名字的话就会叫`Anonymous`
 
 
 
@@ -795,9 +830,8 @@ vue-cli含有模板：https://github.com/vuejs-templates
 
 
 vue.config.js的配置在官方是放到vue-cli的文档里的
-地址为：https://cli.vuejs.org/zh/config/#devserver
-
-
+地址为：https://cli.vuejs.org/zh/config  
+里边内容是按照配置项来分的，比如`devServer`配置项的地址就是https://cli.vuejs.org/zh/config/#devserver
 
 
 
