@@ -191,7 +191,9 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 
 即使当前不在要pull的分支也能执行完毕
 
-##### 当本地库的代码跟远程库有冲突需要合并时
+##### 当本地库的代码跟远程库有冲突时
+
+**如果pull时已经自动合并冲突的话**
 
 会出现一些提示，包括以下字样
 
@@ -211,10 +213,29 @@ especially if it merges an updated upstream into a topic branch.
   3. 按键盘左上角"Esc"按钮
 
   4. 输入":wq"，然后按回车键
-
 - 不自定义commit信息  
   那就只做上文的第三、第四点即可  
   不自定义commit信息的话git也会自动补充上commit信息
+
+**如果pull后还有为合并冲突的话**
+
+那需要手动合并，操作步骤如下
+
+1. 有冲突的部分会有如下字样  
+
+   ```
+   <<<<<<< HEAD
+   Creating a new branch is quick & simple.
+   =======
+   Creating a new branch is quick AND simple.
+   >>>>>>> feature1
+   ```
+
+   把这些内容调整好
+
+2. `git add`有冲突的文件
+
+3. `git commit`
 
 
 ### 还原某个文件到上一次commit
