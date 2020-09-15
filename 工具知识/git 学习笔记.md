@@ -1,5 +1,5 @@
 
-cmd不能用git命令、git bash和powershell可以用git命令
+
 
 
 
@@ -10,6 +10,10 @@ cmd不能用git命令、git bash和powershell可以用git命令
 ### 未归类
 
 - 一个远程仓库可以下载到一个电脑的不同路径上
+- 各终端可使用git命令的情况
+  - powershell：可用
+  - git bash：可用
+  - cmd：不可用
 
 ### Git英文的专有名词
 
