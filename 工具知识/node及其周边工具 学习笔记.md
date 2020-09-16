@@ -312,9 +312,39 @@ app.all('*', function(req, res, next) {
 
 
 
+### 拦截
+
+以下2种方式目前没发现区别
+
+1. `app.use(callback)`
+2. `app.all('*',callback)`
+
+**`callback`**
+
+形参
+
+| 序号 | 通用形参命名 | 描述                               |
+| ---- | ------------ | ---------------------------------- |
+| 0    | req          | 请求                               |
+| 1    | res          | 应该是响应                         |
+| 2    | next         | 调用这个函数来进行后续对请求的响应 |
+
+**请求参数**
+
+和`router.post(path,callback)`回调里的请求不同，拦截里请求的参数是异步生成的  
+直接获取会是`undefined`，放`setTimeout(callback,0)`里就可以获取到
+
+
+
+
+
 ### 接收post3种格式
 
 https://www.cnblogs.com/whybxy/p/8690246.html
+
+**请求的参数**
+
+存放于`req.body`内
 
 
 
@@ -325,6 +355,15 @@ https://www.cnblogs.com/whybxy/p/8690246.html
 ### 使用`nodemon`包
 
 郑涛给的无锡项目模拟服务器代码里有用
+
+- 运行服务  
+  `nodemon main.js`
+- 带调试功能地运行  
+  `nodemon --inspect main.js`
+
+
+
+
 
 # 未归类
 
