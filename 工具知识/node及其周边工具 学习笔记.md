@@ -361,7 +361,18 @@ https://www.cnblogs.com/whybxy/p/8690246.html
 - 带调试功能地运行  
   `nodemon --inspect main.js`
 
+bug
 
+- webstorm终端带调试地运行后没有用命令行结束就关闭webstorm  
+  会导致node程序无法关闭  
+  （后期也会因为端口占用而无法再次开启）
+  - 解决方式  
+    打开`package.json`，用里面的“小三角”运行  
+    （运行一次后就会被添加到右上角的列表里，以后在列表里就可以直接运行了）
+  - 当时出现bug的一些情况：  
+    处于webstorm第二个终端窗口  
+    这个窗口的地址是二级的  
+    使用二级地址里的`package.json`里的`scripts`运行
 
 
 
@@ -373,3 +384,5 @@ https://www.cnblogs.com/whybxy/p/8690246.html
   - windows下的方案  
     先看这个博文：https://blog.csdn.net/weixin_43254676/article/details/95469937  
     不行的话再搜索
+  
+- > express的`res.send`可以响应各种格式的数据，而`res.json`只能响应json格式数据 —— 林先

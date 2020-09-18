@@ -559,7 +559,7 @@ a:c为数字时，a为从1开始的序号
 v-for也可单纯用来输出序号，v-for="n in 10"，{{ n }}将会循环生成1到10。  
 
 
-### 用函数对v-for循环进行筛选
+##### 用函数对v-for循环进行筛选
 v-for="a in computedC"中computedC可为计算属性，计算属性中写
 function () {
     return this.c.filter(function (c) {
@@ -577,7 +577,7 @@ methods: {
 }
 
 
-### `v-for`中的`ref`
+##### `v-for`中的`ref`
 - 找到 v-for中有ref的组件 的方法：
   `this.$refs.ref值[序号]`
   这里序号指的是：如果想要定位到的组件在拥有这个ref值的组件中排第n个，序号就是n-1
@@ -952,6 +952,17 @@ iview3组件的事件名真的和文档写的医院，都带`on-`
 3.0Page组件@on-change并不是完全可靠，有一次用中文方法名就不行
 
 替代方案：监听:current.sync
+
+
+
+##### 表格
+
+- 自定义单元格内容
+  - 使用render函数  
+    使用render函数的话，在`columns`props中的对应列不用指定`key`
+  - 使用模板  
+    官方名称叫[slot-scope 写法](http://v3.iviewui.com/components/table#slot-scope_XF)  
+    详细内容可以点 ↑↑↑ 链接去官网看
 
 
 
