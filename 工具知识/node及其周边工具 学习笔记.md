@@ -4,6 +4,7 @@
 - 接收请求
   - node接收各种请求
   - express接收各种请求
+- 端口转发
 
 
 
@@ -39,9 +40,11 @@ server.listen(port, hostname, () => {
 
 
 
+### http
 
 
-### `http.createServer`
+
+##### `http.createServer`
 
 功能：创建服务器  
 代码：`http.createServer([options][, requestListener])`  
@@ -49,13 +52,15 @@ server.listen(port, hostname, () => {
 
 **`requestListener`**
 
-这是一个回调，会在收到请求后被调用<span style='opacity:.5'>（[nodejs.cn](http://nodejs.cn/api/http.html#http_http_createserver_options_requestlistener)里的说法是：`requestListener`会被自动添加到 [`'request'`](http://nodejs.cn/s/2qCn57) 事件）</span>  
+这是一个回调，会在收到请求后被调用  
+<span style='opacity:.5'>（[nodejs.cn](http://nodejs.cn/api/http.html#http_http_createserver_options_requestlistener)里的说法是：`requestListener`会被自动添加到 [`'request'`](http://nodejs.cn/s/2qCn57) 事件）</span>  
 
 - 执行时机  
   服务器接收到请求后就会执行  
-  （要注意这个请求是包含页面自动请求的图标的，所以开启指向服务的页面时这个回调至少会被执行2次）
+  <span style='opacity:.5'>（要注意这个请求是包含页面自动请求的图标的，所以开启指向服务的页面时这个回调至少会被执行2次）</span>
 
-有2个参数：`req`和`res`
+有2个参数：`req`和`res`  
+[智能社教程](https://study.163.com/course/courseLearn.htm?courseId=1003664007#/learn/video?lessonId=1004194111&courseId=1003664007)称为：请求和响应
 
 
 
@@ -67,58 +72,85 @@ server.listen(port, hostname, () => {
 
 
 
+##### 获取请求中的内容
 
+`req`  
+可以通过这个参数获取到接收的请求的信息  
 
-- `req`  
-  可以通过这个参数获取到接收的请求的信息
-
-  - `req.url`  
-    一个字符串  
-
-    - node有提供方法来将url字符串解析为对象  
-      目前应该有2套方案来实现解析，其中`url`模块的`parse`方法会在未来被废弃
-
-      - WHATWG API  
-        还未深入研究，详细文档有：
-
-        1. http://caibaojian.com/nodejs/s/kqg3Ut.html#url_url_strings_and_url_objects
-        2. [WHATWG官网](https://url.spec.whatwg.org/)
-
-        还可以研究下w3c背后控制人是谁
-
-      - `url`模块的`parse`方法  
-        部分详细内容可以看这个文档：[parse方法](https://nodejs.org/docs/latest-v10.x/api/url.html#url_url_parse_urlstring_parsequerystring_slashesdenotehost)
-
-- `res`  
-  有很多响应请求的方法  
-  方法如下：
+- `req.url`  
+  一个字符串  
+应该只是[百度百科“URL格式”词条](https://baike.baidu.com/item/URL%E6%A0%BC%E5%BC%8F/10056474?fr=aladdin)里说的“路径”（而不是百科里说的“URL”的全部内容）
   
-  - 设置头部  
-    下面是一个设置跨域头部的例子  
+  - [智能社教程](https://study.163.com/course/courseLearn.htm?courseId=1003664007#/learn/video?lessonId=1004194111&courseId=1003664007)里直接访问这个属性就ok了（16年10月31日）  
+  教程说这是一个绝对路径，演示时`req.url`就是URL中的路径（端口号后面的所有内容）
   
-    ```js
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
-    res.setHeader('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-    ```
+  - node有提供方法来将url字符串解析为对象  
+  目前应该有2套方案来实现解析，其中`url`模块的`parse`方法会在未来被废弃
   
-    
+    - WHATWG API  
+    还未深入研究，详细文档有：
   
-  - `res.writeHead(200, { 'Content-Type': 'text/plain' })`
+    1. http://caibaojian.com/nodejs/s/kqg3Ut.html#url_url_strings_and_url_objects
+      2. [WHATWG官网](https://url.spec.whatwg.org/)
   
-  - `res.end('okay')`  
-    可以不传参数
-    
-  - `res.send`和`res.end`有着类似的功能（环境：有用express）
+      还可以研究下w3c背后控制人是谁
   
-  非方法成员如下：
-  
-  - `res.socket.remoteAddress`
-  - `res.socket.remotePort`
+    - `url`模块的`parse`方法  
+      部分详细内容可以看这个文档：[parse方法](https://nodejs.org/docs/latest-v10.x/api/url.html#url_url_parse_urlstring_parsequerystring_slashesdenotehost)
+      
+    - `querystring`模块可以解析get请求`?`后的内容
 
 
 
-### `Server`实例
+
+
+
+
+##### 响应请求
+
+（这里记的内容都是`http.createServer`的回调里的`res`参数）
+
+
+
+**响应请求的方法**
+
+响应内容直接写json字符串前端就能收到json（未验证）
+
+- 增加要响应的内容  
+  `res.write(响应内容)`  
+
+- 响应内容  
+  `res.end(响应内容)`  
+  （可能响应完了就结束了对前端关于这个请求的所有操作）
+
+- 设置头部  
+  下面是一个设置跨域头部的例子  
+
+  ```js
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+  res.setHeader('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+  ```
+
+  
+
+- `res.writeHead(200, { 'Content-Type': 'text/plain' })`
+
+- `res.end('okay')`  
+  可以不传参数
+
+- `res.send`和`res.end`有着类似的功能（环境：有用express）
+
+
+
+非方法成员
+
+- `res.socket.remoteAddress`
+- `res.socket.remotePort`
+
+
+
+##### `Server`实例
 
 可以由`http.createServer`返回
 
@@ -138,24 +170,10 @@ server.listen(port, hostname, () => {
   
   （上面提到`127.0.0.0`的情况并没有发现这个ip被占用。判断没被占用的依据是`netstat -ano`DOS命令）
 - `callback`  
-  应该是监听成功的时候会调用（也就是说`listen`方法成功执行后这个回调只会被调用一次）
+  应该是监听成功的时候会调用  
+  <span style='opacity:.5'>（也就是说`listen`方法成功执行后这个回调只会被调用一次）</span>
 
 
-
-
-
-
-
-### 返回内容
-
-内容直接写json字符串前端就能收到json（未验证）
-
-**api**
-
-- `res.end(内容)`  
-  返回内容
-- `res.write(内容)`  
-  增加要返回的内容
 
 
 
