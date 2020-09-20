@@ -121,6 +121,9 @@ server.listen(port, hostname, () => {
 
 - 响应内容  
   `res.end(响应内容)`  
+  
+  > `res.end(响应内容)` 是`res.write(响应内容);``res.end();`的简写 —— [MiloPeng教程“http模块”篇](https://www.imooc.com/video/20560)
+
   （可能响应完了就结束了对前端关于这个请求的所有操作）
 
 - 设置头部  
@@ -289,7 +292,9 @@ hello.world();
 
 <span style='opacity:.5'>（官网说要在[chrome://inspect](chrome://inspect)页面配置一些url之类的东西，但是实践来看是不需要的，甚至全都删了也可以）</span>
 
-（还有更多调试操作没有探索）
+（还有更多调试操作没有探索）  
+
+- 可以参考[慕课教程](https://www.imooc.com/learn/1093)
 
 
 
