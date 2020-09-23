@@ -1115,10 +1115,22 @@ a<<b在数学中相当于a=a*2^b，反之类似
 - `dom.remove()`
 - `dom的父元素.removeChild(dom)`
 
-##### 控制css
+
+
+##### 样式相关
+
+更改dom的类名
+
+- [`classList`](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/classList)  
+  兼容性不完美  
+  mdn里没写api，不过api看[示例](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/classList#%E7%A4%BA%E4%BE%8B)就能了解了
+
+控制css
 
 - 听说直接修改style标签就可以，不过自己还未测试过
 - 使用`CSSStyleSheet`实例
+
+
 
 ##### 其他
 
