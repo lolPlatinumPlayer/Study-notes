@@ -4,13 +4,86 @@
 
 
 
-# 综合
+记录vue混合和模板
+
+- https://segmentfault.com/q/1010000016743391
+- https://forum.vuejs.org/t/mixin-and-templates/5053/4
+- http://jsfiddle.net/6x2v9y20/24/
+
+
+
+
+
+
+
+构建vue项目可以用到的内容
+
+- vue-cli  
+  全局安装命令是：`npm install -g @vue/cli`
+- vue-loader  
+  webpack的loader，提供单文件组件支持
+- `npm install vue`
+- vueify  
+  已废弃。  
+  github上说正在集中精力搞webpack and rollup  
+  
+  > 用于Browserify的Vue组件转换 —— [JavaScript中文网](https://www.javascriptcn.com/read-63210.html)
+
+
+
+
+
+有空整理一个有less，vuex配置完全，去掉默认页面,build.js引入前面去掉 / ,四空格缩进的模板  
+（原本写在《vue-loader 学习笔记》里）
+
+# 起始
 
 支持ie9
 
+### 版本
+
+
+
+**术语**
+
+- 编译器  
+  将模板字符串编译成为js渲染函数的代码
+
+##### 版本的纬度
+
+有4个纬度来描述版本
+
+- 完整版或运行时
+
+  - 完整版：包含『运行时』和『编译器』
+
+  - 运行时：不包含『编译器』的版本  
+
+    > 当使用 vue-loader 或 vueify 的时候，*.vue 文件内部的模板会在构建时预编译成 JavaScript。你在最终打好的包里实际上是不需要编译器的，所以只用运行时版本即可。 —— [官网](https://cn.vuejs.org/v2/guide/installation.html#%E8%BF%90%E8%A1%8C%E6%97%B6-%E7%BC%96%E8%AF%91%E5%99%A8-vs-%E5%8F%AA%E5%8C%85%E5%90%AB%E8%BF%90%E8%A1%8C%E6%97%B6)
+
+- 不同的模块化方案
+
+  - UMD版
+  -  CommonJS版
+  - 给构建工具使用的ES Module版
+  - 给浏览器使用的ES Module版
+
+- 开发版或生产版
+
+- 版本号
+
+**[版本清单](https://cn.vuejs.org/v2/guide/installation.html#%E5%AF%B9%E4%B8%8D%E5%90%8C%E6%9E%84%E5%BB%BA%E7%89%88%E6%9C%AC%E7%9A%84%E8%A7%A3%E9%87%8A)**<span style='opacity:.5'>（👈点这里查看）</span>
+
+
+
 
 ### 查看编译后的源代码的方法
+
 谷歌控制台sources选项卡 -> Page选项卡 -> Top文件夹 -> webpack://文件夹 -> src文件夹
+
+# 综合
+
+
 
 
 ### 可在控制台直接操作
@@ -151,8 +224,9 @@ update：当其中语句依赖的数据发生改变后才会触发（应该是�
 
 【有需要再试验】能不能在指令中使用所有能在实例中用的vuex功能
 
+### render函数（渲染函数，组件中的一个选项）
 
-### render函数（渲染函数，组件中的一个选项）【其实并不了解，需要一些实操后再整理】
+**【其实并不了解，需要一些实操后再整理】**
 
 代替template渲染html（如与template同时存在template将会失效）
 例子：
@@ -535,6 +609,8 @@ out-in: 离开过渡完成后开始进入过渡
 复用性：除非标签名或者标签中key属性不一样，不然都只会更改标签中改有差异的部分，被更改的部分不会进行缓存(如jq写的style、input输入的内容)  
 这写属性前面不用加:也能获取代理的内容，加了反而会有问题  
 
+可以用在`template`标签上
+
 
 ### v-show
 通过css选择显示隐藏
@@ -606,10 +682,47 @@ methods: {
 
 - name属性不可以是中文名  
   官方提示是：要符合html标签命名规则，同时又不能是html已有标签名
+- `Vue.extend`似乎也可以注册  
+  看这个[例子](http://jsfiddle.net/6x2v9y20/24/)
+
+### [单文件组件](https://cn.vuejs.org/v2/guide/single-file-components.html)
+
+组件可以单文件化，放进`.vue`文件里
+
+- 可以把模板、样式、js分成3个文件  
+  示例代码如下：
+
+  ```vue
+  <template>
+    <div>This will be pre-compiled</div>
+  </template>
+  <script src="./my-component.js"></script>
+  <style src="./my-component.css"></style>
+  ```
 
 
-### 组件的单文件
-可以单文件化，放进.vue文件里
+
+一个template下只能有一个子标签
+
+
+src 导入要遵循和require() 调用一样的路径解析规则，这就是说你需要用以 ./ 开头的相对路径，引用npm资源的话不用加 ./
+
+
+· .vue文件的编写
+一整个文件就是一个组件，所以不能用vue实例，template下也只能有一个子标签。
+与普通组件不同之处是最外层组件是包裹在 export default中，用name属性代表组件名称。
+单文件组件中要使用全局组件的话，要先import Vue from 'vue'
+
+· 单文件组件的使用
+要先 import componentName from './fileName.vue'
+然后再在引入文件的components属性中写上componentName，之后组件就能正常使用了
+（componentName与被引入文件中代码无关）
+
+
+
+
+
+更多内容看[Vue 单文件组件 (SFC) 规范](https://vue-loader.vuejs.org/zh/spec.html)
 
 
 ### 组件html标签中的规则
