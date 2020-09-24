@@ -86,7 +86,9 @@
   有以下内容的api  
   GeoJSON、图片、视频、canvas  
   - canvas  
-  - 可以传入dom id也可以传入未插入文档的dom  
+  
+    - canvas数据源的`canvas`参数可以传入dom id也可以传入未插入文档的dom  
+  
     - 可以监听canvas进行实时更新  
       方法有2种：
       - `animate`配置项  
@@ -97,6 +99,8 @@
     - coordinates输入四个坐标（从左上角起，顺时针）  
       <span style='opacity: 0.5'>canvas应该是对图片的扩展（因为canvas描述里有一句话“Extends ImageSource”）</span>  
       coordinates的4个坐标不能一致
+  - geojson  
+    `feature`的位置写了几何体的话不会报错，但是地图上也不会出现东西
 - **聚类**  
   应该只能用于GeoJSON数据源  
   可以通过数据源的配置项和数据源的方法来控制  
