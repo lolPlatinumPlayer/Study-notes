@@ -220,11 +220,14 @@ mapboxgl.MercatorCoordinate.fromLngLat({
 
 用symbol图层接收单点geojson数据源，然后使用类似下面的`layout`  
 
+- 关于避让  
+  图层内标注之间的避让效果是关不掉的，不过可以开关和图层外标注的避让
+
 ```javascript
 {
-  "symbol-placement": "line", // 默认point，point代表一个点一个文本，line代表沿着线画文本（geojson的单线、多线及Polygon数据都可以）
+  "symbol-placement": "line", // 默认point。point就是普通的展示方式（不沿线），线数据也可以用，不过线数据出来的文字只会出现在第一个点上。line代表沿着线画文本（geojson的单线、多线及Polygon数据都可以）。line-center的效果感觉和line比较相似但又说不出区别，就是不能用于多边形（虽然官网说“只能用于单线和多边形”）
   "text-ignore-placement": false, // 设置为 true 时，其他注记即使碰撞到此文本标注也会显示。
-  'text-field': '{name}', // name处写的是数据源properties的一个属性名，也可以直接写一个字符串或表达式，不能写数字。【】官方对这个属性并没有进行什么说明，官方对`'{name}'`这种写法也没有什么说明
+  'text-field': '{name}', // name处写的是数据源properties的一个属性名，也可以直接写一个字符串或表达式。值可以包含中文却不能包含数字，含数字的话整个图层不会显示并且会红色报错“GET https://api.mapbox.com/fonts/v1/mapbox/arial/0-255.pbf?access_token=pk.eyJ1IjoiaWRvbnRkcml2ZSIsImEiOiJjazAyM3RhbGUwOW1hM21tZXMxYjhpbndnIn0.YyfL9JQcV11Y3Kv-KvTD6Q 404 (Not Found)”，为鑫说是字体原因，可是换了arial也还是不行。不过思极地图是可以包含数字的。官方对这个属性并没有进行什么说明，官方对`'{name}'`这种写法也没有什么说明
   'text-size': 18, // 可以用表达式，返回结果是数字就行，单位是像素
   'text-anchor': 'center', // 文本锚点位置
   'text-allow-overlap': false, // 设置为 true 时，文本标注即使碰撞到其他绘制的注记也会显示。

@@ -203,10 +203,10 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 ```
   Please enter a commit message to explain why this merge is necessary.
   especially if it merges an updated upstream into a topic branch.
-  ```
-  
+```
+
 这时候有2个选择：
-  
+
 - 输入commit信息  
   
   1. 按键盘字母 i 进入insert模式
@@ -238,7 +238,7 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
   2. `git add`有冲突的文件
   
   3. `git commit`
-  
+
 
 ### 还原某个文件到上一次commit
 `git checkout -- 文件名`  
@@ -285,7 +285,7 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 
 > .gitignore文件只能忽略那些原来没有被track的文件，如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。
 那么解决方法就是先把本地缓存删除（改变成未track状态），然后再提交。 —— [引用自《福信富通GIT使用帮助》](https://git.fxft.net/fxft/help/src/master/README.md#gitignore%E6%96%87%E4%BB%B6%E7%9A%84%E4%BD%BF%E7%94%A8)
-```
+```cmd
 git rm -r --cached . // `git rm -r --cached 文件或文件夹`
 git add -A
 git commit -m 'xxx'

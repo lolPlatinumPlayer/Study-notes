@@ -27,6 +27,40 @@
 
   - `数组+''`
   - `数组.toString()`
+  
+- 中文支持  
+  ie5支持js中的中文  
+
+  - 测试环境：ie11模拟ie5
+
+  - 测试代码：  
+
+    ```html
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <title></title>
+    </head>
+    <body>
+    <script>
+      var 一 = 1
+      var 对象 = {
+        甲: 2,
+        乙: 3
+      }
+      
+      函数()
+      function 函数() {
+        对象.乙 += 一
+        console.log(对象)
+      }
+    </script>
+    </body>
+    </html>
+    ```
+
+    
 
 
 
