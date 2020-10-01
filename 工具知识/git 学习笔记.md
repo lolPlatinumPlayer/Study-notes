@@ -18,8 +18,13 @@
 ### Git英文的专有名词
 
 - 版本库 repository
+
+- > 工作区 working tree —— [博客](https://blog.csdn.net/heart_mine/article/details/79424591)
+
 - 暂存区 stage（或index）
+
 - 分支 branch
+
 - 有改动的文件 modified
 
 ### `$ git init`

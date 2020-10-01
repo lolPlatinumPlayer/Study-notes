@@ -665,17 +665,24 @@ methods: {
 
 
 ### 组件注册
+用类的方式使用组件：[这个内容可能有助于“用类的方式使用组件”](https://cn.vuejs.org/v2/guide/typescript.html#%E5%9F%BA%E4%BA%8E%E7%B1%BB%E7%9A%84-Vue-%E7%BB%84%E4%BB%B6)
+
 全局注册：要在父实例前注册才有效
-         Vue.component('my-component', {
-           template: '<div>A custom component!</div>'
-         })
-局部注册：可用 “<div is='components'></div>” 动态更换组件，可用对象动态加载内容，全局注册不能动态加载
-         new Vue({
-             components: {
-                 'my-component':{
-                     template:'<div>A custom component!</div>'}
-             }
-         })
+
+```js
+Vue.component('my-component', {
+  template: '<div>A custom component!</div>'
+})
+```
+局部注册：可用 `<div is='components'></div>` 动态更换组件，可用对象动态加载内容，全局注册不能动态加载
+```js
+new Vue({
+  components: {
+    'my-component':{
+    template:'<div>A custom component!</div>'}
+  }
+})
+```
 字符串模版（js中的名称）可用大小驼峰或者kebab-case (短横线隔开式) 命名，在非字符串模板（html中的名称）中用kebab-case都能捕获到。  
 （就算在html中使用模板语法，也只有引号内可以分辨大小写，引号外依旧不分别）  
 （template在实例中也可用，会把捕获到的dom内容替换为template中内容）  
