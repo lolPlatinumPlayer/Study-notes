@@ -1,4 +1,4 @@
-# 【ES5】
+# 【ES5及之前】
 
 
 
@@ -1062,6 +1062,12 @@ sessionStorage除以上限定外，还限定与窗口，窗口关闭则数据销
 未深入了解
 
 除了`Error`外还有8种错误对象，详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects#%E9%94%99%E8%AF%AF%E5%AF%B9%E8%B1%A1)
+
+- [TypeError](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError)  
+  类型错误  
+  继承自`Error`
+
+API
 
 - 生成错误对象
 
