@@ -1,10 +1,19 @@
 # 待学习
 
-- 确认requestListener的req和res的文档
 - 接收请求
   - node接收各种请求
-  - express接收各种请求
-- 端口转发
+- （端口转发）
+- 直接搞项目
+- 数据库
+
+
+
+
+
+- https://www.runoob.com/nodejs/node-js-get-post.html
+- https://www.w3cschool.cn/nodejs/
+- https://cnodejs.org/getstart
+- https://nodejs.dev/learn
 
 
 
@@ -68,7 +77,7 @@ server.listen(port, hostname, () => {
 
 1. 从官方api例子里研究这2个参数  
    结果：`req`应该对应文档里的“request”，而`res`应该对应文档里的“response”
-2. 继续研究“请求处理”
+2. 继续研究“请求处理” ？？？
 
 
 

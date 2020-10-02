@@ -21,11 +21,77 @@
 
 - > 工作区 working tree —— [博客](https://blog.csdn.net/heart_mine/article/details/79424591)
 
+- > 工作目录 working directory —— [某个网站](https://training.github.com/downloads/zh_CN/github-git-cheat-sheet/)
+
 - 暂存区 stage（或index）
 
 - 分支 branch
 
 - 有改动的文件 modified
+
+
+
+
+
+
+
+### 初始化
+
+
+
+##### Git 全局设置:
+
+```cmd
+git config --global user.name "王佳星"
+git config --global user.email "417783514@qq.com"
+```
+
+##### 创建 git 仓库:
+
+```cmd
+git init
+git add 一些东西
+git commit -m "first commit"
+git remote add 远程服务器地址（应该都是以`.git`结尾）
+git push -u origin master
+```
+
+
+
+
+
+##### 已有仓库的话做如下操作
+
+已经测试过，可用
+
+测试环境如下：
+
+- 文件夹名与参考名是否相同：不同
+- 是否执行过`git init`命令：是
+- 是否执行过`git commit`命令：是
+- 网站：码云、github
+
+github的话多加一行`git branch -M main`
+
+```cmd
+git remote add origin 远程服务器地址（应该都是以`.git`结尾）
+git push -u origin 你要推送的分支名 // 推送一个分支就要执行一次这个命令
+```
+
+不写`git push -u origin master`而写`git push`的话会报错
+
+```
+fatal: The current branch main has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin main
+```
+
+（至少github是这样）
+
+
+
+
 
 ### `$ git init`
 把这个目录变成Git可以管理的仓库（表述可能不正确）
@@ -196,9 +262,23 @@ git checkout 分支名
 
 可以简写为`git checkout -b 分支名`
 
+### 重命名分支
+
+- 重命名本地当前（指向的）分支  
+  `git branch -m 新的分支名`
+- 重命名本地非当前（指向的）分支  
+  `git branch -m 旧的分支名 新的分支名`
+
+
+
 ### 删除分支
 
-`$ git branch -d [branch-name]`
+- 删除本地分支  
+  `$ git branch -d [branch-name]`
+
+- 删除远程分支  
+
+  > `git push --delete origin 分支名` —— [SF](https://segmentfault.com/a/1190000019539669)
 
 ### 合并
 
@@ -431,42 +511,4 @@ cd d:nospace/learngit
 
 学完https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013745374151782eb658c5a5ca454eaa451661275886c6000
 
-
-
-### 码云上简易的命令行入门教程:
-
-##### Git 全局设置:
-
-```cmd
-git config --global user.name "王佳星"
-git config --global user.email "417783514@qq.com"
-```
-
-##### 创建 git 仓库:
-
-```cmd
-mkdir front-dev-framework
-cd front-dev-framework
-git init
-touch README.md
-git add README.md
-git commit -m "first commit"
-git remote add origin https://gitee.com/IDontDrive/front-dev-framework.git
-git push -u origin master
-```
-
-##### 已有仓库的话做如下操作
-
-已经测试过，可用
-
-测试环境如下：
-
-- 文件夹名与参考名是否相同：不同
-- 是否执行过`git init`命令：是
-- 是否执行过`git commit`命令：是
-
-```cmd
-git remote add origin https://gitee.com/IDontDrive/front-dev-framework.git
-git push -u origin 你要推送的分支名 // 推送一个分支就要执行一次这个命令
-```
 
