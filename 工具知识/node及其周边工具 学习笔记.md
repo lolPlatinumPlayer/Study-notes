@@ -2,18 +2,12 @@
 
 - 接收请求
   - node接收各种请求
+- 后端路由
 - （端口转发）
 - 直接搞项目
 - 数据库
 
 
-
-
-
-- https://www.runoob.com/nodejs/node-js-get-post.html
-- https://www.w3cschool.cn/nodejs/
-- https://cnodejs.org/getstart
-- https://nodejs.dev/learn
 
 
 
@@ -49,35 +43,75 @@ server.listen(port, hostname, () => {
 
 
 
-### http
+### 建立http服务器
+
+最基础的要按顺序做2件事
+
+1. 创建`http.Server`实例
+
+2. 启动TCP服务器并监听连接
 
 
 
-##### `http.createServer`
+##### 创建`http.Server`实例
 
-功能：创建服务器  
-代码：`http.createServer([options][, requestListener])`  
+调用`http`模块的`createServer`方法即可创建并返回`http.Server`实例
+
+`http.createServer([options][, requestListener])`  
 <span style='opacity:.5'>这个方法目前只用过`requestListener`</span>
 
-**`requestListener`**
+- `requestListener`
 
-这是一个回调，会在收到请求后被调用  
-<span style='opacity:.5'>（[nodejs.cn](http://nodejs.cn/api/http.html#http_http_createserver_options_requestlistener)里的说法是：`requestListener`会被自动添加到 [`'request'`](http://nodejs.cn/s/2qCn57) 事件）</span>  
-
-- 执行时机  
-  服务器接收到请求后就会执行  
+  这是一个回调，会在收到请求后被调用  
   <span style='opacity:.5'>（要注意这个请求是包含页面自动请求的图标的，所以开启指向服务的页面时这个回调至少会被执行2次）</span>
 
-有2个参数：`req`和`res`  
-[智能社教程](https://study.163.com/course/courseLearn.htm?courseId=1003664007#/learn/video?lessonId=1004194111&courseId=1003664007)称为：请求和响应
+  > `requestListener`会被自动添加到（`http.Server`实例的） [request事件](https://nodejs.org/docs/latest-v10.x/api/http.html#http_event_request) —— [nodejs.cn](http://nodejs.cn/api/http.html#http_http_createserver_options_requestlistener)
+
+  > 当收到新请求时，（`http.Server`实例的）[request事件](https://nodejs.org/docs/latest-v10.x/api/http.html#http_event_request)就会被调用
+  
+  - 参数
+  
+    （[request事件的文档](https://nodejs.org/docs/latest-v10.x/api/http.html#http_event_request)里写了）
+  
+    有2个，大家都命名为`request`和`response`，分别是[`http.ServerResponse`](https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_serverresponse)和[`http.IncomingMessage`](https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_incomingmessage)的实例
+    
+    > `request`提供请求的详细信息。通过它，我们访问请求头和请求数据。
+    > `response` 用于填充我们要返回给客户端的数据。
+    > —— [一个忘记来由的网站](https://nodejs.dev/learn/build-an-http-server)
+    
+    [智能社教程](https://study.163.com/course/courseLearn.htm?courseId=1003664007#/learn/video?lessonId=1004194111&courseId=1003664007)称这2个参数为：请求和响应
 
 
 
-<span style='opacity:.5'>这2个参数没有找到详细说明资料，下面是一些自己收集的内容</span>  
 
-1. 从官方api例子里研究这2个参数  
-   结果：`req`应该对应文档里的“request”，而`res`应该对应文档里的“response”
-2. 继续研究“请求处理” ？？？
+
+
+
+##### 启动TCP服务器并监听连接
+
+使用的是`Server`实例的`listen`方法  
+详见[官网](https://nodejs.org/docs/latest-v10.x/api/net.html#net_server_listen)  
+有几种传参，目前用过的是`server.listen([port[, host]][, callback])`<span style='opacity:.5'>（这种传参的描述在[这里](https://nodejs.org/docs/latest-v10.x/api/net.html#net_server_listen_port_host_backlog_callback)）</span>  
+
+- `port`   
+  端口号
+
+- `host`  
+  暂未查到该参数具体是什么
+
+  - 可以省略  
+    省略的话以`127.`开头的ipv4地址都会被监听（`127.0.0.0`不会）  
+    和[官网](https://nodejs.org/docs/latest-v10.x/api/net.html#net_server_listen_port_host_backlog_callback)说的监听`0.0.0.0`的说法不一致，`0.0.0.0`这时候是无法访问的
+  - 官方例子用`hostname`作变量名，不过个人测试中感觉就是ip地址。  
+    而且ipv4的话必须以`127.`开头，原因未知（`127.0.0.0`地址不行，ipv6未测试）
+
+  （上面提到`127.0.0.0`的情况并没有发现这个ip被占用。判断没被占用的依据是`netstat -ano`DOS命令）
+
+- `callback`  
+  应该是监听成功的时候会调用  
+  <span style='opacity:.5'>（也就是说`listen`方法成功执行后这个回调只会被调用一次）</span>
+
+
 
 
 
@@ -131,7 +165,7 @@ server.listen(port, hostname, () => {
 - 响应内容  
   `res.end(响应内容)`  
   
-  > `res.end(响应内容)` 是`res.write(响应内容);``res.end();`的简写 —— [MiloPeng教程“http模块”篇](https://www.imooc.com/video/20560)
+  > `res.end(响应内容)` 是`res.write(响应内容);res.end();`的简写 —— [MiloPeng教程“http模块”篇](https://www.imooc.com/video/20560)
 
   （可能响应完了就结束了对前端关于这个请求的所有操作）
 
@@ -162,30 +196,19 @@ server.listen(port, hostname, () => {
 
 
 
-##### `Server`实例
+### 发起请求
 
-可以由`http.createServer`返回
+（这部分内容整理自官方文档并辅以查阅博客后的理解，并没有实操过）
 
-**`listen`方法**
-详见[官网](https://nodejs.org/docs/latest-v10.x/api/net.html#net_server_listen)  
-作用：为连接启动一个服务器监听  
-有几种传参，目前用过的是`server.listen([port[, host]][, callback])`  
+`http.request(options,callback)`方法发起请求并返回[`http.ClientRequest`](https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_clientrequest)实例
 
-- `port`   
-  端口号
-- `host`  
-  - 可以省略  
-    省略的话以`127.`开头的ipv4地址都会被监听（`127.0.0.0`不会）  
-    和[官网](https://nodejs.org/docs/latest-v10.x/api/net.html#net_server_listen_port_host_backlog_callback)说的监听`0.0.0.0`的说法不一致，`0.0.0.0`这时候是无法访问的
-  - 官方例子用`hostname`作变量名，不过个人测试中感觉就是ip地址。  
-    而且ipv4的话必须以`127.`开头，原因未知（`127.0.0.0`地址不行，ipv6未测试）
-  
-  （上面提到`127.0.0.0`的情况并没有发现这个ip被占用。判断没被占用的依据是`netstat -ano`DOS命令）
-- `callback`  
-  应该是监听成功的时候会调用  
-  <span style='opacity:.5'>（也就是说`listen`方法成功执行后这个回调只会被调用一次）</span>
+> callback将添加到（[`http.ClientRequest`](https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_clientrequest)实例的）[response事件](https://nodejs.org/docs/latest-v10.x/api/http.html#http_event_response)的一次性监听器 —— [官网](https://nodejs.org/docs/latest-v10.x/api/http.html#http_http_request_url_options_callback)
 
+> [`http.ClientRequest`](https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_clientrequest)实例的[response事件](https://nodejs.org/docs/latest-v10.x/api/http.html#http_event_response)将会传递一个参数，这个参数就是[`http.IncomingMessage`实例](https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_incomingmessage) —— [官网](https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_incomingmessage)
 
+（上一条说的“`http.IncomingMessage`实例”和`requestListener`里的是不一样的，上一条的代表响应而`requestListener`里的代表请求，上一条里的一般命名为`response`）
+
+【】令人好奇的是：怎么`http.IncomingMessage`实例既可以当“响应”又可以当“请求”，而且除了`http.IncomingMessage`实例外，好像没有别的东西可以表示“请求”了
 
 
 
