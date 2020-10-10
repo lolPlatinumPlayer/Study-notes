@@ -582,6 +582,8 @@ out-in: 离开过渡完成后开始进入过渡
 
 ### 样式作用域
 
+更多内容看[官方文档](https://vue-loader.vuejs.org/zh/guide/scoped-css.html)
+
 使用方式：在`style`标签上增加`scoped`属性
 
 效果：
@@ -727,9 +729,7 @@ src 导入要遵循和require() 调用一样的路径解析规则，这就是说
 
 
 
-
-
-更多内容看[Vue 单文件组件 (SFC) 规范](https://vue-loader.vuejs.org/zh/spec.html)
+更多内容看[Vue 单文件组件 (SFC) 规范](https://vue-loader.vuejs.org/zh/spec.html)及[vue-loader指南](https://vue-loader.vuejs.org/zh/guide/)
 
 
 ### 组件html标签中的规则

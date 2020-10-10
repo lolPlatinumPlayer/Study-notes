@@ -19,17 +19,35 @@
 
 - 版本库 repository
 
-- > 工作区 working tree —— [博客](https://blog.csdn.net/heart_mine/article/details/79424591)
+- 工作区 working tree  
+  使用这种翻译的有
 
+  - [博客](https://blog.csdn.net/heart_mine/article/details/79424591)
+  - 《Pro Git》中、英版对照结果
+    - [英文版](https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F)
+    - [中文版](https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-Git-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F)
+- 有一次文章用的`working tree`但是配图用的却是`working directory` —— [《Pro Git》英文版](https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F)
+  
 - > 工作目录 working directory —— [某个网站](https://training.github.com/downloads/zh_CN/github-git-cheat-sheet/)
 
 - 暂存区 stage（或index）
 
 - 分支 branch
 
-- 有改动的文件 modified
 
 
+
+
+> 文件状态
+>
+> - 已提交（committed）  
+>   已提交表示数据已经安全地保存在本地数据库中。
+> - 已修改（modified）  
+>   已修改表示修改了文件，但还没保存到数据库中。
+> - 已暂存（staged）  
+>   已暂存表示对一个已修改文件的当前版本做了标记，使之包含在下次提交的快照中。
+>
+> —— [《Pro Git》中文版](https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-Git-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F)
 
 
 
@@ -243,9 +261,11 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 协议
 
 - https  
-  URL以`https://`开头
+  URL以`https://`开头  
+  推送需要密码
 - SSH  
-  URL以`git@`开头
+  URL以`git@`开头  
+  推送不需要密码
 
 
 
