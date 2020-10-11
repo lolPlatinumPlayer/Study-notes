@@ -43,9 +43,11 @@ server.listen(port, hostname, () => {
 
 
 
-### 建立http服务器
+### 编写响应http请求的代码
 
-最基础的要按顺序做2件事
+（也就是建立http服务器）
+
+最基本要做的2件事如下（要按顺序做）
 
 1. 创建`http.Server`实例
 
@@ -62,26 +64,20 @@ server.listen(port, hostname, () => {
 
 - `requestListener`
 
-  这是一个回调，会在收到请求后被调用  
+  这是一个回调，会被添加到（`http.Server`实例的）[request事件](https://nodejs.org/docs/latest-v10.x/api/http.html#http_event_request)（也就是会在收到请求后被调用）  
   <span style='opacity:.5'>（要注意这个请求是包含页面自动请求的图标的，所以开启指向服务的页面时这个回调至少会被执行2次）</span>
 
-  > `requestListener`会被自动添加到（`http.Server`实例的） [request事件](https://nodejs.org/docs/latest-v10.x/api/http.html#http_event_request) —— [nodejs.cn](http://nodejs.cn/api/http.html#http_http_createserver_options_requestlistener)
-
-  > 当收到新请求时，（`http.Server`实例的）[request事件](https://nodejs.org/docs/latest-v10.x/api/http.html#http_event_request)就会被调用
-  
   - 参数
-  
+
     （[request事件的文档](https://nodejs.org/docs/latest-v10.x/api/http.html#http_event_request)里写了）
   
-    有2个，大家都命名为`request`和`response`，分别是[`http.ServerResponse`](https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_serverresponse)和[`http.IncomingMessage`](https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_incomingmessage)的实例
+    有2个，大家都命名为`request`（`req`）和`response`（`res`），分别是[`http.IncomingMessage`](https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_incomingmessage)和[`http.ServerResponse`](https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_serverresponse)的实例
     
     > `request`提供请求的详细信息。通过它，我们访问请求头和请求数据。
     > `response` 用于填充我们要返回给客户端的数据。
     > —— [一个忘记来由的网站](https://nodejs.dev/learn/build-an-http-server)
     
     [智能社教程](https://study.163.com/course/courseLearn.htm?courseId=1003664007#/learn/video?lessonId=1004194111&courseId=1003664007)称这2个参数为：请求和响应
-
-
 
 
 
@@ -117,7 +113,7 @@ server.listen(port, hostname, () => {
 
 ##### 获取请求中的内容
 
-`req`  
+`req`  【】搞req、res以及那几个示例，过到了这里
 可以通过这个参数获取到接收的请求的信息  
 
 - `req.url`  
@@ -133,7 +129,7 @@ server.listen(port, hostname, () => {
     - WHATWG API  
     还未深入研究，详细文档有：
   
-    1. http://caibaojian.com/nodejs/s/kqg3Ut.html#url_url_strings_and_url_objects
+      1. http://caibaojian.com/nodejs/s/kqg3Ut.html#url_url_strings_and_url_objects
       2. [WHATWG官网](https://url.spec.whatwg.org/)
   
       还可以研究下w3c背后控制人是谁
@@ -206,9 +202,13 @@ server.listen(port, hostname, () => {
 
 > [`http.ClientRequest`](https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_clientrequest)实例的[response事件](https://nodejs.org/docs/latest-v10.x/api/http.html#http_event_response)将会传递一个参数，这个参数就是[`http.IncomingMessage`实例](https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_incomingmessage) —— [官网](https://nodejs.org/docs/latest-v10.x/api/http.html#http_class_http_incomingmessage)
 
-（上一条说的“`http.IncomingMessage`实例”和`requestListener`里的是不一样的，上一条的代表响应而`requestListener`里的代表请求，上一条里的一般命名为`response`）
+- 关于“`http.IncomingMessage`实例”在『response事件』和『request事件』中的不同  
+  在『response事件』中代表http响应而在『request事件』中代表http请求  
+  在『response事件』中一般被命名为`response`
 
-【】令人好奇的是：怎么`http.IncomingMessage`实例既可以当“响应”又可以当“请求”，而且除了`http.IncomingMessage`实例外，好像没有别的东西可以表示“请求”了
+
+
+【】令人好奇的是：怎么`http.IncomingMessage`实例既可以代表“响应”又可以代表“请求”，而且除了`http.IncomingMessage`实例外，好像没有别的东西可以表示“请求”了
 
 
 

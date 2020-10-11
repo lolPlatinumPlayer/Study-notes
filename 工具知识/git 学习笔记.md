@@ -10,10 +10,23 @@
 ### 未归类
 
 - 一个远程仓库可以下载到一个电脑的不同路径上
+
 - 各终端可使用git命令的情况
   - powershell：可用
   - git bash：可用
   - cmd：不可用
+  
+- 免密方法（https方式）【】未验证  
+  输入命令：`git config credential.helper store`  
+  效果：下次输入账号密码后就不需要再输入账号密码了（只对输入该命令的项目生效）  
+  检验命令成功的方式：看`.git/config`文件里是否有以下内容  
+
+  ```
+  [credential]
+          helper = store
+  ```
+
+  
 
 ### Git英文的专有名词
 
