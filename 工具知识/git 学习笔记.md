@@ -15,7 +15,7 @@
   - git bash：可用
   - cmd：不可用
   
-- 免密方法（https方式）【】未验证  
+- 免密方法（https方式）  
   输入命令：`git config credential.helper store`  
   效果：下次输入账号密码后就不需要再输入账号密码了（只对输入该命令的项目生效）  
   检验命令成功的方式：看`.git/config`文件里是否有以下内容  
