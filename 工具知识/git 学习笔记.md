@@ -2,7 +2,6 @@
 
 
 
-
 # Git
 
 
@@ -32,18 +31,29 @@
 
 - 版本库 repository
 
-- 工作区 working tree  
-  使用这种翻译的有
+- 工作目录  working directory
 
-  - [博客](https://blog.csdn.net/heart_mine/article/details/79424591)
-  - 《Pro Git》中、英版对照结果
-    - [英文版](https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F)
-    - [中文版](https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-Git-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F)
-- 有一次文章用的`working tree`但是配图用的却是`working directory` —— [《Pro Git》英文版](https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F)
-  
-- > 工作目录 working directory —— [某个网站](https://training.github.com/downloads/zh_CN/github-git-cheat-sheet/)
+  - 关于名字  
+    目前认为 『工作目录 working directory』 、『工作树 working tree』、『工作区 working tree』表示同一个东西  
+    之所以认为这些名词代表同一个东西，是因为有如下判断依据
 
-- 暂存区 stage（或index）
+    - 有一次[《Pro Git》英文版](https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F)文字用的`working tree`但是配图用的却是`working directory`
+    - [这个stackoverflow提问](https://stackoverflow.com/questions/39128500/working-tree-vs-working-directory)上大家对“working directory”与“working tree”的认知是混淆的
+
+    3个名词在权威文档中都有被使用，下面列出了使用情况
+
+    - 工作树 working tree  
+      官方文档的[中](https://git-scm.com/docs/git-add/zh_HANS-CN)、[英](https://git-scm.com/docs/git-add/en)版本的对比结果
+    - 工作目录 working directory  
+      [和github有关的git少量说明](https://training.github.com/downloads/zh_CN/github-git-cheat-sheet/)中这样翻译
+    - 工作区 working tree  
+      使用这种翻译的有
+      - [博客](https://blog.csdn.net/heart_mine/article/details/79424591)
+      - 《Pro Git》[中](https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-Git-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F)、[英](https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F)版本
+
+- 暂存区 stage（或index）  
+
+  > [git官网](https://git-scm.com/about/staging-area)称为"staging area" or "index"
 
 - 分支 branch
 
@@ -136,10 +146,18 @@ To push the current branch and set the remote as upstream, use
 将远程库克隆到本地  
 这个`地址`都是以`.git`结尾的  
 会在输入命令时所在文件夹里新建一个文件夹  
-文件夹名应该就是`.git`前的那级路径  
 
 - 只`clone`一个分支  
   `git clone -b branchA 地址`
+
+关于下载到的本地文件夹的名称
+
+- 指定名称  
+  `git clone 远程地址 文件夹名称`
+- 不指定名称  
+  会分配一个名称  
+  关于分配名称的规则看[官方说明](https://git-scm.com/docs/git-clone/zh_HANS-CN#git-clone-ltgt)  
+  根据经验看大多都是`.git`前的那级路径
 
 ### 把文件提交到分支
 （使用下面两个命令前先要确保这个文件存在）
@@ -155,11 +173,27 @@ To push the current branch and set the remote as upstream, use
   把暂存区的所有内容提交到当前分支
   commit -m后的内容是对这次提交的说明性文字
   因此可以多次add后一次性commit来提交
-  （测试提交未更改的文件，似乎失败了）
+  （测试提交未更改的文件，似乎失败了）  
+  （已add文件被更改后还是会允许commit的，当然，add后的变化是不会被commit上去）
 
 
-### 同时在版本库和工作区（本地）删除的文件
-`$ git rm XX`  
+
+### 删除文件
+
+- 同时在版本库和工作区（本地）删除的文件  
+  `$ git rm XX`   
+- 只在暂存区里删除文件（不知道会不会在版本库里删掉）  
+  `$ git rm --cached XX`  
+  （实操过，还未深入研究文档）  
+  <span style='color:red'>虽然刚执行这个命令的时候被这个命令操作的文件还在，但是一次`checkout`其他分支再`merge`后就找不着这些文件了，再`checkout`回原分支也找不着</span>  
+  回退版本就可以找回这些“丢失”的文件
+
+
+
+可以在命令中加入`-r`来递归删除
+
+
+
 要同步到分支的话要加上  
 `$ git commit -m "remark information"`  
 
@@ -190,17 +224,58 @@ To push the current branch and set the remote as upstream, use
 （出现过一次，不过不知道触发机制。
 测试了 工作区与暂存区不同、工作区与分支不同、暂存区与分支不同 都没触发）
 
-### `$ git diff`
+
+
+
+
+### 比较
+
+
+
+##### 比较2个分支
+
+> `git diff [first-branch]...[second-branch]` —— [和github有关的git少量说明](https://training.github.com/downloads/zh_CN/github-git-cheat-sheet/)
+
+
+
+
+
+##### `$ git diff`
 若暂存区有内容，则将工作区与暂存区比较  
 若暂存区无内容，则将工作区与分支比较  
 比较后的打印内容会显示 是否有不同、不同之处在哪  
 
-### `$ git diff --cached`
+##### `$ git diff --cached`
 比较暂存区与分支的不同  
 比较后的打印内容会显示 是否有不同、不同之处在哪  
 
-### `$ git log`
-查看所有提交的版本
+
+
+### 查看历史
+
+
+
+**查看所有“在线路上的”commit**
+
+`git log`
+
+
+
+**查看单项目里的命令历史**
+
+`git reflog`
+
+- 显示记录的每次命令（上次关机前的命令都会保存。不过有一次（电气符号库项目中）输入这个命令显示了内容中包含了十几条关机前的内容），每条命令前都会有这条命令所在的版本号
+- add、status等命令是不会被记录的
+
+
+
+**查看本机上输入过的所有git命令**
+
+`history`  
+操作过，但没看过这个命令的文档
+
+
 
 
 
@@ -245,7 +320,7 @@ To push the current branch and set the remote as upstream, use
 · 回退到上个版本
 `git reset --hard HEAD^`
 
-【】--hard 似乎很有问题
+【】--hard 似乎很有问题？？
 
 如果commit后有做修改，那执行这个命令就会回到这个commit
 HEAD后面`^`的数量代表回退2的`^`数量次方步（廖雪峰中说多少个`^`代表回退多少步），可以用~199这种简写
@@ -254,8 +329,7 @@ HEAD后面`^`的数量代表回退2的`^`数量次方步（廖雪峰中说多少
 $ git reset --hard 2b595d5eac
 hard后面是未来版本的版本号的头几位，输入后git会自动检索
 
-· $ git reflog
-显示记录的每次命令（上次关机前的命令都会保存），每条命令前都会有这条命令所在的版本号
+
 
 
 
@@ -300,9 +374,17 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 `git checkout 分支名`  
 （廖雪峰中说用`switch`更科学，不过[《Pro Git》](https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E6%96%B0%E5%BB%BA%E4%B8%8E%E5%90%88%E5%B9%B6)中就是用`checkout`）
 
+bug：
+
+- `checkout`切换分支时如果分支名的大小写打错的话也会切换成功  
+  会切换到大小写错误的那个分支  
+  这时用`git branch`命令查看不到当前所在的分支
+
+
+
 ```git
-git branch 分支名
-git checkout 分支名
+git branch 分支名 // 新建分支
+git checkout 分支名 // 切换分支
 ```
 
 可以简写为`git checkout -b 分支名`
@@ -469,12 +551,27 @@ bbbb
 ##### 忽略文件已track文件
 
 > .gitignore文件只能忽略那些原来没有被track的文件，如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。
-那么解决方法就是先把本地缓存删除（改变成未track状态），然后再提交。 —— [引用自《福信富通GIT使用帮助》](https://git.fxft.net/fxft/help/src/master/README.md#gitignore%E6%96%87%E4%BB%B6%E7%9A%84%E4%BD%BF%E7%94%A8)
+那么解决方法就是先把本地缓存删除（改变成未track状态），然后再提交。 —— 引用自[《福信富通GIT使用帮助》](https://git.fxft.net/fxft/help/src/master/README.md#gitignore%E6%96%87%E4%BB%B6%E7%9A%84%E4%BD%BF%E7%94%A8)
 ```cmd
 git rm -r --cached . // `git rm -r --cached 文件或文件夹`
 git add -A
 git commit -m 'xxx'
 ```
+
+- 有一次输入`git rm -r --cached .`后报错了（电气符号库项目）  
+  报错如下：
+  
+  ```
+  error: the following files have staged content different from both the file and the HEAD:
+      samples/resource/lib/epgis画面工具demo.css
+      src/tool/getGraphicListInPolygon.js
+  (use -f to force removal)
+  ```
+  
+  猜测报错原因：不能在操作到一半的时候执行这个命令（操作到一半是指一部分内容已add而另一部分未add）
+  
+- 有一次输入`git rm --cached samples/resource/lib -r`后导致工作目录下的文件被删了  
+  具体情况在本笔记里搜索“git rm --cached XX”来查看
 
 
 
@@ -493,8 +590,16 @@ git commit -m 'xxx'
 
 - 不要使用windows自带记事本编辑文件  
   （可能是因为会把编码改为GBK）
+  
+  
+
+码云
+
 - 码云上多行commit信息的显示不好  
   一开始只会显示一行，要鼠标移上去一会才会显示全部内容
+- 有时候码云上邀请别人加入项目时被邀请人不会收到通知就会自动加入  
+  有的时候有通知，需要点击“同意”后才会加入  
+  目前2种情况的触发条件未知
 
 
 
