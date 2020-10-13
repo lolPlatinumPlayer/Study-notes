@@ -230,6 +230,10 @@ const json内容=JSON.parse(fs.readFileSync("./package.json"))
 
 ### 模块
 
+
+
+##### CommonJS 
+
 > 在 Node.js 模块系统中，每个文件都被视为一个独立的模块 —— [nodejs.cn](http://nodejs.cn/api/modules.html)
 
 一些未做的测试：
@@ -298,6 +302,18 @@ hello.world();
 ```
 
 `require(‘./hello’) `引入了当前目录下的` hello.js `文件（`./` 为当前目录，`node.js 默认后缀为 js`）
+
+
+
+
+
+##### es6模块
+
+应该是支持的，`mjs`后缀名的文件应该就是node es6模块专用的
+
+目前只粗略看了[这篇博文](https://www.jianshu.com/p/fa54a2e6e168)以及[阮一峰文章](http://www.ruanyifeng.com/blog/2020/08/how-nodejs-use-es6-module.html)
+
+
 
 
 

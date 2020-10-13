@@ -185,8 +185,9 @@ To push the current branch and set the remote as upstream, use
 - 只在暂存区里删除文件（不知道会不会在版本库里删掉）  
   `$ git rm --cached XX`  
   （实操过，还未深入研究文档）  
-  <span style='color:red'>虽然刚执行这个命令的时候被这个命令操作的文件还在，但是一次`checkout`其他分支再`merge`后就找不着这些文件了，再`checkout`回原分支也找不着</span>  
-  回退版本就可以找回这些“丢失”的文件
+  <span style='color:red'>虽然刚执行这个命令的时候被这个命令操作的文件还在，但是一次`checkout`其他分支再`merge`后就找不着这些文件了，再`checkout`回原分支也找不着。</span>  
+  回退版本就可以找回这些“丢失”的文件  
+  <span style='color:red'>但是一次关机开机（可能还有些其他操作）后这些黏贴回来的文件就又不见了</span>
 
 
 
