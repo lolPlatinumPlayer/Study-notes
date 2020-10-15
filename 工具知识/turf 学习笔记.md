@@ -211,7 +211,8 @@
 # 旋转
 
  `transformRotate`  
-是顺时针转的（官网说的“negative clockwise”可能是针对从地面往天上看的情况，毕竟说了“right-hand rule”）  
+天上往地下看是顺时针转的  
+（官网说的“negative clockwise”可能是针对从地面往天上看的情况，毕竟说了“right-hand rule”）  
 角度区间至少支持(-360,360)  
 
 - `mutate`选项  
@@ -228,6 +229,18 @@
 - 简化多边形 `simplify`
 - 移动
   - `lineOffset`
-  - `transformTranslate`
+  - `transformTranslate`  
+    旋转单位是角度（一圈是360那个）  
+    角度0时朝北，角度90朝东（中国内是这样）  
+  
+    - 但是不知道为什么下面的代码并不如预期  
+  
+      ```js
+      const temp1={"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[120,80]}}
+      turf.transformTranslate(temp1, 1000, 45).geometry.coordinates // [178.01631958267922, 86.35915527648773]
+      turf.transformTranslate(temp1, 1000, 90).geometry.coordinates // [171.7897956550686, 80]
+      ```
+  
+      
 - 缩放 `transformScale`
 - 求线条交点 `lineIntersect`

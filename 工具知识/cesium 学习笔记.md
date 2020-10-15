@@ -1,14 +1,19 @@
-## 学习进度
+### 学习
+
+**学习进度**
 
 - 下次从https://www.cesium.com/docs/tutorials/cesium-workshop/ 的Setup开始学
 - 连接webpack的教程学到[这](https://www.cesium.com/docs/tutorials/cesium-and-webpack/#manage-cesiumjs-static-files)之前  
   本地代码地址为：[地址](D:\learning_materials\cesium\code\cesium-webpack-app)
 
-## 学习上的记录
+**学习上的记录**
 
 - [最初教程](https://cesium.com/ion/stories?t=welcome)
+- 官网的学习资源蛮丰富的，不过都是教程，目前还没找到api文档（不过百度一搜就能搜到一堆）
 
-## 地形（terrain）
+
+
+### 地形（terrain）
 
 - **概念**  
   让地球表面有凹凸（没有地形的话就只是平面或曲面）
@@ -28,19 +33,27 @@
 
 
 
-## 代码项目
+### 代码项目
+
+
+
+##### 运行
 
 - 直接cdn引入就能写，且不需要token、帐号等额外的东西<b style='color:red'>？？？</b>  
+  可能可以参考[这个页面](https://www.cesium.com/docs/tutorials/quick-start/)
 
-  不使用帐号的例子（并不是上一行的例子，这两行是从2个思路得出的东西）
-
+- 不使用帐号的例子（并不是上一条的例子，这两条是从2个思路得出的东西）
   - 代码可以参考二开的commit id为7adcc4d57157078c1dfcd6f1587cd774b45f8a6b的commit，可能还有更早的例子，但不记得了
+
+
+
+
 
 - **关于多次初始化**  
   目前做法：用删dom作为退出操作，重新开始就从头执行一遍代码  
   目前做法的测试结果：多次『退出进入』后一切正常，cpu也不会多用，但内存可能会稍微多占一些
 
-## 资源上传（My Assets）
+### 资源上传（My Assets）
 
 资源传完就能在代码里通过id来用了
 
@@ -66,7 +79,7 @@
     用如下语法引入  
     `Cesium.IonResource.fromAssetId(资源的id)`
 
-## Story
+### Story
 
 可以加模型、地图等内容。  
 可以发布为一个网址，发布后也可以继续修改，也可以选择关闭  
@@ -89,7 +102,7 @@
   - **右上角**  
     ![cesium-展示页面-右上角](..\图片\cesium-展示页面-右上角.PNG)
 
-## 下方仪表盘和时间轴
+### 下方仪表盘和时间轴
 
 用来控制时间的
 
@@ -102,7 +115,7 @@
 - **时间轴**  
   拖动手柄以选择到哪个时间
 
-## 相关文件格式
+### 相关文件格式
 
 - **KML**（Keyhole Markup Language）  
   Keyhole公司开发并维护的XML语言（Keyhole是谷歌旗下的）  
@@ -130,4 +143,34 @@
   
   - 似乎用json就可以写CZML了  
     看[这个例子](http://zgeo.work/cesiumTx/examples/editor.html#czml_box)
+
+
+
+### 未归类
+
+- 生成物体  
+
+  - 二开项目  
+
+    ```js
+    var 物体 = Cesium.CzmlDataSource.load(czml)
+    “Cesium.Viewer实例”.dataSources.add(物体)
+    ```
+
+    
+
+  - 无人机项目  
+    代码层级有点深，不好找
+
+- 镜头  
+
+  - 设为“自由镜头”模式  
+    `“Cesium.Viewer实例”.trackedEntity=null`
+  - 将镜头瞬移到物体上  
+    `“Cesium.Viewer实例”.zoomTo(物体)`
+  - 将镜头缓动到物体上  
+    `“Cesium.Viewer实例”.flyTo(物体)`
+  - 将镜头“锁定”在物体上  
+    `“Cesium.Viewer实例”.trackedEntity=物体`  
+    【】无人机项目里是这样写，但是这条的“物体”可能不是上面几条里提到的物体
 
