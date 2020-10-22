@@ -2,6 +2,18 @@
 
 # DOM
 
+### 获得dom
+
+- 获得dom子代  
+
+  > - `dom.children`  
+  >   获取元素节点，浏览器表现相同
+  > - `dom.childNodes`  
+  >   IE：只获取元素节点  
+  >   非IE：获取元素节点与文本节点
+  >
+  > —— [博客](https://www.cnblogs.com/ilovexiaoming/p/6853176.html)
+
 ### dom的属性操作
 
 - 获得dom的属性值  
@@ -31,6 +43,9 @@
 - [`classList`](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/classList)  
   兼容性不完美  
   mdn里没写api，不过api看[示例](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/classList#%E7%A4%BA%E4%BE%8B)就能了解了
+  - `replace(被替换类,新增类)`  
+    替换，如果dom上没有`被替换类`的话，`新增类`也不会被加进去  
+    老婆说这个方法兼容性不好
 
 控制css
 
@@ -81,4 +96,6 @@ ie5支持js中的中文
   </html>
   ```
 
+  ### 模块
   
+  - 浏览器的模块里路径的".js"不能省略

@@ -29,8 +29,7 @@ ie也可以改变滚动条样式，不过仅限于颜色
   - 电气符号库与GeoGL的鉴权服务就用了插入标签来执行js的方法
   - css  
     吉奥这有人用这种方式使css生效（个人未做详细测试）
-
-
+- [预加载](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Preloading_content)
 
 
 

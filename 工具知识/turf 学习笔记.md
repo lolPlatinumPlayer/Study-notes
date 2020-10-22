@@ -223,24 +223,45 @@
 
 
 
+# 移动
+
+- `lineOffset`
+
+- `transformTranslate`  
+  输入geojson  
+  旋转单位是角度（一圈是360那个）  
+天上往下看是顺时针转（中国内是：角度0时朝北，角度90朝东）  
+  
+- 但是不知道为什么下面的代码并不如预期  
+  
+    ```js
+    const temp1={"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[120,80]}}
+    turf.transformTranslate(temp1, 1000, 45).geometry.coordinates // [178.01631958267922, 86.35915527648773]
+    turf.transformTranslate(temp1, 1000, 90).geometry.coordinates // [171.7897956550686, 80]
+  ```
+  
+  
+  - bug：  
+    距离输入负数会导致计算结果错误，错误的结果五花八门  
+    角度为0时，负数距离的结果和正数是一致的；不为0时结果的旋转角度又和输入旋转角度大约有90°夹角
+
+# 测量
+
+### 测量2点间的夹角
+
+`turf.bearing(第一个点, 第二个点)`返回第一个点到第二个点的方向
+
+旋转单位是角度（一圈是360那个）  
+天上往下看是顺时针转（中国内是：角度0时朝北，角度90朝东）  
+区间是$(-180,180]$（包不包含-180未测，180是肯定包含的）
+
+
+
+
+
 # 其他（简易）方法
 
 - 取出2个多边形中重合部分 `intersect`
 - 简化多边形 `simplify`
-- 移动
-  - `lineOffset`
-  - `transformTranslate`  
-    旋转单位是角度（一圈是360那个）  
-    角度0时朝北，角度90朝东（中国内是这样）  
-  
-    - 但是不知道为什么下面的代码并不如预期  
-  
-      ```js
-      const temp1={"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[120,80]}}
-      turf.transformTranslate(temp1, 1000, 45).geometry.coordinates // [178.01631958267922, 86.35915527648773]
-      turf.transformTranslate(temp1, 1000, 90).geometry.coordinates // [171.7897956550686, 80]
-      ```
-  
-      
 - 缩放 `transformScale`
 - 求线条交点 `lineIntersect`

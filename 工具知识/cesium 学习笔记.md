@@ -173,4 +173,14 @@
   - 将镜头“锁定”在物体上  
     `“Cesium.Viewer实例”.trackedEntity=物体`  
     【】无人机项目里是这样写，但是这条的“物体”可能不是上面几条里提到的物体
+  
+- 旋转单位是角度（一圈是360那个）
+  天上往下看是顺时针转（中国内是：角度0时朝北，角度90朝东）
+  
+- cz（canvas）容器的祖先的display为none时加载完毕的事件不会触发  
+
+  - 监听事件的代码为：  
+    `“Cesium.Viewer实例”.scene.globe.tileLoadProgressEvent.addEventListener(函数)`
+  - 规避方法为：  
+    祖先高度设0，overflow设hidden
 

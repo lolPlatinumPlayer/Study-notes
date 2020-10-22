@@ -86,32 +86,9 @@
 
 
 
-### 可在控制台直接操作
-如“app2.message = '新消息'”，app2为用new Vue()新建的对象
-
-
 ### 缩写
 `<a v-bind:href="url"></a>` 缩写-> `<a :href="url"></a>`
 `<a v-on:click="doSomething"></a>` 缩写-> `<a @click="doSomething"></a>`
-
-
-### this
-实例中this会代理data、computed、method
-可以用于钩子、method、computed中
-this就代表实例本身（也就是说可以在外部查看data等信息、调用method等方法）
-
-
-### 实例的生命周期钩子（函数）
-![](..\图片\vue\vue-lifecycle.png)作为方法写在实例中（也就是）new Vue({})中，例子：
-```
-mounted: function () {
-    this.show = false
-}
-```
-- mounted中的函数在这个实例一切准备好也渲染好之后执行。
-- updated：data变更时调用*【】未实测、未测试prop改变的情况、未测试data变而视图不变的情况*
-- 疑似bug：mounted中如果引用methods中函数前有语句的话，会报错
-          解决方法：在这些函数后面加上分号“;”
 
 
 
@@ -654,15 +631,6 @@ methods: {
     }
 }
 
-
-##### `v-for`中的`ref`
-- 找到 v-for中有ref的组件 的方法：
-  `this.$refs.ref值[序号]`
-  这里序号指的是：如果想要定位到的组件在拥有这个ref值的组件中排第n个，序号就是n-1
-- 这种情况ref可以用动态生成，不过动态生成后找到组件的方法还是和上一条一致
-
-
-
 # 组件
 
 
@@ -744,6 +712,68 @@ src 导入要遵循和require() 调用一样的路径解析规则，这就是说
 </table>
 ```
 这样组件就能在table标签中显示了  
+
+
+
+### 组件实例
+
+##### this
+
+实例中this会代理data、computed、method
+可以用于钩子、method、computed中
+this就代表实例本身，也就是说：<b style='color:red'>实例对象===实例内的`this`</b>
+
+
+
+- 获取到指定的vue组件实例的方法  
+  - `this.$parent`
+  - `this.$children`
+  - `this.$refs`
+- 实例名.$el.textContent = 该实例dom里所有文本内容   
+  ？？？
+
+
+
+##### `this.$refs`
+
+可以用于普通dom也可用于vue组件实例
+
+- 普通dom  
+  获取到的就是dom  
+  注意：如果对dom使用了v-if，if值如果刚设为true，那这时dom其实是不存在的。`this.$nextTick`中才会存在
+- vue组件实例  
+  操作方式：在子组件html标签中写 “ref='a'” ，再通过`this.$refs.a`获取到组件实例  
+  `this.$refs`在mounted中获取不到，要加个`this.$nextTick(() => {})`才行  
+  但是一次测试中是可以的。环境：无人机项目，一个后期通过路由导航到的页面，这页面的mounted里用`this.$refs.`可以立即获取到内容
+
+
+
+##### `v-for`中的`ref`
+
+- 找到 v-for中有ref的组件 的方法：
+  `this.$refs.ref值[序号]`
+  这里序号指的是：如果想要定位到的组件在拥有这个ref值的组件中排第n个，序号就是n-1
+- 这种情况ref可以用动态生成，不过动态生成后找到组件的方法还是和上一条一致
+
+
+
+
+##### 生命周期钩子（函数）
+
+![](..\图片\vue\vue-lifecycle.png)作为方法写在实例中（也就是）new Vue({})中，例子：
+
+```
+mounted: function () {
+    this.show = false
+}
+```
+
+- mounted中的函数在这个实例一切准备好也渲染好之后执行。
+- updated：data变更时调用*【】未实测、未测试prop改变的情况、未测试data变而视图不变的情况*
+- 疑似bug：mounted中如果引用methods中函数前有语句的话，会报错
+      解决方法：在这些函数后面加上分号“;”
+
+
 
 
 
@@ -911,29 +941,6 @@ https://cn.vuejs.org/v2/guide/components.html#杂项
 （任何组件通信都可以靠以上两条来完成）
 
 
-##### `this.$parent`、`this.$children`与`this.$refs`
-这些方法可以获取到指定的vue组件实例
-
-**`this.$refs`**
-
-可以用于普通dom也可用于vue组件实例
-
-- 普通dom  
-  获取到的就是dom  
-  注意：如果对dom使用了v-if，if值如果刚设为true，那这时dom其实是不存在的。`this.$nextTick`中才会存在
-
-- vue组件实例  
-  操作方式：在子组件html标签中写 “ref='a'” ，再通过`this.$refs.a`获取到组件实例  
-  `this.$refs`在mounted中获取不到，要加个`this.$nextTick(() => {})`才行  
-  但是一次测试中是可以的。环境：无人机项目，一个后期通过路由导航到的页面，这页面的mounted里用`this.$refs.`可以立即获取到内容
-
-
-
-##### 实例名.$el.textContent = 该实例dom里所有文本内容
-
-？？？
-
-
 
 # 周边工具
 
@@ -956,7 +963,7 @@ xml里组件名来源
 
 
 
-### vue-cli
+### vue-cli 3
 
 官方文档地址：https://cli.vuejs.org/zh/guide/
 
@@ -968,9 +975,24 @@ vue-cli含有模板：https://github.com/vuejs-templates
 
 
 
+
+
+- 未被使用的（css）类引用的图片也会被打包
+
+
+
+##### 配置
+
 vue.config.js的配置在官方是放到vue-cli的文档里的
 地址为：https://cli.vuejs.org/zh/config  
 里边内容是按照配置项来分的，比如`devServer`配置项的地址就是https://cli.vuejs.org/zh/config/#devserver
+
+- 是否给文件名增加随机字符串  
+  不加的话会导致使用同名图片时产生问题，因为多个同名图片只会有一个存在  
+  不加并不会导致source map出现问题，不论在同名vue文件还是js文件里打断点，出现位置都是正确的  
+  控制是否增加随机字符串的配置项是[filenameHashing](https://cli.vuejs.org/zh/config/#filenamehashing)
+
+
 
 
 
@@ -1083,6 +1105,45 @@ iview3组件的事件名真的和文档写的医院，都带`on-`
   - 使用模板  
     官方名称叫[slot-scope 写法](http://v3.iviewui.com/components/table#slot-scope_XF)  
     详细内容可以点 ↑↑↑ 链接去官网看
+  
+- 关于修改样式
+
+  - 边框  
+    iview3（其他版本没试过）的表格边框做的十分恶心，对于控制边框样式不建议用官方的border属性  
+    有以下示例代码供参考  
+
+    ```less
+    // 摘抄自无锡大屏项目
+      .ivu-table-wrapper{
+        overflow:unset; // 解决iview坑爹的边框若隐若现问题
+        &.use-border{
+          @borderColor:#0582b5;
+          border: 1px solid @borderColor;
+          .ivu-table{
+            &:before,&:after{
+              background-color: @borderColor;
+            }
+          }
+          border-bottom: 0;
+          border-right: 0;
+        }
+        &.dont-use-border{
+          border: none;
+          .ivu-table{
+            &:before,&:after{
+              display: none;
+            }
+          }
+        }
+        .ivu-table{
+          th,td{
+            border: none;
+          }
+        }
+      }
+    ```
+
+    不用这套样式的话就要面对令人难以接受的滚动条问题了
 
 
 
