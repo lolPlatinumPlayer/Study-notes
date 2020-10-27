@@ -47,6 +47,17 @@
     替换，如果dom上没有`被替换类`的话，`新增类`也不会被加进去  
     老婆说这个方法兼容性不好
 
+##### 控制内联样式
+
+`dom.style`是[CSSStyleDeclaration](https://developer.mozilla.org/zh-CN/docs/Web/API/CSSStyleDeclaration)的实例
+
+- 给样式属性赋值  
+  `dom.style.属性=属性值`
+- 移除样式属性  
+  `dom.style.removeProperty(属性)`
+- dom的style属性是可读可写的  
+  这就意味着：可以把一个dom的style赋值给另一个dom
+
 控制css
 
 - 听说直接修改style标签就可以，不过自己还未测试过

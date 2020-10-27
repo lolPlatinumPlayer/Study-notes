@@ -169,7 +169,7 @@ console.log({pixels,imageData})
 ```
 
 在无人机项目里看起来挺正常的  
-但是在《把webgl的canvas画到2d的上（失败）.html》里用这种方法获得的颜色是有偏差的  
+但是在《learnWebGL/把webgl的canvas画到2d的上（失败）.html》里用这种方法获得的颜色是有偏差的  
 （猜测得到的数据其实是准确的，而偏差是透明部分的叠加算法不一致导致的）
 
 注意：
@@ -186,6 +186,27 @@ console.log({pixels,imageData})
   `x`和`y`基本都是输入0，`width`和`height`写绘画的宽度与高度  
 - 获取目前视口的信息  
   `gl.getParameter(gl.VIEWPORT)`  
+
+
+
+
+
+## 其他
+
+
+
+#### 画面转图片
+
+- 转base64  
+  请查看《canvas及2d 学习笔记 .md》
+
+
+
+#### 与『canvas dom』尺寸相关的内容
+
+请查看《canvas及2d 学习笔记 .md》
+
+
 
 
 # 疑问点

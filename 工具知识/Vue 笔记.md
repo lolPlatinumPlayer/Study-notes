@@ -405,10 +405,11 @@ Vue对象中methods属性的 属性 可以匿名函数为值，在Mustache中输
 
 
 ### v-bind:a="b"
-在标签中插入以上内容让标签中显示出加入a属性，属性值为b的内容（b为data中的对象，b对象的值将作为标签中a属性的属性值）。a可以是html中原本不能显示的非法属性，加了v-bind后就能显示（看起来好像没什么用）。  
-若不加v-bind直接在标签中写a="b"，那么渲染后将原封不动如字符串一般展示出a="b"  
-若要只显示a属性不要属性值，可直接在标签中写a，无需加上v-bind。  
-b可以是一个三元表达式，以此选择出现的属性值  
+- 在标签中插入以上内容让标签中显示出加入a属性，属性值为b的内容（b为data中的对象，b对象的值将作为标签中a属性的属性值）
+- a可以是html中原本不能显示的非法属性，加了v-bind后就能显示（看起来好像没什么用）
+- 若不加v-bind直接在标签中写a="b"，那么渲染后将原封不动如字符串一般展示出a="b"  
+- 若要只显示a属性不要属性值，可直接在标签中写a，无需加上v-bind。  
+  b可以是一个三元表达式，以此选择出现的属性值  
 
 # 样式
 
@@ -634,6 +635,27 @@ methods: {
 # 组件
 
 
+
+### 组件与实例的生成
+
+按目前的理解，组件就是“实例的类”的一种形式，注册后就可以直接在模板里使用
+
+- 生成 实例的类  
+  [`Vue-extend`](https://cn.vuejs.org/v2/api/#Vue-extend)  
+  其实例的`$mount`方法应该是用来生成dom的，可以传入类似`'#id'`这样的方法来挂在到其他dom下，也可以不传  
+  生成的dom可以手动加入其他dom，具体看[博客](https://www.jianshu.com/p/b931abe383e3)
+- 生成 实例  
+  [`new Vue`](https://cn.vuejs.org/v2/guide/#%E5%A3%B0%E6%98%8E%E5%BC%8F%E6%B8%B2%E6%9F%93)
+
+目前还没找到方法：用js在实例中插入实例
+
+
+
+
+
+
+
+
 ### 组件注册
 用类的方式使用组件：[这个内容可能有助于“用类的方式使用组件”](https://cn.vuejs.org/v2/guide/typescript.html#%E5%9F%BA%E4%BA%8E%E7%B1%BB%E7%9A%84-Vue-%E7%BB%84%E4%BB%B6)
 
@@ -717,6 +739,8 @@ src 导入要遵循和require() 调用一样的路径解析规则，这就是说
 
 ### 组件实例
 
+
+
 ##### this
 
 实例中this会代理data、computed、method
@@ -727,8 +751,15 @@ this就代表实例本身，也就是说：<b style='color:red'>实例对象===�
 
 - 获取到指定的vue组件实例的方法  
   - `this.$parent`
-  - `this.$children`
+  
+  - `this.$children`  
+  
+    > `this.$children`的排序是不确定的，不建议使用 —— 郑涛
+  
   - `this.$refs`
+  
+  - 访问根实例  
+    `this.$root`
 - 实例名.$el.textContent = 该实例dom里所有文本内容   
   ？？？
 
@@ -993,6 +1024,28 @@ vue.config.js的配置在官方是放到vue-cli的文档里的
   控制是否增加随机字符串的配置项是[filenameHashing](https://cli.vuejs.org/zh/config/#filenamehashing)
 
 
+
+##### 命令
+
+- 编译完成自动打开页面  
+  在命令中加入` --open`即可达到该效果  
+  （完整命令如：`vue-cli-service serve --open`）
+
+
+
+##### 不同命令不同process.env.NODE_ENV的方法
+
+官方说明的地址是：[环境变量和模式](https://cli.vuejs.org/zh/guide/mode-and-env.html)
+
+1. 在项目最外层新建一个名为`.env.模式名`的文本文件
+2. 在文本文件里加上如下文本：  
+   `NODE_ENV=想要的NODE_ENV值`（`想要的NODE_ENV值`不需要加引号）
+3. 运行`vue-cli-service serve --mode 模式名`就可以用指定的`process.env.NODE_ENV`了  
+   打包时也用指定`process.env.NODE_ENV`的命令是`vue-cli-service build --mode 模式名`
+
+除了`NODE_ENV`以外还可有其他“环境变量”（不知道是不是叫“环境变量”）
+
+增加这些“环境变量”的方法和`NODE_ENV`的一致，不过“环境变量”名必须以`VUE_APP_`开头，不然不生效
 
 
 

@@ -1,5 +1,24 @@
 
+
+### 关于canvas尺寸
+
+- css可以控制canvas dom在视口里的尺寸  
+  但是无法控制canvas的可绘制像素  
+- 读取canvas的可绘制像素  
+  `dom.width`、`dom.height`
+- 设置canvas的可绘制像素的方法：  
+  - 在html标签上写width、height属性
+  - js上给dom的width、height赋值
+
+- <span style='color:red'>canvas的可绘制像素改变后会自动清空画布</span>  
+  2d上下文在各浏览器的表现都一致  
+  webgl上下文在chrome里和firefox里表现不一致  
+  chrome改变后会等比伸缩，下次绘制时才会把伸缩的内容清空
+
+
+
 ### 上下文对象
+
 `const ctx =canvas.getContext("2d")`
 
 所有的实际性内容都要从上下文对象里调用
@@ -7,11 +26,10 @@
 （猜测一个canvas标签只能用一个上下文）  
 第一次使用`getContext`方法时就确定了上下文（比如说第二次使用`getContext`方法时不管第二个参数怎么传，其实都是没什么卵用的）
 
-
 一个canvas只能`getContext`一种类型（2d、webgl、webgl2、bitmaprenderer）  
 后`getContext`其他类型的话只会返回`null`。
 
-### 矩形
+### 绘制矩形
 
 - 设置填充颜色  
 
@@ -73,20 +91,29 @@ ctx.stroke();
 
 ### 插入图像（用图片或canvas）
 
-canvas上下文的`drawImage`方法  
-最简demo：
+canvas上下文的`drawImage`方法
+
+插入图片的方法
 
 ```javascript
 var imageObj = new Image();
-imageObj.onload = function() {
-  context.drawImage(imageObj, 绘制起点x坐标, 绘制起点y坐标,绘制区域宽,绘制区域高);
-};
+imageObj.addEventListener('load',function () {
+  context.drawImage(imageObj, 绘制起点x坐标, 绘制起点y坐标,绘制区域宽,绘制区域高)
+})
 imageObj.src = 图片地址;
 ```
 
-- `drawImage`参数只有头三个是必填的
-- `drawImage`第一个参数不仅可以接收 Image 对象，也可以接收另一个`'2d'`上下文的 Canvas 对象。  
-  <span style='opacity:.5'>使用 Canvas 对象绘制的开销与使用 Image 对象的开销几乎一致</span>
+插入canvas的方法
+
+```js
+context.drawImage(canvas dom, 绘制起点x坐标, 绘制起点y坐标,绘制区域宽,绘制区域高)
+```
+
+- `drawImage`参数只有头三个是必填的（IE除外，IE的后2个也是必填）  
+  绘制区域宽高不填的话，绘制区域宽高就等于图像的宽高
+- 插入canvas  
+  `drawImage`第一个参数可以是自身的『canvas dom』  
+  <span style='opacity:.5'>使用『canvas dom』绘制的开销与使用 Image 对象的开销几乎一致</span>
 
 ### 画布操作
 
@@ -97,12 +124,6 @@ imageObj.src = 图片地址;
 ### 复制canvas
 
 `cloneNode`复制的canvas不会拥有原canvas的画面
-
-### 改变canvas尺寸
-
-直接给dom元素的width、height赋值就行  
-
-- 注意：canvas宽高改变后会自动清空画布
 
 
 
@@ -175,11 +196,28 @@ imageObj.src = 图片地址;
 
 
 
+### canvas转图像
+
+- 转base64  
+  `canvas.toDataURL()`  
+
+  - 让webgl也可用的方法  
+
+    1. 获得webgl上下文时传入`{preserveDrawingBuffer: true}`  
+       完整代码如下：  
+
+       ```js
+       const canvas = document.getElementById("canvas")
+       const gl = canvas.getContext("webgl", {
+         preserveDrawingBuffer: true
+       })
+       ```
+
+       
+
+
+
 ### 其他
-
-- 返回canvas转为图片后的base64代码  
-
-  `canvas.toDataURL()`
 
 - `canvas.getContext('2d').lineWidth`可以设置边框宽度，边框向内扩展，值是一边的2倍
 
