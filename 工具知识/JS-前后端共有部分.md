@@ -120,7 +120,8 @@ console.log('a[3]',a[3]) // undefined
    谁调用就是谁  
    比如`a.b()`调用者就是`a`  
    `c=a.b;c()`如果在最外层的话调用者就是`window`  
-<span style='opacity:.5'>要注意有些js方法是挂在`window`下面的，如：`setTimeout`、`setInterval`  </span>
+<span style='color:red'>要注意有些js方法是挂在`window`下面的，如：`setTimeout`、`setInterval`  </span>  
+   <span style='opacity:.5'>在对象字面量的方法里，setTimeout处写箭头函数，那this就会指向这个对象 </span>  
 1. 使用`new`的构造函数中  
    `this`代表这个构造函数创建的对象，初始值是`{} ` 
 1. 【】对象的方法居然可以用变量名调用自身，甚至用`const`声明的也一样。  
@@ -798,11 +799,15 @@ function(key, value) {
 - **用于数字类型时**  
   可以传一个参数来进行进制转换，可以把十进制转为指定进制的字符串  
 
-
 ## js的正则api
+
+
+
 ##### 表达正则
 
-- 写法基本都用`/表达式/`这种方法写，虽然`new RegExp(字符串格式表达式)`效果基本一致，不过后者操作起来有点麻烦
+写法基本都用`/表达式/`这种方法写，虽然`new RegExp(字符串格式表达式)`效果基本一致，不过后者操作起来有点麻烦
+
+
 
 ##### 方法
 
@@ -855,7 +860,7 @@ function(key, value) {
 - 匹配中文  
   php和js的匹配方法不一致，php不能用js的方法的原因是：PHP正则表达式中不支持下列 Perl 转义序列：\L, \l, \N, \P, \p, \U, \u, or \X  
   js不能用php的方法的原因未知  
-  js方法：`\u4e00-\u9fa5`  
+  js方法：`\u4e00-\u9fa5`（代码示例：`/[\u4e00-\u9fa5]/.test('dsac上次ds')`）  
   php方法：`\x80-\xff`  
 - `+`和`* `  
    `*`匹配重复任意次(可能是0次)，而 `+`则匹配重复1次或更多次。 ——https://mp.weixin.qq.com/s/nTXcPdrqW4H-g8baKlWXrw
@@ -1047,9 +1052,18 @@ API
 - 打印的话都是： 描述信息+几个错误的代码地址
   - `console.dir`的表现形式：
     和上一条差不多，但是地址是字符串的形式，并且点击后可以看见错误对象的属性
+  
 - 用任何方法把错误对象转为字符串，都只会留下字符串形式的错误描述信息（这些方法包括`JSON.stringify()`）
+
 - ECMA定义的六种默认错误类型应该就是js自动报错的全部情况
+
 - if语句块内似乎如果红色报错，则会进入下一个语句块
+
+其他内容
+
+- 可以给错误对象增加属性，但是`...错误对象`将得不到任何属性
+- 有一种报错似乎无法从控制台上抹除掉  
+  就是资源未找到的错误`404 (Not Found)`
 
 
 ## throw exception
@@ -1565,28 +1579,46 @@ Foo.bar() // hello
   如果不写取值函数，实例就不会拥有这个属性，不过还是可以给这个属性赋值  
 
 ## Promise
+
 `Promise`对象是一个构造函数
 
-`resolve`和`reject`都只能有一个实参，多了在`then`里也不会体现出来  
+- 回调如果是普通函数的话，this指向将和外层的不同  
+  【】哪个回调？
 
-`promise.then(fn)`返回的还会是一个promise  
-（似乎是真的？）
+- 如果`promise`执行完毕的话，`promise.then`里的`return`值就是`promise.then`的值   
+  【】？？？
 
-`reslove`是异步执行的
+- 似乎无法用js获得`promise`的状态，只能在控制台获得  
 
-- 实例化`Promise`时传入的回调都是同步执行的    
+回调
+
+- 实例化`Promise`时传入的回调  
+  这个回调是同步执行的    
   包括其中的『异步代码』以及『reslove之后的代码』，都和在promise外的表现是一致的
-- 回调如果是普通函数的话，this指向将和外层的不同
 
-如果`promise`执行完毕的话，`promise.then`里的`return`值就是`promise.then`的值  
-似乎无法用js获得`promise`的状态，只能在控制台获得  
+  - `resolve`和`reject`都只能有一个实参，多了在`then`里也不会体现出来  
+  - `reject`  
+    - 调用`reject`会导致控制台红色报错  
+      如果reject的实参不是错误对象的话报错如下：  
+      `Uncaught (in promise) reject的实参`
+    - `reject`触发的catch中的回调或者then里的onRejected里会获得传给`reject`的参数
 
-- then（来源于Promise，以下都是个人猜测，未经验证）
+- then  
+
+  - > 即使是一个已经变成 resolve 状态的 Promise，传递给 `then()` 的函数也总是会被异步调用 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E6%97%B6%E5%BA%8F)
+
+  - `promise.then(fn)`返回的还会是一个promise  
+    （似乎是真的？）[这个MDN页面](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8)有相关描述
+
+  
+
+  （以下都是个人猜测，未经验证）  
   then解决了两个问题
+
   - 如果要一个函数运行后获取其计算出的值，再对这个值进行操作。
     - 无then的情况：就要多一层嵌套，而且代码也要多一行以上
     - 可以让**计算出这个值后的语句**对**再之后的语句**行成异步，可以缩短部分运算时间
-  - 语法
+  - 语法  
     `promise对象.then(onCompleted, onRejected)`
     - onCompleted
       必需。`resolve`就是执行这个函数
@@ -1594,12 +1626,59 @@ Foo.bar() // hello
       可选。`reject`就是执行这个函数
     【】测试加载图片的异步功能能不能用高阶函数代替promise实现
 
-**未归类**
+- catch  
 
-- promise就算已经reslove，`then`的回调也是异步执行的
-- 【】finally方法待了解，至少可以避免then与catch的重复代码
+  > `catch(failureCallback)` 是 `then(null, failureCallback)` 的缩略形式 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises)
 
-## Promise相关可行的例子
+  - 多个`then`后跟一个`catch`  
+    [这个MDN页面](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E9%94%99%E8%AF%AF%E4%BC%A0%E9%80%92)似乎说『多个`then`后跟一个`catch`』就相当于如下代码  
+
+    ```js
+    async function foo() {
+      try {
+        const result = await doSomething();
+        const newResult = await doSomethingElse(result);
+        const finalResult = await doThirdThing(newResult);
+        console.log(`Got the final result: ${finalResult}`);
+      } catch(error) {
+        failureCallback(error);
+      }
+    }
+    ```
+
+    
+
+- finally  
+  【】待了解，至少可以避免then与catch的重复代码
+
+
+
+关于错误
+
+- 传入Promise构造函数的回调的代码如果报错的话，是会触发onRejected和finally的，onRejected的话返回一个错误对象  
+  catch与then的onRejected得到的错误对象是全等的
+  - 一种嵌套promise时会导致catch无法捕获的情况  
+    传入Promise构造函数的回调里新建了一个promise  
+    并且调用了新建promise的then方法，但是传入then方法的回调的代码报错  
+    这时候最外层的promise是捕获不到这个错误的
+- 传入then的回调里的代码如果报错的话  
+  - 后面没有catch的话控制台直接报错
+  - 后面有catch的话控制台不会报错  
+    传入catch的回调会被触发
+
+
+
+其他
+
+- MDN似乎说promise不要嵌套使用，不过这部分并没有看得很理解  
+  MDN的相关说明见[这里](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E5%B5%8C%E5%A5%97)以及它之后的[这里](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF)
+
+
+
+## Promise相关可行的例子（大多和await/async有关）
+
+【】这部分笔记待整理
+
 1. ```javascript
    const go= new Promise((resolve, reject) => {
    setTimeout(resolve, 555, 'done') // setTimeout改成await也可以
@@ -1701,6 +1780,12 @@ Foo.bar() // hello
   【】不过每个子项彼此间似乎都是异步的，所以执行完毕的时间并不是按顺序来的
 
 （不用Promise.all不进入回调地域似乎无法做出Promise.all的功能）
+
+## Promise.race
+
+> 其他和Promise.all一样，不同的是只要有一个promise解决或拒绝，合成的promise就会解决或拒绝
+>
+> —— [SF博客](https://segmentfault.com/a/1190000020034361)
 
 
 ## fetch

@@ -1,6 +1,12 @@
 # 待研究
 
 - created里执行的函数的this是undefined
+- vue组件mounted的时候居然可以获取到其模板里的dom？
+  一开始就访问带这个组件的路由也可以获取到
+- 在method里调用函数，函数的this居然不是组件实例？
+  中间加一层this.$nextTick的话this就是组件实例了
+
+
 
 
 
@@ -801,8 +807,11 @@ mounted: function () {
 
 - mounted中的函数在这个实例一切准备好也渲染好之后执行。
 - updated：data变更时调用*【】未实测、未测试prop改变的情况、未测试data变而视图不变的情况*
-- 疑似bug：mounted中如果引用methods中函数前有语句的话，会报错
-      解决方法：在这些函数后面加上分号“;”
+- 疑似bug：mounted中如果引用methods中函数前有语句的话，会报错  
+  解决方法：在这些函数后面加上分号“;”
+- 销毁钩子与`this.$refs`  
+  `beforeDestroy`里`this.$refs`是正常的  
+  到了`destroyed`里`this.$refs`的各项就都为`undefined`了
 
 
 
@@ -1079,7 +1088,7 @@ vue.config.js的配置在官方是放到vue-cli的文档里的
       ]
   }
   ```
-  一条验证规则可以有的属性：type、required、message等，其中message可以是jsx
+  一条验证规则可以有的属性：type、required、message等，其中message可以是jsx  
   在async-validator里（网址是：https://github.com/yiminghe/async-validator）  
   说到某个属性在不同类型下表现不同时，其实指的是**这一条验证规则**的type属性传入不同类型时这个类型的表现不同？？？在Element和async-validator文档里都没看到这句话
   
@@ -1214,3 +1223,10 @@ iview3组件的事件名真的和文档写的医院，都带`on-`
 一个用来做表单校验的库，被element与iview所依赖
 
 【】把element里的相关内容挪下来，iview中的表现和element里写的一致
+
+开篇就提了2个没用过的用法
+
+1. 验证函数传入validator属性  
+   验证函数为：`(rule, value) => value === 'muji'`
+2. 验证函数传入asyncValidator属性  
+   验证函数返回一个Promise，可以reslove也可以reject

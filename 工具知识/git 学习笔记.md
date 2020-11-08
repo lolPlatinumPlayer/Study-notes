@@ -467,33 +467,31 @@ bbbb
 
 **当本地库的代码跟远程库有冲突时**
 
-- <b style='color:gray'>如果pull时已经自动合并冲突的话</b>  
-会出现一些提示，包括以下字样
-  
-```
+- <b style='color:green'>如果pull时已经自动合并冲突的话</b>  
+  会出现一些提示，包括以下字样
+
+  ```
   Please enter a commit message to explain why this merge is necessary.
   especially if it merges an updated upstream into a topic branch.
-```
+  ```
 
-这时候有2个选择：
+  这时候有2个选择：
 
-- 输入commit信息  
-  
-  1. 按键盘字母 i 进入insert模式
-  
-  2. 输入commit信息（可以输入多行）
-  
-  3. 按键盘左上角"Esc"按钮
-  
-  4. 输入":wq"，然后按回车键
+  - 输入commit信息  
+    
+    1. 按键盘字母 i 进入insert模式
+    
+    2. 输入commit信息（可以输入多行）
+    
+    3. 按键盘左上角"Esc"按钮
+    
+    4. 输入":wq"，然后按回车键
   - 不自定义commit信息  
-    那就只做上文的第三、第四点即可  
+    那就只做上文的第3、第4点即可  
     不自定义commit信息的话git也会自动补充上commit信息
-  
-- <b style='color:gray'>如果pull后还有为合并冲突的话</b>  
+- <b style='color:green'>如果pull后还有未合并冲突的话</b>  
 那需要手动合并，操作步骤如下
-  
-1. 有冲突的部分会有如下字样  
+  1. 有冲突的部分会有如下字样  
   
      ```
      <<<<<<< HEAD
@@ -672,3 +670,19 @@ cd d:nospace/learngit
 学完https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013745374151782eb658c5a5ca454eaa451661275886c6000
 
 
+
+### git衍生内容学习笔记
+
+
+
+研究git对单项目免密方法
+
+
+感觉发件者获取公钥进行加密，收件者再用私钥解密这个模式没啥问题啊
+
+
+阮一峰博客阅读笔记http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html
+有几个问题：
+- 为什么还要再对数字签名进行私钥加密，整体都已经加密过了
+- hash函数是公开的吗
+- 苏珊要确认公钥是否正确只需要找鲍勃确认就行了啊
