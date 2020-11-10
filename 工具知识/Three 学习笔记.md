@@ -117,7 +117,7 @@ scene.add(cube); // 将对象加进场景中
   
   有时候只设置`renderOrder`就行
   
-- 具体分析看[文章](https://blog.csdn.net/qq_30100043/article/details/79737692)
+  - 具体分析看[文章](https://blog.csdn.net/qq_30100043/article/details/79737692)
 
 
 ## 材质
