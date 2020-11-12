@@ -125,7 +125,7 @@ Run -> Debug -> 随便点点
 
 
 
-猜测：Android Emulator是一个程序，而AVD是一个配置，确定了在这个程序上具体用哪个设备
+猜测：Android Emulator是一个程序，而AVD是一个配置，确定了在这个程序上具体模拟出怎样的设备
 
 
 
@@ -133,9 +133,21 @@ Run -> Debug -> 随便点点
 
 AVD（android virtual devices）
 
+> - AVD在电脑上有专用存储区域
+> - AVD 存储设备用户数据，如已安装的应用和设置以及模拟 SD 卡
+> - 可以用AVD Manager 擦除用户数据
+>
+> —— [google](https://developer.android.google.cn/studio/run/managing-avds#storage)
+
 ##### 安卓模拟器
 
 Android Emulator
+
+
+
+
+
+### [API级别](https://developer.android.google.cn/guide/topics/manifest/uses-sdk-element#ApiLevels)
 
 
 # 学习
@@ -145,7 +157,8 @@ Android Emulator
 待做事项
 
 - 更换AS及其他安卓内容的下载地址
-- 在手机上调试应用
+- 在手机上调试应用  
+  https://developer.android.google.cn/studio/run/oem-usb
 
 
 
