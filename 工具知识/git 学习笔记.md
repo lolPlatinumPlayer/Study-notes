@@ -25,7 +25,8 @@
           helper = store
   ```
 
-  
+- 输路径时如果路径中有空格的话  
+  路径要用单引号包起来  
 
 ### Git英文的专有名词
 
@@ -260,6 +261,12 @@ To push the current branch and set the remote as upstream, use
 
 `git log`
 
+- 只显示变动文件的文件名  
+  `git log --name-only`
+
+- 查看哪些commit有更改指定文件  
+  `git log 指定文件`
+
 
 
 **查看单项目里的命令历史**
@@ -416,12 +423,16 @@ git checkout 分支名 // 切换分支
 
 ##### <span style='color:red'>注意</span>
 
-合并过程中不要手动对文件进行多余的修改  
-比如说a文件没有冲突而b文件有冲突那你就不要去改a文件  
-不然就算你修复了冲突也无法提交  
-这时你输入`git status`会提示你冲突都解决了让你`commit`但是你`commit`又会提示你`fatal: cannot do a partial commit during a merge.`
+- 合并过程中不要手动对文件进行多余的修改  
 
-解决方式就是退到合并之前，重新合并
+  - 描述：  
+    比如说a文件没有冲突而b文件有冲突那你就不要去改a文件  
+    不然就算你修复了冲突也无法提交  
+    这时你输入`git status`会提示你冲突都解决了让你`commit`但是你`commit`又会提示你`fatal: cannot do a partial commit during a merge.`
+
+  - 误操作后的解决方式：  
+    退到合并之前，重新合并
+  - 不过有一次Study-notes项目误操作后可以正常提交
 
 
 
@@ -466,6 +477,8 @@ bbbb
 
 
 **当本地库的代码跟远程库有冲突时**
+
+【】这条下所有内容对于普通的分支合并也适用
 
 - <b style='color:green'>如果pull时已经自动合并冲突的话</b>  
   会出现一些提示，包括以下字样
@@ -512,7 +525,6 @@ bbbb
 `git checkout -- 文件名`  
 `--`可以省略  
 可以输入多个文件，文件间用空格隔开  
-文件名中有空格的话文件要用单引号包起来  
 文件名处可以改成`.`来选择所有文件  
 **文件在已追踪未add状态下可以**  
 未追踪或已add都不行

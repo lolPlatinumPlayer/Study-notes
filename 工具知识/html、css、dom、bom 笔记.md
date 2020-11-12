@@ -99,6 +99,46 @@
 
 
 
+### iframe通信
+
+获取对方的`window`是通信的基础，并且有了`window`基本就可以为所欲为了（可以进行dom调整、调用方法等操作）
+
+- 获取iframe元素`window`的方法：  
+  `iframe元素.contentWindow`
+- iframe元素获取祖先页面`window`的方法：  
+
+  > - [`window.parent`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/parent)返回当前窗口的直接父对象
+  > - [`window.top`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/top)返回最顶层的窗口对象
+  >
+  > —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/parent#See_also)
+
+
+
+[**postMessage**](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage)
+
+当然，在获得`window`后也可以选择用`postMessage`进行通信
+
+具体代码如下：
+
+1. 增加事件监听  
+
+   ```js
+   window.addEventListener("message", e=> {
+     console.log(e)
+   })
+   ```
+
+2. 触发事件  
+   `另一个页面的window对象.postMessage(数据,'*')`
+
+[postMessage](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage)上有`postMessage`的进一步资料
+
+
+
+
+
+
+
 ### 其他
 
 - 找到元素的父元素：  

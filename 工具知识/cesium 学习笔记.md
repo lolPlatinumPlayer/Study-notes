@@ -294,6 +294,19 @@ var pointEntity = viewer.entities.add({
 
 
 
+### 鼠标事件
+
+[事件处理器](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.htm)上有[增](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#setInputAction)、[减](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)监听函数等方法
+
+一个事件处理器实例：`viewer.cesiumWidget.screenSpaceEventHandler`
+
+监听函数（action）的唯一参数是cz封装的鼠标事件对象
+
+- 鼠标事件对象  
+  应该都只有`position`、`startPosition`、`endPosition`这种属性
+
+
+
 ### 其他
 
 
@@ -318,6 +331,18 @@ var pointEntity = viewer.entities.add({
   - 参数4：『相机与物体间的距离』>=参数3 时倍数的值
 
 - 『相机与物体间的距离』处于响应的极限值之间时，倍数会依据『参数2』、『参数4』进行补间
+
+
+
+##### 地球
+
+可以通过`viewer.scene.globe`获得
+
+官方文档为：[这个](https://cesium.com/docs/cesiumjs-ref-doc/Globe.html)
+
+构造函数只有1个入参：`Ellipsoid`实例
+
+入参会被存到`this._ellipsoid`和`this.ellipsoid`上
 
 
 
