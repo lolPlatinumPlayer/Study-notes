@@ -10,9 +10,13 @@
     - electron
     - windows
 
-- 前置条件
-  - android  
-    - Android SDK
+- 开发指定平台的前置条件  
+  除了bowser以外都有前置条件  
+  - 检查是否拥有前置条件  
+    `cordova requirements`
+  - 各平台的前置条件
+    - android  
+      - Android SDK
 
 
 
