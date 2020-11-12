@@ -156,7 +156,7 @@ gl.uniform2f( // 给某个uniform赋值
 
 ## 获得像素信息
 
-下面这个方法可以获得上下镜像的像素信息
+下面这段代码可以获得上下镜像的像素信息
 
 ```js
 const gl=canvas.getContext('webgl',{preserveDrawingBuffer:true}) // 要注意第一次getContext时preserveDrawingBuffer就要是true
@@ -195,6 +195,13 @@ console.log({pixels,imageData})
 
 
 
+- 如果要生成新的图像，最好新建一个canvas去做，而不是接着原有canvas去做  
+  比如无人机项目里就曾经翻车，在《无人机项目笔记.md》搜索“有时拍照有问题”可以看到具体内容
+
+
+
+
+
 #### 画面转图片
 
 - 转base64  
@@ -205,6 +212,16 @@ console.log({pixels,imageData})
 #### 与『canvas dom』尺寸相关的内容
 
 请查看《canvas及2d 学习笔记 .md》
+
+
+
+#### 容器的操作
+
+mapbox/geogl与cesium可以把dom移除掉后期再添加，程序可以正常运作
+
+
+
+
 
 
 
