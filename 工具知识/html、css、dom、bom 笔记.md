@@ -48,12 +48,7 @@
   >
   > —— [博客](https://www.cnblogs.com/ilovexiaoming/p/6853176.html)
 
-### dom的属性操作
 
-- 获得dom的属性值  
-  `dom.getAttribute(字符串属性名)`
-- 设置dom的id  
-  `dom.id=id值`
 
 ### 在文档上增减dom
 
@@ -67,6 +62,21 @@
 
 - `dom.remove()`
 - `dom的父元素.removeChild(dom)`
+
+
+
+### dom的属性操作
+
+- 获得dom的属性值  
+  `dom.getAttribute(字符串属性名)`
+- 设置dom的id  
+  `dom.id=id值`
+
+
+
+### 获得dom的其他信息
+
+- [返回元素的大小及其相对于视口的位置](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/getBoundingClientRect)  
 
 
 
@@ -144,7 +154,36 @@
 - 找到元素的父元素：  
   `dom.parentElement`
 
-  
+
+
+
+# 事件
+
+### 鼠标事件对象
+
+- 点到border是会触发事件的
+
+
+
+**坐标**
+
+以下内容目前只在chrome上测试过
+
+- `offsetX`与`offsetY`  
+  代表相对于dom真正内容区域左上角的坐标  
+  （上一行说的“真正内容区域”不包含border）  
+  点到左上角第一个像素的的话坐标是`0,0`
+- `clientX`与`clientY`  
+  相对于html的坐标（带滚动条的情况未测试）
+
+
+
+**事件相关dom**
+
+- 获取鼠标交互到的元素  
+  `target`属性
+
+
 
 # 其他
 

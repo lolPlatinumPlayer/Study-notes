@@ -1,4 +1,4 @@
-【】需要整理，不方便查阅
+【】需要整理，目前可读性还有很大提升空间
 
 ## 杂项
 
@@ -157,6 +157,9 @@ router.beforeEach((to, from, next) => {
         ...
     }//这个if在new VueRouter的scrollBehavior属性中同样适用
 }// requiresId 在路由的meta中存在、有值且值不为判断为‘非’的值，例子中if判断会返回true，其余情况返回false
+
+- 设置各路由的title（这个title指的是浏览器标签页的名称，也就是html的title标签设置的那个东西）  
+  `meta.title`的值就是各路由的title
 
 ## 路由动效
 可以整体设、单个路由设置、根据'$route' (to, from)设置

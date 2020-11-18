@@ -24,8 +24,7 @@
 
 构建vue项目可以用到的内容
 
-- vue-cli  
-  全局安装命令是：`npm install -g @vue/cli`
+- vue-cli
 - vue-loader  
   webpack的loader，提供单文件组件支持
 - `npm install vue`
@@ -982,6 +981,16 @@ https://cn.vuejs.org/v2/guide/components.html#杂项
 
 
 
+# 其他
+
+
+
+### `vue.config.js`
+
+[官方的配置文档](https://cli.vuejs.org/zh/config)
+
+
+
 # 周边工具
 
 
@@ -998,63 +1007,6 @@ xml里组件名来源
   那么`path`去掉`/`后首字母大写，就会是组件名  
   （部分情况下这条不会生效）
 - 还找不到名字的话就会叫`Anonymous`
-
-
-
-
-
-### vue-cli 3
-
-官方文档地址：https://cli.vuejs.org/zh/guide/
-
-
-vue-cli含有模板：https://github.com/vuejs-templates
-
-命令进行中可以取消掉重新使用，能解决部分问题，如以下命令：
-“vue init webpack-simple foo”
-
-
-
-
-
-- 未被使用的（css）类引用的图片也会被打包
-
-
-
-##### 配置
-
-vue.config.js的配置在官方是放到vue-cli的文档里的
-地址为：https://cli.vuejs.org/zh/config  
-里边内容是按照配置项来分的，比如`devServer`配置项的地址就是https://cli.vuejs.org/zh/config/#devserver
-
-- 是否给文件名增加随机字符串  
-  不加的话会导致使用同名图片时产生问题，因为多个同名图片只会有一个存在  
-  不加并不会导致source map出现问题，不论在同名vue文件还是js文件里打断点，出现位置都是正确的  
-  控制是否增加随机字符串的配置项是[filenameHashing](https://cli.vuejs.org/zh/config/#filenamehashing)
-
-
-
-##### 命令
-
-- 编译完成自动打开页面  
-  在命令中加入` --open`即可达到该效果  
-  （完整命令如：`vue-cli-service serve --open`）
-
-
-
-##### 不同命令不同process.env.NODE_ENV的方法
-
-官方说明的地址是：[环境变量和模式](https://cli.vuejs.org/zh/guide/mode-and-env.html)
-
-1. 在项目最外层新建一个名为`.env.模式名`的文本文件
-2. 在文本文件里加上如下文本：  
-   `NODE_ENV=想要的NODE_ENV值`（`想要的NODE_ENV值`不需要加引号）
-3. 运行`vue-cli-service serve --mode 模式名`就可以用指定的`process.env.NODE_ENV`了  
-   打包时也用指定`process.env.NODE_ENV`的命令是`vue-cli-service build --mode 模式名`
-
-除了`NODE_ENV`以外还可有其他“环境变量”（不知道是不是叫“环境变量”）
-
-增加这些“环境变量”的方法和`NODE_ENV`的一致，不过“环境变量”名必须以`VUE_APP_`开头，不然不生效
 
 
 

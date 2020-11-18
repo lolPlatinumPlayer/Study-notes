@@ -2,9 +2,23 @@
 
 **学习进度**
 
-- 下次从https://www.cesium.com/docs/tutorials/cesium-workshop/ 的Setup开始学
+- 线路A  
+  下次从https://www.cesium.com/docs/tutorials/cesium-workshop/ 的Setup开始学
+- 线路B
+  - 先搞『卫星绕地球转的，卫星间要加个连线』
+    - 加模型
+    - 加图片
 - 连接webpack的教程学到[这](https://www.cesium.com/docs/tutorials/cesium-and-webpack/#manage-cesiumjs-static-files)之前  
   本地代码地址为：[地址](D:\learning_materials\cesium\code\cesium-webpack-app)
+
+
+
+**非重点待学内容**
+
+- 拖拽物体方法
+- 模型中心点查看方法
+
+
 
 **学习上的记录**
 
@@ -136,14 +150,39 @@
 有2种方法加入模型  
 返回的物体是由不同构造函数构造的
 
-- 方法一    
+- 方法一：加载模型文件
 
-  ```js
-  var 物体 = Cesium.CzmlDataSource.load(czml)
-  viewer.dataSources.add(物体)
-  ```
+  - ```js
+    var 物体 = Cesium.CzmlDataSource.load(czml)
+    viewer.dataSources.add(物体)
+    ```
 
-  改方法在二开项目中使用
+    该方法在[官方例子](https://sandcastle.cesium.com/index.html?src=CZML.html)及二开中使用
+
+  - ```js
+    a = Cesium.CzmlDataSource
+      .load("./resources/data/beidouⅢ.czml")
+    b = a.then(function (data) {
+      c = data
+      satellitesDatasource = data;
+      viewer.dataSources.add(data);
+    })
+    d = b.otherwise(function (data) {
+      console.log(data);
+    })
+    ```
+
+    天津北斗项目用的是该方法
+
+    - czml加载成功会调用`then`方法的回调  
+      失败会调用`otherwise`方法的回调
+
+    - c是`Cesium.CzmlDataSource`实例
+
+    - a、b、d都是`cz的Promise$1`实例  
+      但是彼此间是不相等的
+
+      
 
 - 方法二：流形式
 
@@ -215,6 +254,9 @@ var pointEntity = viewer.entities.add({
 
 **已学习过的图形如下**
 
+图形的`show`配置项都是用来设置是否显示的，`material`配置项都是用来设置材质的。  
+下面就不重复说明了
+
 - [圆](https://cesium.com/docs/cesiumjs-ref-doc/PointGraphics.html#.ConstructorOptions)  
 
   - 在Entity里对应的配置项是：`point`
@@ -238,65 +280,145 @@ var pointEntity = viewer.entities.add({
 
       
 
-- 立方体  
+- [立方体](https://cesium.com/docs/cesiumjs-ref-doc/BoxGraphics.html#.ConstructorOptions)  
 
   - 在Entity里对应的配置项是：`box`
 
-  - `box`的配置项  
+  - 立方体图形的配置项  
     （这里记录了所有配置项）
 
-    - 有完整填充的示例  
+    - 既有边框又有表面的示例  
 
       ```js
       {
-        dimensions: new Cesium.Cartesian3(宽度,厚度,高度),
+        dimensions: new Cesium.Cartesian3(
+          纬线方向的厚度,
+          经线方向的厚度,
+          高度
+        ),
         material: Cesium.Color.RED.withAlpha(不透明度),
-        outline: true,
+    outline: true,
         outlineColor: Cesium.Color.BLACK,
-      }
+  }
       ```
 
       
-
-    - 只有边框的示例  
-
+    
+    - 只有边框没有表面的示例  
+    
       ```js
       {
-        dimensions: new Cesium.Cartesian3(宽度,厚度,高度),
+        dimensions: new Cesium.Cartesian3(
+          纬线方向的厚度,
+      经线方向的厚度,
+          高度
+        ),
         fill: false,
-        outline: true,
+    outline: true,
         outlineColor: Cesium.Color.YELLOW.withAlpha(不透明度),
       }
       ```
-
-    - 设置`Cesium.Cartesian3.fromDegrees`方法第三个参数的意义  
-      代码中的名称为：`heightReference`  
-      可选值：
-
+    
+    - 定义“高度”的意义<span style='opacity:.5'>（这里“高度”指的是Entity的`position`配置项的`Cesium.Cartesian3.fromDegrees`方法的第三个参数）</span>  
+      定义方法：给`heightReference`配置项赋值  
+      `heightReference`配置项可选值：
+    
       1. 传统认知的海拔（和地形无关）  
          `Cesium.HeightReference.NONE`  
          这个是默认值  
-         立方体的锚点在中心
+     立方体的锚点在中心
       2. 让立方体固定在地形上  
          `Cesium.HeightReference.CLAMP_TO_GROUND`  
          这时第三个参数是失效的  
-         立方体的锚点在底面的中心
+     立方体的锚点在底面的中心
       3. 立方体高于地形的距离  
          `Cesium.HeightReference.RELATIVE_TO_GROUND`  
          立方体的锚点在底面的中心
-
+    
     - 投影  
       目前的尝试都是失败的  
       已经尝试过的方案：给`shadows`配置项设置了所有枚举值、半透明的、不透明的、边框的各种情况、加地形与不加的、实例化`viewer`时`shadows`与`terrainShadows`配置项的设与不设
-
+    
     - 允许显示物体时的镜头距物体的区间  
       配置项为`distanceDisplayCondition`，值为[DistanceDisplayCondition](https://cesium.com/docs/cesiumjs-ref-doc/DistanceDisplayCondition.html)实例
+
+- [椭球体](https://cesium.com/docs/cesiumjs-ref-doc/EllipsoidGraphics.html#.ConstructorOptions)
+
+  - 在Entity里对应的配置项是：`ellipsoid`
+
+  - 椭球体图形的配置项  
+    （这里记录的配置项并不全）
+
+    - 设置大小  
+      给`radii`配置项赋如下值：  
+
+      ```js
+      new Cesium.Cartesian3(
+        纬线方向上的半径, 
+        经线方向上的半径, 
+        垂直方向上的半径
+      )
+      ```
+
+    - 表面与边框  
+
+      - 操作方法  
+        和立方体的一致  
+        可以在本笔记内搜索 “既有边框又有表面的示例” 与 “只有边框没有表面的示例” 进行查看
+      - 边框线  
+        也就是“纬线”分段线与“经线”分段线
+
+    - 分段  
+      分段是依据“纬线”分段线与“经线”分段线进行分段的
+
+      - 控制“纬线”分段线数量  
+        控制方法：给`stackPartitions`配置项赋值  
+        最终数量=`stackPartitions`值-1
+      - 控制“经线”分段线数量  
+        控制方法：给`slicePartitions`配置项赋值  
+        最终数量=`slicePartitions`值  
+        注意：2条“经线”才会形成1个圆
+
+### collection
+
+（现在记录的都是猜测，没有深入了解过）
+
+collection目前是自己定义的一个概念，包括但不仅限于如下内容：
+
+- [PrimitiveCollection](https://cesium.com/docs/cesiumjs-ref-doc/PrimitiveCollection.html)
+- [BillboardCollection](https://cesium.com/docs/cesiumjs-ref-doc/BillboardCollection.html)
+- [LabelCollection](https://cesium.com/docs/cesiumjs-ref-doc/LabelCollection.html)
+
+
+
+诞生意义
+
+在图形数量大的时候提升性能
+
+
+
+操作方式
+
+1. 创建collection  
+   `var billboards = new Cesium.BillboardCollection()`
+2. 把collection加入场景  
+   `scene.primitives.add(billboards)`  
+   - 上面这个方法会返回入参
+   - `scene.primitives`本身就是一个[PrimitiveCollection](https://cesium.com/docs/cesiumjs-ref-doc/PrimitiveCollection.html)实例
+
+- 增加图形  
+  `collection.add`方法  
+  比如[BillboardCollection#add](https://cesium.com/docs/cesiumjs-ref-doc/BillboardCollection.html#add)
+
+
+
+
 
 
 
 ### 鼠标事件
 
-[事件处理器](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.htm)上有[增](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#setInputAction)、[减](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)监听函数等方法
+[事件处理器](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html)上有[增](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#setInputAction)、[减](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)监听函数等方法
 
 一个事件处理器实例：`viewer.cesiumWidget.screenSpaceEventHandler`
 
@@ -343,6 +465,14 @@ var pointEntity = viewer.entities.add({
 构造函数只有1个入参：`Ellipsoid`实例
 
 入参会被存到`this._ellipsoid`和`this.ellipsoid`上
+
+
+
+##### 坐标系转换
+
+可以看看[`Cesium.SceneTransforms`](https://cesium.com/docs/cesiumjs-ref-doc/SceneTransforms.htm)
+
+
 
 
 
@@ -482,7 +612,9 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
 - 路线一：运行jar文件  
   卡在了报错“没有主清单属性”
 - 路线二：按[官方说明](https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/Quick-Start#java-1)进行操作  
-  详细内容见[自己提的issue](https://github.com/AnalyticalGraphicsInc/czml-writer/issues/178)
+  详细内容见[自己提的issue](https://github.com/AnalyticalGraphicsInc/czml-writer/issues/178)  
+  官方人员回应：现在改用idea了，所以eclipse的方式不管用
+  
 
 
 

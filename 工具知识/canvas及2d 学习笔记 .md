@@ -29,6 +29,9 @@
 一个canvas只能`getContext`一种类型（2d、webgl、webgl2、bitmaprenderer）  
 后`getContext`其他类型的话只会返回`null`。
 
+- 上下文对象里存有canvas dom  
+  存在名为`canvas`的属性里
+
 ### 绘制矩形
 
 - 设置填充颜色  

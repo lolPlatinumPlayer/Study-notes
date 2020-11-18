@@ -2,14 +2,20 @@
 
 > “WebGL是使用JS来实现OpenGL ES 2.0” —— 《交互式计算机图形学  基于WebGL的自顶向下方法 （第七版）》
 
-笔记里只记关键部分，完整api查看mdn或者其他网站
+笔记里只记关键部分，完整内容请查看[mdn](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API)或者其他网站
 
-搞清楚我们用的是WebGL1.0还是2.0
+
+
+**版本**
 
 > - `"webgl"` (或`"experimental-webgl"`) 这将创建一个 [`WebGLRenderingContext`](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext) 三维渲染上下文对象。只在实现[WebGL](https://developer.mozilla.org/en-US/docs/Web/WebGL) 版本1(OpenGL ES 2.0)的浏览器上可用。
-> - "`webgl2`" (或 "`experimental-webgl2`") 这将创建一个 [`WebGL2RenderingContext`](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL2RenderingContext) 三维渲染上下文对象。只在实现 [WebGL](https://developer.mozilla.org/en-US/docs/Web/WebGL) 版本2 (OpenGL ES 3.0)的浏览器上可用。
+> - "`webgl2`" (或 "`experimental-webgl2`") 这将创建一个 [`WebGL2RenderingContext`](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL2RenderingContext) 三维渲染上下文对象。只在实现 [WebGL](https://developer.mozilla.org/en-US/docs/Web/WebGL) 版本2 (OpenGL ES 3.0)的浏览器上可用。<span style='opacity:.5'>（这是一个实验中的api，尽量不要在生产环境中使用）</span>
 >
 > —— [MDN canvas](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLCanvasElement/getContext#%E5%8F%82%E6%95%B0)
+
+> [WebGL 2](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API#WebGL_2) API引入了对大部分的OpenGL ES 3.0功能集的支持 —— [mdn webgl](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL_API)
+
+
 
 ## 上下文对象
 
@@ -28,7 +34,8 @@
 ## webGL清除色
 - **定义清除色 ** 
   `gl.clearColor(0.0, 0.0, 0.0, 1.0)`  
-  rgb的取值范围都是0到1。alpha可能也是，不过透明度并不是0到1之间均分  
+  rgb的取值范围都是0到1。alpha的可能也是，不过透明度并不是0到1之间均分的  
+  （似乎不定义清除色就使用清除色的话，就是用`rgba(0,0,0,0)`来清除。在开发`《learnWebGL/单色椒盐噪声.html》`时的经验）
 - **使用清除色**  
   `gl.clear(gl.COLOR_BUFFER_BIT)`  
 
@@ -51,8 +58,24 @@ gl.compileShader(着色器)
   gl.attachShader(着色器程序, 片段着色器)
   gl.linkProgram(着色器程序)
   ```
+  
 - 使用  
   `gl.useProgram(着色器程序)`    
+
+
+
+**使用多个着色器程序进行叠加绘制**
+
+- 后绘制的画面会盖住原有的画面  
+  会覆盖的部分是：后绘制的着色器程序中有上`gl_FragColor`的部分
+- 注意后绘制的着色器程序的attribute要用本笔记里的方法添加（2020.11.18）  
+  用其他方法可能画不出任何东西，比如如下的方法就画不出来：  
+  《learnWebGL/点击后绘制点.html》里的方法
+
+- 叠加绘制时后绘制的着色器程序没必要用先前着色器程序的canvas上下文  
+  自己再从canvas上`getContext`也是可以的
+
+
 
 
 ## 使用属性（attribute）
@@ -74,6 +97,16 @@ gl.vertexAttribPointer( 属性序号, size, gl.FLOAT, false, 0, 0)
 */
 gl.bufferData(gl.ARRAY_BUFFER, 强类型数据 , 使用方法);
 ```
+
+- 设置属性如何读取数据
+  - [`gl.vertexAttribPointer`](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/vertexAttribPointer)
+  - [`gl.vertexAttrib[1234]f[v]`](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/vertexAttrib)  
+    似乎用`vertexAttrib3f`就能给4维向量`gl_Position`赋值？  
+    例子为：《learnWebGL/椒盐噪声.html》
+- [`gl.bufferData(gl.ARRAY_BUFFER, 强类型数据, 使用方法)`](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/bufferData)  
+  - `使用方法`  
+    没有理解不同选值有什么用  
+    MDN上只是说这个属性描述了数据 是否经常被使用 以及 是否经常被更改
 
 ## 使用全局变量（uniform）
 
@@ -154,6 +187,47 @@ gl.uniform2f( // 给某个uniform赋值
 
 估计也是运行着色器的，不过暂时不研究
 
+
+
+## 使用图片
+
+**只用一张图**
+
+```js
+// 创建纹理
+var texture = gl.createTexture(); // 方法创建并初始化了一个可以被任何图像绑定的WebGLTexture目标
+gl.bindTexture(gl.TEXTURE_2D, texture);//把WebGLTexture目标绑定到『绑定点（目标）』（绑定点就是第一个实参）
+
+//--------设置纹理参数，让我们可以绘制任何尺寸的图像--------
+//将纹理设置为拉伸（应该是拉伸）
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+//缩小滤镜设为“最近”（应该是）//墓志未晚的值是gl.LINEAR（应该是线性的意思）
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+//放大滤镜设为“最近”（应该是）
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+// 将图像上传到纹理（第二个可能是清晰度，第三个和第四个相同，一般选用gl.RGBA或gl.RGB。图像有6种可以选择，包括canvas dom）
+// （webgl的dom想要能用这个api的话,获得上下文时第二个参数的preserveDrawingBuffer属性要设为true）
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+```
+
+写了上面的代码后，在着色器内就可以通过如下代码获取纹理：（已在片段着色器上测试过）  
+`uniform sampler2D u_image;`
+
+js中没有设置`u_image`却还能在着色器里访问的原因在[这页面](https://webglfundamentals.org/webgl/lessons/webgl-image-processing.html)里搜索“为什么`u_image`没有设置还能正常运行？”来进行了解
+
+
+
+**多张图片**
+
+可参考代码
+
+1. 《使用多个图片/使用多个图片.html》
+2. 《webgl-fundamentals/webgl/webgl-2-textures.html》
+
+
+
 ## 获得像素信息
 
 下面这段代码可以获得上下镜像的像素信息
@@ -197,6 +271,8 @@ console.log({pixels,imageData})
 
 - 如果要生成新的图像，最好新建一个canvas去做，而不是接着原有canvas去做  
   比如无人机项目里就曾经翻车，在《无人机项目笔记.md》搜索“有时拍照有问题”可以看到具体内容
+  
+  
 
 
 
@@ -221,12 +297,19 @@ mapbox/geogl与cesium可以把dom移除掉后期再添加，程序可以正常�
 
 
 
+# 学习
+
+当前有webgl代码的目录如下
+
+- learnWebGL
+- 综合性代码\4.28v_alpha(custom_layer)
 
 
 
 
 
-# 疑问点
+
+### 疑问点
 
 - 有多个`attribute`时绑定点（`gl.ARRAY_BUFFER`）够用吗
 - 坐标系

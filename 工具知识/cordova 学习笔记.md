@@ -94,6 +94,8 @@
 
 ### 使用真实设备运行
 
+似乎是要选择允许文件传输
+
 google有说明，但是如下2点的操作并不如预期
 
 > 1. 在Android Studio中，从工具栏的“运行/调试配置”下拉菜单中选择您的应用。
@@ -156,9 +158,10 @@ Android Emulator
 
 待做事项
 
-- 更换AS及其他安卓内容的下载地址
 - 在手机上调试应用  
-  https://developer.android.google.cn/studio/run/oem-usb
+  - https://developer.android.google.cn/studio/run/oem-usb#Win7
+  - [google给的华为驱动连接](https://consumer.huawei.com/en/support/)
+- 更换AS及其他安卓内容的下载地址
 
 
 
