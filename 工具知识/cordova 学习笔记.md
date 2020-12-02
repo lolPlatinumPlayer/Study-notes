@@ -63,94 +63,6 @@
 
 
 
-# 非cordova内容
-
-### android studio
-
-- 开启项目后gradle下半天的问题  
-  开系统翻墙也不好使  
-  - 解决方法：
-    1. 翻墙下好gradle的压缩包  
-       （比如gradle-6.5-bin.zip就是[这个地址](https://downloads.gradle-dn.com/distributions/gradle-6.5-bin.zip)）
-    2. 关掉AS
-    3. 找到类似`C:\Users\Administrator\.gradle\wrapper\dists\gradle-6.5-bin\6nifqtx7604sqp1q6g8wikw7p`这样的目录
-    4. 把类似`gradle-6.5-bin.zip.lck`和`gradle-6.5-bin.zip`的2个文件删掉
-    5. 放入下好的gradle压缩包
-    6. 开启AS
-    7. 剩下的AS会处理好，也会把压缩文件解压出来
-
-
-
-### 命令行
-
-- `android.BAT`  
-  以`“android sdk”绝对路径\tools\android.BAT`开头在命令行里可以执行一些命令  
-  - 查看可执行命令：  
-    执行`“android sdk”绝对路径\tools\android.BAT`来查看  
-  - 可执行命令示例：  
-    `D:\devtools\android\android_sdk\tools\android.BAT list target`
-
-
-
-### 使用真实设备运行
-
-似乎是要选择允许文件传输
-
-google有说明，但是如下2点的操作并不如预期
-
-> 1. 在Android Studio中，从工具栏的“运行/调试配置”下拉菜单中选择您的应用。
-> 2. 在工具栏中，从目标设备下拉菜单中选择要在其上运行应用程序的设备。
->
-> —— [google](https://developer.android.google.cn/training/basics/firstapp/running-app#RealDevice)
-
-
-
-### 模拟真实设备
-
-如果已经配置完毕的话，只要点击Run按钮（![toolbar-run](../图片/app开发/toolbar-run.png)）就可以模拟真实设备（要稍等一会才会开启）
-
-- 如果没有模拟成功  
-  1. 需要在Tools/AVD Manager里查看是否有可用的配置
-  2. 有的话，检查是否在下拉列表里选择了可用配置  
-     下拉列表如下：  
-     ![下拉列表](../图片/app开发/下拉列表.png)
-
-
-
-打开模拟设备的另一个方法：
-
-Run -> Debug -> 随便点点
-
-
-
-【】搞清楚下面2个东西的区别
-
-
-
-猜测：Android Emulator是一个程序，而AVD是一个配置，确定了在这个程序上具体模拟出怎样的设备
-
-
-
-##### 安卓虚拟设备
-
-AVD（android virtual devices）
-
-> - AVD在电脑上有专用存储区域
-> - AVD 存储设备用户数据，如已安装的应用和设置以及模拟 SD 卡
-> - 可以用AVD Manager 擦除用户数据
->
-> —— [google](https://developer.android.google.cn/studio/run/managing-avds#storage)
-
-##### 安卓模拟器
-
-Android Emulator
-
-
-
-
-
-### [API级别](https://developer.android.google.cn/guide/topics/manifest/uses-sdk-element#ApiLevels)
-
 
 # 学习
 
@@ -158,12 +70,9 @@ Android Emulator
 
 待做事项
 
-- 在手机上调试应用  
-  - https://developer.android.google.cn/studio/run/oem-usb#Win7
-  - [google给的华为驱动连接](https://consumer.huawei.com/en/support/)
+- 搞清Android Emulator和AVD的区别
+- 在手机上调试cordova app
 - 更换AS及其他安卓内容的下载地址
-
-
 
 
 
@@ -178,3 +87,4 @@ Android Emulator
 
 
 当前Android Studio和安卓的一些东西可能被弄乱了，已经搞不清了
+

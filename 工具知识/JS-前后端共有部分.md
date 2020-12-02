@@ -635,7 +635,7 @@ map似乎全面领先forEach。map可以return，而forEach不行，而且forEac
 
 ```js
 arr.reduce((之前计算的结果,currentVal)=>{
-  return （给下一项调用的）结果
+  return 结果 // 给下一项调用的结果
 })
 ```
 
