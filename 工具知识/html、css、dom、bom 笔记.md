@@ -255,6 +255,12 @@ ie5支持js中的中文
 - 取消某个元素的交互能力  
   `pointer-events: none;`
 
+### [flex](http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html)
+
+- flex可以对行内的子元素生效，但是子节点只有文本时，是无法作用于文本的
+
+
+
 ### 滚动条
 
 以下内容没有深入了解，并不保证100%正确

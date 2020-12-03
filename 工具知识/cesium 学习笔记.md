@@ -122,6 +122,15 @@
     destination: Cesium.Cartesian3.fromDegrees(经度,纬度,海拔)
   })
   ```
+  
+- 保存镜头位置信息，以便未来把镜头放到保存的位置
+
+  - 保存镜头位置信息  
+    `const a=viewer.camera.position.clone`
+  - 把镜头放到保存的位置  
+    `viewer.camera.flyTo({destination: a})`
+
+
 
 
 
@@ -152,38 +161,66 @@
 
 - 方法一：加载模型文件
 
-  - ```js
+  - `viewer.dataSources.add`简易版  
+    
+    ```js
     var 物体 = Cesium.CzmlDataSource.load(czml)
     viewer.dataSources.add(物体)
     ```
-
     该方法在[官方例子](https://sandcastle.cesium.com/index.html?src=CZML.html)及二开中使用
-
-  - ```js
+    
+  - `viewer.dataSources.add`详细版  
+    
+    ```js
     a = Cesium.CzmlDataSource
       .load("./resources/data/beidouⅢ.czml")
     b = a.then(function (data) {
       c = data
-      satellitesDatasource = data;
-      viewer.dataSources.add(data);
+      viewer.dataSources.add(data)
     })
     d = b.otherwise(function (data) {
-      console.log(data);
+      console.log(data)
     })
     ```
-
     天津北斗项目用的是该方法
-
     - czml加载成功会调用`then`方法的回调  
       失败会调用`otherwise`方法的回调
-
     - c是`Cesium.CzmlDataSource`实例
-
     - a、b、d都是`cz的Promise$1`实例  
       但是彼此间是不相等的
 
+  - [`Cesium.Model`](https://cesium.com/docs/cesiumjs-ref-doc/Model.html)方法  
+  
+    ```js
+    // 模型坐标
+    var origin = Cesium.Cartesian3.fromDegrees(经度,纬度,海拔)
+    var modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(origin)
+    
+    const model = scene.primitives.add(Cesium.Model.fromGltf({
+      url : /*地址*/,
+      show : true,
+      modelMatrix : modelMatrix,
+      scale : 2000.0, // 模型默认放大比例
+      color: Cesium.Color.ROYALBLUE,
       
-
+      /*给模型设置最小的像素值
+      （当模型按scale配置项放大不能满足需求时会自动放大）*/
+      minimumPixelSize : 128,
+      
+      /* 模型放大值的上限
+      （可以管住scale与minimumPixelSize配置项）*/
+      maximumScale: 200,
+      
+    }))
+    model.readyPromise
+      .then(function(model) { // 这个model和外层的model是全等的
+        // 当模型加载完毕时触发回调
+        // 具体时机为：渲染模型的第1帧前
+      })
+    ```
+  
+    
+  
 - 方法二：流形式
 
   ```js
@@ -199,9 +236,26 @@
 
   
 
+### “物体”
+
+目前属于自己定义的一个概念，包括以下2种添加方法
+
+- `viewer.entities.add`
+- `viewer.scene.primitives.add`
 
 
-### 图形
+
+**Entity 和primitive 对比**
+
+- entity简单，primitive复杂
+
+- primitive更底层，性能更好
+
+
+
+
+
+##### 图形
 
 这是cesium里的一个概念
 
@@ -379,6 +433,21 @@ var pointEntity = viewer.entities.add({
         最终数量=`slicePartitions`值  
         注意：2条“经线”才会形成1个圆
 
+- 模型  
+  [demo](https://sandcastle.cesium.com/index.html?src=3D%2520Models.html)
+
+
+
+
+
+##### primitive
+
+[api文档](https://cesium.com/docs/cesiumjs-ref-doc/Primitive.html)里的例子修改后就可以跑，修改为：把`scene`改成`viewer.scene`
+
+更多内容可以参考[博客A](https://www.jianshu.com/p/5a74c607a591)和[博客B](https://blog.csdn.net/happyduoduo1/article/details/51868042)（这2篇博客是差不多的，A是参考B写的）
+
+
+
 ### collection
 
 （现在记录的都是猜测，没有深入了解过）
@@ -418,14 +487,27 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
 
 ### 鼠标事件
 
-[事件处理器](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html)上有[增](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#setInputAction)、[减](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)监听函数等方法
+[ScreenSpaceEventHandler](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html)上有增、[减](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)监听函数等方法
 
-一个事件处理器实例：`viewer.cesiumWidget.screenSpaceEventHandler`
+- 在这里可以找到一个事件处理器实例：  
+  `viewer.cesiumWidget.screenSpaceEventHandler`
 
-监听函数（action）的唯一参数是cz封装的鼠标事件对象
 
-- 鼠标事件对象  
-  应该都只有`position`、`startPosition`、`endPosition`这种属性
+
+[增加监听函数](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#setInputAction)
+
+`ScreenSpaceEventHandler实例.setInputAction(监听函数,事件类型)`
+
+- 监听函数（action）  
+  唯一形参是cz封装的鼠标事件对象
+  - 鼠标事件对象  
+    （找遍[api文档](https://cesium.com/docs/cesiumjs-ref-doc/index.html)也没看到相关说明）  
+    应该都只有少量简单的属性，比如`position`、`startPosition`、`endPosition`  
+    - `position`  
+      值是`Cartesian2`实例，实例的x、y值和canvas坐标是一致的
+- 事件类型  
+  这个参数要输入`Cesium.ScreenSpaceEventType`的属性  
+  可选值见[这里](https://cesium.com/docs/cesiumjs-ref-doc/global.html#ScreenSpaceEventType)
 
 
 
@@ -468,11 +550,50 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
 
 
 
-##### 坐标系转换
-
-可以看看[`Cesium.SceneTransforms`](https://cesium.com/docs/cesiumjs-ref-doc/SceneTransforms.htm)
+##### 坐标 
 
 
+
+**坐标系转换**  
+可以看看[`Cesium.SceneTransforms`](https://cesium.com/docs/cesiumjs-ref-doc/SceneTransforms.html)
+
+
+
+[`Cesium.Cartesian3`](https://cesium.com/docs/cesiumjs-ref-doc/Cartesian3.html)  
+是比较常用的，据说是空间直角坐标系  
+
+- `x`、`y`、`z`属性存有x、y、z坐标
+- 有克隆该实例的方法：`实例.clone`
+- 有乘以标量的方法：  
+  `Cesium.Cartesian3.multiplyByScalar(输入的实例,标量,输出的实例)`  
+  3个参数都是必填  
+  该方法会返回输出的实例
+- 有实例相加的方法：  
+  `Cesium.Cartesian3.add(输入的实例A,输入的实例B,输出的实例)`  
+  3个参数都是必填  
+  该方法会返回输出的实例  
+- 有判断实例数值是否相等的方法：`实例.equals`
+- 有判断距离的方法：`Cesium.Cartesian3.distance(实例A,实例B)`
+- 有判断角度的方法：`Cesium.Cartesian3.angleBetween(实例A,实例B)`  
+  返回单位为弧度
+- 有归一化方法  
+  - 这里归一化的意思是：  
+    产生一个与原点相距1个单位距离的点，该点与输入点方向相同
+  - 具体使用方法：  
+    `Cesium.Cartesian3.normalize(输入的实例,输出的实例)`  
+    2个参数都是必填  
+    该方法会返回输出的实例  
+
+
+
+[`Cesium.Cartographic`](https://cesium.com/docs/cesiumjs-ref-doc/Cartographic.html)  
+比较罕见，属性里的经纬度是用弧度表示
+
+
+
+##### 效果
+
+可以从[bloom后处理效果](https://cesium.com/docs/cesiumjs-ref-doc/PostProcessStageCollection.html#bloom)
 
 
 
@@ -609,12 +730,11 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
 
 想运行czml-writer，但是2条路线都卡住了
 
-- 路线一：运行jar文件  
+- 路线一：运行[jar文件](D:\learning_materials\cesium\code\czml-writer)  
   卡在了报错“没有主清单属性”
 - 路线二：按[官方说明](https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/Quick-Start#java-1)进行操作  
   详细内容见[自己提的issue](https://github.com/AnalyticalGraphicsInc/czml-writer/issues/178)  
   官方人员回应：现在改用idea了，所以eclipse的方式不管用
-  
 
 
 

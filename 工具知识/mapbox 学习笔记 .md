@@ -182,6 +182,58 @@ mapboxgl.MercatorCoordinate.fromLngLat({
 
 
 
+### 批量绘制文本
+
+用symbol图层接收单点geojson数据源，然后使用类似下面的`layout`  
+
+- 关于避让  
+
+
+
+### symbol图层
+
+目前只接收过单点geojson数据源
+
+可以绘制文本、图标，一个图层同时展示文本和图标也是可以的
+
+
+
+下面是一个layout的示例
+
+```javascript
+{
+  "icon-allow-overlap": true, // 内部是否开启避让效果
+  "symbol-placement": "line", // 默认point。point就是普通的展示方式（不沿线），线数据也可以用，不过线数据出来的文字只会出现在第一个点上。line代表沿着线画文本（geojson的单线、多线及Polygon数据都可以）。line-center的效果感觉和line比较相似但又说不出区别，就是不能用于多边形（虽然官网说“只能用于单线和多边形”）
+  'text-radial-offset':0.8,//文本要远离中心点多远进行展示（不带图标时还没用过该配置）（不加text-variable-anchor的话是没效果的）
+  'text-variable-anchor': ['top', 'bottom', 'left', 'right'], // 允许展示文本的方向
+  "text-ignore-placement": false, // 设置为 true 时，其他注记即使碰撞到此文本标注也会显示。
+  'text-field': '{name}', // name处写的是数据源properties的一个属性名，也可以直接写一个字符串或表达式。值可以包含中文却不能包含数字，含数字的话整个图层不会显示并且会红色报错“GET https://api.mapbox.com/fonts/v1/mapbox/arial/0-255.pbf?access_token=pk.eyJ1IjoiaWRvbnRkcml2ZSIsImEiOiJjazAyM3RhbGUwOW1hM21tZXMxYjhpbndnIn0.YyfL9JQcV11Y3Kv-KvTD6Q 404 (Not Found)”，为鑫说是字体原因，可是换了arial也还是不行。不过思极地图是可以包含数字的。官方对这个属性并没有进行什么说明，官方对`'{name}'`这种写法也没有什么说明
+  'text-size': 18, // 可以用表达式，返回结果是数字就行，单位是像素
+  'text-anchor': 'center', // 文本锚点位置
+  'text-allow-overlap': false, // 设置为 true 时，文本标注即使碰撞到其他绘制的注记也会显示。
+  'text-max-width': 8, // 文本换行的最大宽度。（在沿线画文本时无效）
+  'text-padding': 18, // 文本框四周的额外空间，用以检测注记碰撞。（在沿线画文本时有效，但是数值跨度要大一点）
+  "text-font": ['Microsoft YaHei Regular'],
+  'text-justify': 'auto', // 多行文本的对其方式。默认值是'center'
+}
+```
+
+
+
+下面是用`paint`来修改样式的例子
+
+```javascript
+{
+  'text-color': "#000000",
+  'text-halo-color': "#ffffff", // 文字描边颜色
+  'text-halo-width': 1.88, // 文字描边宽度
+}
+```
+
+
+
+
+
 ### 图层数组
 
 就是`map.getStyle().layers`  
@@ -221,54 +273,28 @@ mapboxgl.MercatorCoordinate.fromLngLat({
 - 可嵌套  
   表达式运算符的参数还可以是一个表达式
 
-**运算符**
+**部分功能**
 
-- get  
-  可以获取数据源properties的属性  
-  不太懂，也不懂和properties间的联系
+- 获取数据源properties的属性  
+  `['get', 属性名]`  
+  
+- js三元表达式的功能   
+
+  ```js
+  ['case',
+    ['get', 属性名],
+    '属性值为`true`的话返回这个值', 
+    '属性值为`false`的话返回这个值',
+  ]
+  ```
+
+- 拼接字符串  
+  `['concat','字符串A','字符串B','字符串C',]`  
+  可拼接的字符串的数量没有限制
 
 **学习资料**
 
 [官方教程](https://docs.mapbox.com/help/tutorials/mapbox-gl-js-expressions/)和[官方文档](https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions/)
-
-
-
-
-
-
-
-# 例子
-
-### 批量绘制文本
-
-用symbol图层接收单点geojson数据源，然后使用类似下面的`layout`  
-
-- 关于避让  
-  图层内标注之间的避让效果是关不掉的，不过可以开关和图层外标注的避让
-
-```javascript
-{
-  "symbol-placement": "line", // 默认point。point就是普通的展示方式（不沿线），线数据也可以用，不过线数据出来的文字只会出现在第一个点上。line代表沿着线画文本（geojson的单线、多线及Polygon数据都可以）。line-center的效果感觉和line比较相似但又说不出区别，就是不能用于多边形（虽然官网说“只能用于单线和多边形”）
-  "text-ignore-placement": false, // 设置为 true 时，其他注记即使碰撞到此文本标注也会显示。
-  'text-field': '{name}', // name处写的是数据源properties的一个属性名，也可以直接写一个字符串或表达式。值可以包含中文却不能包含数字，含数字的话整个图层不会显示并且会红色报错“GET https://api.mapbox.com/fonts/v1/mapbox/arial/0-255.pbf?access_token=pk.eyJ1IjoiaWRvbnRkcml2ZSIsImEiOiJjazAyM3RhbGUwOW1hM21tZXMxYjhpbndnIn0.YyfL9JQcV11Y3Kv-KvTD6Q 404 (Not Found)”，为鑫说是字体原因，可是换了arial也还是不行。不过思极地图是可以包含数字的。官方对这个属性并没有进行什么说明，官方对`'{name}'`这种写法也没有什么说明
-  'text-size': 18, // 可以用表达式，返回结果是数字就行，单位是像素
-  'text-anchor': 'center', // 文本锚点位置
-  'text-allow-overlap': false, // 设置为 true 时，文本标注即使碰撞到其他绘制的注记也会显示。
-  'text-max-width': 8, // 文本换行的最大宽度。（在沿线画文本时无效）
-  'text-padding': 18, // 文本框四周的额外空间，用以检测注记碰撞。（在沿线画文本时有效，但是数值跨度要大一点）
-  "text-font": ['Microsoft YaHei Regular'],
-}
-```
-
-可以辅助使用`paint`来修改样式，下面是一个例子  
-
-```javascript
-{
-  'text-color': "#000000",
-  'text-halo-color': "#ffffff", // 文字描边颜色
-  'text-halo-width': 1.88, // 文字描边宽度
-}
-```
 
 
 
@@ -322,6 +348,30 @@ mapboxgl.MercatorCoordinate.fromLngLat({
 
 - 找到所有数据源  
   `map.getStyle().sources`
+  
+- 使用栅格图  
+  应该是要先`map.addImage`才能使用canvas以外的栅格图
+
+  > 图片文件必须为png，webp或jpg格式 —— [loadImage](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#loadimage)
+
+  ```js
+  map.loadImage('http://placekitten.com/50/50', function(error, image) {
+    if (error) throw error;
+    map.addImage('kitten', image);
+  });
+  ```
+
+  `map.addImage`还可以接收其他格式的图像，比如ImageData，[这是一个ImageData的例子](https://docs.mapbox.com/mapbox-gl-js/example/add-image-generated/)
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -88,7 +88,13 @@ git config --global user.name "王佳星"
 git config --global user.email "417783514@qq.com"
 ```
 
-##### 创建 git 仓库:
+
+
+##### 连接远程仓库
+
+
+
+**创建git仓库并连接远程仓库**
 
 ```cmd
 git init
@@ -100,11 +106,9 @@ git push -u origin master
 
 
 
+**已有本地仓库的话做如下操作**
 
-
-##### 已有仓库的话做如下操作
-
-已经测试过，可用
+<span style='opacity:.5'>（下方内容已测试，都可用）</span>
 
 测试环境如下：
 
@@ -120,16 +124,17 @@ git remote add origin 远程服务器地址（应该都是以`.git`结尾）
 git push -u origin 你要推送的分支名 // 推送一个分支就要执行一次这个命令
 ```
 
-不写`git push -u origin master`而写`git push`的话会报错
+- 报错
+  - 不写`git push -u origin master`而写`git push`的话会报错（至少github是这样）
 
-```
-fatal: The current branch main has no upstream branch.
-To push the current branch and set the remote as upstream, use
+    ```
+    fatal: The current branch main has no upstream branch.
+    To push the current branch and set the remote as upstream, use
+    
+        git push --set-upstream origin main
+    ```
 
-    git push --set-upstream origin main
-```
 
-（至少github是这样）
 
 
 

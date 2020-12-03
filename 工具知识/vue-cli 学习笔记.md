@@ -69,19 +69,54 @@ vue-cli含有模板：https://github.com/vuejs-templates
 
 
 
+##### process.env
+
+在代码里都能获取到，但并没有挂在`window`下
+
+`process.env`默认有2个属性：`NODE_ENV`和`BASE_URL`（二开里有`BASE_URL`，不确定是不是所有vue项目都有）
+
+
+
 ##### 不同命令不同process.env.NODE_ENV的方法
 
-官方说明的地址是：[环境变量和模式](https://cli.vuejs.org/zh/guide/mode-and-env.html)
+**关于该方法的描述**
+
+- 官方说明的地址是：[环境变量和模式](https://cli.vuejs.org/zh/guide/mode-and-env.html)
+
+- 这种方法除了可以设置`NODE_ENV`以外还可以设置其他“环境变量”（不知道是不是叫“环境变量”）
+
+- 给人感觉就是设置`process.env`的值  
+  用代码表达就是如下效果：  
+
+  ```js
+  process.env={
+    ...process.env,
+    ...你文本文件里生成的对象,
+  }
+  ```
+
+  
+
+
+
+**方法**
 
 1. 在项目最外层新建一个名为`.env.模式名`的文本文件
 2. 在文本文件里加上如下文本：  
    `NODE_ENV=想要的NODE_ENV值`（`想要的NODE_ENV值`不需要加引号）
-3. 运行`vue-cli-service serve --mode 模式名`就可以用指定的`process.env.NODE_ENV`了  
-   打包时也用指定`process.env.NODE_ENV`的命令是`vue-cli-service build --mode 模式名`
+3. 在`vue-cli-service serve xxx`或者`vue-cli-service build xxx`命令后加上` --mode 模式名`
+4. 执行命令
 
-除了`NODE_ENV`以外还可有其他“环境变量”（不知道是不是叫“环境变量”）
 
-增加这些“环境变量”的方法和`NODE_ENV`的一致，不过“环境变量”名必须以`VUE_APP_`开头，不然不生效
+
+**该方法的特性**
+
+- 增加“环境变量”的方法和`NODE_ENV`的一致  
+- 不过用`vue-cli-service serve xxx`命令时“环境变量”名必须以`VUE_APP_`开头  
+  不然不生效
+- 用`vue-cli-service build xxx`命令时“环境变量”名不需要以`VUE_APP_`开头  
+  不过用这种方法打出来的包会比不用该方法大的包体积更大，而且html代码没有被压缩  
+  【】原因未知
 
 
 

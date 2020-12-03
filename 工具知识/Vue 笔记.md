@@ -1,8 +1,6 @@
 # 待研究
 
 - created里执行的函数的this是undefined
-- vue组件mounted的时候居然可以获取到其模板里的dom？
-  一开始就访问带这个组件的路由也可以获取到
 - 在method里调用函数，函数的this居然不是组件实例？
   中间加一层this.$nextTick的话this就是组件实例了
 
@@ -101,7 +99,7 @@
 ### `.nextTick`
 
 1、Vue.nextTick(function () {...})
-   页面中所有dom渲染好之后立即执行当中函数内容，（由于vue的智能渲染，直接运行的函数会先运行，然后再渲染dom，所以nextTick中获取的数值都是先运行这些函数后才获得的）
+   页面中所有dom渲染好之后立即执行当中函数内容（[官网](https://cn.vuejs.org/v2/api/#mounted)是这么说的，但是如果vue模板解析时报错的话执行时dom也会有没渲染好的），（由于vue的智能渲染，直接运行的函数会先运行，然后再渲染dom，所以nextTick中获取的数值都是先运行这些函数后才获得的）
    setTimeout延迟0毫秒效果同上。延迟更长时间就能获取到更长时间后改变的数据，这点nextTick做不到。
 2、this.$nextTick(function () {...})
    实例中套与不套好像没什么差别
@@ -804,13 +802,26 @@ mounted: function () {
 }
 ```
 
-- mounted中的函数在这个实例一切准备好也渲染好之后执行。
+- [mounted](https://cn.vuejs.org/v2/api/#mounted)  
+  mounted的时候可以获取到其模板里的dom  
+  一开始就访问带这个组件的路由也可以获取到  
+  不过模板里有报错的话就不一定了  
+
+  > `mounted` 不保证所有的子组件也都一起被挂载。如果你希望等到整个视图都渲染完毕，可以在 `mounted` 内部使用 [vm.$nextTick](https://cn.vuejs.org/v2/api/#vm-nextTick)
+
 - updated：data变更时调用*【】未实测、未测试prop改变的情况、未测试data变而视图不变的情况*
+
 - 疑似bug：mounted中如果引用methods中函数前有语句的话，会报错  
   解决方法：在这些函数后面加上分号“;”
+  
 - 销毁钩子与`this.$refs`  
   `beforeDestroy`里`this.$refs`是正常的  
   到了`destroyed`里`this.$refs`的各项就都为`undefined`了
+  
+- [renderError](https://cn.vuejs.org/v2/api/#renderError)  
+
+  > - 只在开发者环境下工作
+  > - 当 render 函数遭遇错误时，提供另外一种渲染输出（注意，渲染输出指的是dom上的）
 
 
 
