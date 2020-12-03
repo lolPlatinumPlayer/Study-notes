@@ -122,6 +122,15 @@
     destination: Cesium.Cartesian3.fromDegrees(经度,纬度,海拔)
   })
   ```
+  
+- 保存镜头位置信息，以便未来把镜头放到保存的位置
+
+  - 保存镜头位置信息  
+    `const a=viewer.camera.position.clone`
+  - 把镜头放到保存的位置  
+    `viewer.camera.flyTo({destination: a})`
+
+
 
 
 
@@ -478,14 +487,27 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
 
 ### 鼠标事件
 
-[事件处理器](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html)上有[增](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#setInputAction)、[减](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)监听函数等方法
+[ScreenSpaceEventHandler](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html)上有增、[减](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)监听函数等方法
 
-一个事件处理器实例：`viewer.cesiumWidget.screenSpaceEventHandler`
+- 在这里可以找到一个事件处理器实例：  
+  `viewer.cesiumWidget.screenSpaceEventHandler`
 
-监听函数（action）的唯一参数是cz封装的鼠标事件对象
 
-- 鼠标事件对象  
-  应该都只有`position`、`startPosition`、`endPosition`这种属性
+
+[增加监听函数](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#setInputAction)
+
+`ScreenSpaceEventHandler实例.setInputAction(监听函数,事件类型)`
+
+- 监听函数（action）  
+  唯一形参是cz封装的鼠标事件对象
+  - 鼠标事件对象  
+    （找遍[api文档](https://cesium.com/docs/cesiumjs-ref-doc/index.html)也没看到相关说明）  
+    应该都只有少量简单的属性，比如`position`、`startPosition`、`endPosition`  
+    - `position`  
+      值是`Cartesian2`实例，实例的x、y值和canvas坐标是一致的
+- 事件类型  
+  这个参数要输入`Cesium.ScreenSpaceEventType`的属性  
+  可选值见[这里](https://cesium.com/docs/cesiumjs-ref-doc/global.html#ScreenSpaceEventType)
 
 
 
