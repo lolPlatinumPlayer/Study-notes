@@ -59,6 +59,28 @@
 
 
 
+### 代码项目
+
+
+
+##### 运行
+
+- 直接cdn引入就能写，且不需要token、帐号等额外的东西<b style='color:red'>？？？</b>  
+  可能可以参考[这个页面](https://www.cesium.com/docs/tutorials/quick-start/)
+
+- 不使用帐号的例子（并不是上一条的例子，这两条是从2个思路得出的东西）
+  - 代码可以参考二开的commit id为7adcc4d57157078c1dfcd6f1587cd774b45f8a6b的commit，可能还有更早的例子，但不记得了
+
+
+
+
+
+- **关于多次初始化**  
+  目前做法：用删dom作为退出操作，重新开始就从头执行一遍代码  
+  目前做法的测试结果：多次『退出进入』后一切正常，cpu也不会多用，但内存可能会稍微多占一些
+
+
+
 ### `viewer`
 
 - [`viewer.entities`](https://cesium.com/docs/cesiumjs-ref-doc/EntityCollection.html)
@@ -83,27 +105,24 @@
 
 
 
+### 天空盒
+
+设置天空盒贴图
+
+```js
+viewer.scene.skyBox = new Cesium.SkyBox({
+  sources: {
+    positiveX: "images/sky/right.jpg",
+    negativeX: "images/sky/left.jpg",
+    positiveY: "images/sky/front.jpg",
+    negativeY: "images/sky/back.jpg",
+    positiveZ: "images/sky/top.jpg",
+    negativeZ: "images/sky/bottom.jpg",
+  },
+})
+```
 
 
-### 代码项目
-
-
-
-##### 运行
-
-- 直接cdn引入就能写，且不需要token、帐号等额外的东西<b style='color:red'>？？？</b>  
-  可能可以参考[这个页面](https://www.cesium.com/docs/tutorials/quick-start/)
-
-- 不使用帐号的例子（并不是上一条的例子，这两条是从2个思路得出的东西）
-  - 代码可以参考二开的commit id为7adcc4d57157078c1dfcd6f1587cd774b45f8a6b的commit，可能还有更早的例子，但不记得了
-
-
-
-
-
-- **关于多次初始化**  
-  目前做法：用删dom作为退出操作，重新开始就从头执行一遍代码  
-  目前做法的测试结果：多次『退出进入』后一切正常，cpu也不会多用，但内存可能会稍微多占一些
 
 
 
@@ -123,6 +142,10 @@
   })
   ```
   
+- 将镜头瞬移到指定坐标  
+  `viewer.camera.setView`方法  
+  使用方法参考上一条的`flyTo`方法
+
 - 保存镜头位置信息，以便未来把镜头放到保存的位置
 
   - 保存镜头位置信息  
