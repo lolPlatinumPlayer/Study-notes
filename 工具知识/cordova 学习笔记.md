@@ -70,7 +70,6 @@
 
 待做事项
 
-- 搞清Android Emulator和AVD的区别
 - 在手机上调试cordova app
 - 更换AS及其他安卓内容的下载地址
 

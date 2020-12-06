@@ -102,7 +102,11 @@ Run -> Debug -> App -> Run
 
 
 
-【】搞清楚下面2个东西的区别
+【】搞清Android Emulator和AVD的区别
+
+> Android虚拟设备（AVD）是一种配置，用于定义要在[Android Emulator](https://developer.android.google.cn/studio/run/emulator)中模拟的Android手机，平板电脑，War OS，Android TV或Automotive OS设备的特征 。—— [创建和管理虚拟设备](https://developer.android.google.cn/studio/run/managing-avds)
+
+
 
 
 
@@ -110,7 +114,16 @@ Run -> Debug -> App -> Run
 
 
 
-### 安卓虚拟设备
+> - AVD configuration properties override hardware profile properties.
+> - Emulator properties that you set while the emulator is running override them both.  
+>
+> —— [AVD properties](https://developer.android.google.cn/studio/run/managing-avds#avdproperties)
+
+
+
+
+
+**安卓虚拟设备**
 
 AVD（android virtual devices）
 
@@ -118,9 +131,23 @@ AVD（android virtual devices）
 > - AVD 存储设备用户数据，如已安装的应用和设置以及模拟 SD 卡
 > - 可以用AVD Manager 擦除用户数据
 >
-> —— [google](https://developer.android.google.cn/studio/run/managing-avds#storage)
+> —— [google之存储区域](https://developer.android.google.cn/studio/run/managing-avds#storage)
 
-### 安卓模拟器
+
+
+> AVD Manager是一个可以从 Android Studio 启动的界面 —— [创建和管理虚拟设备](https://developer.android.google.cn/studio/run/managing-avds)
+
+> `avdmanager` 是一个命令行工具 —— [avdmanager](https://developer.android.google.cn/studio/command-line/avdmanager)
+
+
+
+
+
+
+
+
+
+**安卓模拟器**
 
 Android Emulator
 
