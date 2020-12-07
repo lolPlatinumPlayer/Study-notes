@@ -1,28 +1,7 @@
-- 平台  
-
-  - 执行`cordova platform list`命令列出的平台可能不全  
-    不过依旧可以通过`cordova platform add 平台`命令添加平台
-
-  - 已知平台有：
-    - android
-    - browser
-    - ios
-    - electron
-    - windows
-
-
-- 开发指定平台的前置条件  
-  除了bowser以外都有前置条件  
-  - 检查是否满足添加的各平台的前置条件    
-    `cordova requirements`
-  - 各平台的前置条件
-    - [android](https://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#installing-the-requirements)  
-      - Android SDK
 
 
 
-
-# 创建项目
+### 创建项目
 
 - 不使用模板  
   `cordova create 路径`
@@ -34,22 +13,68 @@
 
 
 
-跑起项目
+### 运行项目
 
-- 安卓
-  1. 开启模拟的设备  
-     （比如通过AS开启）
-  2. `cordova run android`  
-     这时模拟设备上就已经有项目对应的应用了  
-     （自己操作下模拟设备就能开启这个应用）
+简要步骤：
 
+1. `cordova platform add 平台`
+2. 准备好平台的前置条件
+3. `cordova run 平台名`
 
 
 
+##### 平台概念  
 
-执行`cordova run 平台名`时可能遇到的问题
+- 查看已添加和可添加的平台  
+  `cordova platform list`  
+  该命令列出的平台可能不全  
+  不过就算是没列出来的平台，也可以使用`cordova platform add 平台`命令
+  - 已知平台有：
+    - android
+    - browser
+    - ios
+    - electron
+    - windows
 
-- 安卓
+- 用命令行查看平台所需的『前置条件』  
+  `cordova requirements`  
+  可能会有些不准确的地方  
+  （『前置条件』并不是一个专业术语）
+
+
+
+##### 各平台的介绍
+
+- browser  
+  没有前置条件
+- android  
+  前置条件应该在[这个页面](https://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#installing-the-requirements)里都说了  
+  应该只要AS能跑起项目，cordova也可以
+  - 使用模拟设备运行  
+    如果AS里模拟不成功的话说明还没达到可以在cordova里模拟的条件
+    1. 开启模拟的设备  
+       （比如通过AS开启）
+    2. `cordova run android`  
+       这时模拟设备上就已经有项目对应的应用了  
+       （自己操作下模拟设备就能开启这个应用）
+  - 使用真实设备运行  
+    如果AS里不能运行的话说明还没达到可以在cordova里真机调试的条件
+    1. usb连好手机
+    2. `cordova run android`  
+       这时手机上就会提示有app可以安装了
+
+
+
+
+
+
+
+##### 可能遇到的问题
+
+执行`cordova run 平台名`时
+
+- 安卓  
+  这里没列出的问题可以查阅《android 学习笔记.md》
   - 可能在下载gradle-6.5-all.zip上出现问题  
     - 问题表现：
       - 等待时间过长
@@ -66,12 +91,14 @@
 
 # 学习
 
+待学习内容
+
+- 项目搞起来
 
 
-待做事项
 
-- 在手机上调试cordova app  
-  usb连好手机后，`run`即可安装
+非重点学习事项
+
 - 更换AS及其他安卓内容的下载地址
 
 
@@ -83,13 +110,8 @@
   目前遇到了安卓开发环境不足的问题
 - hello  
   跟着[create your first app](https://cordova.apache.org/docs/en/latest/guide/cli/index.html)走所建立出来的项目  
-  - 遇到的问题  
-    - `cordova run browser`不好使  
-      报错`The platform "browser" does not appear to have been added to this project.`  
-      但是`cordova platform list`时有browser  
-      解决办法：`add`一下
 
 
 
-当前Android Studio和安卓的一些东西可能被弄乱了，已经搞不清了
+
 
