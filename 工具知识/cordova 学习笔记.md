@@ -70,7 +70,8 @@
 
 待做事项
 
-- 在手机上调试cordova app
+- 在手机上调试cordova app  
+  usb连好手机后，`run`即可安装
 - 更换AS及其他安卓内容的下载地址
 
 
@@ -81,7 +82,12 @@
   以`cordova create learnCordova_1`命令创建的项目  
   目前遇到了安卓开发环境不足的问题
 - hello  
-  跟着[create your first app](https://cordova.apache.org/docs/en/latest/guide/cli/index.html)走所建立出来的项目
+  跟着[create your first app](https://cordova.apache.org/docs/en/latest/guide/cli/index.html)走所建立出来的项目  
+  - 遇到的问题  
+    - `cordova run browser`不好使  
+      报错`The platform "browser" does not appear to have been added to this project.`  
+      但是`cordova platform list`时有browser  
+      解决办法：`add`一下
 
 
 

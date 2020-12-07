@@ -144,3 +144,7 @@ vue-cli含有模板：https://github.com/vuejs-templates
 
   
 
+##### 查看使用的webpack的版本
+
+在package.json里看不到，要到node_modules里看  
+应该是第四版的webpack

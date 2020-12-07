@@ -67,7 +67,8 @@
 
 
 ## 字符串
-`'abc'[1]`的结果是`'b'`
+`'abc'[1]`的结果是`'b'`  
+字符串实例的说明见[A](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String#String_instances)或[B](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/prototype)（AB区别应该就是兼容性表不一样）
 
 
 ## 字面量
@@ -799,13 +800,30 @@ function(key, value) {
 - **用于数字类型时**  
   可以传一个参数来进行进制转换，可以把十进制转为指定进制的字符串  
 
+
+
+
+
+## [js中的正则](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions)
+
 ## js的正则api
 
 
 
 ##### 表达正则
 
-写法基本都用`/表达式/`这种方法写，虽然`new RegExp(字符串格式表达式)`效果基本一致，不过后者操作起来有点麻烦
+js中的正则表达式就是`RegExp`对象  
+有2种方法创建`RegExp`对象
+
+- 正则表达式字面量  
+  `/ab+c/i`  
+  由包含在斜杠之间的模式组成
+- 构造函数  
+  `new RegExp('ab+c', 'i')`或`new RegExp(/ab+c/, 'i')`  
+  使用这种方法时要注意js的字符串也是有转义的
+
+
+
 
 
 

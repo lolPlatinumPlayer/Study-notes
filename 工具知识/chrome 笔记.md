@@ -88,6 +88,7 @@ Page选项卡
 - 搜索功能  
   可以用一些特殊代码过滤搜索结果  
   比如：`method:GET -.sg -Workers`
+- 如果在network里把disable cache勾起来的话，即使用同一张图片也会重新加载，network里加载的图片也是同名的
 
 
 

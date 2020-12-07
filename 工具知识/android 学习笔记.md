@@ -90,29 +90,27 @@
 
 - 如果没有模拟成功  
   1. 需要在Tools/AVD Manager里查看是否有可用的配置
-  2. 有的话，检查是否在下拉列表里选择了可用配置  
+  2. 有的话，检查是否在下拉列表里选择了可用的AVD  
      下拉列表如下：  
-     ![下拉列表](../图片/app开发/下拉列表.png)
+     ![下拉列表中的AVD](../图片/app开发/下拉列表中的AVD.png)
 
 
 
-打开模拟设备的另一个方法：
+在AS中打开模拟设备的另一个方法：
 
 Run -> Debug -> App -> Run
 
 
 
-【】搞清Android Emulator和AVD的区别
+**Android Emulator和AVD的关系**
 
-> Android虚拟设备（AVD）是一种配置，用于定义要在[Android Emulator](https://developer.android.google.cn/studio/run/emulator)中模拟的Android手机，平板电脑，War OS，Android TV或Automotive OS设备的特征 。—— [创建和管理虚拟设备](https://developer.android.google.cn/studio/run/managing-avds)
+> AVD是一种配置，用于定义要在[Android Emulator](https://developer.android.google.cn/studio/run/emulator)中模拟的Android手机，平板电脑，War OS，Android TV或Automotive OS设备的特征 。—— [创建和管理虚拟设备](https://developer.android.google.cn/studio/run/managing-avds)
 
-
-
-
-
-猜测：Android Emulator是一个程序，而AVD是一个配置，确定了在这个程序上具体模拟出怎样的设备
+意思就是说AVD是Android Emulator中的一个概念
 
 
+
+**3种配置的优先级**
 
 > - AVD configuration properties override hardware profile properties.
 > - Emulator properties that you set while the emulator is running override them both.  
@@ -123,9 +121,23 @@ Run -> Debug -> App -> Run
 
 
 
-**安卓虚拟设备**
 
-AVD（android virtual devices）
+
+**[Android Emulator](https://developer.android.google.cn/studio/run/emulator)**
+
+安卓模拟器
+
+> 提供了真正的Android设备的几乎所有功能。可以安装app、存储文件，模拟来电和短信，指定设备的位置，模拟不同的网络速度，模拟旋转和其他硬件传感器，访问Google Play商店等等。 —— [《Android Emulator》](https://developer.android.google.cn/studio/run/emulator)
+
+[《Android Emulator》](https://developer.android.google.cn/studio/run/emulator)里还提供了更多详细信息
+
+
+
+
+
+**AVD**
+
+android virtual devices（安卓虚拟设备）
 
 > - AVD在电脑上有专用存储区域
 > - AVD 存储设备用户数据，如已安装的应用和设置以及模拟 SD 卡
@@ -135,21 +147,11 @@ AVD（android virtual devices）
 
 
 
+**AVD Manager与avdmanager**
+
 > AVD Manager是一个可以从 Android Studio 启动的界面 —— [创建和管理虚拟设备](https://developer.android.google.cn/studio/run/managing-avds)
 
 > `avdmanager` 是一个命令行工具 —— [avdmanager](https://developer.android.google.cn/studio/command-line/avdmanager)
-
-
-
-
-
-
-
-
-
-**安卓模拟器**
-
-Android Emulator
 
 
 
