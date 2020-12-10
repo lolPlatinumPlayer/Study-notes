@@ -233,15 +233,29 @@ ie5支持js中的中文
 # HTML
 
 - 可以用任意英文做标签名，但是用中文不行
+
 - **中文乱码**  
   加`meta`标签即可解决，以下两个标签都可以
   1. `<meta charset="UTF-8">`
   2. `<meta http-equiv="Content-Type" content="charset=utf-8"/>`
+  
 - 可以通过插入`script`、`link`这种js或css的标签来使js或css生效
   - 电气符号库与GeoGL的鉴权服务就用了插入标签来执行js的方法
   - css  
     吉奥这有人用这种方式使css生效（个人未做详细测试）
+  
 - [预加载](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Preloading_content)
+
+- SEO  
+
+  > - keywords  
+  >   `<meta name="keywords" content="xxxxxxx">`  
+  >   建议：5个左右,单个8汉字以内；禁忌堆砌，与网站主题无关。
+  > - description网站描述  
+  >   `<meta name="description" content="网站描述，字数尽量空制在80个汉字，160个字符以内！">`  
+  >   建议：字数尽量空制在80个汉字，160个字符以内。
+  >
+  > —— [H-ui 书写规范](http://www.h-ui.net/Hui-notes-htmlStructure.shtml)
 
 
 
