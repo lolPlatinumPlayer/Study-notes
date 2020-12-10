@@ -701,7 +701,8 @@ arr.join(分隔符)返回一个字符串，这个字符串包含arr数组所有�
  `arr或str.slice(begin,end)`  
 - 数组  
   返回一个数组，其元素从arr[begin]开始到arr[end]结尾（不包含arr[end]）  
-  可以不输入end，end小于或等于begin时返回空数组  
+  可以不输入end  
+  end小于或等于begin时返回空数组  
   输入负数则代表从末尾开始数（-n代表倒数第n个）  
   返回数组子项顺序与原数组一致  
   （原数组不会被改变）
