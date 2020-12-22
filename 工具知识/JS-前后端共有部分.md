@@ -1122,6 +1122,18 @@ try{
 - **`getTime()`**  
 
   返回时间戳，单位：毫秒
+  
+- 返回年份  
+  用`getFullYear()`  
+
+  - getUTCFullYear于getFullYear的区别  
+
+    > - **`getFullYear()`** 方法根据本地时间返回指定日期的年份
+    > - **`getUTCFullYear()`** 以世界时为标准，返回一个指定的日期对象的年份
+    >
+    > —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date)
+
+    > 比如在中国大陆、香港、澳门、蒙古国、台湾、新加坡、马来西亚、菲律宾等地区的本地时间比UTC快8小时，记作UTC+8，意思就是比UTC时间快8小时。减的类似理解，比如UTC-10等。 —— [博客](https://www.cnblogs.com/poorpan/archive/2011/11/29/2267030.html)
 
 ## π
 

@@ -53,12 +53,31 @@ const router = new VueRouter({
 ## 路由信息对象的属性
 （这里说的路径都是页面地址加井号后面部分的url地址）
 （在实例中使用时记得在前面加上“this.”）
-$route.hash：hash值，路由中#及其以后部分。如果路由以#开头的话，这种路由的url就是前一个url后加上hash值，并且这一次路由只会给上一次的路由更新hash值（path中无法写hash，但是不影响对hash的捕获）。
-$route.query：在路径中加入的 “?xx=123” 叫查询参数，查询参数一定要写在hash值的前面。$route.query会返回 “{"xx":"123"}” ，写$route.query.xx则会返回123。（目前看query与params不同的地方只有，query是在路由中输入名值对中的名，而params只能在routes中输入名）
-$route.path：不含hash值和查询参数的路径。
-$route.fullPath：包含查询参数和 hash 的完整路径。
-$route.matched：一个数组，当前路由的 路由记录（routes 配置数组中的对象副本）
-$route.name：routes中与path同级的name属性的属性值。
+
+- `$route.hash`  
+  hash值，路由中#及其以后部分。如果路由以#开头的话，这种路由的url就是前一个url后加上hash值，并且这一次路由只会给上一次的路由更新hash值（path中无法写hash，但是不影响对hash的捕获）。
+- `$route.query`  
+  - 在路径中加入的 “?xx=123” 叫查询参数  
+    查询参数一定要写在hash值的前面
+  - $route.query会返回 “{"xx":"123"}”   
+    写$route.query.xx则会返回123。
+- `$route.path`  
+  不含hash值和查询参数的路径。
+- `$route.fullPath`  
+  包含查询参数和 hash 的完整路径。
+- `$route.matched`  
+  一个数组，当前路由的 路由记录（routes 配置数组中的对象副本）
+- `$route.name`  
+  routes中与path同级的name属性的属性值。
+
+
+
+query与params不同的地方
+
+- query会反映在url里，而params不会
+- query是在路由中输入名值对中的名，而params只能在routes中输入名？？？
+
+
 
 ## 嵌套路由
 在VueRouter的参数中使用children配置，children值与routes完全一致。
@@ -74,7 +93,7 @@ router.push()与`<router-link :to="...">`效果一致
 括号中常写的有2种情况：
 
 - 直接写字符串，这个字符串是path（前面要有`/`）
-- 对象，可以依据name跳转，也可以依据path，还可以带query或者params
+- 对象，可以依据name跳转，也可以依据path，还可以带query或者params（如meta等其他参数传了也没有效果）
 router.replace()：完全替换当前历史记录，不管如何前进后退再执行这个方法都会完全替换掉当前的历史记录，并且对其他历史记录没有任何影响。<router-link :to="..." replace>也有同样效果。
 router.go(n)：在历史记录中向前或者后退多少步。【知道这些方法怎么执行后测试一下超负荷会有什么结果】
 

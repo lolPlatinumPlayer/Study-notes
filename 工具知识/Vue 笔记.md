@@ -101,6 +101,10 @@
 1、Vue.nextTick(function () {...})
    页面中所有dom渲染好之后立即执行当中函数内容（[官网](https://cn.vuejs.org/v2/api/#mounted)是这么说的，但是如果vue模板解析时报错的话执行时dom也会有没渲染好的），（由于vue的智能渲染，直接运行的函数会先运行，然后再渲染dom，所以nextTick中获取的数值都是先运行这些函数后才获得的）
    setTimeout延迟0毫秒效果同上。延迟更长时间就能获取到更长时间后改变的数据，这点nextTick做不到。
+
+  nextTick在watch中似乎没有效果,setTimeout0有  
+  （例子：建2个data，watch一个data，被watch的data改变后调用nextTick改变另一个data。似乎不管什么时候两个data值都是相等的，套2层nextTick也一样）
+
 2、this.$nextTick(function () {...})
    实例中套与不套好像没什么差别
 
@@ -391,19 +395,28 @@ watcher中的匿名函数为单参数时，被监听变量一旦改变就执行�
 
 ##### watch的深度监听
 专用于数组、对象，每一次后代内容变化都会触发，也可以输出后代内容，格式为：
-```
+```js
 watch:{
     arrayName:{//个站中有用不同格式写法
-        handler:function(val,oldval){ // “handler:”为固定格式一部分，【】一次监听state时oldval和val是一致的
-            console.log(val.name.y1)
+        handler:function(newVal,oldval){ // “handler:”为固定格式一部分，
+            console.log(newVal.name.y1)
         },
         deep:true //这句为固定格式一部分
     }
 }
 ```
 
+- 监听失效的情况  
+  - 对于Date实例，调用setFullYear、setMonth等方法，就算用深度监听也监听不到
+- `newVal`与`oldVal`一致的情况
+  - 例子A（未记录）
+  - 例子B  
+    监听值为对象的prop，并用`JSON.stringify`打印`newVal`与`oldVal`  
+    - 发现修改prop的属性的话，打印内容都是一致的
+    - 直接给prop赋值的话，打印内容会有区别
 
 ### methods属性
+
 Vue对象中methods属性的 属性 可以匿名函数为值，在Mustache中输入该属性名加() 则可执行函数，例：“属性名()”，可在js中直接调用，例：“Vue对象名.属性名()”。  
 使用methods属性不会进行缓存，函数在每次调用、依赖数据改变时都会重新运行。  
 
@@ -417,6 +430,16 @@ Vue对象中methods属性的 属性 可以匿名函数为值，在Mustache中输
 - 若不加v-bind直接在标签中写a="b"，那么渲染后将原封不动如字符串一般展示出a="b"  
 - 若要只显示a属性不要属性值，可直接在标签中写a，无需加上v-bind。  
   b可以是一个三元表达式，以此选择出现的属性值  
+
+
+
+一种可能正确的解读
+
+不用`v-bind`代表属性值用字符串，用的话代表用动态数据作为属性值
+
+
+
+
 
 # 样式
 
@@ -591,7 +614,8 @@ out-in: 离开过渡完成后开始进入过渡
 
 - [深度作用选择器](https://vue-loader.vuejs.org/zh/guide/scoped-css.html#%E6%B7%B1%E5%BA%A6%E4%BD%9C%E7%94%A8%E9%80%89%E6%8B%A9%E5%99%A8)  
   `>>>`或`/deep/`或`::v-deep`  
-  在样式里加『随机属性』属性时加在深度作用选择器的前一级
+  在样式里加『随机属性』属性时加在深度作用选择器前面的那个元素上  
+  深度作用选择器会被编译成一个后代选择器（也就是` `）
 
 # 判断与循环
 
@@ -692,16 +716,6 @@ methods: {
 .capture  让默认事件方式从冒泡阶段中监听改为捕获阶段中监听，例如：@click.capture="a($event)"的嵌套中会让从里到外触发even.currentTarget变为从外到里触发  
 .self  只在当前元素触发事件，比如单击子元素不触发事件  
 .once  事件执行一次  
-
-
-### 用.$on()创建自定义事件
-
-`实例名.$on('自定义事件名',function(接收参数){函数内容})`
-`实例名.$emit('自定义事件名',发送的参数)`可以触发创建的自定义事件
-以上两条可以在任何位子书写
-（任何组件通信都可以靠以上两条来完成）
-
-
 
 
 
@@ -895,6 +909,38 @@ mounted: function () {
 
 
 
+### 组件的事件
+
+**js操作**
+
+（以下内容未测试对原生事件的效果）
+
+- 监听事件
+  - [持续监听](https://cn.vuejs.org/v2/api/#vm-on)  
+    `实例.$on(事件名,参数不定的函数)`  
+    （上一行的”事件名“可以是字符串也可以是数组）
+  - [单次监听](https://cn.vuejs.org/v2/api/#vm-once)
+- [触发事件](https://cn.vuejs.org/v2/api/#vm-emit)  
+  `实例.$emit('字符串事件名',参数a，参数b,...参数z)
+- [移除监听器](https://cn.vuejs.org/v2/api/#vm-off)
+
+
+
+
+
+**事件在模板中组件的表现**
+
+- 监听自定义事件的方式  
+  `<组件名 @事件名="函数"></组件名>`
+
+- 原生事件  
+
+  - 不使用`.native`修饰符的话是无法监听原生事件的  
+  - 使用`.native`修饰符可以在组件的根元素上监听原生事件
+  - 组件自定义事件名可以和原生事件重名
+
+  
+
 
 
 ### 组件通信
@@ -903,29 +949,50 @@ mounted: function () {
 
 用`props`选项实现
 
-- 在组件标签上属性部分写“A属性='XX内容'”就可以将子组件的props选项的A属性改为XX内容字符串。  
+- 把一个对象的所有属性都作为prop传入组件  
+  `<组件名 v-bind="承载对象的变量"></组件名>`
+
+- prop必须存在于props选项，不然无法使用
+
+- 在组件标签上属性部分写`A属性='XX内容'`就可以将子组件的props选项的A属性改为XX内容字符串。  
+
 - 不能在声明的时候赋值。  
   一次测试中在mounted里是可以获取到的（环境：无人机项目一个后期路由到的页面的子组件，如果一开始就跳到这个路由，结果也还是可以的）  
-- 若要将父组件data动态传入子组件则需在前面加上冒号“:”  
+  
 - 每次父组件变化都会更新子组件的props中的属性，如果想要 继承数据 在继承后不随着 父组件数据 更新，可使用如下方法使用SON_A：  
-
-```
-data: function () {
-  return { SON_A: this.a }
-}  
-```
-（这种方法修改子组件数据可以规避控制台警告，目前建议使用这种方式）
+  
+  ```js
+  data: function () {
+    return { SON_A: this.a }
+  }  
+  ```
+  （这种方法修改子组件数据可以规避控制台警告，目前建议使用这种方式）
 让 继承数据 经过处理后再显示有三种方法：
-1、直接在{{}}里写表达式，效果与第二点相同
-2、computed: {
-       counter: function () {
-           return this.myMessage+10
-       }
-   }
-3、要 继承数据 不随 父组件数据 更新的话只能用如下方法
-   data: function () {
+
+1. 直接在{{}}里写表达式，效果与第二点相同
+  
+  2. ```js
+     computed: {
+          counter: function () {
+            return this.myMessage+10
+          }
+      }
+     ```
+  
+  3. 要 继承数据 不随 父组件数据 更新的话只能用如下方法
+  
+     ```js
+     data: function () {
        return { sona: this.myMessage+10 }
-   }
+     }
+     ```
+
+- 默认值  
+
+  - 取默认值时如果默认值不符合校验规则，也是会报错的  
+    不过有一些值是例外的，比如：`null`与`undefined`
+
+
 
 小技巧
 
@@ -936,8 +1003,8 @@ data: function () {
 
 ##### 对组件入参进行验证
 
-作为子组件设置props中的属性时可用 “propA: Number” 限制传入数据的类型，如不合规格则会在控制台发出提醒，可限制为多种类型，可自定义函数来验证，详见：
-https://cn.vuejs.org/v2/guide/components.html#Prop-验证
+作为子组件设置props中的属性时可用 “propA: Number” 限制传入数据的类型，如不合规格则会在控制台发出提醒，可限制为多种类型，可自定义函数来验证，详见：[这个页面](https://cn.vuejs.org/v2/guide/components.html#Prop-验证)
+
 
 注意：  
 
@@ -969,31 +1036,11 @@ https://cn.vuejs.org/v2/guide/components.html#Prop-验证
 
 
 ##### 组件向外传值
-组件外methods中写好outsidefn单参数函数，组件标签内写好 “@daili='outsidefn'” ，传值方法分为：1、用组件内的watch传值。2、用组件内的methods传值。
-
-1. 用组件内的watch传值：  
-
-   ```js
-   watch:{
-     anyprop:function(d){//anyprop是组件中props中某个数据
-       this.$emit('daili',d)//（单参数d代表监听数据的新值），将单参数改成其它数值也能传递
-     }//这样在触发watch时就能触发outsidefn，且单参数等于watch传递的数值
-   }
-   ```
-   
-2. 用组件内的methods传值：  
-
-   ```js
-   methods: {//组件内写@xx='anymethods'就能触发
-     anymethods: function(d){
-       this.$emit('daili',d);
-     }
-   }
-   ```
-
-   
+- 可以用组件的自定义事件来传
 
 
+
+【】下面内容待整理
 
 1. 达成以上目的还有一个更通用但是稍长的办法：  
    组件标签内写`v-model='b' `   
@@ -1008,8 +1055,23 @@ https://cn.vuejs.org/v2/guide/components.html#Prop-验证
 ##### 在子组件上触发methods中的函数（在html子组件上用本地事件触发method中的函数）
 在子组件标签中写好“@click.native="b"”就会在点击后触发b函数
 
-【组件教程更新未看内容】
-https://cn.vuejs.org/v2/guide/components.html#杂项
+
+
+##### 依赖注入
+
+祖先组件与后代组件通信的方式
+
+- ### [依赖注入](https://cn.vuejs.org/v2/guide/components-edge-cases.html#依赖注入)
+
+- [api](https://cn.vuejs.org/v2/api/#provide-inject)
+
+
+
+
+
+##### 组件教程更新未看内容
+
+[这](https://cn.vuejs.org/v2/guide/components-edge-cases.html#%E7%A8%8B%E5%BA%8F%E5%8C%96%E7%9A%84%E4%BA%8B%E4%BB%B6%E4%BE%A6%E5%90%AC%E5%99%A8)及之后
 
 
 
