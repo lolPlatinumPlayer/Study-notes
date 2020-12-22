@@ -261,6 +261,8 @@ ie5支持js中的中文
 
 # CSS
 
+可能要在mdn里从头学才能找到各部分的名称
+
 - 可以使用`@import`语法组织代码
 - 选择器可以进行连写，如：`.ivu-form-item-content>*:first-child`
 - less会把空的样式去掉  
@@ -268,6 +270,9 @@ ie5支持js中的中文
 - transform可以使用两个translate，rotateX和rotateZ也可以同时使用——源自mapbox
 - 取消某个元素的交互能力  
   `pointer-events: none;`
+- 渐变色可以加在`background-image`上（`background`上也可以）
+- [选择器与组合器](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Selectors)
+- [权重](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Specificity)
 
 ### [flex](http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html)
 
