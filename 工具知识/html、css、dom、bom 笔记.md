@@ -292,3 +292,9 @@ ie也可以改变滚动条样式，不过仅限于颜色
 - float不影响层级关系
 - relative与absolute参与层级关系的计算的效果是相同的
 
+
+
+# 其他样式工具
+
+- postCSS可以通过写js插件来改变css，less和sass都不行。
+  比如把px转成rem的功能，就可以写。
