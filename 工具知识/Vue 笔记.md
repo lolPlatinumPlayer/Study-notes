@@ -270,7 +270,7 @@ directives: {
     ...aaa //import重命名可随意取，最终引入的指令名称都会与js文件中的一致
 }
 
-### 过滤器
+### [过滤器](https://cn.vuejs.org/v2/guide/filters.html)
 
 `|`
 真的和官网说的一样不能用在v-for里面
@@ -1014,12 +1014,13 @@ mounted: function () {
 
 ##### 接收模板代码
 
+- 官方名称：[插槽](https://cn.vuejs.org/v2/guide/components-slots.html)
+- vue2.6.0前后插槽api是不同的
+
 使用步骤：
 
 1. 在组件中写`<slot></slot>`
 2. 使用组件的时候，在组件首尾标签间的模板就会渲染到`<slot></slot>`处
-
-官方名称是：插槽
 
 可接收的模板代码：
 
