@@ -1078,7 +1078,8 @@ API
   - `Error(描述信息)`
   - `new Error(描述信息)`
 
-  两种方法效果都是一致的
+  两种方法效果都是一致的  
+  `描述信息`是1个参数，展示时会被转为字符串展示
 
 - 打印的话都是： 描述信息+几个错误的代码地址
   - `console.dir`的表现形式：
@@ -1086,7 +1087,7 @@ API
   
 - 用任何方法把错误对象转为字符串，都只会留下字符串形式的错误描述信息（这些方法包括`JSON.stringify()`）
 
-- ECMA定义的六种默认错误类型应该就是js自动报错的全部情况
+- ECMA定义的六种默认错误类型应该就是js自动报错的全部情况（[这个页面](https://developer.mozilla.org/zh-cn/docs/web/javascript/reference/global_objects/error#Error_types)有7种）
 
 - if语句块内似乎如果红色报错，则会进入下一个语句块
 
