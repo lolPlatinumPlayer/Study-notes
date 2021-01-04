@@ -51,6 +51,23 @@ vue-cli含有模板：https://github.com/vuejs-templates
   不加的话会导致使用同名图片时产生问题，因为多个同名图片只会有一个存在  
   不加并不会导致source map出现问题，不论在同名vue文件还是js文件里打断点，出现位置都是正确的  
   控制是否增加随机字符串的配置项是[filenameHashing](https://cli.vuejs.org/zh/config/#filenamehashing)
+  
+- 代理  
+  
+  - 代理全部内容又加其他代理配置的写法  
+  
+    ```js
+    devServer: {
+      port: 9090,
+      proxy:{
+        '/':{
+          target: proxyUrl,
+        }
+      },
+    }
+    ```
+  
+    [这里](https://github.com/chimurai/http-proxy-middleware#context-matching)写的`'**'`并不好使
 
 
 
