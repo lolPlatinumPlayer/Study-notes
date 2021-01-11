@@ -178,6 +178,17 @@
 
 
 
+### touch事件对象
+
+也就是[TouchEvent](https://developer.mozilla.org/zh-CN/docs/Web/API/TouchEvent)
+
+**坐标**
+
+存在`TouchEvent`实例的`touches`属性的子项里  
+这个子项也就是[Touch](https://developer.mozilla.org/zh-CN/docs/Web/API/Touch)实例
+
+
+
 **事件相关dom**
 
 - 获取鼠标交互到的元素  

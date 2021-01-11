@@ -159,11 +159,15 @@ new Vue({
 对使用自定义指令的对象执行函数。
 使用方法：在需要使用的标签中添加 “v-指令名” 属性
 全局注册写法：
+
+```js
     Vue.directive('focus', { //标签中加入 “v-focus” 属性即可使用
       inserted: function (el) { //inserted是钩子
         el.focus()// 聚焦元素
       }
     })
+```
+
 局部注册写法：
     directives: {
       focus: {
