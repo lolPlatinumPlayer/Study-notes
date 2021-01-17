@@ -54,8 +54,11 @@ vue-cli含有模板：https://github.com/vuejs-templates
   
 - 代理  
   
-  - 代理全部内容又加其他代理配置的写法  
+  > 使用[http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware#proxycontext-config)实现了代理 —— [官网](https://cli.vuejs.org/zh/config/#devserver-proxy)
   
+  - 代理全部内容又加其他代理配置的写法  
+  例子如下：  
+    
     ```js
     devServer: {
       port: 9090,
@@ -65,9 +68,14 @@ vue-cli含有模板：https://github.com/vuejs-templates
         }
       },
     }
-    ```
-  
+  ```
+    
     [这里](https://github.com/chimurai/http-proxy-middleware#context-matching)写的`'**'`并不好使
+    
+  - 需要走代理的请求的写法  
+  
+    - axios的BaseUrl设为`'./'`  
+      设成空串似乎也可以走代理——网友
 
 
 
