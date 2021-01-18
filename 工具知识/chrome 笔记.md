@@ -104,6 +104,12 @@ Page选项卡
 
 
 
+### 其他
+
+- [在PC端调试手机网页](https://developers.google.com/web/tools/chrome-devtools/remote-debugging?hl=zh-cn)
+
+
+
 
 
 # 扩展

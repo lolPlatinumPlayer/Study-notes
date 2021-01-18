@@ -28,6 +28,8 @@
 - 输路径时如果路径中有空格的话  
   路径要用单引号包起来  
 
+
+
 ### Git英文的专有名词
 
 - 版本库 repository
@@ -164,6 +166,12 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
   会分配一个名称  
   关于分配名称的规则看[官方说明](https://git-scm.com/docs/git-clone/zh_HANS-CN#git-clone-ltgt)  
   根据经验看大多都是`.git`前的那级路径
+
+经验
+
+- 在文银电脑上clone Study-notes时，发现clone后里边没东西。再执行`git pull origin master`后才有东西
+
+
 
 ### 把文件提交到分支
 （使用下面两个命令前先要确保这个文件存在）
@@ -690,6 +698,16 @@ cd d:nospace/learngit
 ### 学习进度
 
 学完https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013745374151782eb658c5a5ca454eaa451661275886c6000
+
+
+
+### 可学习内容
+
+- 学习如何查看一段时间内commit改变的内容  
+  比如说第10个至第15个commit间共更改了哪些内容，而不是看一个个commit分别改了哪些内容  
+  （如果不行的话看看合并commit要怎么操作）
+
+
 
 
 

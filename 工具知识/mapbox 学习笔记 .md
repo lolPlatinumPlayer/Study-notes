@@ -136,10 +136,7 @@
 
 # 事件
 
-有很多，比如单双击、鼠标移入移出、鼠标移动等（稍微找了下没找到官网对所有事件的说明，不过应该是和js保持一致的，离开页面是会触发mouseleave的）  
-应该都可以单独作用于图层（已经测过了双击和鼠标移动，这两个事件在说明里都没提到“图层”）
 
-  
 
 - api
   - 给地图增加事件  
@@ -154,6 +151,21 @@
       包含鼠标触碰到的所有`feature`  
       这个属性会在回调同步执行完毕后被移除  
       （[官网](https://www.mapbox.cn/mapbox-gl-js/api/#mapmouseevent)没有提到这个属性，不过在多个例子里使用了）
+
+
+
+**事件列表**
+
+[官网](https://docs.mapbox.com/mapbox-gl-js/api/events/)没有提到图层的事件列表，图层的事件可能和Map是一致的
+
+- [`Map`](https://docs.mapbox.com/mapbox-gl-js/api/map/#map-events)  
+  - style.load事件  
+    官网没找到相关信息，不过可以使用  
+    早于load事件触发  
+    为鑫说这是样式加载的事件
+- [`Marker`](https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker-events)
+- [`Popup`](https://docs.mapbox.com/mapbox-gl-js/api/markers/#popup-events)
+- [`GeolocationControl`](https://docs.mapbox.com/mapbox-gl-js/api/markers/#geolocatecontrol-events)
 
 
 

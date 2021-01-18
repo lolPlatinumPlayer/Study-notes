@@ -3,6 +3,7 @@
 - created里执行的函数的this是undefined
 - 在method里调用函数，函数的this居然不是组件实例？
   中间加一层this.$nextTick的话this就是组件实例了
+- 了解data在生命周期里的执行时机，其中data先于mounted执行。和其他时机对比的先后顺序待了解、data是否能执行methods待了解
 
 
 
@@ -332,11 +333,15 @@ trim:过滤用户输入的首尾空格
 - 可用对象代理
 - 子项与视图更新
   - 子项变化会不会触发视图更新取决于子项在初始情况存不存在
+  
   - 如果希望在操作初始不存在的子项后更新视图
     - 赋值：`vm.$set(对象或数组,键名或序号,新值)`
     - 删除：`vm.$delete(对象或数组,键名或序号)`
     
     这两个方法在`Vue`全局对象上也是存在的
+  
+- 对象直接赋值的话不会触发视图更新【】有空再确认下  
+  键名应该可以是中文
 
 **关于数组视图更新的研究**
 
@@ -740,7 +745,14 @@ methods: {
 - 生成 实例  
   [`new Vue`](https://cn.vuejs.org/v2/guide/#%E5%A3%B0%E6%98%8E%E5%BC%8F%E6%B8%B2%E6%9F%93)
 
-目前还没找到方法：用js在实例中插入实例
+- vue 基础组件走完才会生成 总体的Vue实例那个变量  
+  不过实例通过this去调，是能调到的（这个不知道是不是因为钩子执行时组件整体已经走完了）
+
+
+
+**待了解内容**
+
+- 用js在实例中插入实例
 
 
 
@@ -870,6 +882,16 @@ this就代表实例本身，也就是说：<b style='color:red'>实例对象===�
   `this.$refs`在mounted中获取不到，要加个`this.$nextTick(() => {})`才行  
   但是一次测试中是可以的。环境：无人机项目，一个后期通过路由导航到的页面，这页面的mounted里用`this.$refs.`可以立即获取到内容
 
+特性
+
+- vue的ref似乎只会加，不会减
+  比如说2个if else的组件用了同一个ref，从一个组件切到另一个组件后ref元素数量就从1变成2了
+- 可用`this.$refs`的生命周期  
+  - `beforeDestroy`可用
+  - `destroyed`不可用
+
+
+
 
 
 ##### `v-for`中的`ref`
@@ -916,6 +938,8 @@ mounted: function () {
 
 
 ### 组件的事件
+
+- vue组件上@click不会触发事件，@click.native才行
 
 **js操作**
 
@@ -1090,7 +1114,9 @@ mounted: function () {
 
 [官方的配置文档](https://cli.vuejs.org/zh/config)
 
+- vue.config.js的代码先执行，index.html的代码后执行
 
+- > vue.config.js里的东西有修改的话需要重启，其他不用——锦侨
 
 # 周边工具
 
@@ -1108,6 +1134,12 @@ xml里组件名来源
   那么`path`去掉`/`后首字母大写，就会是组件名  
   （部分情况下这条不会生效）
 - 还找不到名字的话就会叫`Anonymous`
+
+bug
+
+- 有时vuex在使用的组件里已经更新了  
+  但是在vuedevtool的vuex分析里，是没更新的  
+  —— 2020.12
 
 
 
@@ -1271,6 +1303,18 @@ iview3组件的事件名真的和文档写的医院，都带`on-`
 
 
 
+### vant
+
+**[第二版](https://vant-contrib.gitee.io/vant/#/zh-CN/)**
+
+- Picker组件的setValues对于树结构的columns也可以正常生效
+
+- popup组件的close、before-leave、leave事件都不好使
+
+  
+
+
+
 ### [async-validator](https://github.com/yiminghe/async-validator)
 
 一个用来做表单校验的库，被element与iview所依赖
@@ -1283,3 +1327,11 @@ iview3组件的事件名真的和文档写的医院，都带`on-`
    验证函数为：`(rule, value) => value === 'muji'`
 2. 验证函数传入asyncValidator属性  
    验证函数返回一个Promise，可以reslove也可以reject
+
+
+
+
+
+### 其他
+
+- [固定插件](https://www.npmjs.com/package/vue-affix)

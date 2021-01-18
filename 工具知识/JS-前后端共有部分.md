@@ -32,6 +32,11 @@
 
 - js的奇异表现  
   [知乎视频](https://www.zhihu.com/zvideo/1322284588354412544)第4分钟
+  
+- 16进制字符串
+  例子："\x74\x61\x69"
+  可以直接使用，在控制台输入就会转成具有可读性的字符串
+  该博文有说编码方法：https://blog.csdn.net/haige025/article/details/89531355
 
 
 
@@ -1123,6 +1128,8 @@ try{
 
 ## Date对象
 
+**api**
+
 - **获得时间戳**  
 `valueOf`与`getTime`都可以  
   这2个方法具有完全一致的功能  
@@ -1140,7 +1147,19 @@ try{
 
     > 比如在中国大陆、香港、澳门、蒙古国、台湾、新加坡、马来西亚、菲律宾等地区的本地时间比UTC快8小时，记作UTC+8，意思就是比UTC时间快8小时。减的类似理解，比如UTC-10等。 —— [博客](https://www.cnblogs.com/poorpan/archive/2011/11/29/2267030.html)
 
+- 获得星期几  
+  getDay方法  
+  0代表星期天、1代表星期一
+- 
 
+**延展内容**
+
+- 跳到一个月的最后一天的方法  
+  `new Date(year,month,0)`  
+  注意这里的month不是monthIdx
+  原理：setMonth的dayValue传入0是设为上个月的最后一天
+- `setMonth`、`setFullYear`有时候并不是那么符合常识的。  
+  因为他们在没有指定day参数时会默认去getDate方法里取，而如果取了过大的day，就会走到下个月
 
 ## π
 
@@ -1658,6 +1677,8 @@ Foo.bar() // hello
 
   - `promise.then(fn)`返回的还会是一个promise  
     （似乎是真的？）[这个MDN页面](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8)有相关描述
+    
+  - 【】测测多个then之间是否是同步执行的
 
   
 

@@ -284,6 +284,13 @@ ie5支持js中的中文
 - 渐变色可以加在`background-image`上（`background`上也可以）
 - [选择器与组合器](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Selectors)
 - [权重](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Specificity)
+- 『font ico』的垂直居中  
+  似乎只能用flex来做垂直居中，至少[vant2](https://vant-contrib.gitee.io/vant/#/zh-CN/icon)是要这样的
+- `:not()`中用伪类的话伪类的冒号不能丢
+
+
+
+
 
 ### [flex](http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html)
 

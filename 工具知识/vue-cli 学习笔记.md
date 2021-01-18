@@ -68,6 +68,7 @@ vue-cli含有模板：https://github.com/vuejs-templates
         }
       },
     }
+    ```
   ```
     
     [这里](https://github.com/chimurai/http-proxy-middleware#context-matching)写的`'**'`并不好使
@@ -76,17 +77,32 @@ vue-cli含有模板：https://github.com/vuejs-templates
   
     - axios的BaseUrl设为`'./'`  
       设成空串似乎也可以走代理——网友
+  ```
 
 
 
 ### 命令
 
+- 开发项目  
+  [`vue-cli-service serve`](https://cli.vuejs.org/zh/guide/cli-service.html#vue-cli-service-serve)  
+  进一步介绍看上面的链接
+  - 在手机上调试应用  
+    方法：手机浏览器访问PC端ip  
+    特性：有热更新，而且不用刷新手机页面
+- 打包项目  
+  [`vue-cli-service build`](https://cli.vuejs.org/zh/guide/cli-service.html#vue-cli-service-build)
+- 查看最终使用的webpack配置  
+  [`vue-cli-service inspect`](https://cli.vuejs.org/zh/guide/cli-service.html#vue-cli-service-build)
+
+
+
+经验
+
 - 命令进行中可以取消掉重新使用  
   这样能解决部分问题  
   比如这个命令：`vue init webpack-simple foo`
-- 编译完成自动打开页面  
-  在命令中加入` --open`即可达到该效果  
-  （完整命令如：`vue-cli-service serve --open`）
+  
+  
 
 
 

@@ -1,4 +1,4 @@
-## JSX
+# JSX
 > 每个 JSX 元素只是调用 React.createElement(component, props, ...children) 的语法糖。
 1. JSX中的style={XX}的XX应该一个对象，可以用变量代理
 1. JSX最原本的样子：
@@ -31,7 +31,7 @@
 1. 可以直接用jsx给变量赋值，使用这个变量就相当于使用jsx
 
 
-## 组件
+# 组件
 `class 组件名 extends React.Component {.. }`
 1. 类的每个方法间不能加逗号
 1. render的return后马上换行的话应该用()把标签包裹起来 
@@ -57,8 +57,61 @@
 	   return 默认props（即包含所有prop的对象，他们将会根据这个对象设置默认值）
 	1. propTypes(){.. }【这个应该需要构建才能使用，构建后再研究】【】
 	
-	
-## 状态
+
+
+
+### props
+
+类型验证及默认值完整内容见：https://zh-hans.reactjs.org/docs/typechecking-with-proptypes.html#proptypes
+
+1. 设置初始Props
+   语法：
+
+   ```
+   static defaultProps = {
+       prop名: prop值
+   };
+   ````
+
+1. 可以传函数，甚至函数可以改变状态
+
+
+
+### 全局传参
+
+react的context特性可以让一个组件下的所有后代元素设置共有的参数
+而且这些参数在每个后代组件中都可以独立修改，不影响到其他组件（甚至是后代组件）
+
+##### 使用方法
+
+- 最底层组件中
+
+  ```js
+  static childContextTypes = {
+      themeColor :'随便什么内容'
+  }
+  getChildContext () {
+      return {
+          themeColor : 'blue'
+      }
+  }
+  ```
+
+- 要使用context的后代组件中
+  - 头部写
+
+    ```js
+    static contextTypes = {
+        themeColor: 'yellow'//这里是无法赋值的
+    }
+    ```
+  - 使用时写`this.context.themeColor`
+
+
+
+
+
+# 状态
 1. 设置初始state：
    不设置初始值后续也可以操作
     1. ```
@@ -68,6 +121,7 @@
                state名: state值
            } 
        }
+       ```
     1. ```
        class 组件名 extends React.Component {
            state={
@@ -75,25 +129,16 @@
            }
            ...
        }
+       ```
 1. 改变state`this.setState({state名:state值})`
    这个方法是异步的，据说是因为react要收集所有对state的改变请求然后一次性改变
    render中无法使用
 1. 读取 `this.state.state名`
 
 
-## props
-类型验证及默认值完整内容见：https://zh-hans.reactjs.org/docs/typechecking-with-proptypes.html#proptypes
-1. 设置初始Props
-   语法：
-   ```
-   static defaultProps = {
-       prop名: prop值
-   };
-   ````
-1. 可以传函数，甚至函数可以改变状态
 
 
-## 其他
+# 其他
 1. 构建的话将ReactDOM.render()简写为render()的方法
    引入react-dom时写为`
    import { render } from 'react-dom';
