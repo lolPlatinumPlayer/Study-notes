@@ -65,6 +65,9 @@
 - 将对象保存为全局变量  
   右键对象后点击`store as global variable`  
   <span style='opacity:.5'>不能保存symbol以外的原始类型值</span>
+- 可以在命令行里使用`$`  
+  这个`$`拥有jquery选择器的功能  
+  不过返回的是dom
 
 
 
