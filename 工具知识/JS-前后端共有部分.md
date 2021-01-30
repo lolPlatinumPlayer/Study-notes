@@ -223,9 +223,8 @@ console.log('a[3]',a[3]) // undefined
 
 ## 数据类型
 在es5中数据类型可以分为下面两类
-1. 原始类型值有6种：undefined、null、boolean、number、string、symbol（es6新增）  
-   其实还有一个bigInt类型，但是不是所有浏览器都支持（比如IE），而且操作感觉没有那么流畅
-2. 引用类型值，也就是对象类型(Object type)，除了5种原始值外一切皆对象，比如Object、Array、Function、Date、RegExp、Error。
+1. 原始类型值：undefined、null、boolean、number、string、symbol（es6新增）、BigInt（es2020新增）  
+2. 引用类型值，也就是对象类型(Object type)，除了原始值外一切皆对象，比如Object、Array、Function、Date、RegExp、Error。
 
 声明变量时不同的内存分配：  
 1. 原始类型值：  
@@ -261,8 +260,22 @@ console.log('a[3]',a[3]) // undefined
 
 ## instanceof
 `对象 instanceof 构造函数`  
-mdn的说明是判断构造函数的prototype属性是否出现在对象的原型链中，不过粗略测试后感觉是构造函数或类是否出现在对象的原型链中  
+（注意：对原始类型值使用`instanceof`永远都返回`false`）
+
+mdn的说明是判断构造函数的prototype属性是否出现在对象的原型链中，不过粗略测试后感觉是构造函数或类是否出现在对象的原型链中
+
 `instanceof Object`的话数组、日期也会判断为true，但是`String instanceof String`这种情况都是返回false
+
+
+
+
+## `typeof`
+
+`typeof a`返回a的数据类型，返回值是字符串，优先级第二级，测试表如下：
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/typeof
+注意：对于数组返回的是和对象一样的'object'
+
+
 
 
 ## 对象（下文的对象都指广义对象）
@@ -580,15 +593,6 @@ switch(表达式){
 （比如说循环3次，在第二次时执行`continue`，那么就会直接进入第三次的语句执行）
 
 `return` 可以跳出函数，`break`只能存在于指定位子
-
-
-
-
-## typeof a
-
-返回a的数据类型，返回值是字符串，优先级第二级，测试表如下：
-https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/typeof
-注意：对于数组返回的是和对象一样的'object'
 
 
 
@@ -1001,16 +1005,71 @@ div上似乎没有聚焦、失焦事件
 
 （这四种东西的具体同源策略细节还没理清）
 
-
 ## sessionStorage和localStorage
-这两个都属于web存储，都限定在同文档源（协议、主机名、端口号）（根据https://segmentfault.com/a/1190000004121465 描述，应该也限定于同域名下，且子域名无法继承父域名localStorage）
-sessionStorage除以上限定外，还限定与窗口，窗口关闭则数据销毁
-正式存、取方法应该用setItem和getItem来，（稍微看了书和博客还是没研究清楚多级对象的存储）  
-这两个东西都能被iframe中的页面获得
+
+参考资料
+
+- [博客](https://segmentfault.com/a/1190000004121465)
+
+
+
+共同点
+
+- 正式存、取方法应该用setItem和getItem来，（稍微看了书和博客还是没研究清楚多级对象的存储）  
+
+- 这两个东西都能被iframe中的页面获得
+
+- [存储大小测试（MDN提供）](http://dev-test.nemikor.com/web-storage/support-test/)  
+  （需要翻墙）  
+  测试结果如下表：  
+
+  |           | localStorage | sessionStorage | globalStorage |
+  | --------- | ------------ | -------------- | ------------- |
+  | chrome88  | 5101 k个字符 | 5101 k个字符   | 不支持        |
+  | firefox84 | 5101 k个字符 | 5101 k个字符   | 不支持        |
+  | IE11      | 4864 k个字符 | 4864 k个字符   | 不支持        |
+
+- > key和value都是一个字符2字节的UTF-16 [`DOMString`](https://developer.mozilla.org/en-US/docs/Web/API/DOMString) 格式，整数键会自动转为字符串
+  > —— MDN
+
+
+
+
+
+不同点
+
+- sessionStorage除以上限定外，还限定于窗口，窗口关闭则数据销毁  
+
+  > 该存储区域在页面会话期间可用（即只要浏览器处于打开状态，包括页面重新加载和恢复） —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API)
+
+- > - sessionStorage对应当前[origin](https://developer.mozilla.org/en-US/docs/Glossary/origin) 
+  >
+  > —— [MDN sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage)
+
+- > - localStorage对应[`Document`](https://developer.mozilla.org/en-US/docs/Web/API/Document)'s [origin](https://developer.mozilla.org/en-US/docs/Glossary/origin)
+  > - localStorage跨会话保存 
+  >
+  > - 在 "private browsing"或"incognito"会话里创建的localStorage对象的数据，在最后一个"private" tab关闭时清除
+  > - Data stored in either `localStorage` **is specific to the protocol of the page**
+  >
+  > —— [MDN localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+
+
+
+【】看sessionStorage
+
+【】大小的资料要查阅后记录一下
+
+【】记录终止时间
+
+【】测试共享策略
+
+
 
 
 ## cookie
-受同源策略限制，不过与请求文件的同源策略可能稍有不同
+受同源策略限制，不过与请求文件的同源策略可能稍有不同  
+应该是会存在硬盘上的
 
 
 ## 跨域
@@ -1303,7 +1362,8 @@ Symbol是第七种数据类型
 作用：负责重命名
 
 不管在`export`还是`import`中，`as`前的都是原变量名，`as`后的都是重命名后变量名  
-`as`可以将一个变量重命名为多个变量  
+
+- `as`可以将一个变量重命名为多个变量  
 
 - 重命名`export default`导出的内容  
   用下面的代码可能可以（turf源码中出现，自己并未研究过）  
@@ -1646,7 +1706,9 @@ Foo.bar() // hello
   return的值是最终读取到的值  
   如果不写取值函数，实例就不会拥有这个属性，不过还是可以给这个属性赋值  
 
-## Promise
+## [Promise](https://developer.mozilla.org/zh-cn/docs/web/javascript/reference/global_objects/promise)
+
+- 还有一个可以查阅的页面是[使用Promise](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises)
 
 `Promise`对象是一个构造函数
 
@@ -1675,8 +1737,8 @@ Foo.bar() // hello
 
   - > 即使是一个已经变成 resolve 状态的 Promise，传递给 `then()` 的函数也总是会被异步调用 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E6%97%B6%E5%BA%8F)
 
-  - `promise.then(fn)`返回的还会是一个promise  
-    （似乎是真的？）[这个MDN页面](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8)有相关描述
+  - `promise.then(fn)`返回的也是promise  
+    [这个MDN页面](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8)有相关描述
     
   - 【】测测多个then之间是否是同步执行的
 
@@ -1716,9 +1778,9 @@ Foo.bar() // hello
     }
     ```
 
-    
+  - catch返回的是一个promise
 
-- finally  
+- [finally](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally)  
   【】待了解，至少可以避免then与catch的重复代码
 
 
@@ -1827,8 +1889,40 @@ Foo.bar() // hello
     
     
 
+## [`Promise.resolve`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve)
+
+兼容性：除了ie，都可以
+
+- Promise.resolve().then与setTimeout 0的区别  
+  Promise.resolve().then比setTimeout 0早执行  
+  下面是一个例子  
+
+  ```js
+  Promise.resolve().then(x=>{
+    console.log(x,1)
+  })
+  setTimeout(()=>{
+    console.log('setTimeout 0（1）')
+  },0)
+  setTimeout(()=>{
+    console.log('setTimeout 0（2）')
+  },0)
+  Promise.resolve().then(x=>{
+    console.log(x,2)
+  })
+  console.log('外层打印内容')
+  ```
+
+  打印结果为  
+
+  ![promise测试的打印结果](E:\non_work_project\mine\Study-notes\图片\promise测试的打印结果.png)
+
+  
+
+
 
 ## Promise.all
+
 - **语法** 
 
   `Promise.all(多个promise组成的数组)`  
@@ -2122,6 +2216,38 @@ export default connect(函数)(组件)
 @connect(函数) // 这句要在export default前
 export default 组件
 ```
+
+
+
+# ES2020
+
+## BigInt
+
+**可参考资料如下**
+
+- [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
+- [阮一峰](https://es6.ruanyifeng.com/#docs/number#BigInt-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B)
+- [ES2021](https://tc39.es/ecma262/#sec-bigint-objects)
+- [tc39提议（github版本）](https://github.com/tc39/proposal-bigint)
+- [tc39提议（网页版本）](https://tc39.es/proposal-bigint/)
+
+**特性**
+
+- 可以表示任意大的整数
+
+- 与Number的关系
+
+  - 即使是同一数字Number和BigInt也不全等  
+    不过用`==`的判断结果是`true`
+
+  - > 不能和Number混合运算 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt#%E6%8F%8F%E8%BF%B0)
+
+- 兼容性  
+  IE不行，其他浏览器在18年左右就支持了
+
+- > 可以使用负号，但不能使用正号 —— [阮一峰](https://es6.ruanyifeng.com/#docs/number#%E7%AE%80%E4%BB%8B)
+
+
 
 
 
