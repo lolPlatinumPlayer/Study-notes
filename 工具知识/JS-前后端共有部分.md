@@ -1005,19 +1005,19 @@ div上似乎没有聚焦、失焦事件
 
 （这四种东西的具体同源策略细节还没理清）
 
-## sessionStorage和localStorage
+## Web Storage
 
-参考资料
-
-- [博客](https://segmentfault.com/a/1190000004121465)
+稍微看了书和博客还是没研究清楚多级对象的存储
 
 
 
-共同点
+**关于大小**
 
-- 正式存、取方法应该用setItem和getItem来，（稍微看了书和博客还是没研究清楚多级对象的存储）  
+- > 储存量大于cookie —— [Web Storage][3]
 
-- 这两个东西都能被iframe中的页面获得
+- > localStorage有3者中最大的存储量 —— [Web Storage][3]
+
+  （3者指的是cookie与2种Web Storage）
 
 - [存储大小测试（MDN提供）](http://dev-test.nemikor.com/web-storage/support-test/)  
   （需要翻墙）  
@@ -1029,40 +1029,103 @@ div上似乎没有聚焦、失焦事件
   | firefox84 | 5101 k个字符 | 5101 k个字符   | 不支持        |
   | IE11      | 4864 k个字符 | 4864 k个字符   | 不支持        |
 
+
+
+**关于私人模式与隐身模式**
+
+看MDN的描述，感觉web存储在这种模式下是不可靠的
+
+- [私人模式与隐身模式 - Web Storage](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API#private_browsing_incognito_modes)
+
+- > 在私人模式或隐身模式会话里创建的localStorage对象的数据，在最后一个该类标签关闭时清除 —— [localStorage][1]
+
+
+
+**其他共同点**
+
+- > 特定于页面协议（比如说http和https就是不同的协议） —— [localStorage][1]与[sessionStorage][2]
+
 - > key和value都是一个字符2字节的UTF-16 [`DOMString`](https://developer.mozilla.org/en-US/docs/Web/API/DOMString) 格式，整数键会自动转为字符串
-  > —— MDN
+  > —— [localStorage][1]与[sessionStorage][2]
+
+- > 数据永远不会传输到服务器 —— [Web Storage][3]
+
+- > 如果用户[禁用了第三方Cookie，](https://support.mozilla.org/en-US/kb/disable-third-party-cookies)则拒绝从第三方IFrame访问Web存储（Firefox从[版本43](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/43)开始实施此行为） —— [Web Storage][3]
+
+- > 建议使用Web Storage API来防止碰到[用普通对象的API可能会遇到的陷阱](https://2ality.com/2012/01/objects-as-maps.html) —— [使用Web Storage][4]
+
+- 这两个东西都能被iframe中的页面获得
 
 
 
+**其他不同点**
 
+- sessionStorage  
 
-不同点
+  > - sessionStorage对应当前[源](https://developer.mozilla.org/en-US/docs/Glossary/origin) —— [sessionStorage][2]
+  > - 关于清除
+  >   - data in `sessionStorage` is cleared when the page session ends —— [localStorage][1]与[sessionStorage][2]
+  >   - [localStorage][1]在随后补充道：that is, when the page is closed
+  > - sessionStorage对应选项卡 —— [sessionStorage][2]
+  > - 只要标签页或浏览器处于打开状态，页面会话就会持续，并且在页面重新加载和还原后仍然存在 —— [sessionStorage][2]
+  > - **`sessionStorage`** 在页面会话期间（只要打开浏览器，包括页面重新加载和还原），就为每个给定的[源](https://developer.mozilla.org/en-US/docs/Glossary/origin)维护一个单独的存储区，该存储区在整个页面会话期间都可用。 —— [使用Web Storage][4]
+  > - 关闭标签页将清除sessionStorage —— [sessionStorage][2]
 
-- sessionStorage除以上限定外，还限定于窗口，窗口关闭则数据销毁  
-
-  > 该存储区域在页面会话期间可用（即只要浏览器处于打开状态，包括页面重新加载和恢复） —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API)
-
-- > - sessionStorage对应当前[origin](https://developer.mozilla.org/en-US/docs/Glossary/origin) 
+- localStorage  
+  > - localStorage对应[`Document`](https://developer.mozilla.org/en-US/docs/Web/API/Document)的[源](https://developer.mozilla.org/en-US/docs/Glossary/origin) —— [localStorage][1]
+  > - localStorage跨会话保存 —— [localStorage][1]
+  > - localStorage即使关闭并重新打开浏览器也仍然存在 —— [使用Web Storage][4]
   >
-  > —— [MDN sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage)
-
-- > - localStorage对应[`Document`](https://developer.mozilla.org/en-US/docs/Web/API/Document)'s [origin](https://developer.mozilla.org/en-US/docs/Glossary/origin)
-  > - localStorage跨会话保存 
-  >
-  > - 在 "private browsing"或"incognito"会话里创建的localStorage对象的数据，在最后一个"private" tab关闭时清除
-  > - Data stored in either `localStorage` **is specific to the protocol of the page**
-  >
-  > —— [MDN localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+  > - localStorage里的数据没有到期时间 —— [localStorage][1]
+  > - localStorage里的数据不会到期 —— [sessionStorage][2]
 
 
 
-【】看sessionStorage
+
+
+
+
+[1]: https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage "《localStorage》 - MDN"
+[2]: https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage "《sessionStorage》 - MDN"
+[3]: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API "《Web Storage API》 - MDN"
+[4]: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API "《使用Web Storage API》 - MDN"
+
+
+
+【】看到[使用Web Storage][4]的”So, for example, initially calling“
 
 【】大小的资料要查阅后记录一下
 
 【】记录终止时间
 
 【】测试共享策略
+
+待测试内容
+
+- 3个对象的共享策略
+
+  - 测试localStorage在同源的不同path下是否共享
+
+  - 测试sessionStorage在同源的不同path下是否共享
+  
+  - sessionStorage在不同标签页下是否共享  
+
+    - 测试ctrl打开的情况
+    - 测试页面内打开的情况
+    - 测试输入url打开的情况
+  - 测试chrome从历史记录里点开的情况
+    - 测试chrome还原关闭窗口的情况
+    - 测试chrome回退键的情况
+    
+    测完之后看看能不能理解《sessionStorage》的这句话：“Opening a page in a new tab or window creates a new session with the value of the top-level browsing context, which differs from how session cookies work.”
+  
+- 测试非整数键的使用  
+  可以3个浏览器都测测
+
+  - Web Storage的
+  - 对象的
+  
+- 测试sessionStorage是否能设置到期时间
 
 
 
