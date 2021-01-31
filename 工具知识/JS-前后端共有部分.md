@@ -1092,13 +1092,11 @@ div上似乎没有聚焦、失焦事件
 
 
 
-【】看到[使用Web Storage][4]的”So, for example, initially calling“
+**[使用StorageEvent响应存储更改](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API#responding_to_storage_changes_with_the_storageevent)**
 
-【】大小的资料要查阅后记录一下
 
-【】记录终止时间
 
-【】测试共享策略
+【】MDN的4个页面都看完了，准备测试
 
 待测试内容
 
