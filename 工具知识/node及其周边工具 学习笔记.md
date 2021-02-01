@@ -19,7 +19,7 @@
 
 > 10、12、14版分别起始与18年、19年、20年的4月，服务终止于21年、22年、23年的4月30日 —— [node官网](https://nodejs.org/zh-cn/about/releases/)
 
-[vue-cli](https://cli.vuejs.org/zh/guide/installation.html)里提到了如何管理多个node版本
+> 你可以使用 [n](https://github.com/tj/n)，[nvm](https://github.com/creationix/nvm) 或 [nvm-windows](https://github.com/coreybutler/nvm-windows) 在同一台电脑中管理多个 Node 版本 —— [vue-cli](https://cli.vuejs.org/zh/guide/installation.html)
 
 ### 入门
 
