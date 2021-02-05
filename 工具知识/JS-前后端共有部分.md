@@ -31,7 +31,9 @@
 - `new`关键字后的构造函数似乎可以不加括号
 
 - js的奇异表现  
-  [知乎视频](https://www.zhihu.com/zvideo/1322284588354412544)第4分钟
+  
+  - [知乎视频](https://www.zhihu.com/zvideo/1322284588354412544)第4分钟
+  - `3.0000000000000002 === 3`结果为`true`
   
 - 16进制字符串
   例子："\x74\x61\x69"
@@ -347,6 +349,10 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/type
     不过`对象.属性.属性=1`可以生效
 
   似乎原型链也会被冻结，详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze)
+  
+- 给对象设置数字键是会转为字符串键的  
+  `pureObj[.222]=.222`  
+  <span style='opacity:.5'>注意：`.222`这种写法转成字符串后是`0.222`</span>
 
 ## 引用传递（有时也被称为“引用传值”）
 
@@ -1007,11 +1013,90 @@ div上似乎没有聚焦、失焦事件
 
 ## Web Storage
 
-稍微看了书和博客还是没研究清楚多级对象的存储
+Web Storage指的是`window.localStorage`与`window.sessionStorage`对象  
+这2个对象都是`Storage`实例  
+[`Storage`](https://developer.mozilla.org/zh-CN/docs/Web/API/Storage)是浏览器内置的构造函数
 
 
 
-**关于大小**
+- > key和value都是一个字符2字节的UTF-16 [`DOMString`](https://developer.mozilla.org/en-US/docs/Web/API/DOMString) 格式，整数键会自动转为字符串
+  > —— [localStorage][1]与[sessionStorage][2]
+  
+  经过测试，小数键也是会转为字符串的<span style='opacity:.5'>（注意：`.22`这种写法是会转成`'0.22'`的）</span>  
+  <span style='opacity:.5'>已测试浏览器为：chrome88、IE11、firefox85</span>  
+
+
+
+##### 关于“作用域”
+
+localStorage只要同[源](https://developer.mozilla.org/en-US/docs/Glossary/origin)就行了，sessionStorage除了同[源](https://developer.mozilla.org/en-US/docs/Glossary/origin)外还有其他限制
+
+- 2者的“作用域”都至少是同[源](https://developer.mozilla.org/en-US/docs/Glossary/origin)的  
+  mdn上有一些话佐证了这件事：  
+  
+  > - localStorage对应[`Document`](https://developer.mozilla.org/en-US/docs/Web/API/Document)的[源](https://developer.mozilla.org/en-US/docs/Glossary/origin) —— [localStorage][1]
+  > - sessionStorage对应当前[源](https://developer.mozilla.org/en-US/docs/Glossary/origin) —— [sessionStorage][2]
+  > - 特定于页面协议（比如说http和https就是不同的协议） —— [localStorage][1]与[sessionStorage][2]
+  
+  （注意：同[源](https://developer.mozilla.org/en-US/docs/Glossary/origin)不同路径也是视为相同“作用域”的，这一点已经在chrome88上测试过了）
+  
+- sessionStorage的其他限制  
+
+  - 关闭浏览器会清空sessionStorage  
+    以下2个事情可以证明
+
+    - 关闭浏览器后再打开，再点历史记录，出来的sessionStorage是不一样的
+    - 『还原关闭窗口』是不会共享sessionStorage的  
+      （已在chrome88上测试）  
+      『还原关闭窗口』的按钮如下：  
+      ![chrome88还原关闭的标签页](E:\non_work_project\mine\Study-notes\图片\chrome88还原关闭的标签页.jpg)  
+
+    > - data in `sessionStorage` is cleared when the page session ends —— [localStorage][1]与[sessionStorage][2]
+    > - [localStorage][1]在随后补充道：that is, when the page is closed
+
+    当然，[localStorage][1]补充的那句话是错的
+
+  - > sessionStorage对应选项卡 —— [sessionStorage][2]
+
+    mdn上还有这句话的详细描述版本：  
+
+    > **`sessionStorage`** 在页面会话期间（只要打开浏览器，包括页面重新加载和还原），就为每个给定的[源](https://developer.mozilla.org/en-US/docs/Glossary/origin)维护一个单独的存储区，该存储区在整个页面会话期间都可用。 —— [使用Web Storage][4]
+
+    具体对应以下特性：  
+    <span style='opacity:.5'>（都已在chrome88上测试）</span>
+
+    - 同一个时间展示的不同标签页不会共享sessionStorage  
+      <span style='opacity:.5'>（已测试项目为：按住ctrl打开`#`或绝对路径的url、在新标签页里输入url打开）</span>
+
+    - 以下情况会共享sessionStorage
+
+      - 标签页内打开的情况（没有新建标签页）
+
+      - 从历史记录里点开的情况  
+        这说明了下面这句来自mdn的话有一半是错误的：  
+
+        > 关闭标签页/窗口将清除sessionStorage —— [sessionStorage][2]
+
+      - 前进、回退键的情况
+
+      - 刷新  
+        就算`disable cache`、硬性刷新、清空缓存并硬性刷新，sessionStorage都是不会变的
+
+        > 只要标签页或浏览器处于打开状态，页面会话就会持续，并且在页面重新加载和还原后仍然存在 —— [sessionStorage][2]
+
+
+
+##### localStorage比sessionStorage持久的地方  
+
+- > localStorage跨会话保存 —— [localStorage][1]
+
+- > localStorage即使关闭并重新打开浏览器也仍然存在 —— [使用Web Storage][4]
+
+- > 在移动设备上的浏览器或各`Native App`用到的`WebView`里，`localStorage`都是不可靠的，可能会因为各种原因（比如说退出App、网络切换、内存不足等原因）被清空 —— [博客](https://segmentfault.com/a/1190000004121465)
+
+
+
+##### 关于大小
 
 - > 储存量大于cookie —— [Web Storage][3]
 
@@ -1031,9 +1116,18 @@ div上似乎没有聚焦、失焦事件
 
 
 
-**关于私人模式与隐身模式**
+##### 关于到期时间
 
-看MDN的描述，感觉web存储在这种模式下是不可靠的
+sessionStorage和localStorage都无法设置到期时间
+
+> - localStorage里的数据没有到期时间 —— [localStorage][1]
+> - localStorage里的数据不会到期 —— [sessionStorage][2]
+
+
+
+##### 关于私人模式与隐身模式
+
+看MDN的描述，感觉Web Storage在这种模式下是不可靠的
 
 - [私人模式与隐身模式 - Web Storage](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API#private_browsing_incognito_modes)
 
@@ -1041,45 +1135,17 @@ div上似乎没有聚焦、失焦事件
 
 
 
-**其他共同点**
-
-- > 特定于页面协议（比如说http和https就是不同的协议） —— [localStorage][1]与[sessionStorage][2]
-
-- > key和value都是一个字符2字节的UTF-16 [`DOMString`](https://developer.mozilla.org/en-US/docs/Web/API/DOMString) 格式，整数键会自动转为字符串
-  > —— [localStorage][1]与[sessionStorage][2]
+##### 非重点共同点
 
 - > 数据永远不会传输到服务器 —— [Web Storage][3]
 
-- > 如果用户[禁用了第三方Cookie，](https://support.mozilla.org/en-US/kb/disable-third-party-cookies)则拒绝从第三方IFrame访问Web存储（Firefox从[版本43](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/43)开始实施此行为） —— [Web Storage][3]
+- > 如果用户[禁用了第三方Cookie，](https://support.mozilla.org/en-US/kb/disable-third-party-cookies)则拒绝从第三方IFrame访问Web Storage（Firefox从[版本43](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/43)开始实施此行为） —— [Web Storage][3]
 
 - > 建议使用Web Storage API来防止碰到[用普通对象的API可能会遇到的陷阱](https://2ality.com/2012/01/objects-as-maps.html) —— [使用Web Storage][4]
 
 - 这两个东西都能被iframe中的页面获得
 
-
-
-**其他不同点**
-
-- sessionStorage  
-
-  > - sessionStorage对应当前[源](https://developer.mozilla.org/en-US/docs/Glossary/origin) —— [sessionStorage][2]
-  > - 关于清除
-  >   - data in `sessionStorage` is cleared when the page session ends —— [localStorage][1]与[sessionStorage][2]
-  >   - [localStorage][1]在随后补充道：that is, when the page is closed
-  > - sessionStorage对应选项卡 —— [sessionStorage][2]
-  > - 只要标签页或浏览器处于打开状态，页面会话就会持续，并且在页面重新加载和还原后仍然存在 —— [sessionStorage][2]
-  > - **`sessionStorage`** 在页面会话期间（只要打开浏览器，包括页面重新加载和还原），就为每个给定的[源](https://developer.mozilla.org/en-US/docs/Glossary/origin)维护一个单独的存储区，该存储区在整个页面会话期间都可用。 —— [使用Web Storage][4]
-  > - 关闭标签页将清除sessionStorage —— [sessionStorage][2]
-
-- localStorage  
-  > - localStorage对应[`Document`](https://developer.mozilla.org/en-US/docs/Web/API/Document)的[源](https://developer.mozilla.org/en-US/docs/Glossary/origin) —— [localStorage][1]
-  > - localStorage跨会话保存 —— [localStorage][1]
-  > - localStorage即使关闭并重新打开浏览器也仍然存在 —— [使用Web Storage][4]
-  >
-  > - localStorage里的数据没有到期时间 —— [localStorage][1]
-  > - localStorage里的数据不会到期 —— [sessionStorage][2]
-
-
+- [使用StorageEvent响应存储更改](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API#responding_to_storage_changes_with_the_storageevent)
 
 
 
@@ -1092,45 +1158,45 @@ div上似乎没有聚焦、失焦事件
 
 
 
-**[使用StorageEvent响应存储更改](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API#responding_to_storage_changes_with_the_storageevent)**
-
-
-
-【】MDN的4个页面都看完了，准备测试
-
-待测试内容
-
-- 3个对象的共享策略
-
-  - 测试localStorage在同源的不同path下是否共享
-
-  - 测试sessionStorage在同源的不同path下是否共享
-  
-  - sessionStorage在不同标签页下是否共享  
-
-    - 测试ctrl打开的情况
-    - 测试页面内打开的情况
-    - 测试输入url打开的情况
-  - 测试chrome从历史记录里点开的情况
-    - 测试chrome还原关闭窗口的情况
-    - 测试chrome回退键的情况
-    
-    测完之后看看能不能理解《sessionStorage》的这句话：“Opening a page in a new tab or window creates a new session with the value of the top-level browsing context, which differs from how session cookies work.”
-  
-- 测试非整数键的使用  
-  可以3个浏览器都测测
-
-  - Web Storage的
-  - 对象的
-  
-- 测试sessionStorage是否能设置到期时间
-
 
 
 
 ## cookie
 受同源策略限制，不过与请求文件的同源策略可能稍有不同  
 应该是会存在硬盘上的
+
+
+
+- > 计划在未来两年内从equation中消除第三方Cookie —— [20年1月的文章](https://hothardware.com/news/google-phase-out-third-party-cookies-chrome)
+
+- > 从20年2月份开始Google仅将不包含SameSite标签的cookie视为第一方，并且要要求通过HTTPS访问标记为供第三方使用的Cookie —— [20年1月的文章](https://hothardware.com/news/google-phase-out-third-party-cookies-chrome)
+
+- > 20年1月，Google 计划在未来几年内逐步终止对 Chrome 中第三方跟踪 Cookie 的支持 —— [公众号文章A](https://mp.weixin.qq.com/s/xoOyXHqvuzlb0I2lFzBbtg)
+
+- >2020 年 1 月 14 日，Google 表示，为了保护用户隐私，Google Chorme 将在两年的时间内逐步删除第三方 Cookie —— [公众号文章C](https://mp.weixin.qq.com/s/9oNLZbGMBlpAfS_VGIdIow)
+
+- > - 来自你访问网站的创建和使用的，也就是第一方 Cookie；那些根本不熟的，是从好友分享或者其他途径获得你的消息，是第三方 Cookie，用户并不信任这种东西，它往往意味着被追踪和信息被拿来营销换钱 
+  > - SuperCookie  
+  >   也叫做 EverCookie，规模化专门化地搞你的黑料，用于识别和复制客户端浏览器存储上故意删除的 cookie  
+  >   要删除和阻止这类 Cookie 就困难得多了，用户在浏览网页的时候几乎无法保护自己的隐私，因为他就很”流氓“，常规的 cookie 删除方法奈何不了它们，即使用户删除了标准Cookie 和其他的隐私数据（比如 Flash Cookie、H5 存储、Silverlight 等等）依然能够识别用户。出于隐私方面的考虑，用户和一些组织都不愿使用超级Cookie。但是，潜在的数据财富及其在在线广告中的使用促使许多广告组织和网站尝试使用这些更强大的 cookie
+  >
+  > —— [公众号文章B](https://mp.weixin.qq.com/s/sv37sW9TgSgnzCzSGQ7q_w)
+
+- > firefox直接阻止第三方Cookie并每天将其命名为一天 —— [20年1月的文章](https://hothardware.com/news/google-phase-out-third-party-cookies-chrome)
+
+
+
+
+
+[**FLoC**](https://blog.chromium.org/2021/01/privacy-sandbox-in-2021.html)（Federated Learning of Cohorts）
+
+google用来代替cookie的方案  
+
+> Google 还同时有其他的替代 Cookie 的提议，所以目前不能保证 FLoC 会是 Google 淘汰 Cookie 的最终方案 —— [公众号文章C](https://mp.weixin.qq.com/s/9oNLZbGMBlpAfS_VGIdIow)
+
+疑问：广告商用FLoC只能一个网站获得一个画像？没法具体到用户？
+
+
 
 
 ## 跨域
@@ -2218,7 +2284,8 @@ iterator
 
 ## 对象展开运算符（或称扩展运算符）（Object rest spread）
 （ES6的stage-3、ES7）
-...后的内容可用变量代理
+`...`后的内容可用变量代理
+
 - 使用条件：
   1. cnpm install --save-dev babel-plugin-transform-object-rest-spread
   2. .babelrc中加"plugins": ["transform-object-rest-spread"]
@@ -2283,6 +2350,8 @@ export default 组件
 # ES2020
 
 ## BigInt
+
+> [ES2020](https://github.com/tc39/proposal-bigint) 引入了一种新的数据类型 BigInt —— [阮一峰](https://es6.ruanyifeng.com/#docs/number#BigInt-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B)
 
 **可参考资料如下**
 

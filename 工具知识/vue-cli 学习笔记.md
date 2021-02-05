@@ -1,8 +1,26 @@
+
+
+> 一、二版的包名是vue-cli，三、四版的是@vue/cli —— [官网](https://cli.vuejs.org/zh/guide/installation.html)
+
 第三版+第四版的文档地址：https://cli.vuejs.org/zh/guide/
 
 
 
+`vue -V`或`vue --version`查看cli版本
+
+
+
 笔记本上全局装的是第四版
+
+
+
+**升级**
+
+> 如果装了1、2版，那要把之前装的版本卸载掉，然后再装3或4 —— [官网](https://cli.vuejs.org/zh/guide/installation.html)
+
+[官网](https://cli.vuejs.org/zh/guide/installation.html#%E5%8D%87%E7%BA%A7)同样说了可以用`npm update -g @vue/cli`升级全局包，不过这指的应该是版本号不低于3的cli进行升级的方案
+
+[升级项目依赖看这个链接](https://cli.vuejs.org/zh/guide/installation.html#%E9%A1%B9%E7%9B%AE%E4%BE%9D%E8%B5%96)
 
 
 
@@ -12,9 +30,12 @@
 
 
 
+### `vue ui`
 
+> 可以通过 `vue ui` 通过一套图形化界面管理你的所有项目 —— [官网](https://cli.vuejs.org/zh/guide/)
 
-
+- 可以用来新建项目  
+  挺好的，可以图形化地控制选项
 
 
 
@@ -189,3 +210,9 @@ vue-cli含有模板：https://github.com/vuejs-templates
 
 在package.json里看不到，要到node_modules里看  
 应该是第四版的webpack
+
+
+
+# 第二版
+
+之前个人PC上装的是第二版
