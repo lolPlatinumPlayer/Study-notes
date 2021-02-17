@@ -10,7 +10,53 @@ z轴向屏幕外
 
 ## `Object3D`
 很多类都继承自`Object3D`（如场景类、组类、对象类等）  
-`add`方法：可以同时添加不限个数的对象、光源，也可以多次添加  
+`add`方法：可以同时添加不限个数的对象、光源，也可以多次添加 
+
+**对象**
+
+这里的对象是指`Object3D`的实例，组和光也是`Object3D`的实例
+
+```javascript // 例子为立方体
+const geometry = new THREE.BoxGeometry(1, 1, 1); // 设置形状
+const material = new THREE.MeshBasicMaterial({color: 0x00ff00}); // 设置材质（这里直接上色，颜色值要么16进制数字要么非缩写字符串，字符串可以用单词）
+const cube = new THREE.Mesh(geometry, material); // 依据形状和材质新建对象
+scene.add(cube); // 将对象加进场景中
+```
+
+- 移动与旋转操作方法与相机相同、旋转比相机多了`物体.lookAt(new THREE.Vector3(0,0,2))`这种方法  
+  （在whs组件中返回的组件中，这些操作要在setTimeout0里才能生效，不然会被覆盖）
+
+- 新建对象
+
+  - 网格：`new THREE.Mesh(形状, 材质)`
+  - 线：`new THREE.Line(形状, 材质)`
+
+- 删除对象：`父内容.remove(组件)`
+
+- 替换对象
+  直接把原对象覆盖掉，然后`parent`属性设为父对象  
+
+- 找到父级：`对象.parent`
+
+- 遍历
+
+  - 遍历对象及其后代
+    `对象.traverse(callback)`
+  - 遍历可见对象及其可见后代
+    `对象.traverseVisible(callback)`
+  - 遍历对象的祖先
+    `对象.traverseAncestors(callback)`
+
+- 让物体靠前显示：
+  `物体.material.depthTest=false`（new材质时也可以设置）（depthWrite也可以）  
+  （bug：whs平面有时候会挡在depthTest=false的物体上，这个时候给需要最前的物体的材质设置transparent:true就行）  
+  有时候three环境除了`depthTest`还需要在对象上设置`renderOrder`靠前   
+
+  有时候只设置`renderOrder`就行
+
+  - 具体分析看[文章](https://blog.csdn.net/qq_30100043/article/details/79737692)
+
+ 
 
 
 ## 场景
@@ -80,47 +126,9 @@ z轴向屏幕外
   默认position：`{x:0,y:1,z:0}`  
 
 
-## 对象
-这里的对象是指`Object3D`的实例，组和光也是`Object3D`的实例
-```javascript // 例子为立方体
-const geometry = new THREE.BoxGeometry(1, 1, 1); // 设置形状
-const material = new THREE.MeshBasicMaterial({color: 0x00ff00}); // 设置材质（这里直接上色，颜色值要么16进制数字要么非缩写字符串，字符串可以用单词）
-const cube = new THREE.Mesh(geometry, material); // 依据形状和材质新建对象
-scene.add(cube); // 将对象加进场景中
-```
-- 移动与旋转操作方法与相机相同、旋转比相机多了`物体.lookAt(new THREE.Vector3(0,0,2))`这种方法  
-  （在whs组件中返回的组件中，这些操作要在setTimeout0里才能生效，不然会被覆盖）
-  
-- 新建对象
-  - 网格：`new THREE.Mesh(形状, 材质)`
-  - 线：`new THREE.Line(形状, 材质)`
-  
-- 删除对象：`父内容.remove(组件)`
-
-- 替换对象
-  直接把原对象覆盖掉，然后`parent`属性设为父对象  
-  
-- 找到父级：`对象.parent`
-
-- 遍历
-  - 遍历对象及其后代
-    `对象.traverse(callback)`
-  - 遍历可见对象及其可见后代
-    `对象.traverseVisible(callback)`
-  - 遍历对象的祖先
-    `对象.traverseAncestors(callback)`
-  
-- 让物体靠前显示：
-  `物体.material.depthTest=false`（new材质时也可以设置）（depthWrite也可以）  
-  （bug：whs平面有时候会挡在depthTest=false的物体上，这个时候给需要最前的物体的材质设置transparent:true就行）  
-  有时候three环境除了`depthTest`还需要在对象上设置`renderOrder`靠前   
-  
-  有时候只设置`renderOrder`就行
-  
-  - 具体分析看[文章](https://blog.csdn.net/qq_30100043/article/details/79737692)
-
 
 ## 材质
+
 物体的`material`属性可以使用`material`实例，也可以使用由`material`实例组成的数组  
 
 - **使用数组**  
@@ -225,10 +233,10 @@ mesh的geometry在赋值新的bufferGeometry后会变成新的形状【】更广
   
   - **如果首尾点连线穿过了一条线段**  
     那么效果如下  
-    ![首尾点连线穿过了一条线段](图片\首尾点连线穿过了一条线段.png)  
+    ![首尾点连线穿过了一条线段](..\图片\首尾点连线穿过了一条线段.png)  
     
   - **如果中间有些线穿过了其他线**  
-    ![捕获](图片\捕获.png)  
+    ![捕获](..\图片\捕获.png)  
     
     `side`取任意值的结果都是一致的  
     
@@ -346,8 +354,10 @@ const sprite = new THREE.Sprite(spriteMaterial)
   xy为0时在左下角，为1时在右上角，值的大小不限  
   之后旋转位移缩放等都会以此为中心  
 
+## Points对象（总朝着相机的多个平面）
 
-## Points对象（总朝着相机的一个平面）
+要配合[PointsMaterial](https://threejs.org/docs/#api/zh/materials/PointsMaterial)使用
+
 ```javascript
 const pG = new THREE.Geometry();
 pG.vertices.push( new THREE.Vector3(0,0,0) );
@@ -357,6 +367,10 @@ const p = new THREE.Points(pG,pM)
 - **近大远小**  
   默认会。`sizeAttenuation`设置为`false`后不会  
   
+- 尺寸  
+  调整points的scale可以改变内部各点间的距离，但是不会改变各点显示图案的大小  
+  要改变图案大小，要调整PointsMaterial的size属性（已在实例化时的配置项里测试过）
+  
 - **贴图** 
   
   估计显示的贴图大小永远不会大于屏幕【】这时候的位子偏移可以测一下
@@ -365,20 +379,9 @@ const p = new THREE.Points(pG,pM)
   `PointsMaterial`曾用名有`PointCloudMaterial`、`ParticleBasicMaterial`、`ParticleSystemMaterial`
 
 
-## 动画
-```javascript
-function animate() {
-    requestAnimationFrame( animate ); // 1/60秒后调用其中回调（js专门给动画做的定时器，各方面比普通定时器都有优化）
-
-    // 这里放每1/60秒需要的变化
-
-    renderer.render( scene, camera );
-}
-animate();
-```
-
 
 ## 鼠标拾取（鼠标碰了什么物体）
+
 ```javascript
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
@@ -415,6 +418,21 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 2. `子项.addTo(组)`
 
 ## 动画
+
+**渲染器动画**
+
+```javascript
+function animate() {
+    requestAnimationFrame( animate ); // 1/60秒后调用其中回调（js专门给动画做的定时器，各方面比普通定时器都有优化）
+
+    // 这里放每1/60秒需要的变化
+
+    renderer.render( scene, camera );
+}
+animate();
+```
+
+**物体动画**
 
 如果一个物体有动画的话，它会有一个`animations`属性，当中存放至少一个**关键帧轨道集**
 
@@ -518,7 +536,6 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 ## 性能提升
 
 - 使用引用材质
-  - 1
 - 去除阴影
 - 把`MeshPhongMaterial`改为`MeshLambertMaterial`
 
@@ -552,8 +569,6 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 
 
 
-
-
 # 未归类
 
 - three中在纹理和贴图间没有明显的界限，经常会叫“纹理贴图”  
@@ -565,7 +580,7 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 
 - i5 5代核显对sprite和mesh重叠颜色时可能出现问题
 
-# 配合使用工具
+# 配合使用的工具
 
 
 ## stats
@@ -583,10 +598,6 @@ window.addEventListener( 'mousemove', onMouseMove, false );
   `gui.add(对象,对象的键名,最小值,最大值)`  
   这样就能生成完毕。  
   在拖动拖拽轴的时候，会实时给`对象[对象的键名]`赋值
-
-
-
-
 
 
 
