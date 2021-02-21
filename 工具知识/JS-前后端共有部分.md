@@ -39,6 +39,12 @@
   例子："\x74\x61\x69"
   可以直接使用，在控制台输入就会转成具有可读性的字符串
   该博文有说编码方法：https://blog.csdn.net/haige025/article/details/89531355
+  
+- 闭包  
+  
+  > 闭包就是能够读取其他函数内部变量的函数。例如在javascript中，只有函数内部的子函数才能读取[局部变量](https://baike.baidu.com/item/局部变量/9844788)，所以闭包可以理解成“定义在一个[函数](https://baike.baidu.com/item/函数/301912)内部的函数“ —— [百度百科](https://baike.baidu.com/item/%E9%97%AD%E5%8C%85)
+  
+  > 一个函数和对其周围状态（**lexical environment，词法环境**）的引用捆绑在一起（或者说函数被引用包围），这样的组合就是**闭包**（**closure**）。也就是说，闭包让你可以在一个内层函数中访问到其外层函数的作用域。在 JavaScript 中，每当创建一个函数，闭包就会在函数创建的同时被创建出来。 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Closures)
 
 
 

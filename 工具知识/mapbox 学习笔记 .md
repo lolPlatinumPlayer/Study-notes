@@ -76,7 +76,7 @@
     ```js
     {
       type: "raster",
-      url: "aegis://aegis.HillShade",//这个url是思极地图的，换成mapbox应该也一样
+      url: "aegis://aegis.HillShade",//这个url是sjdt的，换成mapbox应该也一样
       tileSize: 512
     }
     ```
@@ -219,7 +219,7 @@ mapboxgl.MercatorCoordinate.fromLngLat({
   'text-radial-offset':0.8,//文本要远离中心点多远进行展示（不带图标时还没用过该配置）（不加text-variable-anchor的话是没效果的）
   'text-variable-anchor': ['top', 'bottom', 'left', 'right'], // 允许展示文本的方向
   "text-ignore-placement": false, // 设置为 true 时，其他注记即使碰撞到此文本标注也会显示。
-  'text-field': '{name}', // name处写的是数据源properties的一个属性名，也可以直接写一个字符串或表达式。值可以包含中文却不能包含数字，含数字的话整个图层不会显示并且会红色报错“GET https://api.mapbox.com/fonts/v1/mapbox/arial/0-255.pbf?access_token=pk.eyJ1IjoiaWRvbnRkcml2ZSIsImEiOiJjazAyM3RhbGUwOW1hM21tZXMxYjhpbndnIn0.YyfL9JQcV11Y3Kv-KvTD6Q 404 (Not Found)”，为鑫说是字体原因，可是换了arial也还是不行。不过思极地图是可以包含数字的。官方对这个属性并没有进行什么说明，官方对`'{name}'`这种写法也没有什么说明
+  'text-field': '{name}', // name处写的是数据源properties的一个属性名，也可以直接写一个字符串或表达式。值可以包含中文却不能包含数字，含数字的话整个图层不会显示并且会红色报错“GET https://api.mapbox.com/fonts/v1/mapbox/arial/0-255.pbf?access_token=pk.eyJ1IjoiaWRvbnRkcml2ZSIsImEiOiJjazAyM3RhbGUwOW1hM21tZXMxYjhpbndnIn0.YyfL9JQcV11Y3Kv-KvTD6Q 404 (Not Found)”，为鑫说是字体原因，可是换了arial也还是不行。不过sjdt是可以包含数字的。官方对这个属性并没有进行什么说明，官方对`'{name}'`这种写法也没有什么说明
   'text-size': 18, // 可以用表达式，返回结果是数字就行，单位是像素
   'text-anchor': 'center', // 文本锚点位置
   'text-allow-overlap': false, // 设置为 true 时，文本标注即使碰撞到其他绘制的注记也会显示。
@@ -435,13 +435,13 @@ mapboxgl.MercatorCoordinate.fromLngLat({
   环境：
 
   - 二开框架切换地图样式功能
-  - 思极地图
+  - sjdt
   - url：`"aegis://aegis.Satellite512"`
 
 - 有时候`raster`数据源url的`.json`可以去掉也可以加上  
   环境：
 
   - 二开框架切换地图样式功能
-  - 思极地图
+  - sjdt
   - url：`"aegis://aegis.HillShade.json"`
 
