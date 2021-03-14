@@ -34,7 +34,57 @@
   地图放大的等级  
   （zoom越大，地图也越大）
 
-### 改变地图样式
+### 设置地图样式
+
+**初始化时配置**
+
+```js
+var mapStyle = {
+  'version': 8,
+  'name': 'Dark',
+  'sources': {
+    'mapbox': {
+      'type': 'vector',
+      'url': 'mapbox://mapbox.mapbox-streets-v8'
+    },
+    'overlay': {
+      'type': 'image',
+      'url': 'https://docs.mapbox.com/mapbox-gl-js/assets/radar.gif',
+      'coordinates': [
+        [-80.425, 46.437],
+        [-71.516, 46.437],
+        [-71.516, 37.936],
+        [-80.425, 37.936]
+      ]
+    }
+  },
+  'sprite': 'mapbox://sprites/mapbox/dark-v10',
+  'glyphs': 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
+  'layers': [
+    {
+      'id': 'overlay',
+      'source': 'overlay',
+      'type': 'raster',
+      'paint': { 'raster-opacity': 0.85 }
+    },
+  ]
+};
+    
+var map = new mapboxgl.Map({
+  container: 'map',
+  maxZoom: 5.99,
+  minZoom: 4,
+  zoom: 5,
+  center: [-75.789, 41.874],
+  style: mapStyle
+})
+```
+
+
+
+
+
+**初始化之后设置**
 
 `map.setStyle(json或指向json的url)`  
 详细内容请参考[官网](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#setstyle)
@@ -46,6 +96,8 @@
     应该是因为`setStyle`实际上是更新style对象  
     而所有图层与数据源（数据源应该是）都是style对象的一部分  
     所以导致了这个情况
+
+
 
 **一些mapbox底图的实现方式**
 
@@ -243,6 +295,11 @@ mapboxgl.MercatorCoordinate.fromLngLat({
 ```
 
 
+
+
+
+- 改变图片颜色  
+  2021.3.10做了了解，只能改变一个格式的图片的颜色（好像叫swt）
 
 
 

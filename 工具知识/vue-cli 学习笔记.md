@@ -32,14 +32,19 @@
 
 ### `vue ui`
 
+第三版应该也有这个命令[ElementUI插件](https://github.com/ElementUI/vue-cli-plugin-element)里有提到
+
 > 可以通过 `vue ui` 通过一套图形化界面管理你的所有项目 —— [官网](https://cli.vuejs.org/zh/guide/)
 
 有一些简易功能
 
 - 可以用来新建项目  
   可以图形化地控制选项  
+- 可以配置依赖项  
+  可能通过 `vue ui`下载依赖后会自动配置（有这个想法的依据是：一次下载less后，没有在vue.config.js里做配置也可以在单文件组件里使用，当然，有做一些其他所需的操作）
 - 可以保存配置方便下次建项目时使用
 - 可以运行npm script
+- 可以分析项目（这个功能似乎挺专业的）
 
 
 
@@ -71,6 +76,8 @@ vue-cli含有模板：https://github.com/vuejs-templates
 `vue.config.js`的配置
 地址为：[官方的配置文档](https://cli.vuejs.org/zh/config)  
 里边内容是按照配置项来分的，比如`devServer`配置项的地址就是https://cli.vuejs.org/zh/config/#devserver
+
+注意：
 
 - 是否给文件名增加随机字符串  
   不加的话会导致使用同名图片时产生问题，因为多个同名图片只会有一个存在  
@@ -104,6 +111,29 @@ vue-cli含有模板：https://github.com/vuejs-templates
       设成空串似乎也可以走代理——网友
   ```
 
+- [调整webpack配置](https://cli.vuejs.org/zh/guide/webpack.html#%E7%AE%80%E5%8D%95%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%B9%E5%BC%8F)  
+
+  - 通过给`configureWebpack`赋值对象确实可以调整，不过容易出错（目前没有符合预期地运行过）  
+
+  - 感觉低入侵的写法是这样的：  
+
+    ```js
+    var HtmlWebpackPlugin = require('html-webpack-plugin');
+    
+    module.exports = {
+        configureWebpack:  config => {
+            config.plugins.forEach((val) => {
+                if (val instanceof HtmlWebpackPlugin) {
+                    val.options.title='aaaa' // 修改语句
+                }
+            })
+        }
+    }
+    
+    ```
+
+    
+
 
 
 ### 命令
@@ -117,7 +147,8 @@ vue-cli含有模板：https://github.com/vuejs-templates
 - 打包项目  
   [`vue-cli-service build`](https://cli.vuejs.org/zh/guide/cli-service.html#vue-cli-service-build)
 - 查看最终使用的webpack配置  
-  [`vue-cli-service inspect`](https://cli.vuejs.org/zh/guide/cli-service.html#vue-cli-service-build)
+  - 官网的说法：[`vue-cli-service inspect`](https://cli.vuejs.org/zh/guide/cli-service.html#vue-cli-service-build)
+  - 网友的说法：[博客](https://blog.csdn.net/huzhenv5/article/details/104040077)
 
 
 

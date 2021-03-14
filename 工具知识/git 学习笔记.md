@@ -106,6 +106,14 @@ git remote add 远程服务器地址（应该都是以`.git`结尾）
 git push -u origin master
 ```
 
+- 用webstorm的Terminal敲这些命令的话会有问题  
+
+  - `git commit -m 'first commit'`失败  
+    `git commit -m first`可以
+  - `git remote add origin https://gitee.com/IDontDrive/static_personal_mapbox_code.git`失败
+
+  webstorm版本：2020.3
+
 
 
 **已有本地仓库的话做如下操作**
@@ -565,7 +573,36 @@ bbbb
 
 `git checkout 另一个分支名 文件路径`
 
-### 忽略文件
+
+
+### 用命令忽略文件
+
+
+
+**让`add .`不添加某些文件**
+
+`git restore 文件`
+
+- 被这个命令执行过的文件，`add .`将不会添加这些文件  
+  对于未追踪(untracked)的文件无法使用这个命令
+- 不过对于已经add的文件，使用这个命令并不会从“被add的列表”中移除
+
+
+
+**让某些文件不会被追踪**
+
+就是未追踪(untracked)的情况下用`add .`也不会添加的方法  
+【】目前还没研究
+
+
+
+**从已add列表移除文件**
+
+`git rm --cached 文件`
+
+
+
+### 做忽略文件的配置
 
 增加`.gitignore`文件，在里面写上希望忽略的文件或文件夹  
 
@@ -577,7 +614,7 @@ bbbb
   `.gitignore`文件支持多种编码  
   如果编码不是`utf-8`的话，在`.gitignore`文件里的中文操作将会失效
 
-##### 忽略文件已track文件
+##### 在配置中忽略已track文件
 
 > .gitignore文件只能忽略那些原来没有被track的文件，如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。
 那么解决方法就是先把本地缓存删除（改变成未track状态），然后再提交。 —— 引用自[《福信富通GIT使用帮助》](https://git.fxft.net/fxft/help/src/master/README.md#gitignore%E6%96%87%E4%BB%B6%E7%9A%84%E4%BD%BF%E7%94%A8)
