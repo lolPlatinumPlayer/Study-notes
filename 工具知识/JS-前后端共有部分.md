@@ -1191,7 +1191,44 @@ Symbol是第七种数据类型
   *`description`是ES2019提出来的*
   
 
-## 模块
+# 模块
+
+- UMD  
+  糅合了CommonJS和AMD  
+  如果2者都不可用，则将模块公开到全局
+
+- CommonJS  
+
+  - 同步的
+
+  - > 模块可以多次加载，但是只会在第一次加载时运行一次，然后运行结果就被缓存了，以后再加载，就直接读取缓存结果。要想让模块再次运行，必须清除缓存。 —— [知乎文章](https://zhuanlan.zhihu.com/p/79695530)
+
+  - > 模块加载的顺序，按照其在代码中出现的顺序 —— [知乎文章](https://zhuanlan.zhihu.com/p/79695530)
+
+- [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD)  
+  异步的  
+
+  - 实现库：requirejs、almondjs
+
+- [CMD](https://github.com/seajs/seajs/issues/242)  
+  异步的  
+
+  - 实现库：seajs
+
+- AMD、CMD区别
+
+  - AMD推崇在定义模块的最前面就要声明好依赖  
+    CMD推崇在任意位置引用依赖  
+    - AMD虽然也可以在任意位置引用依赖  
+      不过执行结果不符合直觉，详见[这篇文章](https://www.douban.com/note/283566440/)
+
+- es module  
+  未来
+
+- YUI
+
+## es module
+
 一般在打包工具中使用，部分浏览器也支持了es6模块  
 以下提到的**变量**包括**函数**（函数名后不应加括号），不包括**属性**  
 
