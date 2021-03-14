@@ -21,6 +21,10 @@
 
 - vue-router每次跳转到一个组件都会触发组件的`mounted`方法  
   离开一个组件都会执行`beforeDestroy`和`destroyed`方法
+  
+- 路由配置中无法配置params  
+  配置query也只能加到path里才能生效  
+  （路由配置指的是实例化`'vue-router'`时的`routes`参数）
 
 ## 定义路由
 ```javascript
@@ -89,13 +93,27 @@ query与params不同的地方
 
 <span style='opacity:.5'>下面的`router`用`vue组件实例.$router`也是一样的</span>
 
-router.push()与`<router-link :to="...">`效果一致  
+**router.push()**
+
+与`<router-link :to="...">`效果一致  
 括号中常写的有2种情况：
 
 - 直接写字符串，这个字符串是path（前面要有`/`）
 - 对象，可以依据name跳转，也可以依据path，还可以带query或者params（如meta等其他参数传了也没有效果）
-router.replace()：完全替换当前历史记录，不管如何前进后退再执行这个方法都会完全替换掉当前的历史记录，并且对其他历史记录没有任何影响。<router-link :to="..." replace>也有同样效果。
-router.go(n)：在历史记录中向前或者后退多少步。【知道这些方法怎么执行后测试一下超负荷会有什么结果】
+
+
+
+**router.replace()**
+
+完全替换当前历史记录，不管如何前进后退再执行这个方法都会完全替换掉当前的历史记录，并且对其他历史记录没有任何影响。<router-link :to="..." replace>也有同样效果。
+
+
+
+**router.go(n)**
+
+在历史记录中向前或者后退多少步。【知道这些方法怎么执行后测试一下超负荷会有什么结果】
+
+
 
 ## 命名路由
 路由除了之前带/的字符串格式，还可以是对象形式，不过要在 to 前加上冒号 “:” 。如：

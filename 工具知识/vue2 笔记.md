@@ -469,6 +469,10 @@ v-bind:style="{ color: activeColor, fontSize: fontSize + 20 + 'px' }"
 三元表达式例子：  
     :style="true?{marginBottom:45+'px'}:null"  
 
+- 长度里的单位不能省略
+
+
+
 
 
 ### （增删）过渡效果
@@ -691,7 +695,7 @@ methods: {
 
 ### 事件处理方法
 
-`<button v-on:click="greet">Greet</button>`
+`<button v-on:click="greet">XXX</button>`
 
 1. click处（个人）称为“事件名”，已知的有：
 

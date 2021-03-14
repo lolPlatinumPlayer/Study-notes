@@ -1112,6 +1112,17 @@ try{
 - `setMonth`、`setFullYear`有时候并不是那么符合常识的。  
   因为他们在没有指定day参数时会默认去getDate方法里取，而如果取了过大的day，就会走到下个月
 
+
+
+## URI编解码
+
+有2个选择
+
+- encodeURI与decodeURI的组合
+- encodeURIComponent与decodeURIComponent的组合
+
+
+
 ## π
 
 `Math.PI`长度没占满，所以将`Math.PI`除一些数两边也能全等
