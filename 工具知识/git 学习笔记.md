@@ -728,6 +728,22 @@ git commit -m 'xxx'
 
 
 
+
+
+# 错误排查
+
+- `Failed to connect to github.com port 443: Timed out`  
+  百度结果是开了代理导致的  
+  代理关掉一会之后，重启了git Bash2次之后就可以了
+
+- `Operation timed out after 300021 milliseconds with 0 out of 0 bytes received`  
+  只百度到一个[可用信息](https://blog.csdn.net/weixin_45667885/article/details/101106642)  
+  这个博客说用手机热点（中国移动）时会遇到这个问题，约6小时后改用普通wifi解决了问题
+
+
+
+
+
 # 学习
 
 cd d:nospace/learngit
