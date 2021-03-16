@@ -48,6 +48,38 @@
 
 
 
+### px转rem
+
+- [一个接近可行的文章](https://www.cnblogs.com/yifeng555/p/12734032.html)  
+  下面是需要修改的点
+  - 安装postcss-pxtorem要安装第五版的  
+    命令是`npm i postcss-pxtorem@5.1.1`  
+    [这个文章](https://blog.csdn.net/k912120/article/details/114678251)里有说为什么
+  - 没用autoprefixer的话相关代码去掉
+
+
+
+注意
+
+- pxtorem和px2rem是2个东西  
+  感觉pxtorem更好  
+  [这个文章](https://www.cnblogs.com/zhurong/p/14011857.html)里有进行对比
+
+
+
+- [flexible](https://github.com/amfe/lib-flexible)（amfe-flexible或lib-flexible）  
+  主要功能是在`html`标签上增加font-size  
+  是做移动端的  
+  几个版本都没几行代码
+
+
+
+之前试了几个方法都不行，下面列出部分不行的文章
+
+- [装lib-flexible和px2rem-loader](https://www.jianshu.com/p/79be33f2ce88)
+
+  
+
 
 
 # 第三版
@@ -251,3 +283,6 @@ vue-cli含有模板：https://github.com/vuejs-templates
 # 第二版
 
 之前个人PC上装的是第二版
+
+
+
