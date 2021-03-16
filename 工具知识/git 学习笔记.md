@@ -744,6 +744,27 @@ cd d:nospace/learngit
   比如说第10个至第15个commit间共更改了哪些内容，而不是看一个个commit分别改了哪些内容  
   （如果不行的话看看合并commit要怎么操作）
 
+- “远程仓库名”  
+  连接远程仓库时可以设置“远程仓库名”（hrt的git环境强制要设置“远程仓库名”）  
+  命令为：`git remote add 远程仓库名 ssh://xxx.git`  
+  执行上面这个命令后`.git/config`文件里就长下面这样子  
+
+  ```
+  [core]
+  	repositoryformatversion = 0
+  	filemode = false
+  	bare = false
+  	logallrefupdates = true
+  	symlinks = false
+  	ignorecase = true
+  [remote "远程仓库名"]
+  	url = ssh://xxx.git
+  	fetch = +refs/heads/*:refs/remotes/远程仓库名/*
+  
+  ```
+
+  后续push时就要这样写：`git push -f 远程仓库名 develop`
+
 
 
 
