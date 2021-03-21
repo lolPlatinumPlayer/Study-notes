@@ -735,10 +735,15 @@ git commit -m 'xxx'
 - `Failed to connect to github.com port 443: Timed out`  
   百度结果是开了代理导致的  
   代理关掉一会之后，重启了git Bash2次之后就可以了
-
 - `Operation timed out after 300021 milliseconds with 0 out of 0 bytes received`  
   只百度到一个[可用信息](https://blog.csdn.net/weixin_45667885/article/details/101106642)  
   这个博客说用手机热点（中国移动）时会遇到这个问题，约6小时后改用普通wifi解决了问题
+- `OpenSSL SSL_read: Connection was reset, errno 10054`  
+  百度上说法五花八门，不过hrt电脑出现这问题的原因就是网络不行  
+  换个时间再push或pull就行了
+- `OpenSSL SSL_connect: Connection was reset in connection to github.com:443`  
+  同上，不过这个命令是在使用powershel时出现的，在git bash和powershell间反复操作后，最终在git bash上成功push  
+  不成功是网页上的github无法访问，成功时网页上的github也能访问
 
 
 
