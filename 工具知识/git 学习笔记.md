@@ -225,7 +225,7 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
 该命令用于查看状态
 1. 如工作区有文件未提交到版本库且未被添加到暂存区里，则会打印“Untracked files:”  
    并在后面列出文件名（文件名的中文部分会以8进制形式显示）  
-   如果希望中文正确显示的话要先输入一行命令：`git config --global core.quotepath false`
+   如果希望中文正确显示的话要先输入一行命令：`git config --global core.quotepath false`（win10下输入这个命令后中文会以乱码方块字显示）
 2. 如工作区有文件与分支不一致则会打印“Changes not staged for commit”  
    并在后面列出文件名  
    （文件名前会出现说明型前缀）
