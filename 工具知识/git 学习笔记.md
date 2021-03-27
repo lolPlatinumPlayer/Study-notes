@@ -125,9 +125,9 @@ git push -u origin master
 - 文件夹名与参考名是否相同：不同
 - 是否执行过`git init`命令：是
 - 是否执行过`git commit`命令：是
-- 网站：码云、github
+- 网站：码云、github、hrtGitlab
 
-github的话多加一行`git branch -M main`
+github的话要多加一行`git branch -M main`
 
 ```cmd
 git remote add origin 远程服务器地址（应该都是以`.git`结尾）
@@ -143,6 +143,9 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
     
         git push --set-upstream origin main
     ```
+    
+  - hrtGitlab在push时报错`fatal: repository 'xxxx.git/' not found`  
+    解决方法：remote add时不用http的地址，改用SSH即可
 
 
 
