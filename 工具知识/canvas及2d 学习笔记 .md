@@ -87,10 +87,14 @@ ctx.lineTo(200,20);
 ctx.stroke();
 ```
 
-`ctx.beginPath()`可能意味着不清空之前的绘画，而继续进行接下来的绘制（看[慕课](https://www.imooc.com/video/3479)时产生的想法）
+- `ctx.beginPath()`  
+  可能意味着不清空之前的绘画，而继续进行接下来的绘制（看[慕课](https://www.imooc.com/video/3479)时产生的想法）  
+  实操时发现加不加没有区别（不过如果之前调用过`ctx.clearRect`的话不加`beginPath`会出问题，[MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/clearRect)里提到了这一点）
 
 - 设置线宽  
-  `ctx.lineWidth = 线宽`
+  `ctx.lineWidth = 线宽`  
+  线宽要求为数字
+- [设置虚线](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/setLineDash)
 
 ### 插入图像（用图片或canvas）
 
@@ -217,6 +221,16 @@ context.drawImage(canvas dom, 绘制起点x坐标, 绘制起点y坐标,绘制区
        ```
 
        
+
+### 擦除图像
+
+- [`clearRect`](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/clearRect)  
+  设置一个矩形区域，并且擦除区域内图像
+- 改变canvas的可绘制像素
+- 颜色值设置为`'transparent'`然后绘图的方法应该是不行的  
+  （没有试验过）
+
+
 
 
 
