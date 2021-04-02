@@ -27,6 +27,9 @@
 
 - 输路径时如果路径中有空格的话  
   路径要用单引号包起来  
+  
+- hrtGitLab会自动删除空文件夹  
+  这个删除操作甚至在git记录里看不到
 
 
 
@@ -77,6 +80,8 @@
 
 
 
+【】初始化、git init、git clone、初次连接服务端 这几个部分要合并
+
 
 
 ### 初始化
@@ -96,7 +101,7 @@ git config --global user.email "417783514@qq.com"
 
 
 
-**创建git仓库并连接远程仓库**
+###### 创建git仓库并连接远程仓库
 
 ```cmd
 git init
@@ -116,7 +121,7 @@ git push -u origin master
 
 
 
-**已有本地仓库的话做如下操作**
+###### 已有本地仓库的话做如下操作
 
 <span style='opacity:.5'>（下方内容已测试，都可用）</span>
 
@@ -153,7 +158,7 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
 
 
 
-### `$ git init`
+### `git init`
 把这个目录变成Git可以管理的仓库（表述可能不正确）
 （内含工作区与版本库，.git文件夹以外都是工作区，.git是版本库）
 这时候并没有真正创建master分支(`git branch`看不到任何东西)  
@@ -287,9 +292,10 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
 
 - 只显示变动文件的文件名  
   `git log --name-only`
-
 - 查看哪些commit有更改指定文件  
   `git log 指定文件`
+- 查看指定用户的commit  
+  `git log --author=用户名`
 
 
 
@@ -384,6 +390,7 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
   推送需要密码
 - SSH  
   URL以`git@`开头  
+  （hrt GitLab是以`ssh://git@`开头的）  
   推送不需要密码
 
 
@@ -496,7 +503,10 @@ bbbb
 ##### 从服务端下载指定分支代码并将其与当前分支进行合并
 `git pull origin 远程主机分支名`  （这里origin是远程主机名）
 
-即使当前不在要pull的分支也能执行完毕
+- 当前内容都已add但未commit也可以正常合并
+- 即使当前不在要pull的分支也能执行完毕？？？
+
+
 
 
 

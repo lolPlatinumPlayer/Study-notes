@@ -5,6 +5,8 @@
   中间加一层this.$nextTick的话this就是组件实例了
 - 了解data在生命周期里的执行时机，其中data先于mounted执行。和其他时机对比的先后顺序待了解、data是否能执行methods待了解
 - 实例中的`$options`等成员
+- keep-alive  
+  不知道是啥东西，只知道没见过
 
 
 
@@ -60,10 +62,12 @@
 
 - 完整版或运行时
 
-  - 完整版：包含『运行时』和『编译器』
+  - 完整版  
+    包含『运行时』和『编译器』
 
-  - 运行时：不包含『编译器』的版本  
-
+  - 仅运行时（runtime-only）  
+  不包含『编译器』的版本  
+    
     > 当使用 vue-loader 或 vueify 的时候，*.vue 文件内部的模板会在构建时预编译成 JavaScript。你在最终打好的包里实际上是不需要编译器的，所以只用运行时版本即可。 —— [官网](https://cn.vuejs.org/v2/guide/installation.html#%E8%BF%90%E8%A1%8C%E6%97%B6-%E7%BC%96%E8%AF%91%E5%99%A8-vs-%E5%8F%AA%E5%8C%85%E5%90%AB%E8%BF%90%E8%A1%8C%E6%97%B6)
 
 - 不同的模块化方案
@@ -133,6 +137,8 @@ new Vue({
   }
 })
 ```
+
+- 可以用mixin把模板和其他内容拆开
 
 - data和methods都可以用mixins进行拆分
 
@@ -694,7 +700,9 @@ out-in: 离开过渡完成后开始进入过渡
 - [深度作用选择器](https://vue-loader.vuejs.org/zh/guide/scoped-css.html#%E6%B7%B1%E5%BA%A6%E4%BD%9C%E7%94%A8%E9%80%89%E6%8B%A9%E5%99%A8)  
   `>>>`或`/deep/`或`::v-deep`  
   在样式里加『随机属性』属性时加在深度作用选择器前面的那个元素上  
-  深度作用选择器会被编译成一个后代选择器（也就是` `）
+  深度作用选择器会被编译成一个后代选择器（也就是` `）  
+  （hrt的sxy系统与ptxy系统中只能用`::v-deep`）  
+  （hrt的sxy系统与ptxy系统中`.a::v-deep.b`并不会编译成`.a .b`，要自己在中间加上空格才行）
 
 # 判断与循环
 
@@ -820,15 +828,49 @@ methods: {
 
 按目前的理解，组件就是“实例的类”的一种形式，注册后就可以直接在模板里使用
 
-- 生成 实例的类  
+- 生成 “类”  
   [`Vue-extend`](https://cn.vuejs.org/v2/api/#Vue-extend)  
   其实例的`$mount`方法应该是用来生成dom的，可以传入类似`'#id'`这样的方法来挂在到其他dom下，也可以不传  
   生成的dom可以手动加入其他dom，具体看[博客](https://www.jianshu.com/p/b931abe383e3)
+  
+  - vue的“仅运行时”版本不可用  
+    准确说是其实例的`$mount`方法不可用
+  - 提醒：
+    - 这个“类”的配置时机和正常类不一样  
+      这个类是`Vue.extend(配置)`时配置（生成类时配置）  
+      而不是实例化时配置
+  - 【】有空测一下new "类"生成的是不是vue组件的实例
+  
 - 生成 实例  
-  [`new Vue`](https://cn.vuejs.org/v2/guide/#%E5%A3%B0%E6%98%8E%E5%BC%8F%E6%B8%B2%E6%9F%93)
-
+  [`new Vue(配置)`](https://cn.vuejs.org/v2/guide/#%E5%A3%B0%E6%98%8E%E5%BC%8F%E6%B8%B2%E6%9F%93)  
+  
+  - vue的“仅运行时”版本可用
+  
+  - `new Vue`还有一种方法生成实例，代码如下  
+  
+    ```js
+    new Vue({
+      el: dom,
+      render: (h) => h(配置),
+    }).$children[0]
+    ```
+  
+    
+  
 - vue 基础组件走完才会生成 总体的Vue实例那个变量  
   不过实例通过this去调，是能调到的（这个不知道是不是因为钩子执行时组件整体已经走完了）
+  
+- 如果自己用new Vue或extend插入实例  
+  那vue devtools的components选项卡里是找不到这个实例的  
+  （即使传入components选项也没用）
+  
+- 挂载  
+  new Vue和extend都有挂载的概念  
+  挂载时指定的元素会被替换为vue实例控制的元素  
+  而不是说指定元素不动，vue只在里边插入自己控制的元素
+  
+- new Vue或extend的实例的入参  
+  放配置的[`propsData`](https://cn.vuejs.org/v2/api/#propsData)选项里
 
 
 
@@ -903,6 +945,13 @@ src 导入要遵循和require() 调用一样的路径解析规则，这就是说
 要先 import componentName from './fileName.vue'
 然后再在引入文件的components属性中写上componentName，之后组件就能正常使用了
 （componentName与被引入文件中代码无关）
+
+
+
+- .vue文件生成的就是一个配置对象  
+  （vue组件实例的配置对象）
+
+
 
 
 
@@ -1125,6 +1174,11 @@ mounted: function () {
 
 > 对象或数组默认值必须由一个函数返回 —— [官网](https://cn.vuejs.org/v2/guide/components-props.html#Prop-%E9%AA%8C%E8%AF%81)
 
+- props的相关函数没有`this`   
+（已在 `validator`中验证）
+  
+  > prop 会在一个组件实例创建**之前**进行验证，所以实例的 property (如 `data`、`computed` 等) 在 `default` 或 `validator` 函数中是不可用的。 —— [官网](https://cn.vuejs.org/v2/guide/components-props.html#Prop-%E9%AA%8C%E8%AF%81)
+
 
 
 ##### 接收模板代码
@@ -1146,7 +1200,53 @@ mounted: function () {
 
 - 一个组件可以接收多份模板代码（`slot`）
 
+疑似bug：
 
+- elemenUI代码如下
+
+  - 详细描述   
+    下面不可用的例子里不管v-if条件如何，似乎都占用了template  
+    表现就是：判断为真则符合预期，判断为假则表格里对应单元格没有任何东西
+
+  - 可用  
+
+    ```vue
+    <template v-for="(item, key) in colDict">
+                <el-table-column
+                  :prop="key"
+                  :label="item.name"
+                  :key="key"
+                  v-if="item.valFn"
+                >
+                  <template slot-scope="scope">
+                    {{ item.valFn(scope.row[key]) }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  :prop="key"
+                  :label="item.name"
+                  :key="key"
+                  v-else
+                ></el-table-column>
+              </template>
+    ```
+
+  - 不可用  
+
+    ```vue
+    <el-table-column
+                v-for="(item, key) in colDict"
+                :prop="key"
+                :label="item.name"
+                :key="key"
+              >
+                <template v-if="item.valFn" slot-scope="scope">
+                  {{ item.valFn(scope.row[key]) }}
+                </template>
+              </el-table-column>
+    ```
+
+  
 
 
 
@@ -1261,6 +1361,8 @@ bug
 - 让下拉框能转换没有显示的选项的方法
   v-for使用拥有所有能转换的数据
   v-show再过滤出需要显示的选项（这里用v-if的话就只能转换有显示的选项的数据）
+- 下拉框不会触发blur事件  
+  这点导致在写表单rule时，trigger要写change而不是blur
 
 
 ##### 表单
@@ -1303,16 +1405,18 @@ bug
   - 不过不建议这样用  
     因为element错误提示是设计为显示在输入框下面的，如果没有输入框的话，那样式肯定是不如预期的
   
-- 动态表单的验证  
-  例子里在prop的最后加了.value  
-  不过如果原值是null的话，在util.js（element的源码）里找不到.value  
-  最终验证就是无效的  
-  把prop最后的.value去掉后，对原来为null的项目就可以验证了
+- [动态表单的验证](https://element.eleme.cn/#/zh-CN/component/form#dong-tai-zeng-jian-biao-dan-xiang)  
+  
+  - 关于要不要在`prop`的最后加上`.value`  
+    例子里在prop的最后加了.value  
+    不过如果原值是null的话，在util.js（element的源码）里找不到.value  
+    最终验证就是无效的  
+    把prop最后的.value去掉后，对原来为null的项目就可以验证了
 
 
 ##### 表格
 - 自定义单元格内容
-  ```
+  ```vue
   <template slot-scope="scope">
     需要的dom（最外层没有标签也可以）
   </template>
