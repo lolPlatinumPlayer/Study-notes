@@ -96,6 +96,8 @@ vue-cli含有模板：https://github.com/vuejs-templates
 - 打包后的`chunk-vendors.js`文件  
 
   > 这个文件打包了所有有`import`的`node_modules`里的内容 —— 郑涛
+  
+- > vue.config.js里的东西有修改的话需要重启，其他不用——锦侨
 
 
 

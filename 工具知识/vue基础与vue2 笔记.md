@@ -55,6 +55,18 @@
 
 - 编译器  
   将模板字符串编译成为js渲染函数的代码
+  
+- 选项  
+  组件配置对象的第一级属性
+  
+- attribute  
+  vue官网中的attribute指的都是标签上的属性
+  
+- [指令](https://cn.vuejs.org/v2/guide/syntax.html#%E6%8C%87%E4%BB%A4)  
+  
+  > 带有 `v-` 前缀的特殊 attribute
+  
+  
 
 ##### 版本的维度
 
@@ -101,8 +113,12 @@
 
 
 ### 缩写
-`<a v-bind:href="url"></a>` 缩写-> `<a :href="url"></a>`
-`<a v-on:click="doSomething"></a>` 缩写-> `<a @click="doSomething"></a>`
+- `<a v-bind:href="url"></a>` 缩写-> `<a :href="url"></a>`
+- `<a v-on:click="doSomething"></a>` 缩写-> `<a @click="doSomething"></a>`
+
+
+
+
 
 
 
@@ -253,7 +269,7 @@ update：当其中语句依赖的数据发生改变后才会触发（应该是�
 写字符串就生成文本节点，也可以再写一个createElement生成一个子标签（再写createElement的话一定要包裹在数组中），也可以写变量来达到前两种效果，也可以写一个数组生成多个内容
 
 
-### render函数小知识点
+##### 小知识点
 
 VNodes必须唯一【测来测去好像多个VNodes也没什么问题】
 在createElement生成的标签中写vue的html部分只会被当成普通html
@@ -286,6 +302,18 @@ export default {
 directives: {
     ...aaa //import重命名可随意取，最终引入的指令名称都会与js文件中的一致
 }
+
+
+
+### 标记标签为html
+
+即让模板中某个标签及其后代作为纯html渲染（不以模板语法渲染）
+
+实现方法：用[`v-pre`](https://cn.vuejs.org/v2/api/#v-pre)指令
+
+[`v-cloak`](https://cn.vuejs.org/v2/api/#v-cloak)似乎有类似功能，不过目前还没研究清楚
+
+
 
 ### [过滤器](https://cn.vuejs.org/v2/guide/filters.html)
 
@@ -387,8 +415,10 @@ trim:过滤用户输入的首尾空格
   `'/'`路由就是这个页面，不过`router.beforeEach`里进行了判断，一开始会跳到另一个页面
 - 控制台操作`vm`
 
+### 计算属性
 
-### 计算属性（computed属性的值的属性名）
+（computed选项的属性的属性名）
+
 （不可与data重名）
 getter作用：依赖几个数据生成另一个数据，并赋值给计算属性。
 getter的简写方法：在计算属性中直接写入无参数匿名函数，return一个值。
@@ -408,7 +438,7 @@ getter的简写方法：在计算属性中直接写入无参数匿名函数，re
     然而经常是不打印的，而且vue devtools（2.6.10）里数据也不一定及时更新
 
 
-### 计算属性的setter（set属性）
+##### 计算属性的setter（set属性）
 要使用setter必须有一个getter（这种情况下要写为计算属性的get属性），setter只能以单参数匿名函数放于计算属性的set属性中，参数代表计算属性新赋的值，当直接操作计算属性的值时运行setter（get计算结果变化并不会运行setter）。
 任何方法都无法通过操作计算属性来改变其值，setter也不行。
 
@@ -510,7 +540,7 @@ watch:{
     - 发现修改prop的属性的话，打印内容都是一致的
     - 直接给prop赋值的话，打印内容会有区别
 
-### methods属性
+### methods选项
 
 Vue对象中methods属性的 属性 可以匿名函数为值，在Mustache中输入该属性名加() 则可执行函数，例：“属性名()”，可在js中直接调用，例：“Vue对象名.属性名()”。  
 使用methods属性不会进行缓存，函数在每次调用、依赖数据改变时都会重新运行。  
@@ -518,8 +548,16 @@ Vue对象中methods属性的 属性 可以匿名函数为值，在Mustache中输
 - 方法名含中文的话有时候会有问题  
   事件触发的方法的名称带有中文的话，是不会触发这个方法的
 
+### [v-bind](https://cn.vuejs.org/v2/api/#v-bind)
 
-### v-bind:a="b"
+**v-bind="对象"**
+
+也就是批量`v-bind:a="b"`的语法糖
+
+**v-bind:a="b"**
+
+可以简写为`:a="b"`
+
 - 在标签中插入以上内容让标签中显示出加入a属性，属性值为b的内容（b为data中的对象，b对象的值将作为标签中a属性的属性值）
 - a可以是html中原本不能显示的非法属性，加了v-bind后就能显示（看起来好像没什么用）
 - 若不加v-bind直接在标签中写a="b"，那么渲染后将原封不动如字符串一般展示出a="b"  
@@ -595,9 +633,9 @@ v-bind:style="{ color: activeColor, fontSize: fontSize + 20 + 'px' }"
 
 
 
-##### 用name属性设置一套效果
+##### 用name选项设置一套效果
 
-使用前提： 以name属性值为前缀的css class要先写好一套
+使用前提： 以name值为前缀的css class要先写好一套
 各样式后缀功能见： https://cn.vuejs.org/v2/guide/transitions.html#过渡的-CSS-类名
 
 
@@ -1183,7 +1221,9 @@ mounted: function () {
 
 ##### 组件的入参
 
-用`props`选项实现
+有2种方法：`props`选项、其他属性（组件标签上的其他属性）   
+这一部分只介绍`props`选项  
+关于其他属性的介绍在本笔记内搜索“其他属性”进行查看
 
 - 把一个对象的所有属性都作为prop传入组件  
   `<组件名 v-bind="承载对象的变量"></组件名>`
@@ -1237,7 +1277,7 @@ mounted: function () {
 
 
 
-##### 对组件入参进行验证
+##### 对props进行验证
 
 作为子组件设置props中的属性时可用 “propA: Number” 限制传入数据的类型，如不合规格则会在控制台发出提醒，可限制为多种类型，可自定义函数来验证，详见：[这个页面](https://cn.vuejs.org/v2/guide/components.html#Prop-验证)
 
@@ -1375,11 +1415,41 @@ v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
 
 
 
+### 其他属性
+
+也就是组件标签上既不是prop也不是class、style的属性
+
+- 组件内获得其他属性  
+  [`this.$attrs`](https://cn.vuejs.org/v2/api/#vm-attrs)  
+- 其他属性一样可以在模板中使用  
+  但是需要通过`$attrs.属性名`这种形式调用
+- 响应式  
+  其他属性一样可以是响应式的   
+  这意味着：如果传入的其他属性是动态的，那就可以被watch，值更改后也会更新视图
+- 其他属性默认会渲染在html上  
+  关闭这个特性的方法：把[inheritAttrs](https://cn.vuejs.org/v2/api/#inheritAttrs)选项设为false
 
 
-##### 组件教程更新未看内容
+
+### 组件教程更新未看内容
 
 [这](https://cn.vuejs.org/v2/guide/components-edge-cases.html#%E7%A8%8B%E5%BA%8F%E5%8C%96%E7%9A%84%E4%BA%8B%E4%BB%B6%E4%BE%A6%E5%90%AC%E5%99%A8)及之后
+
+
+
+
+
+# 用类的形式写组件
+
+vue2虽然原生也支持类的写法，不过会有一些问题（比如method里没有this）
+
+建议使用这2个依赖：[vue-class-component](https://class-component.vuejs.org/)、[Vue Property Decorator](https://github.com/kaorun343/vue-property-decorator)
+
+### vue-class-component
+
+**使用前提**
+
+> 需要在项目中配置[TypeScript](https://www.typescriptlang.org/)或[Babel](https://babeljs.io/) —— [官网](https://class-component.vuejs.org/guide/installation.html#build-setup)
 
 
 
@@ -1399,17 +1469,7 @@ v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
 
 
 
-# 其他
 
-
-
-### `vue.config.js`
-
-[官方的配置文档](https://cli.vuejs.org/zh/config)
-
-- vue.config.js的代码先执行，index.html的代码后执行
-
-- > vue.config.js里的东西有修改的话需要重启，其他不用——锦侨
 
 # 周边工具
 
