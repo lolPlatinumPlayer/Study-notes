@@ -744,7 +744,7 @@ arr.join(分隔符)返回一个字符串，这个字符串包含arr数组所有�
     
   - 复制数组  
     不输入参数
-    
+  
 - 字符串  
   规则与数组的类似  
   就是返回的是字符串，且在end不大于begin时返回空串
@@ -785,7 +785,8 @@ a.unshift('a','b','c')
 
 - 返回数组中符合条件的第一个元素  
   `arr.find(fn)`  
-  `fn`结果为`true`时代表符合条件
+  `fn`结果为`true`时代表符合条件  
+  没符合条件的就返回`undefind`
 - 查找元素在数组中的序号  
   - 返回第一个符号条件的元素的序号  
     `arr.findIndex(fn)`  
@@ -1704,8 +1705,11 @@ Foo.bar() // hello
 
   - > 即使是一个已经变成 resolve 状态的 Promise，传递给 `then()` 的函数也总是会被异步调用 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E6%97%B6%E5%BA%8F)
 
-  - `promise.then(fn)`返回的也是promise  
-    [这个MDN页面](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8)有相关描述
+  - `promise.then(fn)`会返回一个新的promise  
+    [这个MDN页面](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8)有相关描述  
+    
+    - 如果fn里return了一个值  
+      那被返回的promise的then的参数就是return值
     
   - 【】测测多个then之间是否是同步执行的
 
@@ -1748,7 +1752,7 @@ Foo.bar() // hello
   - catch返回的是一个promise
 
 - [finally](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally)  
-  【】待了解，至少可以避免then与catch的重复代码
+  正常写法是在then或catch后执行，不正常写法没试过
 
 
 
@@ -1886,9 +1890,9 @@ Foo.bar() // hello
 
   
 
+## [Promise的组合方法](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise#%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95)
 
-
-## Promise.all
+##### Promise.all
 
 - **语法** 
 
@@ -1912,7 +1916,7 @@ Foo.bar() // hello
 
 （不用Promise.all不进入回调地域似乎无法做出Promise.all的功能）
 
-## Promise.race
+##### Promise.race
 
 > 其他和Promise.all一样，不同的是只要有一个promise解决或拒绝，合成的promise就会解决或拒绝
 >

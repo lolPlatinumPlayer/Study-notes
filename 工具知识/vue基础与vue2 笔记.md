@@ -313,6 +313,8 @@ v-html中似乎不能对变量进行运算
 - mustache中弄出来的字符串会被转义，而`v-html`不会
 
 
+
+
 ### v-model
 input、textarea等自然输入控件中属性加上v-model="xxx"，可实现input中输入数据与Vue对象data属性中的xxx属性的双向绑定，即输入数据===xxx属性，显示也同步。该点在单多选下拉input中同样适用。
 多选按钮：在xxx声明为数组时可以获取选中框的value（使用vue的标签中应用v-bind），声明为空时将以true、false反映选中状态。
@@ -330,11 +332,13 @@ select下拉列表：只要有声明xxx，xxx值都为选中选项option中的�
     如果v-model输入非法值的话编译会阻塞报错：`'Assigning to rvalue'`
 
 
-### v-model修饰符
+##### v-model的修饰符
 添加在v-model.后
 lazy:使v-model不会在输入未完成时就同步
 number:将输入数值变为Number类型（如果原值的转换结果为 NaN 则返回原值，如果输入第一位为数字，那后续也只能输入数字）
 trim:过滤用户输入的首尾空格
+
+
 
 
 ### data选项
@@ -392,6 +396,16 @@ getter的简写方法：在计算属性中直接写入无参数匿名函数，re
 使用计算属性会进行缓存，函数只有当其依赖数据（使用的变量）改变时才会重新运行，多次调用只会调用计算结果而不会运行函数。
 
 可以让路由参与运算，并且一开始计算结果就是正确的
+
+- 用getter来做相关操作可能会出现问题  
+  （可能setter可以）  
+  （引导记下这条笔记的例子也有点问题，组件内没把value绑到再下级的组件上）  
+  getter感觉只是保证了值的正确，然而其中的代码似乎不一定每次都执行
+  - 例子  
+    写了个组件，内外用v-model通信  
+    外部一开始传入null，内部输出都是对象  
+    写了个计算属性为输出结果，并在getter中emit、console.log  
+    然而经常是不打印的，而且vue devtools（2.6.10）里数据也不一定及时更新
 
 
 ### 计算属性的setter（set属性）
@@ -699,10 +713,25 @@ out-in: 离开过渡完成后开始进入过渡
 
 - [深度作用选择器](https://vue-loader.vuejs.org/zh/guide/scoped-css.html#%E6%B7%B1%E5%BA%A6%E4%BD%9C%E7%94%A8%E9%80%89%E6%8B%A9%E5%99%A8)  
   `>>>`或`/deep/`或`::v-deep`  
-  在样式里加『随机属性』属性时加在深度作用选择器前面的那个元素上  
-  深度作用选择器会被编译成一个后代选择器（也就是` `）  
-  （hrt的sxy系统与ptxy系统中只能用`::v-deep`）  
-  （hrt的sxy系统与ptxy系统中`.a::v-deep.b`并不会编译成`.a .b`，要自己在中间加上空格才行）
+  
+  - 在样式里加『随机属性』属性时加在深度作用选择器前面的那个元素上  
+  
+  - 深度作用选择器之后的内容编译成css后，都不会带『随机属性』
+  
+  - 深度作用选择器会被编译成一个后代选择器（也就是` `）  
+    （hrt的sxy系统与ptxy系统中只能用`::v-deep`）  
+    （hrt的sxy系统与ptxy系统中`.a::v-deep.b`并不会编译成`.a .b`，要自己在中间加上空格才行，不过下面这种情况会编译出后代选择器）  
+  
+    ```scss
+    .el-select{
+      width: 100%;
+      ::v-deep.el-input__suffix{
+        display: none;
+      }
+    }
+    ```
+  
+  
 
 # 判断与循环
 
@@ -1224,6 +1253,14 @@ mounted: function () {
 
 
 
+##### 双向数据绑定
+
+对于组件来说有v-model和[.sync](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)两种方式
+
+v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
+
+
+
 ##### 接收模板代码
 
 - 官方名称：[插槽](https://cn.vuejs.org/v2/guide/components-slots.html)
@@ -1346,6 +1383,22 @@ mounted: function () {
 
 
 
+
+
+# 错误定位
+
+- 报一堆因某个data未定义引起的错误  
+  实际上这个data定义了
+
+  - 错误原因  
+    另一个data在data()里赋值不正确，比如把某个属性设为了未定义的变量
+
+  - 一次经验  
+    一堆报错中基本都是第一个data（data()return的第一个属性）的错  
+    接近中间的位置报了一个真正的错
+
+
+
 # 其他
 
 
@@ -1405,7 +1458,8 @@ bug
   v-for使用拥有所有能转换的数据
   v-show再过滤出需要显示的选项（这里用v-if的话就只能转换有显示的选项的数据）
 - 下拉框不会触发blur事件  
-  这点导致在写表单rule时，trigger要写change而不是blur
+  这点导致在写表单rule时，trigger要写change而不是blur  
+  （在令彰4.1日系统的项目上好像是这样，不过自己测了发现并没有这回事）
 
 
 ##### 表单
@@ -1486,7 +1540,7 @@ lin
 
 ##### 其他
 
-- 加载中的指令可以给任意标签使用  
+- 加载中的指令可以给template以外的任意标签使用  
   <span style='opacity:.5'>（不仅仅是element组件可以用）</span>  
   `v-loading="布尔值"`
 
