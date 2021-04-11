@@ -215,7 +215,8 @@ https://router.vuejs.org/zh-cn/advanced/transitions.html
 
 - 获得当前路由信息  
   通过`vue组件实例.$route`可以获得  
-  （实操过，本笔记的《动态路径参数》部分也有类似用法）
+  有很多信息，包括params、meta等  
+  （本笔记的《动态路径参数》部分也有类似用法）
 
 
 
