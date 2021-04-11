@@ -706,6 +706,8 @@ out-in: 离开过渡完成后开始进入过渡
 
 # 判断与循环
 
+> v-for优先级高于v-if —— [官网](https://cn.vuejs.org/v2/guide/list.html#v-for-%E4%B8%8E-v-if-%E4%B8%80%E5%90%8C%E4%BD%BF%E7%94%A8)
+
 
 ### v-if、v-else、v-else-if
 `<h1 v-if="ok">Yes</h1>`  
@@ -725,29 +727,67 @@ out-in: 离开过渡完成后开始进入过渡
 - 不支持在template标签中多次切换【】？  
 
 
-### v-for【】格式待整理
-在标签内加入v-for="(a,b) in c"（in可更改为of），可以循环生成该标签。  
-生成标签间固定加入部分可以是data中的数据。  
-在mustache或v-html里输入c、b、a分别表示：  
-c写在data中，可为数组可为对象，长度决定了循环次数。  
-b:c为数组或数字时，b为序号（从0开始，可在mustache中运算）  
-  c为对象时，b为序号对应属性的属性名  
-a:c为数字时，a为从1开始的序号  
-   c为数组时，a为每次循环中c数组中对应序号中的内容。如果是a.xx，则代表c数组中对应序号内容的xx属性的属性值,若循环到内容中没有名为xx的对象，则a.xx处不生成任何代码。  
-  c为对象时，a为序号对应属性的属性值。这种情况下，要输出序号的话v-for中应写为(a,b,e) in c,{{e}}就会输出序号。  
-如无需序号，可写为v-for="a in c"  
-v-for也可单纯用来输出序号，v-for="n in 10"，{{ n }}将会循环生成1到10。  
+
+### 循环
+
+即使用`v-for`指令
+
+**语法**
+
+`v-for="in前 in in后"`  
+（可以用 `of` 替代 `in` 作为分隔符）  
+
+- `in后`处都是被迭代内容
+
+- `in前`处是单次迭代的信息  
+  有2种写法
+
+  - 写法一：  
+    直接写一个变量  
+    （[官网](https://cn.vuejs.org/v2/guide/list.html#%E7%94%A8-v-for-%E6%8A%8A%E4%B8%80%E4%B8%AA%E6%95%B0%E7%BB%84%E5%AF%B9%E5%BA%94%E4%B8%BA%E4%B8%80%E7%BB%84%E5%85%83%E7%B4%A0)称为别名）
+  - 写法二：  
+    `(a,b)`或`(a,b,c)`
+
+  `in前`处的信息的维度数量不同（[官网](https://cn.vuejs.org/v2/guide/list.html#%E7%94%A8-v-for-%E6%8A%8A%E4%B8%80%E4%B8%AA%E6%95%B0%E7%BB%84%E5%AF%B9%E5%BA%94%E4%B8%BA%E4%B8%80%E7%BB%84%E5%85%83%E7%B4%A0)称维度为参数）  
+  如果只想用第一个维度，那么用写法一即可  
+  如果想用第二个或第三个维度，那么必须用写法二  
+  （`()`中的内容就是各个维度）
+
+**可迭代数据类型**
+
+- 数组  
+  有2个维度
+  1. 数组子项
+  2. 迭代序号
+- 对象  
+  有3个维度
+  1. 属性值
+  2. 属性名
+  3. 迭代序号
+- 正整数  
+  有1个维度  
+  那就是：当前迭代所属的次数  
+  （比如说用v-for迭代3，那输出结果就是1、2、3）
 
 
-##### 用函数对v-for循环进行筛选
+
+
+##### 对循环进行筛选
 v-for="a in computedC"中computedC可为计算属性，计算属性中写
+
+```js
 function () {
     return this.c.filter(function (c) {
         return 筛选条件写在这
     })
 }
+```
+
 在计算属性不适用的情况下 (例如，在嵌套 v-for 循环中) 可以使用method方法
-v-for="a in e(c)"
+
+`v-for="a in e(c)"`
+
+```js
 methods: {
     e: function (c) {
         return c.filter(function (c) {
@@ -755,6 +795,9 @@ methods: {
         })
     }
 }
+```
+
+
 
 
 
