@@ -1453,6 +1453,111 @@ vue2虽然原生也支持类的写法，不过会有一些问题（比如method�
 
 
 
+##### 模板
+
+可以用.vue的模板也可以用渲染函数
+
+- 用`.vue`的模板  
+
+  ```vue
+  <template>
+    <div>{{ message }}</div>
+  </template>
+  
+  <script>
+  import Vue from 'vue'
+  import Component from 'vue-class-component'
+  
+  @Component
+  export default class HelloWorld extends Vue {
+    message = 'Hello World!'
+  }
+  </script>
+  ```
+
+- 用渲染函数  
+
+  ```jsx
+  import Vue from 'vue'
+  import Component from 'vue-class-component'
+  
+  @Component
+  export default class HelloWorld extends Vue {
+    message = 'Hello World!'
+    render() {
+      return <div>{{ message }}</div>
+    }
+  }
+  ```
+
+
+
+##### 直接在类中写的内容
+
+```jsx
+import Vue from 'vue'
+import Component from 'vue-class-component'
+
+@Component
+export default class HelloWorld extends Vue {
+  
+  // 声明data
+  firstName = 'John'
+  lastName = 'Doe'
+    
+  // 声明方法
+  onClick(){}
+    
+  // 声明钩子
+  mounted(){}
+    
+  // 声明渲染函数
+  render() {
+    return <input v-model="name" @click="onClick">
+  }
+
+  // 声明计算属性的getter
+  get name() {
+    return this.firstName + ' ' + this.lastName
+  }
+
+  // 声明计算属性的setter
+  set name(value) {
+    const splitted = value.split(' ')
+    this.firstName = splitted[0]
+    this.lastName = splitted[1] || ''
+  }
+    
+}
+```
+
+
+
+##### 其他选项
+
+其他选项传给装饰器
+
+```vue
+<template>
+  <OtherComponent />
+</template>
+
+<script>
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import OtherComponent from './OtherComponent.vue'
+
+@Component({
+  components: {
+    OtherComponent
+  }
+})
+export default class HelloWorld extends Vue {}
+</script>
+```
+
+
+
 
 
 # 错误定位
