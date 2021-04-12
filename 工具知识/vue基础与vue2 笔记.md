@@ -875,6 +875,8 @@ methods: {
 - 可以有动态事件
 - 可以用这种写法：`@click="a(1,2,事件对象)"`  
   未测试
+- 监听器是按顺序触发的  
+  比如说在模板和mounted里监听了同一个事件，那模板的会先触发，mounted的后触发
 
 
 ### 事件处理方法
@@ -931,6 +933,7 @@ methods: {
 # 组件
 
 - 组件的根节点可以是另一个组件
+- 组件的根节点可以是transition标签
 
 
 
@@ -939,7 +942,7 @@ methods: {
 按目前的理解，组件就是“实例的类”的一种形式，注册后就可以直接在模板里使用
 
 - 生成 “类”  
-  [`Vue-extend`](https://cn.vuejs.org/v2/api/#Vue-extend)  
+  [`Vue.extend`](https://cn.vuejs.org/v2/api/#Vue-extend)  
   其实例的`$mount`方法应该是用来生成dom的，可以传入类似`'#id'`这样的方法来挂在到其他dom下，也可以不传  
   生成的dom可以手动加入其他dom，具体看[博客](https://www.jianshu.com/p/b931abe383e3)
   
@@ -952,27 +955,34 @@ methods: {
   - 【】有空测一下new "类"生成的是不是vue组件的实例
   
 - 生成 实例  
-  [`new Vue(配置)`](https://cn.vuejs.org/v2/guide/#%E5%A3%B0%E6%98%8E%E5%BC%8F%E6%B8%B2%E6%9F%93)  
   
-  - vue的“仅运行时”版本可用
-  
-  - `new Vue`还有一种方法生成实例，代码如下  
-  
-    ```js
-    new Vue({
-      el: dom,
-      render: (h) => h(配置),
-    }).$children[0]
-    ```
-  
+  - `new`Vue.extend生成的“类”  
+    这个时候应该也是可以传配置的  
+    element的message组件就有这样的代码：`({data: options})`
     
+  - [`new Vue(配置)`](https://cn.vuejs.org/v2/guide/#%E5%A3%B0%E6%98%8E%E5%BC%8F%E6%B8%B2%E6%9F%93)  
+  
+    - vue的“仅运行时”版本可用
+  
+    - `new Vue`还有一种方法生成实例，代码如下  
+  
+      ```js
+      new Vue({
+        el: dom,
+        render: (h) => h(配置),
+      }).$children[0]
+      ```
+  
+      
   
 - vue 基础组件走完才会生成 总体的Vue实例那个变量  
   不过实例通过this去调，是能调到的（这个不知道是不是因为钩子执行时组件整体已经走完了）
   
 - 如果自己用new Vue或extend插入实例  
   那vue devtools的components选项卡里是找不到这个实例的  
-  （即使传入components选项也没用）
+  （即使传入components选项也没用）  
+  （element-ui的Message组件在body标签下加入extend出的实例，devtools也捕获不到）  
+  （element-ui的MessageBox组件大致了解了下，和Message应该也是一样的情况）
   
 - 挂载  
   new Vue和extend都有挂载的概念  
@@ -1040,21 +1050,15 @@ new Vue({
 
 
 
-一个template下只能有一个子标签
-
-
-src 导入要遵循和require() 调用一样的路径解析规则，这就是说你需要用以 ./ 开头的相对路径，引用npm资源的话不用加 ./
-
-
-· .vue文件的编写
-一整个文件就是一个组件，所以不能用vue实例，template下也只能有一个子标签。
-与普通组件不同之处是最外层组件是包裹在 export default中，用name属性代表组件名称。
-单文件组件中要使用全局组件的话，要先import Vue from 'vue'
-
-· 单文件组件的使用
-要先 import componentName from './fileName.vue'
-然后再在引入文件的components属性中写上componentName，之后组件就能正常使用了
-（componentName与被引入文件中代码无关）
+- src 导入要遵循和require() 调用一样的路径解析规则，也就是说需要用以 ./ 开头的相对路径，引用npm资源的话不用加 ./
+- .vue文件的编写
+  一整个文件就是一个组件，所以不能用vue实例。
+  与普通组件不同之处是最外层组件是包裹在 export default中，用name属性代表组件名称。
+  单文件组件中要使用全局组件的话，要先import Vue from 'vue'
+- 单文件组件的使用
+  要先 import componentName from './fileName.vue'
+  然后再在引入文件的components属性中写上componentName，之后组件就能正常使用了
+  （componentName与被引入文件中代码无关）
 
 
 
@@ -1431,6 +1435,13 @@ v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
 
 
 
+### 获得传给本组件的监听器
+
+[`this.$listeners`](https://cn.vuejs.org/v2/api/#vm-listeners)  
+这个方法不会返回带了`.native`修饰符的监听器
+
+
+
 ### 组件教程更新未看内容
 
 [这](https://cn.vuejs.org/v2/guide/components-edge-cases.html#%E7%A8%8B%E5%BA%8F%E5%8C%96%E7%9A%84%E4%BA%8B%E4%BB%B6%E4%BE%A6%E5%90%AC%E5%99%A8)及之后
@@ -1705,9 +1716,19 @@ lin
 
 ##### 其他
 
-- 加载中的指令可以给template以外的任意标签使用  
-  <span style='opacity:.5'>（不仅仅是element组件可以用）</span>  
+- 加载状态  
   `v-loading="布尔值"`
+  
+  - 如果给某个组件加了该指令  
+    那么在加载状态结束后会重置组件内的data（这点挺好的）
+  - 这个指令可以给template以外的任意标签使用  
+    <span style='opacity:.5'>（不仅仅是element组件可以用）</span>  
+  
+- 隐藏组件  
+
+  > 官方在 github 的 issues 中表示不会写在文档中，需要用的自己看源码进行调用  —— [博客](https://blog.csdn.net/u012260238/article/details/103907206) 
+
+  - el-scrollbar
 
 
 
