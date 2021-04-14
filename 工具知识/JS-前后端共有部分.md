@@ -1149,7 +1149,7 @@ try{
 - encodeURI与decodeURI的组合
 - encodeURIComponent与decodeURIComponent的组合
 
-
+2个选择的结果会稍有差异（有一次同事用decodeURI解不全的字符串用decodeURIComponent就可以解全）
 
 ## π
 
