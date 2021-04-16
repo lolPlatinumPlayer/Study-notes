@@ -1322,7 +1322,13 @@ v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
 
 特性：
 
-- 一个组件可以接收多份模板代码（`slot`）
+- 一个组件可以接收多份模板代码（`slot`）  
+  这情况官方名称是：[具名插槽](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%85%B7%E5%90%8D%E6%8F%92%E6%A7%BD)  
+  写法有4种  
+  - `<普通标签 slot="插槽名">xxx</普通标签>`
+  - `<template slot="插槽名">xxx</template>`
+  - `<template v-slot:插槽名>xxx</template>`
+  - `<template #插槽名>xxx</template>`
 
 疑似bug：
 
@@ -1662,6 +1668,21 @@ bug
     value是要验证的值
     callback是验证方法（validate）的回调，不传参代表符合验证条件，有传参则代表不符合验证条件，会触发相关视图效果
     callback是单参数的，这个传参是控制台提示信息，会在不符合验证时在控制台进行打印
+  - 触发验证的时机  
+    由rules属性的属性的子项的trigger属性控制  
+    默认值似乎是change
+    - blur  
+      一般是用这个  
+      不过如果el-form-item里不是select、input这种元素的话不生效  
+      （el-form-item里是一个包裹input元素的组件也不生效）  
+      （自己写一个有blur事件的组件也不生效）
+    - change  
+      el-form-item里不是select、input这种元素也可以生效  
+      不过el-form-item里的元素一定要绑v-model，且这个元素一定要是能接收v-model的  
+      不然不生效
+  - 调用api验证某一项  
+    `组件实例.validateField(rules属性的属性名)`  
+    [官网](https://element.eleme.cn/#/zh-CN/component/form#form-methods)没提到这个用法
   
 - `:model`是必填的
   prop也要填model传入对象的属性
@@ -1721,6 +1742,8 @@ lin
   
   - 如果给某个组件加了该指令  
     那么在加载状态结束后会重置组件内的data（这点挺好的）
+  - 如果给按钮加了这个指令  
+    那在加载状态中还是可以触发点击事件
   - 这个指令可以给template以外的任意标签使用  
     <span style='opacity:.5'>（不仅仅是element组件可以用）</span>  
   

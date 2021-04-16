@@ -594,6 +594,10 @@ bbbb
   - `git push origin 本地分支名`  
     如果服务端没有该分支的话则会自动在服务端新增该分支  
   - `git push --set-upstream origin 分支名`
+- pull的智能性  
+  在b分支执行`git pull origin a`后在a分支合并b分支之后  
+  a分支是一定可以push到远程仓库的  
+  就算在合并b分支前落后了远程仓库几个commit也是可以的
 
 
 
