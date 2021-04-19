@@ -1411,6 +1411,11 @@ v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
 
 - [api](https://cn.vuejs.org/v2/api/#provide-inject)
 
+- 可以注入方法
+
+- 默认写法注入的数值是不会动态更新的  
+  （默认写法指的是provide写函数或对象）  
+
 
 
 ##### 递归组件
@@ -1721,6 +1726,22 @@ bug
   scope中还有一些其他数据
   template改成其他标签也可以
   el-table-column标签上无法加样式与类名
+
+
+
+怀疑有的bug
+
+- 固定表头时在表格高度足够的情况下，高度会被压缩至出现滚动条  
+  （固定表头指的是设置height属性，百分比还是px写法都有该bug）  
+  - 详细描述  
+    被压缩高度指的是表格body的高度，表格本身的高度是正常的  
+    这个bug是初次渲染时出现的，后续只要表格高度有变化，那这个bug就会消失
+    - 表格上有加v-loading
+    - 表格父元素是el-scrollbar组件
+  - 出现bug的文件  
+    sxy项目：`data-analysis\data-notionalPooling\city-report-system\myReport\outlier.vue`
+
+
 
 
 ##### 导航框
