@@ -1,4 +1,7 @@
+## [入门代码](https://threejs.org/docs/index.html#manual/zh/introduction/Creating-a-scene)
+
 ## js判断浏览器是否支持webGL
+
 https://threejs.org/docs/index.html#manual/zh/introduction/WebGL-compatibility-check
 
 
@@ -183,6 +186,25 @@ scene.add(cube); // 将对象加进场景中
   
   不透明度低于`alphaTest`的部分将不渲染，所以可以改善这个情况  
   材质生成后给`alphaTest`赋值并不会产生任何效果（只有这个数值会变）
+
+
+
+##### 贴图/纹理
+
+three中在纹理和贴图间没有明显的界限，经常会叫“纹理贴图”  
+英文就是Texture，有时候是map  
+纹理贴图都是要传入一个『图片或canvas或视频』，但是对于传入的『图片或canvas或视频』并没有一个名称
+
+- 使用视频texture  
+
+  ```js
+  const texture = new THREE.VideoTexture(videoDom)
+  const material = new THREE.MeshBasicMaterial({map: texture  })
+  ```
+
+  注意：three里视频的画面和videoDom的是一致的
+
+
 
 
 ## 形状
@@ -569,16 +591,14 @@ animate();
 
 
 
-# 未归类
 
-- three中在纹理和贴图间没有明显的界限，经常会叫“纹理贴图”  
-  英文就是Texture，有时候是map  
-  纹理贴图都是要传入一个图片或者canvas，但是对于传入的『图片或者canvas』并没有一个名称
 
 
 # 记录
 
 - i5 5代核显对sprite和mesh重叠颜色时可能出现问题
+
+
 
 # 配合使用的工具
 
