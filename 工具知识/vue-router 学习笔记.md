@@ -29,10 +29,13 @@
 ## 定义路由
 ```javascript
 const routes = [
-    { path: '/dd', component: { template: '<div>foo</div>' } },
+    { name:'xx',path: '/dd', component: { template: '<div>foo</div>' } },
 ]
 ```
-`path`的值是路由，`component`的值是组件。`component`的`template`是模板（类似于html），只应该有一个根元素。
+- `name`值可以带`.`带数字
+- `path`的值是路由  
+  里边可以带`.`带数字
+- `component`的值是组件
 
 ## 创建 router 实例
 ```javascript

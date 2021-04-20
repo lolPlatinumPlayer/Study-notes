@@ -30,6 +30,32 @@
   
 - hrtGitLab会自动删除空文件夹  
   这个删除操作甚至在git记录里看不到
+  
+- “远程仓库名”  
+  连接远程仓库时可以设置“远程仓库名”（hrt的git环境强制要设置“远程仓库名”）  
+  命令为：`git remote add 远程仓库名 ssh://xxx.git`  
+  执行上面这个命令后`.git/config`文件里就长下面这样子  
+  
+  ```
+  [core]
+  	repositoryformatversion = 0
+  	filemode = false
+  	bare = false
+  	logallrefupdates = true
+  	symlinks = false
+  	ignorecase = true
+  [remote "远程仓库名"]
+  	url = ssh://xxx.git
+  	fetch = +refs/heads/*:refs/remotes/远程仓库名/*
+  
+  ```
+  
+  后续push时就要这样写：`git push -f 远程仓库名 develop`（？？？）
+  
+  - `.git/config`里的远程仓库名可以随意更改  
+    `git pull origin master`里的origin就是仓库名
+
+
 
 
 
@@ -148,6 +174,8 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
     
         git push --set-upstream origin main
     ```
+    
+    这个报错应该是因为没有确定远程仓库（仓库名）导致的
     
   - hrtGitlab在push时报错`fatal: repository 'xxxx.git/' not found`  
     解决方法：remote add时不用http的地址，改用SSH即可
@@ -513,7 +541,7 @@ bbbb
 
 
 ##### 从服务端下载指定分支代码并将其与当前分支进行合并
-`git pull origin 远程主机分支名`  （这里origin是远程主机名）
+`git pull origin 远程仓库分支名`  （这里origin是远程仓库名）
 
 - 当前内容都已add但未commit也可以正常合并
 - 即使当前不在要pull的分支也能执行完毕？？？
@@ -806,28 +834,8 @@ cd d:nospace/learngit
   比如说第10个至第15个commit间共更改了哪些内容，而不是看一个个commit分别改了哪些内容  
   （如果不行的话看看合并commit要怎么操作）
 
-- “远程仓库名”  
-  连接远程仓库时可以设置“远程仓库名”（hrt的git环境强制要设置“远程仓库名”）  
-  命令为：`git remote add 远程仓库名 ssh://xxx.git`  
-  执行上面这个命令后`.git/config`文件里就长下面这样子  
-
-  ```
-  [core]
-  	repositoryformatversion = 0
-  	filemode = false
-  	bare = false
-  	logallrefupdates = true
-  	symlinks = false
-  	ignorecase = true
-  [remote "远程仓库名"]
-  	url = ssh://xxx.git
-  	fetch = +refs/heads/*:refs/remotes/远程仓库名/*
   
-  ```
-
-  后续push时就要这样写：`git push -f 远程仓库名 develop`
-
-
+  
 
 
 
