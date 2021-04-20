@@ -930,10 +930,17 @@ methods: {
 
 
 
-# 组件
+# 模板
 
-- 组件的根节点可以是另一个组件
-- 组件的根节点可以是transition标签
+- 模板的根节点可以是一个组件  
+  甚至可以用单标签写法（`<组件名 />`）  
+- 模板的根节点可以是transition标签
+
+
+
+
+
+# 组件
 
 
 
@@ -1072,8 +1079,6 @@ new Vue({
 更多内容看[Vue 单文件组件 (SFC) 规范](https://vue-loader.vuejs.org/zh/spec.html)及[vue-loader指南](https://vue-loader.vuejs.org/zh/guide/)
 
 
-### 组件html标签中的规则
-写普通的html属性可以在渲染后显示，但是写vue的专属属性有特别的一套规则（与非组件的html标签的vue规则完全不同），在下文进行介绍。
 
 
 ### 让组件在超出html标签嵌套规则的情况下正常使用
@@ -1295,6 +1300,41 @@ mounted: function () {
   
   > prop 会在一个组件实例创建**之前**进行验证，所以实例的 property (如 `data`、`computed` 等) 在 `default` 或 `validator` 函数中是不可用的。 —— [官网](https://cn.vuejs.org/v2/guide/components-props.html#Prop-%E9%AA%8C%E8%AF%81)
 
+- 类型
+
+  - 写法
+
+    - ```js
+      props:{
+        propA:类型
+      }
+      ```
+
+    - ```js
+      props:{
+        propA:[类型a,类型b,类型c,]
+      }
+      ```
+
+    - ```js
+      props:{
+        propA:{
+          type:类型
+        }
+      }
+      ```
+
+  - 对象类型  
+    也就是`Object`  
+    数组、date等js原生构造函数的实例无法通过`Object`的校验  
+    （自建类的实例是可以的）
+
+  - 不校验的类型  
+
+    > `null` 和 `undefined` 会通过任何类型验证 —— [官网](https://cn.vuejs.org/v2/guide/components-props.html#Prop-%E9%AA%8C%E8%AF%81)
+
+
+
 
 
 ##### 双向数据绑定
@@ -1449,7 +1489,9 @@ v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
 ### 获得传给本组件的监听器
 
 [`this.$listeners`](https://cn.vuejs.org/v2/api/#vm-listeners)  
-这个方法不会返回带了`.native`修饰符的监听器
+
+- 这个属性不会返回带了`.native`修饰符的监听器
+- 这个属性不会返回用`组件实例.$on`监听的监听器
 
 
 
@@ -1772,7 +1814,25 @@ lin
 
   > 官方在 github 的 issues 中表示不会写在文档中，需要用的自己看源码进行调用  —— [博客](https://blog.csdn.net/u012260238/article/details/103907206) 
 
-  - el-scrollbar
+  - el-scrollbar  
+  
+    - 猜测用法：在可能需要滚动条的地方套上  
+  
+      ```html
+      <父>
+        <el-scrollbar>
+          <子 />
+        </el-scrollbar>
+      </父>
+      ```
+  
+      就这样写就行，子元素过高时就会自动出现滚动条
+  
+    - bug  
+  
+      - `div.el-scrollbar__wrap`这个元素上有`margin-bottom: -5px; margin-right: -5px;`  
+        这个至少导致了子元素下方5px的消失  
+        （右侧5px有没消失没研究）
 
 
 
