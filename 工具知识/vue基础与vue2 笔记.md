@@ -392,6 +392,12 @@ trim:过滤用户输入的首尾空格
 - 重置指定data  
   `this.data名=this.$options.data().data名`
 
+
+
+- push和$set都不会让vue devtool更新（vue2.6.11，vue devtool5.3.4）
+
+
+
 **关于数组视图更新的研究**
 
 结果和上面说的“不会触发视图更新”是相反的，不过[vue官网](https://cn.vuejs.org/v2/guide/reactivity.html#%E5%AF%B9%E4%BA%8E%E6%95%B0%E7%BB%84)也确实说“给数组子项赋值是不会触发视图更新的”

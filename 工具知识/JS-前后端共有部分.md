@@ -781,6 +781,16 @@ a.unshift('a','b','c')
    向数组添加的新项目  
    （可以省略）
 
+
+
+##### 数组排序
+
+[`arr.sort`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
+
+返回排序后的数组，会改变原数组
+
+
+
 ##### 在数组中查找单个元素
 
 - 返回数组中符合条件的第一个元素  
@@ -981,6 +991,9 @@ setInterval和setTimeout
   `document.querySelectorAll(字符串格式的css选择器)`
 
 ## 事件
+
+（这里介绍的内容都来自[EventTarget](https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget)）
+
 这里写的是最正规的方法
 以下事件名不加on
 
@@ -1645,9 +1658,9 @@ Foo.bar() // hello
   - `super`在构造函数、普通方法中调不到父类属性（静态、实例、属性、公有字段都不行）和父类静态方法
   - `super`调用父类方法。可以在构造函数、普通方法中使用。静态方法中不允许使用`super`
 - `super`的使用条件  
-  - 子类要写构造函数的话，里面一定要有且只能有一个`super(传参或不传参)`，不然会阻塞报错  
-    而且要在这之后才能用`this`和`super`，不然阻塞报错  
-  - 不能用`super`这种形式直接存在，不然阻塞报错  
+  - 子类要写构造函数的话，里面一定要有且只能有一个`super(传参或不传参)`，不然会阻塞<span style='color:red'>报错</span>（比如`TypeError: Cannot set property 'xxx' of undefined`）  
+    而且要在这之后才能用`this`和`super`，不然阻塞<span style='color:red'>报错</span>  
+  - 不能用`super`这种形式直接存在，不然阻塞<span style='color:red'>报错</span>  
 - 子类new出来的对象，同时是父类与子类的实例，instanceof 父类或子类都是true  
 - 可以继承js原生的构造函数（没有测试过）
 
