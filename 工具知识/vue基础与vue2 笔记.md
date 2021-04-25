@@ -2,7 +2,8 @@
 
 - created里执行的函数的this是undefined
 - 在method里调用函数，函数的this居然不是组件实例？
-  中间加一层this.$nextTick的话this就是组件实例了
+  中间加一层this.$nextTick的话this就是组件实例了  
+  计算属性里的也是
 - 了解data在生命周期里的执行时机，其中data先于mounted执行。和其他时机对比的先后顺序待了解、data是否能执行methods待了解
 - 实例中的`$options`等成员
 - keep-alive  
@@ -546,6 +547,14 @@ watch:{
     - 发现修改prop的属性的话，打印内容都是一致的
     - 直接给prop赋值的话，打印内容会有区别
 
+
+
+##### [immediate](https://cn.vuejs.org/v2/api/#vm-watch)
+
+听杭兴说是一开始就监听的配置
+
+
+
 ### methods选项
 
 Vue对象中methods属性的 属性 可以匿名函数为值，在Mustache中输入该属性名加() 则可执行函数，例：“属性名()”，可在js中直接调用，例：“Vue对象名.属性名()”。  
@@ -556,11 +565,9 @@ Vue对象中methods属性的 属性 可以匿名函数为值，在Mustache中输
 
 ### [v-bind](https://cn.vuejs.org/v2/api/#v-bind)
 
-**v-bind="对象"**
 
-也就是批量`v-bind:a="b"`的语法糖
 
-**v-bind:a="b"**
+**v-bind:a="b**
 
 可以简写为`:a="b"`
 
@@ -577,6 +584,12 @@ Vue对象中methods属性的 属性 可以匿名函数为值，在Mustache中输
 不用`v-bind`代表属性值用字符串，用的话代表用动态数据作为属性值
 
 
+
+**v-bind="对象"**
+
+也就是批量`v-bind:a="b"`的语法糖
+
+- 标签上如果单条写法和对象写法给同一个prop赋了值，那对象写法的将不会生效
 
 
 
@@ -884,8 +897,9 @@ methods: {
 - 监听器是按顺序触发的  
   比如说在模板和mounted里监听了同一个事件，那模板的会先触发，mounted的后触发
 
-
 ### 事件处理方法
+
+**常规用法**
 
 `<button v-on:click="greet">XXX</button>`
 
@@ -917,6 +931,14 @@ methods: {
      脚本语句里的data等不需要加`this.`  
      脚本语句里的`this`值为`null`，而使用`window`是会报错的  
      （不过放箭头函数里可以获取到`this`，而window不行）
+   - 写语句时获取事件对象  
+     用`$event`  
+     面对原生标签时也可以获得原生事件对象
+
+**[官网的用法列表](https://cn.vuejs.org/v2/api/#v-on)**
+
+比如有动态写法和对象写法
+
 
 
 ### 事件修饰符
@@ -933,6 +955,8 @@ methods: {
 - .self  只在当前元素触发事件  
   比如单击子元素不触发事件  
 - .once  事件只执行一次  
+
+更多修饰符看[这里](https://cn.vuejs.org/v2/api/#v-on)
 
 
 
@@ -1241,8 +1265,9 @@ mounted: function () {
 关于其他属性的介绍在本笔记内搜索“其他属性”进行查看
 
 - 把一个对象的所有属性都作为prop传入组件  
-  `<组件名 v-bind="承载对象的变量"></组件名>`
-
+  `<组件名 v-bind="承载对象的变量"></组件名>`  
+这种方法传的参数都是双向绑定的
+  
 - prop必须存在于props选项，不然无法使用
 
 - 在组件标签上属性部分写`A属性='XX内容'`就可以将子组件的props选项的A属性改为XX内容字符串。  
@@ -1694,7 +1719,33 @@ bug
   v-show再过滤出需要显示的选项（这里用v-if的话就只能转换有显示的选项的数据）
 - 下拉框不会触发blur事件  
   这点导致在写表单rule时，trigger要写change而不是blur  
-  （在令彰4.1日系统的项目上好像是这样，不过自己测了发现并没有这回事）
+  （在令彰4.1日系统的项目上好像是这样，不过自己测了发现并没有这回事(这里说的测试和4.22日不是同一次)）  
+
+  - 4.22日blur测试结果  
+
+    | 类型 | 组件事件     | 表单验证触发时机 |
+    | ---- | ------------ | ---------------- |
+    | 单选 | 基本都触发   | 不触发           |
+    | 多选 | 大部分不触发 | 不触发           |
+
+    触发具体情况：
+
+    - 单选  
+      - 呼出下拉框后点击组件外都触发
+      - 点击输入框关闭下拉框面板都不触发
+      - 点击下拉框面板后关闭下拉框面板的话有时触发有时不触发  
+        目前还没掌握到规律
+      - 有选值的话组件销毁时会触发
+
+    - 多选
+      - 不可搜索  
+        已有选择项的情况：点下拉框内内容使呼出面板消失可触发  
+      - 可搜索  
+        不管什么时候点边框都可以触发，其它时候都不触发
+
+    上面的测试结果在可搜索情况下也适用
+
+    测试版本："element-ui": "2.13.2"  "vue": "2.6.10"
 
 
 ##### 表单
@@ -1714,6 +1765,9 @@ bug
   在async-validator里（网址是：https://github.com/yiminghe/async-validator）  
   说到某个属性在不同类型下表现不同时，其实指的是**这一条验证规则**的type属性传入不同类型时这个类型的表现不同？？？在Element和async-validator文档里都没看到这句话
   
+  - 中文  
+    prop和from的属性都写中文的话验证是不能完全生效的  
+    （一次经验中是只生效的第一项）
   - 自定义验证规则
     就是validator方法（与type、required、message等同级）
     validator方法形参为：rule、 value、 callback、 source、 options
@@ -1803,6 +1857,54 @@ lin
   - 空串：空白
   - null、undefined、false、数字：提示不出现且控制台阻塞报错
   - 对象：传入对象的表现与给this.$message()传入对象的表现基本一致，其中传空对象也会提示，但没有提示内容
+
+##### 上传组件
+
+- 目前没找到自己封装请求的方法  
+  http-request可能可以
+
+- 文件列表  
+  这个属性只能用来往组件里传东西，不能取东西  
+  往这个属性里传东西可以改变组件各钩子的fileList参数
+
+- 多选
+
+  - 用组件的上传行为上传多个文件只能分多次请求
+
+    > 这点得到了杭兴的确认
+
+  - 多选支持设置和不设置没发现区别  
+    对应属性是：multiple  
+    例子代码如下：   
+
+    ```vue
+    <el-upload
+      ref="upload"
+      :action="reportUrl"
+      :headers="reportHeaders"
+      name="multipartFiles"
+      :data="{
+        // 点保存后的额外参数
+        taskId: id,
+        reportUnitId,
+      }"
+      :on-success="onSaveSuccess"
+      :on-error="onSaveFail"
+      :auto-upload="false"
+      multiple
+    >
+      <el-button slot="trigger" size="small" type="primary">
+        上报
+      </el-button>
+      <div slot="tip" class="limitDescription">
+        只能上传 .xls、.xlsx 文件
+      </div>
+    </el-upload>
+    ```
+
+    
+
+
 
 ##### 其他
 

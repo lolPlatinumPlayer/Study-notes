@@ -1719,6 +1719,7 @@ Foo.bar() // hello
   - > 即使是一个已经变成 resolve 状态的 Promise，传递给 `then()` 的函数也总是会被异步调用 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E6%97%B6%E5%BA%8F)
 
   - `promise.then(fn)`会返回一个新的promise  
+    （这点要注意，`.then`之后就不是原来的对象了）  
     [这个MDN页面](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8)有相关描述  
     
     - 如果fn里return了一个值  
