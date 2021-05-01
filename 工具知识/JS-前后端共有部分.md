@@ -1370,7 +1370,7 @@ Symbol是第七种数据类型
   
 - `import * as a from './b'`  
   针对`export`输出，将./b中的变量都重命名为a.x1、a.x2等  
-  
+  a的属性都是getter（测试过vue-cli4.5.11）
 
 import from的地址可以省略.js，（慕课react实战里说是脚手架的功能）  
 import在静态解析阶段执行，所以它是一个模块之中最早执行的。  
@@ -1937,7 +1937,13 @@ Foo.bar() // hello
 > —— [SF博客](https://segmentfault.com/a/1190000020034361)
 
 
-## fetch
+
+## 请求
+
+目前未找到捕获跨域错误的方法
+
+##### fetch
+
 ```javascript
     fetch(这里可以放请求、php文件或其他文件,{ // 加第二个参数可以规避在跨域时的报错，但并没有解决跨域获取不到东西的问题
         method: "GET",
@@ -1959,7 +1965,7 @@ Foo.bar() // hello
 - fetch据说可以全面替代xhr（js请求除了xhr就是fetch），完整见[mdn](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch)
 
 
-## new request（未测试不用new request是否能成功）
+##### new request（未测试不用new request是否能成功）
 ```javascript
     let myImage = document.querySelector('img');
     var myRequest = new Request('flowers.gif');
@@ -1975,7 +1981,7 @@ Foo.bar() // hello
 ```
 
 
-## 读取json类文件的内容
+##### 读取json类文件的内容
 `请求返回内容.json()`  
 `json()`方法只能用于`请求返回内容`，会返回一个promise，它的then会返回文件中的json内容  
 详见[mdn](https://developer.mozilla.org/en-US/docs/Web/API/Body/json)

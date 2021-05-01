@@ -22,6 +22,8 @@
 - vue-router每次跳转到一个组件都会触发组件的`mounted`方法  
   离开一个组件都会执行`beforeDestroy`和`destroyed`方法
   
+  - [在同组件不同路由间调整时不会触发钩子](https://router.vuejs.org/zh/guide/essentials/dynamic-matching.html#%E5%93%8D%E5%BA%94%E8%B7%AF%E7%94%B1%E5%8F%82%E6%95%B0%E7%9A%84%E5%8F%98%E5%8C%96)
+  
 - 路由配置中无法配置params  
   配置query也只能加到path里才能生效  
   （路由配置指的是实例化`'vue-router'`时的`routes`参数）

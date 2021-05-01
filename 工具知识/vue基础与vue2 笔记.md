@@ -8,6 +8,7 @@
 - 实例中的`$options`等成员
 - keep-alive  
   不知道是啥东西，只知道没见过
+- component标签
 
 
 
@@ -462,7 +463,11 @@ getter的简写方法：在计算属性中直接写入无参数匿名函数，re
 
 
 
-**基础写法**
+除了基础写法外还可以用[“编程式”的写法](https://cn.vuejs.org/v2/api/#vm-watch)来产生watch
+
+
+
+**基础写法**（选项写法）
 
 ```
 watch: {
@@ -481,14 +486,16 @@ watch: {
     写法：  
 
     ```js
-    
-        'monitor.idxChain'(val){
-          console.log(val,'monitor.idxChain');
-          const [idx0,idx1,idx2]=this.monitor.idxChain
-          }
+    'monitor.idxChain'(val){
+      console.log(val,'monitor.idxChain');
+      const [idx0,idx1,idx2]=this.monitor.idxChain
+    }
     ```
-
     
+
+
+
+
 
 
 
@@ -551,7 +558,8 @@ watch:{
 
 ##### [immediate](https://cn.vuejs.org/v2/api/#vm-watch)
 
-听杭兴说是一开始就监听的配置
+用来设置回调是否在一开始就执行  
+设为true的话会在beforeCreate和created之间执行
 
 
 
@@ -896,6 +904,8 @@ methods: {
   未测试
 - 监听器是按顺序触发的  
   比如说在模板和mounted里监听了同一个事件，那模板的会先触发，mounted的后触发
+- 事件名可以包含冒号  
+  （[官网](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)的例子上就有用）
 
 ### 事件处理方法
 
@@ -964,7 +974,20 @@ methods: {
 
 - 模板的根节点可以是一个组件  
   甚至可以用单标签写法（`<组件名 />`）  
+  
 - 模板的根节点可以是transition标签
+
+- 可以用v-if生成根标签  
+  下面是例子  
+
+  ```vue
+  <template>
+    <标签a v-if="条件"></标签a>
+    <标签b v-else></标签b>
+  </template>
+  ```
+
+  
 
 
 
@@ -1186,8 +1209,9 @@ this就代表实例本身，也就是说：<b style='color:red'>实例对象===�
 
 
 
+##### [生命周期钩子（函数）](https://cn.vuejs.org/v2/api/#%E9%80%89%E9%A1%B9-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E9%92%A9%E5%AD%90)
 
-##### 生命周期钩子（函数）
+这里记录不完整，具体看官网
 
 ![](..\图片\vue\vue-lifecycle.png)作为方法写在实例中（也就是）new Vue({})中，例子：
 
@@ -1197,6 +1221,9 @@ mounted: function () {
 }
 ```
 
+- beforeCreate  
+  这里就可以获得路由信息了（注意：在同组件的不同路由间切换的话是不会触发钩子的）
+  
 - [mounted](https://cn.vuejs.org/v2/api/#mounted)  
   mounted的时候可以获取到其模板里的dom  
   一开始就访问带这个组件的路由也可以获取到  
@@ -1266,8 +1293,14 @@ mounted: function () {
 
 - 把一个对象的所有属性都作为prop传入组件  
   `<组件名 v-bind="承载对象的变量"></组件名>`  
-这种方法传的参数都是双向绑定的
-  
+
+  - 双向绑定  
+    - 第一级属性  
+    默认不绑定，加上[sync](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)修饰符与对应事件后可以绑定  
+      （[《sync教程》](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)有提到这种用法）  
+    - 第二级属性  
+      都会默认绑定，且不需要再写其他代码
+
 - prop必须存在于props选项，不然无法使用
 
 - 在组件标签上属性部分写`A属性='XX内容'`就可以将子组件的props选项的A属性改为XX内容字符串。  
@@ -1746,6 +1779,9 @@ bug
     上面的测试结果在可搜索情况下也适用
 
     测试版本："element-ui": "2.13.2"  "vue": "2.6.10"
+  
+- 多选下拉框  
+  多选下拉框会在初始化时把v-model绑定值改为数组
 
 
 ##### 表单
@@ -1765,6 +1801,8 @@ bug
   在async-validator里（网址是：https://github.com/yiminghe/async-validator）  
   说到某个属性在不同类型下表现不同时，其实指的是**这一条验证规则**的type属性传入不同类型时这个类型的表现不同？？？在Element和async-validator文档里都没看到这句话
   
+  - 赋值为null有有些情况会触发验证  
+    赋值为undefined都不会触发验证
   - 中文  
     prop和from的属性都写中文的话验证是不能完全生效的  
     （一次经验中是只生效的第一项）
@@ -1790,6 +1828,10 @@ bug
   - 调用api验证某一项  
     `组件实例.validateField(rules属性的属性名)`  
     [官网](https://element.eleme.cn/#/zh-CN/component/form#form-methods)没提到这个用法
+  - 验证数组值是否存在  
+    数组length为0的话也会被判断为不存在  
+    （就算手动把length改为1也会判断为存在）  
+    具体写法：`{ required: true,type: 'array',其他内容 }`  
   
 - `:model`是必填的
   prop也要填model传入对象的属性
