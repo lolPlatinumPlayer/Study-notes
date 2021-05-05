@@ -78,8 +78,14 @@
 
 ## in
 > `prop in object`  
-如果指定的属性在指定的对象或其原型链中，则in 运算符返回true。  
-**`prop`**： 一个字符串类型或者 symbol 类型的属性名或者数组索引（非symbol类型将会强制转为字符串）。  
+> 如果指定的属性在指定的对象或其原型链中，则in 运算符返回true。  
+
+- `prop`  
+  接受类型为字符串和symbol  
+  遇到这两种类型以外的数据会转为字符串
+- `object`  
+  指的是广义对象
+- `idx in arr`这种用法是可以的
 
 
 ## 与、或
@@ -94,6 +100,12 @@
 ## 字符串
 `'abc'[1]`的结果是`'b'`  
 字符串实例的说明见[A](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String#String_instances)或[B](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/prototype)（AB区别应该就是兼容性表不一样）
+
+**字符串的类型**
+
+有基本字符串和字符串对象2种，基本都用基本字符串  
+（字符串对象就属于对象了）   
+2者的描述见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 
 ## 字面量
@@ -301,73 +313,117 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/type
   2. 堆中创建一个引用（犀牛中称为基对象），这个引用是映射引用的集合，这个集合里包含一个映射引用——通过字符串`a`引用到原始值1
   3. 变量a通过非映射引用引用基对象
 - ==或===对比变量都是对比变量背后的引用，只两个变量指向同一个引用时才会返回true，因为每一个引用在js的判断下都是不同的（就算用一样的字面量给不同变量赋值，最终的比较结果还是false）  
-- 属性名：可以是任意字符串  
-- 方法：对象的属性值是函数时这个属性被称为方法  
-
-## 对象的相关api
-
-- **`Object.create(proto)`**  
-  返回一个空对象，对象的`__proto__`是`proto`  
-  第二个参数及更多内容见[mdn](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/create)
-  
-- 字面量中写set、get
-
-  ```javascript
-  {
-      get a(){
-          return this._a;
-      },
-      set a(a){
-          this._a=a;
-      }
-  }
-  ```
-  
-
-  
-- Object.defineProperty()  
-
-  ```javascript
-  Object.defineProperty(对象,属性的键名, {
-    get() {
-      console.log('get')
-    },
-    set(x) {
-      console.log('set')
-    }
-  })
-  ```
+- 方法：对象的属性值是函数时这个属性被称为方法 
 
   
 
-- Object.defineProperties()  
+##### 键
 
-  ```javascript
-  Object.defineProperties(对象, {
-    '属性1的键名': {
-      get(){},
-      set(){}
-    },
-    '属性2的键名': {
-      get(){},
-      set(){}
-    }
-    // etc. etc.
-  })
-  ```
+- es5键值只能是字符串  
+  es6中可以用 symbol做键名
+- 使用`对象[表达式]`这种语法的时候表达式结果也会转为字符串  
+  下面是一个例子
+  - 给对象设置数字键是会转为字符串键的  
+    `pureObj[.222]=.222`  
+    <span style='opacity:.5'>注意：`.222`这种写法转成字符串后是`0.222`</span>
 
-- 冻结对象  
-  `Object.freeze(对象)`  
-  冻结后对象不能被修改，不过对象的属性可以  
 
-  - `对象.属性=1`这种写法不生效  
-    不过`对象.属性.属性=1`可以生效
 
-  似乎原型链也会被冻结，详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze)
+##### [评价属性的2个维度](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Enumerability_and_ownership_of_properties)
+
+[各方法于这2个维度的统计表](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Enumerability_and_ownership_of_properties#%E7%BB%9F%E8%AE%A1%E8%A1%A8)
+
+
+
+2个维度
+
+- 是否可枚举  
+  （可枚举的称为可枚举属性）  
   
-- 给对象设置数字键是会转为字符串键的  
-  `pureObj[.222]=.222`  
-  <span style='opacity:.5'>注意：`.222`这种写法转成字符串后是`0.222`</span>
+  - 可枚举  
+    - 通过直接的赋值和属性初始化的属性  
+    - 使用[Object.defineProperty](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)定义时设为可枚举的属性
+    - 判断对象自身的属性是否可枚举  
+      `obj.propertyIsEnumerable(键)`  
+      面对在对象自身上找不到的属性，总是返回false  
+      （可以用symbol做键）  
+  - 不可枚举  
+    
+    - 对于通过 [Object.defineProperty](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty) 等定义的属性，默认不可枚举
+    
+    - > js中基本包装类型的原型属性是不可枚举的  
+      > 如Object, Array, Number等  
+      > —— [知乎文章](https://zhuanlan.zhihu.com/p/47291013)  
+    
+      （注意这里说的是原型**属性**，当然原型也是不可枚举的）
+    
+  - chrome控制台中对于可枚举属性与不可枚举属性标有不同颜色  
+    ![盗用知乎的图片](https://pic1.zhimg.com/80/v2-5f2c0313978e69c464019904328cf340_720w.png)  
+    深色为可枚举、浅色为不可枚举
+
+- 是否属于对象自身  
+  也就是说是否不在原型链上  
+  <span style="opacity:.5">MDN英文版称属于对象自身的属性是ownership的，但中文版翻译为所有权，这明显是错误的（2021.5.5）</span>
+
+
+
+## 迭代
+
+阮一峰ES6中对相关名词的使用是不严格的
+
+
+
+##### 可迭代对象
+
+iterable object  
+必须有一个键值为`Symbol.iterator`的@@iterator方法
+
+- 转数组的方法  
+  - `Array.from(可迭代对象)`
+  - `[...可迭代对象]`  
+    这种方法会把可迭代对象中的内容清空（把每一项都移除）
+
+##### @@iterator方法
+
+[阮一峰ES6](https://es6.ruanyifeng.com/#docs/iterator#%E9%BB%98%E8%AE%A4-Iterator-%E6%8E%A5%E5%8F%A3)中称为Iterator接口  
+该方法会返回一个迭代器
+
+
+
+##### 生成器
+
+generator
+
+生成迭代器的函数（暂时的理解，实际上应该不是）
+
+【】把备忘录里的记录先过一遍
+
+
+
+##### 迭代器
+
+iterator
+
+> 迭代器是一个对象 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Iterators_and_generators#%E8%BF%AD%E4%BB%A3%E5%99%A8)
+
+[阮一峰ES6](https://es6.ruanyifeng.com/#docs/iterator#Iterator%EF%BC%88%E9%81%8D%E5%8E%86%E5%99%A8%EF%BC%89%E7%9A%84%E6%A6%82%E5%BF%B5)中称为：Iterator、遍历器、遍历器对象
+
+描述
+
+- 迭代器有一个`next`方法，调用这个方法表示进行一次迭代
+
+- 外部可以判断迭代器是否迭代完成
+
+诞生来由
+
+- 有时候需要使用复杂的迭代方案（比如按指定顺序遍历深度对象）  
+  这个时候就需要用for循环、while等api编写迭代方案  
+  把迭代部分代码封装成对象，那这个对象就被称为迭代器
+- 可以一次一次迭代，es5-迭代api都是遍历的
+
+虽然有时候有这个需求，但是写一些代码就能实现了，没必要在js里加api吧↑↑↑↑↑↑
+
+
 
 ## 引用传递（有时也被称为“引用传值”）
 
@@ -403,23 +459,51 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/type
 
 
 ## 依据模板制造对象
-最原始的方法如下（基本不会用这种方法，这种方法创建的对象`.constructor`不会显示函数中的代码，只会显示`ƒ Object() { [native code] }`）
-```javascript
-function createObj(){
-  let obj = {}
-  obj.name = 11111
-  return obj
-}
-let obj1 = createObj()
-```
-其中用来创建对象的函数被称为 构造函数
-使用new关键字可以简化一些代码
-```javascript
-function createObj(){
-  this.name = 11111
-}
-let obj1 = new createObj()
-```
+- 最原始的方法  
+  （基本不会用这种方法，这种方法创建的对象`.constructor`不会显示函数中的代码，只会显示`ƒ Object() { [native code] }`）
+
+    ```javascript
+    function createObj(){
+      let obj = {}
+      obj.name = 11111
+      return obj
+    }
+    let obj1 = createObj()
+    ```
+  
+- 使用new关键字可以简化一些代码
+
+    ```javascript
+    function createObj(){
+      this.name = 11111
+    }
+    let obj1 = new createObj()
+    ```
+    
+    其中用来创建对象的函数被称为 构造函数
+    
+    - 继承  
+    
+      ```js
+      function A() {
+        this.property = 'is not enumerable';
+      }
+      
+      A.prototype.methodA = function() {};
+      
+      function B() {
+        this.propB='bbb'
+        this.methodB = function method() { return 'is enumerable'; };
+      }
+      
+      // 让B继承A
+      B.prototype = new A;
+      B.prototype.constructor = B;
+      
+      var o = new B()
+      ```
+    
+      用这种方法继承的属性会存在在原型链上（class写法的话都是存在于对象自身上）
 
 
 #### 在原型上增加属性
@@ -446,21 +530,24 @@ prototype（译文：原型）
 打印 构造函数名.prototype.constructor 则会显示函数内容（与直接打印一致）
 打印 对象名.constructor 则会显示其构造函数
 
+##### 获取对象的原型
+
+[`Object.getPrototypeOf(对象)`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/GetPrototypeOf)
+
+> 返回对象的原型（内部`[[Prototype]]`属性的值）
+
+- > 如果没有继承属性，则返回`null`
+
+- > Object.getPrototypeOf(Object)不等于Object.prototype
+
+- >在 ES5 中，如果参数不是一个原始对象类型，将抛出一个 [`TypeError`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypeError) 异常  
+  >在 ES6 中，非对象参数被强制转换为对象 
+
+##### 测试对象是否存在于另一个对象的原型链上
+
+[Object.prototype.isPrototypeOf()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/isPrototypeOf)
 
 
-## 对象属性
-有2个判断不同的依据：
-1. 是否可枚举
-2. 是否处于原型中
-详见：https://www.cnblogs.com/kongxy/p/4618173.html
-没有顺序，如果chrome打印的话是按照首字母排序
-
-其他信息
-
-- **键值**  
-  es5键值只能是字符串  
-  使用`对象[表达式]`这种语法的时候表达式结果也会转为字符串  
-  *（es6中可以用 symbol做键名）*
 
 ## 变量作用域
 
@@ -479,18 +566,10 @@ prototype（译文：原型）
 
   
 
-
-## Object.keys(obj)
-返回一个数组，数组包含了对象自身的（不含继承的）所有可枚举属性（不含 Symbol 属性）的键名
-数组的子项都是字符串
-如果属性名中不含数字的话，则这个数组会按赋值先后排序
-是数字（字符串型数字）则按数字大小排序
-es5中对非对象使用会报错，而es6会返回内容（如：对字符串使用则会返回一个从0开始的数组，数组长度与字符串长度一致）
-
-
 ## for in 
+
 `for(const 属性名 in 对象) `  
-遍历一个对象的可枚举属性【】？？？
+遍历一个对象除symbol外的可枚举属性（本笔记有记录什么叫可枚举属性）
 
 - 对于数组也可以使用`for(const 序号 in 数组)`  
   
@@ -501,13 +580,7 @@ es5中对非对象使用会报错，而es6会返回内容（如：对字符串�
     - 循环体内获得的序号是字符串
     - 对数组并不会一定按顺序遍历
     
-- **用于狭义对象**  
-    会循环出原型链上添加的属性名（也就是说`Object`对象上原有的属性名不会循环出来）
 
-- **hasOwnProperty**  
-    `对象或数组.hasOwnProperty(attr)`判断对象或者数组自身(不包括原型链)是否具有指定名称的属性或序号  
-    返回布尔值  
-    *（该方法属于Object对象，由于所有的对象都"继承"了Object的对象实例，因此几乎所有的实例对象都可以使用该方法）*
 
 
 
@@ -617,7 +690,144 @@ switch(表达式){
 
 
 
-## 数组或对象的方法
+
+
+## 对象相关的api
+
+
+
+##### [Object.create](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/create) 
+
+`Object.create(proto,[propertiesObject])`  
+返回一个空对象
+
+- `proto`会作为对象的`__proto__`  
+- 第二个参数参照[`Object.defineProperties()`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperties)的第二个参数
+
+
+
+##### 字面量中的set、get
+
+```javascript
+{
+    get a(){
+        return this._a;
+    },
+    set a(a){
+        this._a=a;
+    }
+}
+```
+
+
+
+##### [Object.defineProperty](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)  
+
+```javascript
+Object.defineProperty(对象,属性的键名, {
+  get() {
+    console.log('get')
+  },
+  set(x) {
+    console.log('set')
+  }
+})
+```
+
+
+
+**Object.defineProperties()**  
+
+```javascript
+Object.defineProperties(对象, {
+  '属性1的键名': {
+    get(){},
+    set(){}
+  },
+  '属性2的键名': {
+    get(){},
+    set(){}
+  }
+  // etc. etc.
+})
+```
+
+
+
+##### 冻结对象  
+
+`Object.freeze(对象)`  
+冻结后对象不能被修改，不过对象的属性可以  
+
+- `对象.属性=1`这种写法不生效  
+  不过`对象.属性.属性=1`可以生效
+
+似乎原型链也会被冻结，详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze)
+
+
+
+##### hasOwnProperty  
+
+`对象或数组.hasOwnProperty(attr)`判断对象或者数组自身(不包括原型链)是否具有指定名称的属性或序号  
+
+- 面对取值函数的结果  
+  要看取值函数是否在原型链上  
+  （比如字面量写法、defineProperty写法就是在对象自身上，类写法就是在原型链上）  
+  （chrome90在对象自身上也会显示原型链上的取值函数对应的属性，这个结论是通过观察class写法得出的）  
+- （返回布尔值）
+- （该方法属于Object对象，由于所有的对象都"继承"了Object的对象实例，因此几乎所有的实例对象都可以使用该方法）  
+- （这个方法与属性可枚举与否无关） 
+
+
+
+##### 返回对象自身的键
+
+返回形式是数组
+
+
+
+- 所有非symbol键
+
+  [`Object.getOwnPropertyNames(对象)`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyNames)
+  
+    > 数组中枚举属性的顺序与通过 [`for...in`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/for...in) 循环（或 [`Object.keys`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/keys)）迭代该对象属性时一致。数组中不可枚举属性的顺序未定义
+  
+  > 在 ES5 中，如果参数不是一个原始对象类型，将抛出一个 [`TypeError`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypeError) 异常  
+    > 在 ES6 中，非对象参数被强制转换为对象 
+
+
+
+- 所有可枚举非symbol键  
+  [Object.keys(obj)](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/keys)  
+  返回数组包含了对象自身的（不含继承的）所有可枚举属性（不含 Symbol 属性）的键名
+
+  - 数组的子项都是字符串
+
+  - 排序  
+
+    > 数组中属性名的排列顺序和正常循环遍历该对象时返回的顺序一致
+
+    （下面2条不记得是否校验过）
+
+    - 如果属性名中不含数字的话，则这个数组会按赋值先后排序
+    - 是数字（字符串型数字）则按数字大小排序
+
+  - 对非对象使用  
+
+    > es5中对非对象使用会报错，而es6会返回内容  
+
+    （如：对字符串使用则会返回一个从0开始的数组，数组长度与字符串长度一致）
+
+
+
+- 所有symbol键   
+  `Object.getOwnPropertySymbols(对象)`  
+  - 兼容性：  
+    IE不支持、edge12前版本不支持，其他支持
+
+
+
+## 数组的方法
 
 
 
@@ -717,38 +927,6 @@ arr.join(分隔符)返回一个字符串，这个字符串包含arr数组所有�
 
 
 
-
-##### concat
-只有字符串或数组能调用这个方法
-
-- 字符串调用的话  
-  字符串将会拼接在第一个元素前
-- 数组调用的话  
-   `数组1.concat(数组2,数组3,......,数组n)`
-  该方法返回一个数组  
-  新数组的元素是调用该方法的数组及参数中所有数组的元素  
-  元素的顺序与调用该方法中各数组的顺序一致  
-  【】？如果传进去的不是数组则会作为元素连接
-
-
-##### slice
- `arr或str.slice(begin,end)`  
-- 数组  
-  返回一个数组，其元素从arr[begin]开始到arr[end]结尾（不包含arr[end]）  
-  可以不输入end  
-  end小于或等于begin时返回空数组  
-  输入负数则代表从末尾开始数（-n代表倒数第n个）  
-  返回数组子项顺序与原数组一致  
-  （原数组不会被改变）
-  - 如果end过大，那就截到数组最后一位
-    
-  - 复制数组  
-    不输入参数
-  
-- 字符串  
-  规则与数组的类似  
-  就是返回的是字符串，且在end不大于begin时返回空串
-
 ##### unshift
 
 在数组头部添加元素，并返回添加后的数组长度
@@ -759,8 +937,6 @@ a.unshift('a','b','c')
 ```
 
 上面这段代码执行后a等于`["a", "b", "c", 1, 2, 3]`
-
-
 
 
 
@@ -818,6 +994,47 @@ a.unshift('a','b','c')
   调用这个方法会对数组的每一项执行测试函数，直到有一项测试函数的结果是`true` 
 - 测试是否每个元素都符合条件  
   `arr.every(测试函数)`
+
+
+
+## 数组与字符串共有的方法
+
+
+##### concat
+
+只有字符串或数组能调用这个方法
+
+- 字符串调用的话  
+  字符串将会拼接在第一个元素前
+- 数组调用的话  
+  `数组1.concat(数组2,数组3,......,数组n)`
+  该方法返回一个数组  
+  新数组的元素是调用该方法的数组及参数中所有数组的元素  
+  元素的顺序与调用该方法中各数组的顺序一致  
+  【】？如果传进去的不是数组则会作为元素连接
+
+
+##### slice
+
+ `arr或str.slice(begin,end)`  
+
+- 数组  
+  返回一个数组，其元素从arr[begin]开始到arr[end]结尾（不包含arr[end]）  
+  可以不输入end  
+  end小于或等于begin时返回空数组  
+  输入负数则代表从末尾开始数（-n代表倒数第n个）  
+  返回数组子项顺序与原数组一致  
+  （原数组不会被改变）
+  - 如果end过大，那就截到数组最后一位
+
+  - 复制数组  
+    不输入参数
+
+- 字符串  
+  规则与数组的类似  
+  就是返回的是字符串，且在end不大于begin时返回空串
+
+
 
 
 
@@ -1229,8 +1446,18 @@ Symbol是第七种数据类型
 无法添加属性
 
 - **生成Symbol值的方法**  
-  `let 变量=Symbol(描述字符串)`  
-  描述字符串是可选的  
+  - `let 变量=Symbol(描述字符串)`  
+    描述字符串是可选的  
+  这种方法创建的symbol不会放入全局的symbol注册表
+    
+  - `Symbol.for(字符串的键)`  
+  - 功能
+    
+      1. 该方法会首先去全局的symbol注册表里找是否有该键的symbol
+        2. 如果有则返回
+        3. 如果没有则创建一个新的symbol，并加入全局的symbol注册
+    - 兼容性  
+        IE不支持、edge12前不支持，其他浏览器都支持
   
 - **类型转换**  
   Symbol值不会隐式转换，在其他值会隐式转换的场景下会报错  
@@ -1600,7 +1827,7 @@ class 类名 {
   以此类推
 
 
-## 类的静态方法
+##### 类的静态方法
 ```javascript
 class Foo {
   static bar() {
@@ -1620,7 +1847,7 @@ Foo.bar() // hello
 - 类中可以调用自己的静态方法
 
 
-## 类的属性
+##### 类的属性
 - **实例属性**  
   实例属性除了在构造函数里给`this`添加外，也可以定义在类的最顶层，如：
   ```javascript
@@ -1647,11 +1874,13 @@ Foo.bar() // hello
   https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes#%E5%AD%97%E6%AE%B5%E5%A3%B0%E6%98%8E
 
 
-## 类的继承
+##### 类的继承
 子类会继承父类所有方法和属性  
 （包括静态内容）  
-（继承来的内容的表现和子类本身的内容表现一致）  
-不写构造函数时会默认执行父类的构造函数
+
+- 不写构造函数时会默认执行父类的构造函数
+- 继承的属性的所有权是实例的（这个属性包括取值函数）  
+  方法是在原型链上的（类的方法本来就是在原型链上，这里指的是继承来的方法会存在对应级别的原型链上，而不是和子类同级）
 
 - `super`的功能  
   - 执行`super`意味着给父类构造函数传参后执行，并添加父类属性、方法，最终创建this  
@@ -1662,23 +1891,25 @@ Foo.bar() // hello
     而且要在这之后才能用`this`和`super`，不然阻塞<span style='color:red'>报错</span>  
   - 不能用`super`这种形式直接存在，不然阻塞<span style='color:red'>报错</span>  
 - 子类new出来的对象，同时是父类与子类的实例，instanceof 父类或子类都是true  
-- 可以继承js原生的构造函数（没有测试过）
+- 可以继承js原生的构造函数  
+  （记得继承过Event）
 
 
-## 类的存值函数和取值函数
+##### 类的存值函数和取值函数
 ```javascript
-  class MyClass {
-      set prop(value) {
-          console.log('setter: ' + value);
-      }
-      get prop() {
-          return 123
-      }
-  }
+class HasSetGet {
+    set prop(value) {
+        console.log('setter: ' + value);
+    }
+    get prop() {
+        return 123
+    }
+}
 ```
 用存值函数和取值函数可以创建一些特殊的属性  
 在chrome控制台这些属性是半透明显示，而且是点击“(...)”后获取其值，对这些属性用hasOwnProperty结果也为false  
 一般使用中需要再开一个属性或者字段来存值
+
 - **存值函数**  
   在给属性赋值时会运行的函数，形参是赋给属性的值，这个函数的return没有意义  
   不设存值函数的话除了没这个函数的功能外似乎没有其他影响  
@@ -2053,62 +2284,6 @@ function a(p0,p1='p1'){
 - 与`for of`结合使用  
   `for (var arr of map)`  
   arr的第一项是key，第二项是值
-
-## 迭代
-
-阮一峰ES6中对相关名词的使用是不严格的
-
-
-
-### 可迭代对象
-
-iterable object  
-必须有一个键值为`Symbol.iterator`的@@iterator方法
-
-- 转数组的方法  
-  - `Array.from(可迭代对象)`
-  - `[...可迭代对象]`  
-    这种方法会把可迭代对象中的内容清空（把每一项都移除）
-
-### @@iterator方法
-
-[阮一峰ES6](https://es6.ruanyifeng.com/#docs/iterator#%E9%BB%98%E8%AE%A4-Iterator-%E6%8E%A5%E5%8F%A3)中称为Iterator接口  
-该方法会返回一个迭代器
-
-
-
-### 生成器
-
-generator
-
-生成迭代器的函数（暂时的理解，实际上应该不是）
-
-【】把备忘录里的记录先过一遍
-
-
-
-### 迭代器
-
-iterator
-
-> 迭代器是一个对象 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Iterators_and_generators#%E8%BF%AD%E4%BB%A3%E5%99%A8)
-
-[阮一峰ES6](https://es6.ruanyifeng.com/#docs/iterator#Iterator%EF%BC%88%E9%81%8D%E5%8E%86%E5%99%A8%EF%BC%89%E7%9A%84%E6%A6%82%E5%BF%B5)中称为：Iterator、遍历器、遍历器对象
-
-描述
-
-- 迭代器有一个`next`方法，调用这个方法表示进行一次迭代
-
-- 外部可以判断迭代器是否迭代完成
-
-诞生来由
-
-- 有时候需要使用复杂的迭代方案（比如按指定顺序遍历深度对象）  
-  这个时候就需要用for循环、while等api编写迭代方案  
-  把迭代部分代码封装成对象，那这个对象就被称为迭代器
-- 可以一次一次迭代，es5-迭代api都是遍历的
-
-虽然有时候有这个需求，但是写一些代码就能实现了，没必要在js里加api吧↑↑↑↑↑↑
 
 
 
