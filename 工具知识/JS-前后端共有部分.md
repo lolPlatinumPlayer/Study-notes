@@ -1,35 +1,21 @@
-# 【ES5及之前】
+**关于版本**
+
+没说明的都是es5或更低版本
+
+es6+会用下面这种标签来标记
+
+- <span style='background:#eef5f4;padding:0 10px'>es6</span>
+- <span style='background:#eef5f4;padding:0 10px'>es7</span>
 
 
 
-## 未分类
+# 未分类
 
 - 异步执行的代码里的变量取的值都是执行时的值，而不是异步代码生成时的值
 
 - 使用未定义的变量会导致阻塞报错，报错内容如下：  
   `Uncaught ReferenceError: 变量名 is not defined`
   
-- `console.warn()`  
-  除了版本低于8的IE，其他浏览器都支持  
-  和`console.error()`一样可以看到调用栈
-  
-- `console.table(arr)`  
-  输出表格，未看兼容性  
-  子项是对象
-  
-- 数组隐式转换为字符串是不符合直觉的  
-  转换结果为：  
-
-  - 一维数组：每一项转为字符串，用`,`连接（结果不包含左右的中括号）
-  - 多维数组：`[[1,2,3],[4,5]]`的转换结果为`"1,2,3,4,5"`
-
-  测试案例为：
-
-  - `数组+''`
-  - `数组.toString()`
-  
-- `new`关键字后的构造函数似乎可以不加括号
-
 - js的奇异表现  
   
   - [知乎视频](https://www.zhihu.com/zvideo/1322284588354412544)第4分钟
@@ -40,11 +26,6 @@
   
     > 如果两个值都是字符串，则根据它们包含的Unicode代码点的值将它们作为字符串进行比较 —— [MDN 比较运算符](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than#description)  
   
-- 16进制字符串
-  例子："\x74\x61\x69"
-  可以直接使用，在控制台输入就会转成具有可读性的字符串
-  该博文有说编码方法：https://blog.csdn.net/haige025/article/details/89531355
-  
 - 闭包  
   
   > 闭包就是能够读取其他函数内部变量的函数。例如在javascript中，只有函数内部的子函数才能读取[局部变量](https://baike.baidu.com/item/局部变量/9844788)，所以闭包可以理解成“定义在一个[函数](https://baike.baidu.com/item/函数/301912)内部的函数“ —— [百度百科](https://baike.baidu.com/item/%E9%97%AD%E5%8C%85)
@@ -53,53 +34,56 @@
 
 
 
-## `delete`
-
-`delete`做的应该是去除引用关系
-
-**删除对象的属性**
-
-`delete obj.键值`或`delete obj['键值']`  
-要注意这是会发生引用传递的
-
-**删除变量**
-
-`delete variable`  
-以下两种对象可以用delete删除
-
- 1. `window.obj='attr'`用这种方法声明的对象
- 2. 不声明直接赋值的对象
-
-**删除数组的子项**
-
-可以把数组的某一项变成empty，数组长度不变
 
 
+# 数据类型
 
-## in
-> `prop in object`  
-> 如果指定的属性在指定的对象或其原型链中，则in 运算符返回true。  
+数据类型可以分为下面两类
 
-- `prop`  
-  接受类型为字符串和symbol  
-  遇到这两种类型以外的数据会转为字符串
-- `object`  
-  指的是广义对象
-- `idx in arr`这种用法是可以的
+1. 原始类型值：undefined、null、boolean、number、string、symbol（<span style='background:#eef5f4;padding:0 10px'>es6</span>）、BigInt（<span style='background:#eef5f4;padding:0 10px'>es2020</span>）  
+2. 引用类型值，也就是对象类型(Object type)，除了原始值外一切皆对象，比如Object、Array、Function、Date、RegExp、Error。
+
+声明变量时不同的内存分配：  
+
+1. 原始类型值：  
+   存储在栈(stack)中的不可变数据，每个原始值在栈中都有独立的空间来存储。  
+   除了字符串外，不可能有两个全等的原始值；就算两次用相同的字符串字面量给变量赋值，js也会在栈中开辟两个位子存放这两个字符串（个人猜想）  
+2. 引用类型值：  
+   存储在堆(heap)中，引用的结果是栈中的值或另一个引用  
+   引用分两种：  
+     1. 映射的引用：比如数组和狭义上的对象。数组的子项通过序号映射到一个原始值，而狭义对象通过字符串映射到原始值  
+     2. 非映射的引用，比如`=`。  
+        `let a=1`后a获得的就是一个非映射引用，引用的指向是原始值——1。  
+        之后把a赋值给任何变量，这些变量的引用都是相同的。  
+        如果赋值给a的是广义对象，那就有可能发生下文说的引用传递  
+
+这么设计的原因
+
+引用值的大小会改变，所以不能把它放在栈中，否则会降低变量查寻的速度。相反，放在变量的栈空间中的值是该对象存储在堆中的地址。地址的大小是固定的，所以把它存储在栈中对变量性能无任何负面影响。
+
+关于命名  
+
+- 犀牛书中称为原始类型（primitive type）和对象类型（object type）
+- [MDN](https://developer.mozilla.org/zh-CN/docs/Glossary/Primitive)中中文译名为：基本类型（基本数值、基本数据类型）  
+  英文名为：primitive (primitive value, primitive data type) 
+
+### 字面量
+
+对象字面量：｛a:1,b:'aa'｝  
+数组字面量：[1,4,3,2]  
+函数字面量：function(){.. }  
+以上这些方式直接出现的都叫字面量  
 
 
-## 与、或
-- `&&`与前为true 时解析与后
-- `||`或前为false时解析或后
-- 与或后是表达式或者语句的话可以执行
-  - 打印语句直接写就能执行
-  - 赋值语句的话外面要加括号
-  - 括号中可以写多个语句，语句用逗号分开，语句间也可以换行
 
+# 字符串
 
-## 字符串
-`'abc'[1]`的结果是`'b'`  
-字符串实例的说明见[A](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String#String_instances)或[B](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/prototype)（AB区别应该就是兼容性表不一样）
+- `'abc'[1]`的结果是`'b'`  
+- 字符串实例的说明见[A](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String#String_instances)或[B](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/prototype)（AB区别应该就是兼容性表不一样）
+- 16进制字符串  
+  例子："\x74\x61\x69"  
+  可以直接使用，在控制台输入就会转成具有可读性的字符串  
+  该博文有说编码方法：https://blog.csdn.net/haige025/article/details/89531355
 
 **字符串的类型**
 
@@ -108,14 +92,56 @@
 2者的描述见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 
-## 字面量
-对象字面量：｛a:1,b:'aa'｝  
-数组字面量：[1,4,3,2]  
-函数字面量：function(){.. }  
-以上这些方式直接出现的都叫字面量  
+
+# 数字
+
+### 表达
+
+- `1e-2`等于0.01
+- `1e2`等于100
 
 
-## 数组
+### 操作
+
+四舍五入 Math.round(7.25)
+取出大的值 Math.max(2,4)
+
+
+
+### BigInt
+
+> [ES2020](https://github.com/tc39/proposal-bigint) 引入了一种新的数据类型 BigInt —— [阮一峰](https://es6.ruanyifeng.com/#docs/number#BigInt-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B)
+
+**可参考资料如下**
+
+- [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
+- [阮一峰](https://es6.ruanyifeng.com/#docs/number#BigInt-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B)
+- [ES2021](https://tc39.es/ecma262/#sec-bigint-objects)
+- [tc39提议（github版本）](https://github.com/tc39/proposal-bigint)
+- [tc39提议（网页版本）](https://tc39.es/proposal-bigint/)
+
+**特性**
+
+- 可以表示任意大的整数
+
+- 与Number的关系
+
+  - 即使是同一数字Number和BigInt也不全等  
+    不过用`==`的判断结果是`true`
+
+  - > 不能和Number混合运算 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt#%E6%8F%8F%E8%BF%B0)
+
+- 兼容性  
+  IE不行，其他浏览器在18年左右就支持了
+
+- > 可以使用负号，但不能使用正号 —— [阮一峰](https://es6.ruanyifeng.com/#docs/number#%E7%AE%80%E4%BB%8B)
+
+
+
+
+
+
+# 数组
 ```javascript
 let a=[11,22]
 a[6]='ss'
@@ -125,8 +151,28 @@ console.log('a[3]',a[3]) // undefined
 ```
 数组可以拥有属性（但是属性只能存在在原型链上）（只有数组和对象类型的数据可以拥有属性）
 
+- 数组隐式转字符串  
+  是不符合直觉的  
+  转换结果为：  
 
-## 函数编写方法
+  - 一维数组：每一项转为字符串，用`,`连接（结果不包含左右的中括号）
+  - 多维数组：`[[1,2,3],[4,5]]`的转换结果为`"1,2,3,4,5"`
+
+  测试案例为：
+
+  - `数组+''`
+  - `数组.toString()`
+
+# 函数
+
+- 形参与实参的关系相当于`形参=实参`，所以是会发生引用传递的
+- 函数都有一个`name`属性，值为函数名（es5中如果把函数表达式赋值给变量，这个函数的name属性将是空字符串）
+- `arguments`对象是所有（非箭头）函数中都可用的局部变量  
+  特性近似于包含所有实参的数组  
+  详见[mdn](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/arguments)
+
+
+### 函数的编写方法
 函数有三种编写方法：
 1. 函数声明：`function fnName () {…}`
    唯一一个会函数提升的编写方法
@@ -142,15 +188,48 @@ console.log('a[3]',a[3]) // undefined
     1. `(function(){... }())`
     2. `(function(){... })()`
 		
-## 函数的其他内容
-- 形参与实参的关系相当于`形参=实参`，所以是会发生引用传递的
-- 函数都有一个`name`属性，值为函数名（es5中如果把函数表达式赋值给变量，这个函数的name属性将是空字符串）
-- `arguments`对象是所有（非箭头）函数中都可用的局部变量  
-  特性近似于包含所有实参的数组  
-  详见[mdn](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/arguments)
+### 高阶函数
+
+- **定义**  
+  接收或返回函数的函数
+
+- **回调函数**  
+  作为函数实参的函数即为回调函数
+
+- **作用域**  
+  如果一个函数return了另一个函数，return的函数会处于return它的函数的作用域中（就算return它的函数已经执行结束也是如此，作用域的关系会延续下去）  
+  如果函数接收另一个函数作为参数，则这两个函数的作用域将是同级的
+
+- **应用场景**  
+
+  1. 用一份代码制造多个函数，并且制造出来的函数都有独立的父级作用域  
+     类似功能如果不用高阶函数就只能用面向对象的写法实现，比如：返回含方法的对象的函数、构造函数、类  
+     但用高阶函数写则更为简洁  
+     代码如下：  
+
+     ```javascript
+     function 高阶函数(){
+         let 父级作用域变量=0
+         function 要造出的函数(){
+             父级作用域变量++
+             console.log('父级作用域变量：',父级作用域变量)
+         }
+         return 要造出的函数
+     }
+     
+     const 第1个造出的函数=高阶函数()
+     第1个造出的函数() // 父级作用域变量： 1
+     第1个造出的函数() // 父级作用域变量： 2
+     第1个造出的函数() // 父级作用域变量： 3
+     const 第2个造出的函数=高阶函数()
+     第2个造出的函数() // 父级作用域变量： 1
+     第1个造出的函数() // 父级作用域变量： 4
+     ```
+
+  2. 柯里化
 
 
-## `this`
+### `this`
 ##### 特性
 
 1. 对`this`赋值将会导致阻塞报错
@@ -210,104 +289,18 @@ console.log('a[3]',a[3]) // undefined
      - 依据控制台结果来看，箭头函数不是绑定函数，打印结果跟普通函数比较相似
 
 
-## 高阶函数
-- **定义**  
-  接收或返回函数的函数
-  
-- **回调函数**  
-  作为函数实参的函数即为回调函数
 
-- **作用域**  
-  如果一个函数return了另一个函数，return的函数会处于return它的函数的作用域中（就算return它的函数已经执行结束也是如此，作用域的关系会延续下去）  
-  如果函数接收另一个函数作为参数，则这两个函数的作用域将是同级的
-
-- **应用场景**  
-
-  1. 用一份代码制造多个函数，并且制造出来的函数都有独立的父级作用域  
-     类似功能如果不用高阶函数就只能用面向对象的写法实现，比如：返回含方法的对象的函数、构造函数、类  
-     但用高阶函数写则更为简洁  
-     代码如下：  
-
-     ```javascript
-     function 高阶函数(){
-         let 父级作用域变量=0
-         function 要造出的函数(){
-             父级作用域变量++
-             console.log('父级作用域变量：',父级作用域变量)
-         }
-         return 要造出的函数
-     }
-     
-     const 第1个造出的函数=高阶函数()
-     第1个造出的函数() // 父级作用域变量： 1
-     第1个造出的函数() // 父级作用域变量： 2
-     第1个造出的函数() // 父级作用域变量： 3
-     const 第2个造出的函数=高阶函数()
-     第2个造出的函数() // 父级作用域变量： 1
-     第1个造出的函数() // 父级作用域变量： 4
-     ```
-
-  2. 柯里化
-
-
-## 数据类型
-在es5中数据类型可以分为下面两类
-1. 原始类型值：undefined、null、boolean、number、string、symbol（es6新增）、BigInt（es2020新增）  
-2. 引用类型值，也就是对象类型(Object type)，除了原始值外一切皆对象，比如Object、Array、Function、Date、RegExp、Error。
-
-声明变量时不同的内存分配：  
-1. 原始类型值：  
-   存储在栈(stack)中的不可变数据，每个原始值在栈中都有独立的空间来存储。  
-   除了字符串外，不可能有两个全等的原始值；就算两次用相同的字符串字面量给变量赋值，js也会在栈中开辟两个位子存放这两个字符串（个人猜想）  
-2. 引用类型值：  
-   存储在堆(heap)中，引用的结果是栈中的值或另一个引用  
-   引用分两种：  
-    1. 映射的引用：比如数组和狭义上的对象。数组的子项通过序号映射到一个原始值，而狭义对象通过字符串映射到原始值  
-    2. 非映射的引用，比如`=`。  
-       `let a=1`后a获得的就是一个非映射引用，引用的指向是原始值——1。  
-       之后把a赋值给任何变量，这些变量的引用都是相同的。  
-       如果赋值给a的是广义对象，那就有可能发生下文说的引用传递  
-	
-
-这么设计的原因
-
-引用值的大小会改变，所以不能把它放在栈中，否则会降低变量查寻的速度。相反，放在变量的栈空间中的值是该对象存储在堆中的地址。地址的大小是固定的，所以把它存储在栈中对变量性能无任何负面影响。
-
-关于命名  
-
-- 犀牛书中称为原始类型（primitive type）和对象类型（object type）
-- [MDN](https://developer.mozilla.org/zh-CN/docs/Glossary/Primitive)中中文译名为：基本类型（基本数值、基本数据类型）  
-  英文名为：primitive (primitive value, primitive data type) 
-
-
-
-## undefined
+# `undefined`
 
 用`undefined`赋值可以把原有内容覆盖掉  
 但是对对象的某个属性赋值`undefined`并不会将这个属性删除
 
 
-## instanceof
-`对象 instanceof 构造函数`  
-（注意：对原始类型值使用`instanceof`永远都返回`false`）
 
-mdn的说明是判断构造函数的prototype属性是否出现在对象的原型链中，不过粗略测试后感觉是构造函数或类是否出现在对象的原型链中
+# 对象
 
-`instanceof Object`的话数组、日期也会判断为true，但是`String instanceof String`这种情况都是返回false
+（下文的对象都指广义对象）
 
-
-
-
-## `typeof`
-
-`typeof a`返回a的数据类型，返回值是字符串，优先级第二级，测试表如下：
-https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/typeof
-注意：对于数组返回的是和对象一样的'object'
-
-
-
-
-## 对象（下文的对象都指广义对象）
 - 在`let a={a:1}`中发生的几件事：
   1. 栈中开辟空间存放原始值——1
   2. 堆中创建一个引用（犀牛中称为基对象），这个引用是映射引用的集合，这个集合里包含一个映射引用——通过字符串`a`引用到原始值1
@@ -317,7 +310,7 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/type
 
   
 
-##### 键
+### 键
 
 - es5键值只能是字符串  
   es6中可以用 symbol做键名
@@ -329,7 +322,7 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/type
 
 
 
-##### [评价属性的2个维度](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Enumerability_and_ownership_of_properties)
+### [评价属性的2个维度](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Enumerability_and_ownership_of_properties)
 
 [各方法于这2个维度的统计表](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Enumerability_and_ownership_of_properties#%E7%BB%9F%E8%AE%A1%E8%A1%A8)
 
@@ -367,98 +360,8 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/type
 
 
 
-## 迭代
+# 依据模板制造对象
 
-阮一峰ES6中对相关名词的使用是不严格的
-
-
-
-##### 可迭代对象
-
-iterable object  
-必须有一个键值为`Symbol.iterator`的@@iterator方法
-
-- 转数组的方法  
-  - `Array.from(可迭代对象)`
-  - `[...可迭代对象]`  
-    这种方法会把可迭代对象中的内容清空（把每一项都移除）
-
-##### @@iterator方法
-
-[阮一峰ES6](https://es6.ruanyifeng.com/#docs/iterator#%E9%BB%98%E8%AE%A4-Iterator-%E6%8E%A5%E5%8F%A3)中称为Iterator接口  
-该方法会返回一个迭代器
-
-
-
-##### 生成器
-
-generator
-
-生成迭代器的函数（暂时的理解，实际上应该不是）
-
-【】把备忘录里的记录先过一遍
-
-
-
-##### 迭代器
-
-iterator
-
-> 迭代器是一个对象 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Iterators_and_generators#%E8%BF%AD%E4%BB%A3%E5%99%A8)
-
-[阮一峰ES6](https://es6.ruanyifeng.com/#docs/iterator#Iterator%EF%BC%88%E9%81%8D%E5%8E%86%E5%99%A8%EF%BC%89%E7%9A%84%E6%A6%82%E5%BF%B5)中称为：Iterator、遍历器、遍历器对象
-
-描述
-
-- 迭代器有一个`next`方法，调用这个方法表示进行一次迭代
-
-- 外部可以判断迭代器是否迭代完成
-
-诞生来由
-
-- 有时候需要使用复杂的迭代方案（比如按指定顺序遍历深度对象）  
-  这个时候就需要用for循环、while等api编写迭代方案  
-  把迭代部分代码封装成对象，那这个对象就被称为迭代器
-- 可以一次一次迭代，es5-迭代api都是遍历的
-
-虽然有时候有这个需求，但是写一些代码就能实现了，没必要在js里加api吧↑↑↑↑↑↑
-
-
-
-## 引用传递（有时也被称为“引用传值”）
-
-- 定义：  
-    将一个变量赋值给另一个变量后，使其中一个变量的一部分发生改变， 这个变化会同步到另一个变量上，那就说发生了引用传递
-- 触发条件：  
-    赋值变量的值是广义对象，操作变量的子项就会发生引用传递  
-    （操作包含`delete`）
-- 规避方法：
-    1. 浅拷贝：规避操作第一层子项时的引用传递
-    2. 深拷贝：规避操作所有层子项时的引用传递
-    
-	
-## 浅拷贝方法
-- `...`（最优方案）
-- 被赋值变量=Object.assign(x,赋值变量) 
-  x处根据赋值变量的值是数组还是对象来选择是输入空数组还是空对象
-- objectA = { a: objectB.a, b: objectB.b, c: objectB.c }
-- `b=[].concat(a)`
-- `Object.create()`  
-  这是一个虚假的浅拷贝方案
-- 用`map`方法
-
-面对Map对象的方案
-
-- `new Map(原map.entries())`
-
-## 深拷贝方法
-- `$.extend(objectA, objectB )//【】等待重新测试`  
-   （使用这种方法的前提是：`objectA`是空对象，对象类型是对象。这是一个jq方法）
-- A=JSON.parse(JSON.stringify(B))
-- 自己写函数一层一层赋值
-
-
-## 依据模板制造对象
 - 最原始的方法  
   （基本不会用这种方法，这种方法创建的对象`.constructor`不会显示函数中的代码，只会显示`ƒ Object() { [native code] }`）
 
@@ -470,44 +373,51 @@ iterator
     }
     let obj1 = createObj()
     ```
-  
+
 - 使用new关键字可以简化一些代码
 
-    ```javascript
-    function createObj(){
-      this.name = 11111
+  ```javascript
+  function createObj(){
+    this.name = 11111
+  }
+  let obj1 = new createObj()
+  ```
+
+  其中用来创建对象的函数被称为 构造函数
+
+  - 继承  
+
+    ```js
+    function A() {
+      this.property = 'is not enumerable';
     }
-    let obj1 = new createObj()
+    
+    A.prototype.methodA = function() {};
+    
+    function B() {
+      this.propB='bbb'
+      this.methodB = function method() { return 'is enumerable'; };
+    }
+    
+    // 让B继承A
+    B.prototype = new A;
+    B.prototype.constructor = B;
+    
+    var o = new B()
     ```
-    
-    其中用来创建对象的函数被称为 构造函数
-    
-    - 继承  
-    
-      ```js
-      function A() {
-        this.property = 'is not enumerable';
-      }
-      
-      A.prototype.methodA = function() {};
-      
-      function B() {
-        this.propB='bbb'
-        this.methodB = function method() { return 'is enumerable'; };
-      }
-      
-      // 让B继承A
-      B.prototype = new A;
-      B.prototype.constructor = B;
-      
-      var o = new B()
-      ```
-    
-      用这种方法继承的属性会存在在原型链上（class写法的话都是存在于对象自身上）
+
+    用这种方法继承的属性会存在在原型链上（class写法的话都是存在于对象自身上）
+
+- `new`关键字后的构造函数似乎可以不加括号
+
+- 用`class`关键字制造模板  
+  （下文有详细描述）
 
 
-#### 在原型上增加属性
+### 在原型上增加属性
+
 方法：在构造函数外给`构造函数.prototype.属性名`赋值 
+
 - 这种方法会给这条语句后所有由该构造函数创建的对象的`__proto__`属性增加属性（`__proto__`属性应该就是原型）
 - 这条语句后的对象可以用访问普通属性的方法访问这些属性（前提是普通属性中没有和这些属性同名的）
 - 上面两条的限定条件为：
@@ -517,8 +427,10 @@ iterator
 - 这种方法增加的方法在不同对象之间是全等的，比在构造函数里增加更节省资源（构造函数里增加的方法在不同对象间是不同的）
 
 
-## 原型链
+# 原型链
+
 原型也可以拥有原型，这样一直往后追溯的原型的链条就称为原型链  
+
 - 原型链上的属性或方法对象都可以直接调用
 
 - 原型链上的成员可以与对象本身上的成员重名  
@@ -530,7 +442,7 @@ prototype（译文：原型）
 打印 构造函数名.prototype.constructor 则会显示函数内容（与直接打印一致）
 打印 对象名.constructor 则会显示其构造函数
 
-##### 获取对象的原型
+### 获取对象的原型
 
 [`Object.getPrototypeOf(对象)`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/GetPrototypeOf)
 
@@ -543,15 +455,410 @@ prototype（译文：原型）
 - >在 ES5 中，如果参数不是一个原始对象类型，将抛出一个 [`TypeError`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypeError) 异常  
   >在 ES6 中，非对象参数被强制转换为对象 
 
-##### 测试对象是否存在于另一个对象的原型链上
+### 测试对象是否存在于另一个对象的原型链上
 
 [Object.prototype.isPrototypeOf()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/isPrototypeOf)
 
 
 
-## 变量作用域
 
-- **待探究原理的例子【】**  
+
+# 类
+
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
+
+``` javascript
+class 类名 {
+  constructor(x, y) { // 构造函数可以不写，js会自动生成
+    // 这里写原来写在es5构造函数中的内容 
+    // 构造函数的形参指向new类时传入的实参，这点和es5构造函数一样
+    // 这里如果return的话，制造的对象就和普通函数没多大区别了（比如方法不会加上去）
+  }
+  方法名() {
+    // 这个方法会加在（类及其产生的对象的）原型链上（与给`es5构造函数名.prototype.方法名`赋值函数效果一致）
+  }
+}
+```
+
+- this  
+  - 非静态内容的this都是指向实例，而静态内容的this指向类  
+  - 属性会直接作为this的属性显示（两种方法赋值的属性都一样）  
+  - 方法则会加在this的原型链上  
+- 类中非静态的内容都是给实例调用的，而静态的内容都是给类调用的  
+- 类构造函数也可以`return`一个对象，这样的话实例就会是这个对象  
+- 类不会像普通函数一样变量提升
+- 类的方法名可以用表达式，属性名不确定可不可以
+- 类主体中的内容都在严格模式下执行——mdn
+- 类可以匿名可以赋值给变量可以被返回，这三个特性结合着函数使用可以拥有更灵活的操作
+- 找到实例的类：`实例.__proto__.constructor`  
+  找到实例的类的父类：`实例.__proto__.__proto__.constructor`  
+  以此类推
+
+
+### 类的静态方法
+
+```javascript
+class Foo {
+  static bar() {
+    this.baz();
+  }
+  static baz() {
+    console.log('hello');
+  }
+  baz() {
+    console.log('world');
+  }
+}
+
+Foo.bar() // hello
+```
+
+- 静态方法可以与非静态方法重名
+- 类中可以调用自己的静态方法
+
+
+### 类的属性
+
+- **实例属性**  
+  实例属性除了在构造函数里给`this`添加外，也可以定义在类的最顶层，如：
+
+  ```javascript
+  class A {
+    a=1
+  }
+  ```
+
+- **静态属性**  
+  静态属性除了用`类.静态属性=属性值`这种方法添加外，也可以定义在类的最顶层，如：
+
+  ```javascript
+  class A {
+    static a=1
+  }
+  ```
+
+  类中可以调用自己的静态属性
+
+- **待整理**  
+  类的外部无法对私有字段进行读写（js中），原生js在控制台里可以读取私有字段
+  私有字段必须声明后使用
+  babel的私有字段在控制台里无法查看
+  实例属性、公有字段、私有字段
+  https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes#%E5%AD%97%E6%AE%B5%E5%A3%B0%E6%98%8E
+
+
+### 类的继承
+
+子类会继承父类所有方法和属性  
+（包括静态内容）  
+
+- 不写构造函数时会默认执行父类的构造函数
+- 继承的属性的所有权是实例的（这个属性包括取值函数）  
+  方法是在原型链上的（类的方法本来就是在原型链上，这里指的是继承来的方法会存在对应级别的原型链上，而不是和子类同级）
+
+- `super`的功能  
+  - 执行`super`意味着给父类构造函数传参后执行，并添加父类属性、方法，最终创建this  
+  - `super`在构造函数、普通方法中调不到父类属性（静态、实例、属性、公有字段都不行）和父类静态方法
+  - `super`调用父类方法。可以在构造函数、普通方法中使用。静态方法中不允许使用`super`
+- `super`的使用条件  
+  - 子类要写构造函数的话，里面一定要有且只能有一个`super(传参或不传参)`，不然会阻塞<span style='color:red'>报错</span>（比如`TypeError: Cannot set property 'xxx' of undefined`）  
+    而且要在这之后才能用`this`和`super`，不然阻塞<span style='color:red'>报错</span>  
+  - 不能用`super`这种形式直接存在，不然阻塞<span style='color:red'>报错</span>  
+- 子类new出来的对象，同时是父类与子类的实例，instanceof 父类或子类都是true  
+- 可以继承js原生的构造函数  
+  （记得继承过Event）
+
+
+### 类的存值函数和取值函数
+
+```javascript
+class HasSetGet {
+    set prop(value) {
+        console.log('setter: ' + value);
+    }
+    get prop() {
+        return 123
+    }
+}
+```
+
+用存值函数和取值函数可以创建一些特殊的属性  
+在chrome控制台这些属性是半透明显示，而且是点击“(...)”后获取其值，对这些属性用hasOwnProperty结果也为false  
+一般使用中需要再开一个属性或者字段来存值
+
+- **存值函数**  
+  在给属性赋值时会运行的函数，形参是赋给属性的值，这个函数的return没有意义  
+  不设存值函数的话除了没这个函数的功能外似乎没有其他影响  
+- **取值函数**  
+  在读取属性值时运行的函数，这个读取行为包括在chrome控制台点开“(...)”  
+  return的值是最终读取到的值  
+  如果不写取值函数，实例就不会拥有这个属性，不过还是可以给这个属性赋值  
+
+
+
+
+
+
+
+# 引用传递
+
+（有时也被称为“引用传值”）
+
+- 定义：  
+  将一个变量赋值给另一个变量后，使其中一个变量的一部分发生改变， 这个变化会同步到另一个变量上，那就说发生了引用传递
+
+- 触发条件：  
+  赋值变量的值是广义对象，操作变量的子项就会发生引用传递  
+  （操作包含`delete`）
+
+- 规避方法：
+
+  1. 浅拷贝：规避操作第一层子项时的引用传递
+  2. 深拷贝：规避操作所有层子项时的引用传递
+
+  
+
+### 浅拷贝方法
+
+- `...`（最优方案）
+- 被赋值变量=Object.assign(x,赋值变量) 
+  x处根据赋值变量的值是数组还是对象来选择是输入空数组还是空对象
+- objectA = { a: objectB.a, b: objectB.b, c: objectB.c }
+- `b=[].concat(a)`
+- `Object.create()`  
+  这是一个虚假的浅拷贝方案
+- 用`map`方法
+
+面对Map对象（<span style='background:#eef5f4;padding:0 10px'>es6</span>）的方案
+
+- `new Map(原map.entries())`
+
+### 深拷贝方法
+
+- `$.extend(objectA, objectB )//【】等待重新测试`  
+  （使用这种方法的前提是：`objectA`是空对象，对象类型是对象。这是一个jq方法）
+- A=JSON.parse(JSON.stringify(B))
+- 自己写函数一层一层赋值
+
+
+
+# 事件
+
+（这里介绍的内容都来自[EventTarget](https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget)）
+
+这里写的是最正规的方法
+以下事件名不加on
+
+- 增加事件
+  `元素.addEventListener(字符串事件名, 函数名)`
+- 移除事件
+  `元素.removeEventListener(字符串事件名, 函数名)`
+
+元素可以是`window`、dom和[XMLHttpRequest](https://developer.mozilla.org/zh-cn/DOM/XMLHttpRequest)  
+`window`的话可以省略`window.`
+
+后面还有几个选项
+
+**增加自定义事件**
+
+<span style='opacity:.5'>这里用代码来说明</span>
+
+```javascript
+元素.addEventListener("自定义事件名", (事件对象)=>{}); // 增加事件。具体用法看上面
+var event = new CustomEvent("自定义事件名", 事件对象);
+元素.dispatchEvent(event); // 触发事件
+```
+
+如果重复给一个事件绑定一个函数，那触发事件的时候这个函数也只会执行一次。  
+（这个特点在leaflet实现的事件里也是一样的）
+
+**焦点相关**
+
+div上似乎没有聚焦、失焦事件  
+不过window有
+
+做『判断按键按下状态』时，可以增加对window焦点的监听，这样状态判断就万无一失了
+
+
+
+# 打印
+
+**普通打印**
+
+只有内容主体和右侧的触发地址，且都是白色
+
+- `console.log()`
+- `console.dir()`  
+  专注于输出信息  
+  打印信息比`console.log()`更为丰富  
+  但是交互性就不强  
+  比如打印dom，是无法通过点击跳转到dom的  
+  打印错误对象，里边的连接也是无法点击的
+
+**其他非错误打印**
+
+- `console.warn()`  
+  除了版本低于8的IE，其他浏览器都支持  
+  和`console.error()`一样可以看到调用栈
+
+- `console.table(arr)`  
+  输出表格，未看兼容性  
+  子项是对象
+
+**报错**
+
+都是红色，且左侧会多一个展开按钮，可以查看打印代码的调用链
+
+- `console.error`和`throw`  
+  外观一致，但`throw`会阻断
+
+**打印错误对象**  
+
+- 各种方法打印出来内容都差不多（都有调用链）
+
+# 错误
+
+
+### 错误对象（Error对象）
+
+未深入了解
+
+除了`Error`外还有8种错误对象，详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects#%E9%94%99%E8%AF%AF%E5%AF%B9%E8%B1%A1)
+
+- [TypeError](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError)  
+  类型错误  
+  继承自`Error`
+
+API
+
+- 生成错误对象
+
+  - `Error(描述信息)`
+  - `new Error(描述信息)`
+
+  两种方法效果都是一致的  
+  `描述信息`是1个参数，展示时会被转为字符串展示
+
+- 打印的话都是： 描述信息+几个错误的代码地址
+
+  - `console.dir`的表现形式：
+    和上一条差不多，但是地址是字符串的形式，并且点击后可以看见错误对象的属性
+
+- 用任何方法把错误对象转为字符串，都只会留下字符串形式的错误描述信息（这些方法包括`JSON.stringify()`）
+
+- ECMA定义的六种默认错误类型应该就是js自动报错的全部情况（[这个页面](https://developer.mozilla.org/zh-cn/docs/web/javascript/reference/global_objects/error#Error_types)有7种）
+
+- if语句块内似乎如果红色报错，则会进入下一个语句块
+
+其他内容
+
+- 可以给错误对象增加属性，但是`...错误对象`将得不到任何属性
+- 有一种报错似乎无法从控制台上抹除掉  
+  就是资源未找到的错误`404 (Not Found)`
+
+
+### `throw exception`
+
+抛出一个自定义错误
+
+- exception为错误内容，可以是对象、数组、字符串、错误对象等
+- 会阻断程序
+
+### try catch finally
+
+```javascript
+try{
+    // 一些代码
+}catch (e) {
+    // try语句块阻塞报错则执行
+    // 这里return和再外一层return表现是一致的
+}finally{
+    // 上面两块都走完就执行（没有错误也会执行）
+}
+```
+
+- try语句块中阻塞报错的话整体代码不会阻塞
+- 这个方法可以跳出`forEach`
+- 等于then处理承诺被拒绝的功能
+
+# Date对象
+
+**api**
+
+- **获得时间戳**  
+  `valueOf`与`getTime`都可以  
+  这2个方法具有完全一致的功能  
+  <span style='opacity:.5'>（2个额外知识：`valueOf`是所有对象都具有的方法、date对象隐式转换后结果是字符串）</span>
+
+- **获得年份**  
+  用`getFullYear()`  
+
+  - getUTCFullYear于getFullYear的区别  
+
+    > - **`getFullYear()`** 方法根据本地时间返回指定日期的年份
+    > - **`getUTCFullYear()`** 以世界时为标准，返回一个指定的日期对象的年份
+    >
+    > —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date)
+
+    > 比如在中国大陆、香港、澳门、蒙古国、台湾、新加坡、马来西亚、菲律宾等地区的本地时间比UTC快8小时，记作UTC+8，意思就是比UTC时间快8小时。减的类似理解，比如UTC-10等。 —— [博客](https://www.cnblogs.com/poorpan/archive/2011/11/29/2267030.html)
+
+- 获得星期几  
+  getDay方法  
+  0代表星期天、1代表星期一
+
+**延展内容**
+
+- 跳到一个月的最后一天的方法  
+  `new Date(year,month,0)`  
+  注意这里的month不是monthIdx
+  原理：setMonth的dayValue传入0是设为上个月的最后一天
+- `setMonth`、`setFullYear`有时候并不是那么符合常识的。  
+  因为他们在没有指定day参数时会默认去getDate方法里取，而如果取了过大的day，就会走到下个月
+
+
+
+# 声明与作用域
+
+let/const属于es6
+
+- var  
+  若在块内声明，则与块外同名变量为两个不同变量  
+  若块内没有声明，不管块外声明与否，块内外同名变量都为同一个变量  
+- 函数嵌套  
+  规则如上，块为声明函数处的闭包  
+  详细说就是：若A函数中使用了B函数，则这两个函数中变量的作用域都遵从以下准则：有声明的在函数内自成作用域，没声明的与声明该函数处外部作用域一致。 
+
+**let/const与var的区别**
+
+1. let/const在声明语句前使用会直接报错“is not defined”，而var会返回undefined，因为var的声明会提升至作用域顶部，而赋值不会提升
+2. var可以重复声明，而let/const会报错“has already been declared”
+3. var不会在在花括号形成独立作用域，而let/const会（这个花括号包括条件语句、循环语句中的花括号以及直接写的花括号）
+4. var声明变量会给window的原型加属性，而let、const不会
+
+let与var仅有以上区别
+
+const除了以上区别外，const在声明时必须赋值，而且其声明的变量不能在其他地方赋值。  
+
+但是有两种情况可以让声明后的const看起来像被改变：  
+（其实对常量赋值的引用并没有被改变，被改变的是引用另一头的内容）  
+
+1. 常量依赖的变量改变
+2. 常量是个数组或对象，其子项可以被改变或增删
+
+**未归类**
+
+- `const`声明变量所在最后一个作用域前这个变量将是未定义的  
+  就算在外层作用域声明了同名变量也是一样的  
+  【】
+  - 是不是只是“最后一个作用域”是这样未测试
+  - let是不是这样未测试
+  - “未定义的”是什么情况未测试
+
+
+
+**待探究原理的例子【】**
+
+- 例子A
 
   ```javascript
   function a(){
@@ -564,27 +871,122 @@ prototype（译文：原型）
   a() // b函数中获取不到q
   ```
 
-  
-
-## for in 
-
-`for(const 属性名 in 对象) `  
-遍历一个对象除symbol外的可枚举属性（本笔记有记录什么叫可枚举属性）
-
-- 对于数组也可以使用`for(const 序号 in 数组)`  
-  
-    其特性如下：  
-    
-    - 所有被赋值的子项都会进入循环
-    - 如果遇到数组元素为空时，不会执行本次循环
-    - 循环体内获得的序号是字符串
-    - 对数组并不会一定按顺序遍历
-    
 
 
 
 
-## `switch`
+
+# 运算符
+
+### 与、或
+
+- `&&`与前为true 时解析与后
+- `||`或前为false时解析或后
+- 与或后是表达式或者语句的话可以执行
+  - 打印语句直接写就能执行
+  - 赋值语句的话外面要加括号
+  - 括号中可以写多个语句，语句用逗号分开，语句间也可以换行
+
+### <<、>>、<<<、>>>
+
+按位移动运算符。  
+在二进制位移，返回十进制。  
+向左的即为左移，在右侧加上位移数个数的0，反之同理  
+a<<b在数学中相当于a=a*2^b，反之类似  
+
+### `~`
+
+按位取反  
+
+输入`-1返回0
+
+### `++`
+
+`a++`返回自增前的  
+`++a`返回自增后的
+
+### 取余
+
+`%`
+
+- a、b都是正数时  
+  a%b=c 意味着 a=b*某个整数+c 且 0<=c<=(b-1)
+  【】把c放到等式左边可能更易于计算和理解
+- a是负数b是正数时  
+  a%b=c 意味着 a=b*某个整数+(-c) 且 0>=c>=-(b-1) 也就是 c为用a绝对值取余b的结果的相反数
+
+
+
+
+
+# 关键字
+
+
+### `instanceof`
+
+`对象 instanceof 构造函数`  
+（注意：对原始类型值使用`instanceof`永远都返回`false`）
+
+mdn的说明是判断构造函数的prototype属性是否出现在对象的原型链中，不过粗略测试后感觉是构造函数或类是否出现在对象的原型链中
+
+`instanceof Object`的话数组、日期也会判断为true，但是`String instanceof String`这种情况都是返回false
+
+
+
+
+### `typeof`
+
+`typeof a`返回a的数据类型，返回值是字符串，优先级第二级，测试表如下：
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/typeof
+注意：对于数组返回的是和对象一样的'object'
+
+
+
+
+
+### `delete`
+
+`delete`做的应该是去除引用关系
+
+**删除对象的属性**
+
+`delete obj.键值`或`delete obj['键值']`  
+要注意这是会发生引用传递的
+
+**删除变量**
+
+`delete variable`  
+以下两种对象可以用delete删除
+
+  1. `window.obj='attr'`用这种方法声明的对象
+  2. 不声明直接赋值的对象
+
+**删除数组的子项**
+
+可以把数组的某一项变成empty，数组长度不变
+
+
+
+### `in`
+
+> `prop in object`  
+> 如果指定的属性在指定的对象或其原型链中，则in 运算符返回true。  
+
+- `prop`  
+  接受类型为字符串和symbol  
+  遇到这两种类型以外的数据会转为字符串
+- `object`  
+  指的是广义对象
+- `idx in arr`这种用法是可以的
+
+
+
+# 语句
+
+
+
+
+### `switch`
 
 **用例**
 
@@ -676,10 +1078,24 @@ switch(表达式){
 
 
 
+### for in 
+
+`for(const 属性名 in 对象) `  
+遍历一个对象除symbol外的可枚举属性（本笔记有记录什么叫可枚举属性）
+
+- 对于数组也可以使用`for(const 序号 in 数组)`  
+
+  其特性如下：  
+
+  - 所有被赋值的子项都会进入循环
+  - 如果遇到数组元素为空时，不会执行本次循环
+  - 循环体内获得的序号是字符串
+  - 对数组并不会一定按顺序遍历
 
 
 
-## 结束循环、跳出函数
+
+# 结束循环、跳出函数
 `break`、`return`可以结束for循环、`switch`  
 无法结束`map`、`forEach`  
 
@@ -692,11 +1108,11 @@ switch(表达式){
 
 
 
-## 对象相关的api
+# 对象相关的api
 
 
 
-##### [Object.create](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/create) 
+### [Object.create](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/create) 
 
 `Object.create(proto,[propertiesObject])`  
 返回一个空对象
@@ -706,7 +1122,7 @@ switch(表达式){
 
 
 
-##### 字面量中的set、get
+### 字面量中的set、get
 
 ```javascript
 {
@@ -721,7 +1137,7 @@ switch(表达式){
 
 
 
-##### [Object.defineProperty](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)  
+### [Object.defineProperty](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)  
 
 ```javascript
 Object.defineProperty(对象,属性的键名, {
@@ -754,7 +1170,7 @@ Object.defineProperties(对象, {
 
 
 
-##### 冻结对象  
+### 冻结对象  
 
 `Object.freeze(对象)`  
 冻结后对象不能被修改，不过对象的属性可以  
@@ -766,7 +1182,7 @@ Object.defineProperties(对象, {
 
 
 
-##### hasOwnProperty  
+### hasOwnProperty  
 
 `对象或数组.hasOwnProperty(attr)`判断对象或者数组自身(不包括原型链)是否具有指定名称的属性或序号  
 
@@ -780,7 +1196,7 @@ Object.defineProperties(对象, {
 
 
 
-##### 返回对象自身的键
+### 返回对象自身的键
 
 返回形式是数组
 
@@ -823,11 +1239,11 @@ Object.defineProperties(对象, {
 - 所有symbol键   
   `Object.getOwnPropertySymbols(对象)`  
   - 兼容性：  
-    IE不支持、edge12前版本不支持，其他支持
+    IE不支持、edge12开始支持，其他支持
 
 
 
-## 数组的方法
+# 数组的方法
 
 
 
@@ -836,7 +1252,7 @@ Object.defineProperties(对象, {
 
 
 
-##### forEach遍历数组
+### forEach遍历数组
 
 ```javascript
 array.forEach(function(currentValue, index, arr) {
@@ -858,7 +1274,7 @@ array.forEach(function(currentValue, index, arr) {
 - this处可以传入一个值，最好用对象或数组，数字或字符串不好处理
 
 
-##### map
+### map
 
 `arr.map(fun)`  
 将arr的每一项经过fun处理（return）后形成这一项新的内容，这些新的项集合成一个新的数组，最终返回这个新的数组 （注意是每一项，不管是否return，每一项的处理都会返回一个子项，就是说处理后的数组长度一定与调用map的数组长度一致）【】测试一下在回调中删掉this末尾项会如何  
@@ -869,13 +1285,13 @@ map似乎全面领先forEach。map可以return，而forEach不行，而且forEac
 
 
 
-##### fill
+### fill
 
 <span style='color:red'>`fill`广义对象时是会引用传递的，这个要非常小心</span>
 
 
 
-##### reduce
+### reduce
 
 ```js
 arr.reduce((之前计算的结果,currentVal)=>{
@@ -901,7 +1317,7 @@ arr.reduce((之前计算的结果,currentVal)=>{
 
 
 
-##### filter
+### filter
 `var XX = arr.filter(callback)`
 callback中返回的是布尔值，为真的子项会进入新数组
 单参数代表前面的arr
@@ -915,7 +1331,7 @@ callback中返回的是布尔值，为真的子项会进入新数组
 不可用于对象
 
 
-##### join
+### join
 arr.join(分隔符)返回一个字符串，这个字符串包含arr数组所有子项，子项间用分隔符分隔  
 如果不填分隔符，则用`,`分隔。可以用空串做分隔符  
 子项在各种类型下的情况：
@@ -927,7 +1343,7 @@ arr.join(分隔符)返回一个字符串，这个字符串包含arr数组所有�
 
 
 
-##### unshift
+### unshift
 
 在数组头部添加元素，并返回添加后的数组长度
 
@@ -941,7 +1357,7 @@ a.unshift('a','b','c')
 
 
 
-##### splice
+### splice
 `arr.splice(index,howmany,item1,.....,itemX)`
 从数组中添加/删除项目，然后返回被删除的项目，会改变原数组
 
@@ -959,7 +1375,7 @@ a.unshift('a','b','c')
 
 
 
-##### 数组排序
+### 数组排序
 
 [`arr.sort`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
 
@@ -967,7 +1383,7 @@ a.unshift('a','b','c')
 
 
 
-##### 在数组中查找单个元素
+### 在数组中查找单个元素
 
 - 返回数组中符合条件的第一个元素  
   `arr.find(fn)`  
@@ -985,7 +1401,7 @@ a.unshift('a','b','c')
     - 查找最后一个全等的元素的序号  
       `arr.lastIndexOf(值)`
 
-##### 测试数组
+### 测试数组
 
  『测试函数』返回`true`的话表示符合条件  
 
@@ -997,10 +1413,10 @@ a.unshift('a','b','c')
 
 
 
-## 数组与字符串共有的方法
+# 数组与字符串共有的方法
 
 
-##### concat
+### concat
 
 只有字符串或数组能调用这个方法
 
@@ -1014,7 +1430,7 @@ a.unshift('a','b','c')
   【】？如果传进去的不是数组则会作为元素连接
 
 
-##### slice
+### slice
 
  `arr或str.slice(begin,end)`  
 
@@ -1038,7 +1454,7 @@ a.unshift('a','b','c')
 
 
 
-## 分割字符串
+# 分割字符串
 
 返回一个数组，这个数组是输入字符串按`separator`分割后组成的
 格式：`字符串.split(separator,howmany)`
@@ -1049,7 +1465,7 @@ a.unshift('a','b','c')
 
 
 
-## JSON.stringify()
+# JSON.stringify()
 返回 转为JSON格式字符串 的 传入js对象或数组
 第三个参数可输入数字或者字符串，这个参数生效的话就会对结果进行格式整理
 1. 输入数字代表缩进（缩进个数为0到10）
@@ -1082,7 +1498,7 @@ function(key, value) {
 - 对象属性值为`undefined`的属性不会打印
 - 对象属性值为`NaN`的会转为`null`
 
-## `toString`
+# `toString`
 
 多种数据类型都可以执行这个方法来返回字符串
 
@@ -1093,9 +1509,9 @@ function(key, value) {
 
 
 
-## [js中的正则](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions)
+# [js中的正则](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions)
 
-## js的正则api
+### js的正则api
 
 
 
@@ -1156,7 +1572,7 @@ js中的正则表达式就是`RegExp`对象
   - 正则后加g的话则将所有匹配到的内容替换为第二个参数
   
   
-## 正则核心
+# 正则核心
 - 正则的`[]`几乎可以把中间所有原来有功能的符号转为无功能的（包括空格，中间加`]`是不行的，`]`直接写就能匹配。webstorm中`[[]`都是不行的，webstorm里要写成`\[`）  
    （[微信公众号](https://mp.weixin.qq.com/s/nTXcPdrqW4H-g8baKlWXrw)上说是反义的说法不对）  
    - 不过似乎只能包裹一个字符  
@@ -1179,7 +1595,7 @@ js中的正则表达式就是`RegExp`对象
   `单词A.*单词B`
 
 
-## 定时器
+# 定时器
 setInterval和setTimeout  
 - 定时器执行的回调是定时器生成时的回调，而不是执行时的回调
 
@@ -1199,180 +1615,9 @@ setInterval和setTimeout
 
   可以达到异步的效果，不过注意这样做的操作在画面里会有卡顿感
 
-## 选择器
-
-- 单个元素
-  `document.querySelector(字符串格式的css选择器)`   
-  详见https://developer.mozilla.org/zh-CN/docs/Web/API/Document/querySelector
-- 多个元素
-  `document.querySelectorAll(字符串格式的css选择器)`
-
-## 事件
-
-（这里介绍的内容都来自[EventTarget](https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget)）
-
-这里写的是最正规的方法
-以下事件名不加on
-
-- 增加事件
-  `元素.addEventListener(字符串事件名, 函数名)`
-- 移除事件
-  `元素.removeEventListener(字符串事件名, 函数名)`
-
-元素可以是`window`、dom和[XMLHttpRequest](https://developer.mozilla.org/zh-cn/DOM/XMLHttpRequest)  
-`window`的话可以省略`window.`
-
-后面还有几个选项
-
-**增加自定义事件**
-
-<span style='opacity:.5'>这里用代码来说明</span>
-
-```javascript
-元素.addEventListener("自定义事件名", (事件对象)=>{}); // 增加事件。具体用法看上面
-var event = new CustomEvent("自定义事件名", 事件对象);
-元素.dispatchEvent(event); // 触发事件
-```
-
-如果重复给一个事件绑定一个函数，那触发事件的时候这个函数也只会执行一次。  
-（这个特点在leaflet实现的事件里也是一样的）
-
-**焦点相关**
-
-div上似乎没有聚焦、失焦事件  
-不过window有
-
-做『判断按键按下状态』时，可以增加对window焦点的监听，这样状态判断就万无一失了
 
 
-
-
-## 数字操作
-四舍五入 Math.round(7.25)
-取出大的值 Math.max(2,4)
-
-
-
-## 打印
-
-普通打印  
-只有内容主体和右侧的触发地址，且都是白色
-
-- `console.log()`
-- `console.dir()`  
-  专注于输出信息  
-  打印信息比`console.log()`更为丰富  
-  但是交互性就不强  
-  比如打印dom，是无法通过点击跳转到dom的  
-  打印错误对象，里边的连接也是无法点击的
-
-报错  
-都是红色，且左侧会多一个展开按钮，可以查看打印代码的调用链
-
-- `console.error`和`throw`  
-  外观一致，但`throw`会阻断
-
-打印错误对象  
-
-- 各种方法打印出来内容都差不多（都有调用链）
-
-
-## 错误对象（Error对象）
-未深入了解
-
-除了`Error`外还有8种错误对象，详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects#%E9%94%99%E8%AF%AF%E5%AF%B9%E8%B1%A1)
-
-- [TypeError](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError)  
-  类型错误  
-  继承自`Error`
-
-API
-
-- 生成错误对象
-
-  - `Error(描述信息)`
-  - `new Error(描述信息)`
-
-  两种方法效果都是一致的  
-  `描述信息`是1个参数，展示时会被转为字符串展示
-
-- 打印的话都是： 描述信息+几个错误的代码地址
-  - `console.dir`的表现形式：
-    和上一条差不多，但是地址是字符串的形式，并且点击后可以看见错误对象的属性
-  
-- 用任何方法把错误对象转为字符串，都只会留下字符串形式的错误描述信息（这些方法包括`JSON.stringify()`）
-
-- ECMA定义的六种默认错误类型应该就是js自动报错的全部情况（[这个页面](https://developer.mozilla.org/zh-cn/docs/web/javascript/reference/global_objects/error#Error_types)有7种）
-
-- if语句块内似乎如果红色报错，则会进入下一个语句块
-
-其他内容
-
-- 可以给错误对象增加属性，但是`...错误对象`将得不到任何属性
-- 有一种报错似乎无法从控制台上抹除掉  
-  就是资源未找到的错误`404 (Not Found)`
-
-
-## throw exception
-抛出一个自定义错误
-
-- exception为错误内容，可以是对象、数组、字符串、错误对象等
-- 会阻断程序
-
-## try catch finally
-
-```javascript
-try{
-    // 一些代码
-}catch (e) {
-    // try语句块阻塞报错则执行
-    // 这里return和再外一层return表现是一致的
-}finally{
-    // 上面两块都走完就执行（没有错误也会执行）
-}
-```
-
-- try语句块中阻塞报错的话整体代码不会阻塞
-- 这个方法可以跳出`forEach`
-- 等于then处理承诺被拒绝的功能
-
-## Date对象
-
-**api**
-
-- **获得时间戳**  
-`valueOf`与`getTime`都可以  
-  这2个方法具有完全一致的功能  
-  <span style='opacity:.5'>（2个额外知识：`valueOf`是所有对象都具有的方法、date对象隐式转换后结果是字符串）</span>
-  
-- **获得年份**  
-  用`getFullYear()`  
-
-  - getUTCFullYear于getFullYear的区别  
-
-    > - **`getFullYear()`** 方法根据本地时间返回指定日期的年份
-    > - **`getUTCFullYear()`** 以世界时为标准，返回一个指定的日期对象的年份
-    >
-    > —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date)
-
-    > 比如在中国大陆、香港、澳门、蒙古国、台湾、新加坡、马来西亚、菲律宾等地区的本地时间比UTC快8小时，记作UTC+8，意思就是比UTC时间快8小时。减的类似理解，比如UTC-10等。 —— [博客](https://www.cnblogs.com/poorpan/archive/2011/11/29/2267030.html)
-
-- 获得星期几  
-  getDay方法  
-  0代表星期天、1代表星期一
-
-**延展内容**
-
-- 跳到一个月的最后一天的方法  
-  `new Date(year,month,0)`  
-  注意这里的month不是monthIdx
-  原理：setMonth的dayValue传入0是设为上个月的最后一天
-- `setMonth`、`setFullYear`有时候并不是那么符合常识的。  
-  因为他们在没有指定day参数时会默认去getDate方法里取，而如果取了过大的day，就会走到下个月
-
-
-
-## URI编解码
+# URI编解码
 
 有2个选择
 
@@ -1381,38 +1626,77 @@ try{
 
 2个选择的结果会稍有差异（有一次同事用decodeURI解不全的字符串用decodeURIComponent就可以解全）
 
-## π
+# π
 
 `Math.PI`长度没占满，所以将`Math.PI`除一些数两边也能全等
 
 
 
-## <<、>>、<<<、>>>
-
-按位移动运算符。  
-在二进制位移，返回十进制。  
-向左的即为左移，在右侧加上位移数个数的0，反之同理  
-a<<b在数学中相当于a=a*2^b，反之类似  
-
-## `~`
-
-按位取反  
-
-输入`-1返回0
-
-## 数字表示
-
-- `1e-2`等于0.01
-- `1e2`等于100
+# 三角函数算不出0却算得出1
 
 
 
+# 迭代
 
-#  【ES6】
+阮一峰ES6中对相关名词的使用是不严格的
 
-​	   
 
-## 属性名简写
+
+### 可迭代对象
+
+iterable object  
+必须有一个键值为`Symbol.iterator`的@@iterator方法
+
+- 转数组的方法  
+  - `Array.from(可迭代对象)`
+  - `[...可迭代对象]`  
+    这种方法会把可迭代对象中的内容清空（把每一项都移除）
+
+### @@iterator方法
+
+[阮一峰ES6](https://es6.ruanyifeng.com/#docs/iterator#%E9%BB%98%E8%AE%A4-Iterator-%E6%8E%A5%E5%8F%A3)中称为Iterator接口  
+该方法会返回一个迭代器
+
+
+
+### 生成器
+
+generator
+
+生成迭代器的函数（暂时的理解，实际上应该不是）
+
+【】把备忘录里的记录先过一遍
+
+
+
+### 迭代器
+
+iterator
+
+> 迭代器是一个对象 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Iterators_and_generators#%E8%BF%AD%E4%BB%A3%E5%99%A8)
+
+[阮一峰ES6](https://es6.ruanyifeng.com/#docs/iterator#Iterator%EF%BC%88%E9%81%8D%E5%8E%86%E5%99%A8%EF%BC%89%E7%9A%84%E6%A6%82%E5%BF%B5)中称为：Iterator、遍历器、遍历器对象
+
+描述
+
+- 迭代器有一个`next`方法，调用这个方法表示进行一次迭代
+
+- 外部可以判断迭代器是否迭代完成
+
+诞生来由
+
+- 有时候需要使用复杂的迭代方案（比如按指定顺序遍历深度对象）  
+  这个时候就需要用for循环、while等api编写迭代方案  
+  把迭代部分代码封装成对象，那这个对象就被称为迭代器
+- 可以一次一次迭代，es5-迭代api都是遍历的
+
+虽然有时候有这个需求，但是写一些代码就能实现了，没必要在js里加api吧↑↑↑↑↑↑
+
+
+
+# 属性名简写
+
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
 
 - 属性名与属性值变量名相同时可以只写一个  
 
@@ -1434,9 +1718,16 @@ a<<b在数学中相当于a=a*2^b，反之类似
   };
   ```
 
-  
 
-## Symbol
+
+
+# `:function(a)`可缩写为`(a)`
+
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
+
+# Symbol
+
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
 
 【】学到[这](https://es6.ruanyifeng.com/#docs/symbol#%E5%AE%9E%E4%BE%8B%EF%BC%9A%E6%B6%88%E9%99%A4%E9%AD%94%E6%9C%AF%E5%AD%97%E7%AC%A6%E4%B8%B2)之前
 
@@ -1457,7 +1748,7 @@ Symbol是第七种数据类型
         2. 如果有则返回
         3. 如果没有则创建一个新的symbol，并加入全局的symbol注册
     - 兼容性  
-        IE不支持、edge12前不支持，其他浏览器都支持
+        IE不支持、edge12开始支持，其他支持
   
 - **类型转换**  
   Symbol值不会隐式转换，在其他值会隐式转换的场景下会报错  
@@ -1506,7 +1797,9 @@ Symbol是第七种数据类型
 
 - YUI
 
-## es module
+# es module
+
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
 
 一般在打包工具中使用，部分浏览器也支持了es6模块  
 以下提到的**变量**包括**函数**（函数名后不应加括号），不包括**属性**  
@@ -1660,13 +1953,10 @@ setTimeout(() => foo = 'baz', 500);
 
 
 
+# 箭头函数
 
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
 
-
-## “:function(a)” 可缩写为 “(a)”
-
-
-## 箭头函数
 箭头函数的`this`在声明时就确定了，并且不会被改变  
 
 > 箭头函数没有自己的this —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
@@ -1686,38 +1976,11 @@ setTimeout(() => foo = 'baz', 500);
 - bug写法：`()=>对象字面量`  估计是因为这里的花括号会被解析成语句块的花括号
 
 
-## 声明与作用域
-var：若在块内声明，则与块外同名变量为两个不同变量；若块内没有声明，不管块外声明与否，块内外同名变量都为同一个变量  
-函数嵌套：规则如上，块为声明函数处的闭包。详细说就是：若A函数中使用了B函数，则这两个函数中变量的作用域都遵从以下准则：有声明的在函数内自成作用域，没声明的与声明该函数处外部作用域一致。 
 
-**let/const与var的区别**
+# 解构赋值
 
-1. let/const在声明语句前使用会直接报错“is not defined”，而var会返回undefined，因为var的声明会提升至作用域顶部，而赋值不会提升
-2. var可以重复声明，而let/const会报错“has already been declared”
-3. var不会在在花括号形成独立作用域，而let/const会（这个花括号包括条件语句、循环语句中的花括号以及直接写的花括号）
-4. var声明变量会给window的原型加属性，而let、const不会
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
 
-let与var仅有以上区别
-
-const除了以上区别外，const在声明时必须赋值，而且其声明的变量不能在其他地方赋值。  
-
-但是有两种情况可以让声明后的const看起来像被改变：  
-（其实对常量赋值的引用并没有被改变，被改变的是引用另一头的内容）  
-
-1. 常量依赖的变量改变
-2. 常量是个数组或对象，其子项可以被改变或增删
-
-**未归类**
-
-- `const`声明变量所在最后一个作用域前这个变量将是未定义的  
-  就算在外层作用域声明了同名变量也是一样的  
-  【】
-  - 是不是只是“最后一个作用域”是这样未测试
-  - let是不是这样未测试
-  - “未定义的”是什么情况未测试
-
-
-## 解构赋值
 结构赋值可以多级嵌套使用
 - ```javascript
   var a, b, rest;
@@ -1799,126 +2062,10 @@ const除了以上区别外，const在声明时必须赋值，而且其声明的�
   
 
 
-## 类
-``` javascript
-class 类名 {
-  constructor(x, y) { // 构造函数可以不写，js会自动生成
-    // 这里写原来写在es5构造函数中的内容 
-    // 构造函数的形参指向new类时传入的实参，这点和es5构造函数一样
-    // 这里如果return的话，制造的对象就和普通函数没多大区别了（比如方法不会加上去）
-  }
-  方法名() {
-    // 这个方法会加在（类及其产生的对象的）原型链上（与给`es5构造函数名.prototype.方法名`赋值函数效果一致）
-  }
-}
-```
-- this  
-  - 非静态内容的this都是指向实例，而静态内容的this指向类  
-  - 属性会直接作为this的属性显示（两种方法赋值的属性都一样）  
-  - 方法则会加在this的原型链上  
-- 类中非静态的内容都是给实例调用的，而静态的内容都是给类调用的  
-- 类构造函数也可以`return`一个对象，这样的话实例就会是这个对象  
-- 类不会像普通函数一样变量提升
-- 类的方法名可以用表达式，属性名不确定可不可以
-- 类主体中的内容都在严格模式下执行——mdn
-- 类可以匿名可以赋值给变量可以被返回，这三个特性结合着函数使用可以拥有更灵活的操作
-- 找到实例的类：`实例.__proto__.constructor`  
-  找到实例的类的父类：`实例.__proto__.__proto__.constructor`  
-  以此类推
 
+# [Promise](https://developer.mozilla.org/zh-cn/docs/web/javascript/reference/global_objects/promise)
 
-##### 类的静态方法
-```javascript
-class Foo {
-  static bar() {
-    this.baz();
-  }
-  static baz() {
-    console.log('hello');
-  }
-  baz() {
-    console.log('world');
-  }
-}
-
-Foo.bar() // hello
-```
-- 静态方法可以与非静态方法重名
-- 类中可以调用自己的静态方法
-
-
-##### 类的属性
-- **实例属性**  
-  实例属性除了在构造函数里给`this`添加外，也可以定义在类的最顶层，如：
-  ```javascript
-  class A {
-    a=1
-  }
-  ```
-  
-- **静态属性**  
-  静态属性除了用`类.静态属性=属性值`这种方法添加外，也可以定义在类的最顶层，如：
-  
-  ```javascript
-  class A {
-    static a=1
-  }
-  ```
-  类中可以调用自己的静态属性
-  
-- **待整理**  
-  类的外部无法对私有字段进行读写（js中），原生js在控制台里可以读取私有字段
-  私有字段必须声明后使用
-  babel的私有字段在控制台里无法查看
-  实例属性、公有字段、私有字段
-  https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes#%E5%AD%97%E6%AE%B5%E5%A3%B0%E6%98%8E
-
-
-##### 类的继承
-子类会继承父类所有方法和属性  
-（包括静态内容）  
-
-- 不写构造函数时会默认执行父类的构造函数
-- 继承的属性的所有权是实例的（这个属性包括取值函数）  
-  方法是在原型链上的（类的方法本来就是在原型链上，这里指的是继承来的方法会存在对应级别的原型链上，而不是和子类同级）
-
-- `super`的功能  
-  - 执行`super`意味着给父类构造函数传参后执行，并添加父类属性、方法，最终创建this  
-  - `super`在构造函数、普通方法中调不到父类属性（静态、实例、属性、公有字段都不行）和父类静态方法
-  - `super`调用父类方法。可以在构造函数、普通方法中使用。静态方法中不允许使用`super`
-- `super`的使用条件  
-  - 子类要写构造函数的话，里面一定要有且只能有一个`super(传参或不传参)`，不然会阻塞<span style='color:red'>报错</span>（比如`TypeError: Cannot set property 'xxx' of undefined`）  
-    而且要在这之后才能用`this`和`super`，不然阻塞<span style='color:red'>报错</span>  
-  - 不能用`super`这种形式直接存在，不然阻塞<span style='color:red'>报错</span>  
-- 子类new出来的对象，同时是父类与子类的实例，instanceof 父类或子类都是true  
-- 可以继承js原生的构造函数  
-  （记得继承过Event）
-
-
-##### 类的存值函数和取值函数
-```javascript
-class HasSetGet {
-    set prop(value) {
-        console.log('setter: ' + value);
-    }
-    get prop() {
-        return 123
-    }
-}
-```
-用存值函数和取值函数可以创建一些特殊的属性  
-在chrome控制台这些属性是半透明显示，而且是点击“(...)”后获取其值，对这些属性用hasOwnProperty结果也为false  
-一般使用中需要再开一个属性或者字段来存值
-
-- **存值函数**  
-  在给属性赋值时会运行的函数，形参是赋给属性的值，这个函数的return没有意义  
-  不设存值函数的话除了没这个函数的功能外似乎没有其他影响  
-- **取值函数**  
-  在读取属性值时运行的函数，这个读取行为包括在chrome控制台点开“(...)”  
-  return的值是最终读取到的值  
-  如果不写取值函数，实例就不会拥有这个属性，不过还是可以给这个属性赋值  
-
-## [Promise](https://developer.mozilla.org/zh-cn/docs/web/javascript/reference/global_objects/promise)
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
 
 - 还有一个可以查阅的页面是[使用Promise](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises)
 
@@ -2023,7 +2170,7 @@ class HasSetGet {
 
 
 
-## Promise相关可行的例子（大多和await/async有关）
+### Promise相关可行的例子（大多和await/async有关）
 
 【】这部分笔记待整理
 
@@ -2105,7 +2252,7 @@ class HasSetGet {
     
     
 
-## [`Promise.resolve`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve)
+### [`Promise.resolve`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve)
 
 兼容性：除了ie，都可以
 
@@ -2135,7 +2282,7 @@ class HasSetGet {
 
   
 
-## [Promise的组合方法](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise#%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95)
+### [Promise的组合方法](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise#%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95)
 
 ##### Promise.all
 
@@ -2169,11 +2316,13 @@ class HasSetGet {
 
 
 
-## 请求
+# 请求
 
 目前未找到捕获跨域错误的方法
 
-##### fetch
+### fetch
+
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
 
 ```javascript
     fetch(这里可以放请求、php文件或其他文件,{ // 加第二个参数可以规避在跨域时的报错，但并没有解决跨域获取不到东西的问题
@@ -2195,8 +2344,10 @@ class HasSetGet {
 - get方法不能拥有body属性，传参只能写在请求地址里（这点网上资料都没提到）  
 - fetch据说可以全面替代xhr（js请求除了xhr就是fetch），完整见[mdn](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch)
 
+### new request
 
-##### new request（未测试不用new request是否能成功）
+（未测试不用new request是否能成功）
+
 ```javascript
     let myImage = document.querySelector('img');
     var myRequest = new Request('flowers.gif');
@@ -2212,21 +2363,29 @@ class HasSetGet {
 ```
 
 
-##### 读取json类文件的内容
+### 读取json类文件的内容
 `请求返回内容.json()`  
 `json()`方法只能用于`请求返回内容`，会返回一个promise，它的then会返回文件中的json内容  
 详见[mdn](https://developer.mozilla.org/en-US/docs/Web/API/Body/json)
 
+# Object.assign
 
-## Object.assign(object1,object2,object3等等)
+`Object.assign(object1,object2,object3等等)`
+
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
+
 参数要求是对象或数组
 把除第一个参数外的参数的属性添加到第一个参数上,同时返回处理后的第一个参数的值
 遇到同名的属性后面的会覆盖前面的
 要把数组加到对象里的话，数组就会化为属性名为其序号的对象参与到assign中 
 第一个参数写空对象或空数组可以实现浅拷贝
 
+# 参数默认值语法
 
-## 参数默认值语法（default parameter）
+（default parameter）
+
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
+
 ```javascript
 function a(p0,p1='p1'){
     // 按顺序给参数赋予默认值（目前js用原生api给真正的函数参数默认值的话也只能按顺序给）
@@ -2235,7 +2394,9 @@ function a(p0,p1='p1'){
 
 
 
-## Set对象
+# Set对象
+
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
 
 > `Set`对象是值的集合，你可以按照插入的顺序迭代它的元素。 Set中的元素只会**出现一次**，即 Set 中的元素是唯一的。—— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Set)
 
@@ -2249,7 +2410,9 @@ function a(p0,p1='p1'){
 
 
 
-## Map对象
+# Map对象
+
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
 
 比普通对象的优点是可以拿任意值作为键名，引用值也可以。可以迭代到symbol键，数字作为键值时也不会转为字符串  
 缺点是创建时、打印时结构没那么直观、也无法输出成字面量  
@@ -2287,7 +2450,7 @@ function a(p0,p1='p1'){
 
 
 
-## [类型化数组](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypedArray)
+# [类型化数组](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypedArray)
 
 ### [Uint8Array](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array)
 
@@ -2316,13 +2479,12 @@ function a(p0,p1='p1'){
 
 
 
-#  【ES7】
+# 对象展开运算符
 
+（或称扩展运算符）（Object rest spread）
 
+<span style='background:#eef5f4;padding:0 10px'>es7</span>
 
-
-## 对象展开运算符（或称扩展运算符）（Object rest spread）
-（ES6的stage-3、ES7）
 `...`后的内容可用变量代理
 
 - 使用条件：
@@ -2371,8 +2533,10 @@ function a(p0,p1='p1'){
     `[...'hello']` // [ "h", "e", "l", "l", "o" ]
 （更多内容见http://es6.ruanyifeng.com/#docs/array#扩展运算符）
 
+# 装饰器
 
-## 装饰器
+<span style='background:#eef5f4;padding:0 10px'>es7</span>
+
 看了一个例子后感觉像语法糖  
 可以把  
 ```
@@ -2386,54 +2550,3 @@ export default 组件
 
 
 
-# ES2020
-
-## BigInt
-
-> [ES2020](https://github.com/tc39/proposal-bigint) 引入了一种新的数据类型 BigInt —— [阮一峰](https://es6.ruanyifeng.com/#docs/number#BigInt-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B)
-
-**可参考资料如下**
-
-- [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
-- [阮一峰](https://es6.ruanyifeng.com/#docs/number#BigInt-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B)
-- [ES2021](https://tc39.es/ecma262/#sec-bigint-objects)
-- [tc39提议（github版本）](https://github.com/tc39/proposal-bigint)
-- [tc39提议（网页版本）](https://tc39.es/proposal-bigint/)
-
-**特性**
-
-- 可以表示任意大的整数
-
-- 与Number的关系
-
-  - 即使是同一数字Number和BigInt也不全等  
-    不过用`==`的判断结果是`true`
-
-  - > 不能和Number混合运算 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/BigInt#%E6%8F%8F%E8%BF%B0)
-
-- 兼容性  
-  IE不行，其他浏览器在18年左右就支持了
-
-- > 可以使用负号，但不能使用正号 —— [阮一峰](https://es6.ruanyifeng.com/#docs/number#%E7%AE%80%E4%BB%8B)
-
-
-
-
-
-# 【计算相关】
-
-## `++`
-
-`a++`返回自增前的  
-`++a`返回自增后的
-
-
-## 取余（%）
-- a、b都是正数时  
-  a%b=c 意味着 a=b*某个整数+c 且 0<=c<=(b-1)
-  【】把c放到等式左边可能更易于计算和理解
-- a是负数b是正数时  
-  a%b=c 意味着 a=b*某个整数+(-c) 且 0>=c>=-(b-1) 也就是 c为用a绝对值取余b的结果的相反数
-
-
-## 三角函数算不出0却算得出1
