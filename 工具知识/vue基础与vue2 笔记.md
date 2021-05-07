@@ -1702,6 +1702,17 @@ export default class HelloWorld extends Vue {}
 
 
 
+# 风格指南
+
+[官方风格指南](https://cn.vuejs.org/v2/style-guide/)
+
+
+
+个人经验
+
+- 不要把很多业务逻辑写在watch里，还是函数调函数可读性好  
+    即使用watch能减少代码量，但是在未来有功能修改的话，改起来会多花很多时间
+
 
 
 # 周边工具
