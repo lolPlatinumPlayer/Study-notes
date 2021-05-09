@@ -1044,10 +1044,13 @@ methods: {
   不过实例通过this去调，是能调到的（这个不知道是不是因为钩子执行时组件整体已经走完了）
   
 - 如果自己用new Vue或extend插入实例  
-  那vue devtools的components选项卡里是找不到这个实例的  
-  （即使传入components选项也没用）  
-  （element-ui的Message组件在body标签下加入extend出的实例，devtools也捕获不到）  
-  （element-ui的MessageBox组件大致了解了下，和Message应该也是一样的情况）
+  
+  - 那vue devtools的components选项卡里是找不到这个实例的  
+    （即使传入components选项也没用）  
+    （element-ui的Message组件在body标签下加入extend出的实例，devtools也捕获不到）  
+    （element-ui的MessageBox组件大致了解了下，和Message应该也是一样的情况）
+  - 不会热更新  
+    （有一次发现会，改内联style、文本、css都会更新）
   
 - 挂载  
   new Vue和extend都有挂载的概念  
