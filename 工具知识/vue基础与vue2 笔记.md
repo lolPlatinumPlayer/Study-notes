@@ -4,6 +4,8 @@
 - 在method里调用函数，函数的this居然不是组件实例？
   中间加一层this.$nextTick的话this就是组件实例了  
   计算属性里的也是
+- mounted 中window.addEventListener method  
+  method里的this是vue实例
 - 了解data在生命周期里的执行时机，其中data先于mounted执行。和其他时机对比的先后顺序待了解、data是否能执行methods待了解
 - 实例中的`$options`等成员
 - keep-alive  
@@ -110,6 +112,7 @@
   - 例子：  
     写了一个组件，组件内用v-if写了个div  
     如果把组件根元素作为echarts容器，那么这个带v-if的div就再也不会出现了
+- 模板里有时候可以去掉双引号
 
 
 
@@ -352,6 +355,8 @@ input、textarea等自然输入控件中属性加上v-model="xxx"，可实现inp
 select下拉列表：只要有声明xxx，xxx值都为选中选项option中的内容。
 勾选框：true或false。绑定数值方法：v-bind:true-value="'a'"
 （因为v-model是双向数据绑定，所以用v-for循环出来的内容直接写循环中的某一项就行，不用再从循环依赖的数据里一层一层点出来）
+
+- v-model可以传入v-for循环出来的东西
 
 坑：
 
@@ -1231,6 +1236,10 @@ mounted: function () {
 
   > `mounted` 不保证所有的子组件也都一起被挂载。如果你希望等到整个视图都渲染完毕，可以在 `mounted` 内部使用 [vm.$nextTick](https://cn.vuejs.org/v2/api/#vm-nextTick)
 
+  - 提示  
+    如果模板里依赖mounted里才制造的数据的话是有问题的，因为模板先于mounted渲染  
+    解决方法是放在beforeMount里
+  
 - updated：data变更时调用*【】未实测、未测试prop改变的情况、未测试data变而视图不变的情况*
 
 - 疑似bug：mounted中如果引用methods中函数前有语句的话，会报错  

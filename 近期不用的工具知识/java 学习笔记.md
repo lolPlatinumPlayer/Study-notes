@@ -1,3 +1,8 @@
+- java后端接口返回拼合数据可能是不好操作的  
+  余泽鑫说了差不多的话（大泽科技也疑似给出了相同看法）
+
+
+
 ### 安装
 
 安装步骤看[菜鸟教程](https://www.runoob.com/java/java-environment-setup.html)
