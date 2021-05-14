@@ -340,6 +340,7 @@ console.log('a[3]',a[3]) // undefined
       `obj.propertyIsEnumerable(键)`  
       面对在对象自身上找不到的属性，总是返回false  
       （可以用symbol做键）  
+    
   - 不可枚举  
     
     - 对于通过 [Object.defineProperty](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty) 等定义的属性，默认不可枚举
@@ -352,8 +353,12 @@ console.log('a[3]',a[3]) // undefined
     
   - chrome控制台中对于可枚举属性与不可枚举属性标有不同颜色  
     ![盗用知乎的图片](https://pic1.zhimg.com/80/v2-5f2c0313978e69c464019904328cf340_720w.png)  
-    深色为可枚举、浅色为不可枚举
-
+  深色为可枚举、浅色为不可枚举
+    
+  - js设置不可枚举的意义  
+    有的东西希望在字典里存在又不希望在列表里存在，那这些东西就可以设为不可枚举  
+    <span style='opacity:.5'>比如做下拉列表时，如果和字典复用同一个数据来源（狭义对象），又希望加强字典的健壮性（不合法键也不阻塞报错），就可以加一些不可枚举键</span>
+  
 - 是否属于对象自身  
   也就是说是否不在原型链上  
   <span style="opacity:.5">MDN英文版称属于对象自身的属性是ownership的，但中文版翻译为所有权，这明显是错误的（2021.5.5）</span>
@@ -1014,11 +1019,12 @@ switch(表达式){
 **程序执行流程**
 
 1. 计算表达式结果
-2. 从上到下用`===`判断`case`后的值（`case`后好像也可以用表达式？）
+2. 从上到下用`===`判断`case`后面的值（`case`后面好像也可以用表达式？）
 3. 判断结果为`true`的话开始执行后续“case语句块”的语句  
    直到碰到`break`  
    <span style='opacity:.5'>所有执行的“case语句块”为：</span>  
-   <span style='opacity:.5'>[判断结果为`true`的那个,结果为`true`的`case`所在行后面第一个`break`所在的“case语句块”]</span>
+   <span style='opacity:.5'>[判断结果为`true`的那个,结果为`true`的`case`所在行后面第一个`break`所在的“case语句块”]</span>  
+   <span style='opacity:.5'>（这里的 [a,b] 是区间的意思，不是数组的意思）</span>
 
 **块级作用域**
 
@@ -1150,9 +1156,27 @@ Object.defineProperty(对象,属性的键名, {
 })
 ```
 
+- 单纯设个值  
+  例子如下  
+
+  ```js
+  Object.defineProperties(STATUS_DICT, {
+    null: {
+      value:值,
+    },
+    undefined: {
+      value:值,
+    }
+  })
+  ```
+
+  
+
 
 
 **Object.defineProperties()**  
+
+详细内容参照Object.defineProperty，下面是个例子
 
 ```javascript
 Object.defineProperties(对象, {
@@ -1192,7 +1216,7 @@ Object.defineProperties(对象, {
   （chrome90在对象自身上也会显示原型链上的取值函数对应的属性，这个结论是通过观察class写法得出的）  
 - （返回布尔值）
 - （该方法属于Object对象，由于所有的对象都"继承"了Object的对象实例，因此几乎所有的实例对象都可以使用该方法）  
-- （这个方法与属性可枚举与否无关） 
+- （这个方法与属性是否可枚举无关，mdn的描述容易看出有关系的） 
 
 
 
@@ -1381,6 +1405,11 @@ a.unshift('a','b','c')
 
 返回排序后的数组，会改变原数组
 
+- [回调](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#%E5%8F%82%E6%95%B0)  
+  可选  
+  要求返回数字  
+  排序规则：依据返回数字大于0、等于0、小于0进行排序
+
 
 
 ### 在数组中查找单个元素
@@ -1465,9 +1494,21 @@ a.unshift('a','b','c')
 
 
 
-# JSON.stringify()
+# [`JSON.stringify()`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify)
 返回 转为JSON格式字符串 的 传入js对象或数组
+
+
+
+- 不可枚举属性将被忽略  
+  mdn中一句话看起来像是普通对象的不会被忽略，但实际上也会被忽略  
+  下面贴出了这句话：  
+
+  > 其他类型的对象，包括 Map/Set/WeakMap/WeakSet，仅会序列化可枚举的属性
+
+
+
 第三个参数可输入数字或者字符串，这个参数生效的话就会对结果进行格式整理
+
 1. 输入数字代表缩进（缩进个数为0到10）
 2. 输入字符串则代表缩进用字符串进行填充（也是0到10个字符，可输入转义字符）
 这个方法不能直接对有循环引用的内容使用，否则阻塞报错“Converting circular structure to JSON”
@@ -1797,7 +1838,7 @@ Symbol是第七种数据类型
 
 - YUI
 
-# es module
+# [es module](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Modules)
 
 <span style='background:#eef5f4;padding:0 10px'>es6</span>
 
@@ -1829,7 +1870,21 @@ Symbol是第七种数据类型
 
 
 
-### `export`
+### 导出
+
+- 一个文件里可以同时拥有`export`和`export default`  
+  下面是一个例子：  
+
+  ```js
+  export function getStatusDict() {
+    return 1
+  }
+  export default getStatusDict()
+  ```
+
+  
+
+##### `export`
 
 作用：负责导出
 
@@ -1851,7 +1906,7 @@ Symbol是第七种数据类型
 
 
 
-### `export default`
+##### `export default`
 
 与node的`module.exports`类似，不过不同的是`export default`可以与`export`共同使用，在引入时还有简写`import a, {b,c as d} from 'only_name'`  
 `export default`本质是输出一个叫default的变量，所以不能使用`export default var a = 1`这种写法，而可以使用`export default 1`这种写法
@@ -1891,6 +1946,10 @@ Symbol是第七种数据类型
 - `import * as a from './b'`  
   针对`export`输出，将./b中的变量都重命名为a.x1、a.x2等  
   a的属性都是getter（测试过vue-cli4.5.11）
+  
+- `import _, { each, forEach } from 'lodash'`  
+
+  > 如果想在一条`import`语句中，同时输入默认方法和其他接口则可以这样写 —— [《ES6 入门教程》](https://es6.ruanyifeng.com/#docs/module#export-default-%E5%91%BD%E4%BB%A4)
 
 import from的地址可以省略.js，（慕课react实战里说是脚手架的功能）  
 import在静态解析阶段执行，所以它是一个模块之中最早执行的。  
@@ -2479,7 +2538,7 @@ function a(p0,p1='p1'){
 
 
 
-# 对象展开运算符
+# [对象展开运算符](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
 
 （或称扩展运算符）（Object rest spread）
 
@@ -2490,7 +2549,11 @@ function a(p0,p1='p1'){
 - 使用条件：
   1. cnpm install --save-dev babel-plugin-transform-object-rest-spread
   2. .babelrc中加"plugins": ["transform-object-rest-spread"]
+  
 - 运用于对象 
+  
+  - 仅拷贝可枚举的属性
+  
   1. 代码：（序号后不写点东西就变成行内代码了）
      ```javascript
      let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
@@ -2504,6 +2567,7 @@ function a(p0,p1='p1'){
      console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
      ```
   3. vuex的辅助函数
+  
 - 运用于数组
   ...array可以把数组的各子项变成各参数，console.log、运行函数时传入参数中都可用，array与[...array]相等
     1. 在document.write中，加不加...输出都是用英文逗号隔开
@@ -2528,6 +2592,7 @@ function a(p0,p1='p1'){
     4. 可以使用三元运算符，如...(x > 0 ? ['a'] : [])
   
     5. arr1.push(...arr2)意为把arr2每个子项都加到arr1数组后面（前面有push的介绍）
+  
 - 运用于字符串
     1. 将字符串转为数组
     `[...'hello']` // [ "h", "e", "l", "l", "o" ]
@@ -2550,3 +2615,6 @@ export default 组件
 
 
 
+# 待学习内容
+
+- toLocaleString
