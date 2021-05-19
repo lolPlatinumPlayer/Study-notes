@@ -338,6 +338,13 @@ directives: {
 可包含单个JS表达式，如“{{ message.split('').reverse().join('') }}”
 当中语法与JS一致，可包含限定作用域内变量，限定作用域为：用new Vue(){}新建对象中data的属性值。可用逗号“,”隔开多个内容。
 
+- 有些内容不会被渲染  
+  已知的如下：
+  - null
+  - undefined
+  - 空串
+- 布尔值是会被渲染的
+
 
 ### v-html="rawHtml"与mustache的区别
 v-html用加号（+）连接多个变量
@@ -1031,13 +1038,15 @@ methods: {
   其实例的`$mount`方法应该是用来生成dom的，可以传入类似`'#id'`这样的方法来挂在到其他dom下，也可以不传  
   生成的dom可以手动加入其他dom，具体看[博客](https://www.jianshu.com/p/b931abe383e3)
   
-  - vue的“仅运行时”版本不可用  
-    准确说是其实例的`$mount`方法不可用
+  - vue的“仅运行时”版本无法使用其实例的`$mount`方法  
+    如果像普通组件一样注册之后在模板里用的话，是没问题的
   - 提醒：
     - 这个“类”的配置时机和正常类不一样  
       这个类是`Vue.extend(配置)`时配置（生成类时配置）  
       而不是实例化时配置
   - 【】有空测一下new "类"生成的是不是vue组件的实例
+  - `Vue.extend(配置)`生成的实例的name  
+    是`'VueComponent'`
   
 - 生成 实例  
   
@@ -1096,22 +1105,30 @@ methods: {
 ### 组件注册
 用类的方式使用组件：[这个内容可能有助于“用类的方式使用组件”](https://cn.vuejs.org/v2/guide/typescript.html#%E5%9F%BA%E4%BA%8E%E7%B1%BB%E7%9A%84-Vue-%E7%BB%84%E4%BB%B6)
 
-全局注册：要在父实例前注册才有效
+- 全局注册：要在父实例前注册才有效
+  
+  ```js
+  Vue.component('my-component', {
+    template: '<div>A custom component!</div>'
+  })
+  ```
+  
+  - 第二个参数
+    - 可以传配置  
+      就像例子一样
+    - 可以传实例  
+      测试过用`Vue.extend(配置)`生成的实例
+- 局部注册：可用 `<div is='components'></div>` 动态更换组件，可用对象动态加载内容，全局注册不能动态加载
+  
+  ```js
+  new Vue({
+    components: {
+      'my-component':{
+      template:'<div>A custom component!</div>'}
+    }
+  })
+  ```
 
-```js
-Vue.component('my-component', {
-  template: '<div>A custom component!</div>'
-})
-```
-局部注册：可用 `<div is='components'></div>` 动态更换组件，可用对象动态加载内容，全局注册不能动态加载
-```js
-new Vue({
-  components: {
-    'my-component':{
-    template:'<div>A custom component!</div>'}
-  }
-})
-```
 字符串模版（js中的名称）可用大小驼峰或者kebab-case (短横线隔开式) 命名，在非字符串模板（html中的名称）中用kebab-case都能捕获到。  
 （就算在html中使用模板语法，也只有引号内可以分辨大小写，引号外依旧不分别）  
 （template在实例中也可用，会把捕获到的dom内容替换为template中内容）  
@@ -1140,9 +1157,15 @@ new Vue({
 
 - src 导入要遵循和require() 调用一样的路径解析规则，也就是说需要用以 ./ 开头的相对路径，引用npm资源的话不用加 ./
 - .vue文件的编写
-  一整个文件就是一个组件，所以不能用vue实例。
-  与普通组件不同之处是最外层组件是包裹在 export default中，用name属性代表组件名称。
-  单文件组件中要使用全局组件的话，要先import Vue from 'vue'
+  - 一整个文件就是一个组件，所以不能用vue实例。
+  - 与普通组件不同之处是最外层组件是包裹在 export default中，用
+  - name属性代表组件名称。
+  - 单文件组件中要使用全局组件的话，要先import Vue from 'vue'  
+    - 一次测试发现不是这样  
+      - 测试环境  
+        在main.js里`Vue.component`了
+      - 测试时间  
+        2021.5.18
 - 单文件组件的使用
   要先 import componentName from './fileName.vue'
   然后再在引入文件的components属性中写上componentName，之后组件就能正常使用了
@@ -1731,6 +1754,53 @@ export default class HelloWorld extends Vue {}
 
 
 
+# [vNode](https://cn.vuejs.org/v2/api/#VNode-%E6%8E%A5%E5%8F%A3)
+
+sxy项目做MyTableCol组件时依据观察得来的结论
+
+
+
+- tag属性应该就是vNode的标签名  
+  文本节点的tag是undefined
+- children属性是vNode的子节点列表  
+  如果没有子节点的话该属性值为undefined
+- text属性  
+  总是字符串
+  - 作用  
+    这里仅记录对于文本节点以及无后代的标签节点的作用  
+    <span style='opacity:.5'>（这里假设在el-table-column组件的setColumnRenders方法里打断点时就是渲染前。该方法里的children变量在在该组件间插入template时，children变量的后代就是vNode）</span>
+    - 渲染前  
+      elm属性为`undefined`
+    - 渲染时  
+      elm是一个dom  
+      这个dom的文本就是text属性的值
+      - 注意：  
+        就算text属性有值，vNode的children属性也仍然是`undefined`
+    - 渲染后改变text不会更新dom
+    - 【】验证上述内容对children属性为`[文本vNode]`的标签节点是否生效  
+    - 【】验证上述内容对children属性为undefined的标签节点是否生效  
+      不生效
+
+- 文本节点  
+
+  - 文本节点的elm属性值为text实例
+  - data属性值为undefined
+
+- 标签节点  
+
+  - 标签上的“其他属性”  
+    存放于data属性的attrs属性中
+
+    - 在标签上值是什么数据类型到了vNode中也是什么类型
+    - 对于标签上无值的属性  
+      到了vNode中值为空串
+    - 没有“其他属性”时  
+      attrs属性是不存在的
+
+    
+
+
+
 # 错误定位
 
 - 报一堆因某个data未定义引起的错误  
@@ -2007,6 +2077,59 @@ lin
     ```
 
     
+
+##### 时间选择组件
+
+- 设置[日期格式](https://element.eleme.cn/#/zh-CN/component/date-picker#ri-qi-ge-shi)后该组件并不会格式化初始值  
+  也就是说，在选择日期前组件不会改变v-model的绑定值
+
+  
+
+##### 源码
+
+- 直接引入node_modules中的特定组件是不行的  
+  比如`import qq from 'element-ui/packages/table-column/index.js'` 然后再去用qq这个组件  
+  这个可能是因为源码中用了jsx而项目中不支持jsx
+
+可以复制到项目里用，比如el-table-column的  
+el-table的不行，会报一个并不真实的错误，我觉得应该是依赖问题，因为element是用yarn装依赖，而我测试的项目是用npm，npm装好后本身就报了4个高危错误
+
+- 表格  
+  - 单元格的代码在el-table里（而不是在el-table-column里）  
+    el-table-column甚至没有单元格的数据
+  - el-table-column代表一个列
+    - 把源码复制到项目里制造出新组件  
+      新组件和原组件混用会报错（暂时没发现其他问题）  
+      - 报错原因  
+        table/src/table-column.js里的columnIdSeed会重合
+      - 解决办法  
+        把新组件的初始columnIdSeed设大点就行了
+
+
+
+##### 运行源码
+
+- 用yarn1可以安装成功  
+  （1次经验是：没用淘宝镜像装完有报警告和错，不过可以用）
+- npm run dev的地址和终端里输出的不一样  
+  是http://localhost:8085/  
+  而不是http://0.0.0.0:8085/
+
+
+
+##### 使用源码
+
+名词解释
+
+- 目标项目  
+  要使用修改源码后的elementUI的项目
+
+
+
+使用方式
+
+- 修改目标项目node_modules的方法  
+  npm run dist后用生成的lib文件夹替换掉目标项目node_modules里elementUI的lib
 
 
 

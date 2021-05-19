@@ -255,6 +255,7 @@ vue-cli含有模板：https://github.com/vuejs-templates
 - 用`vue-cli-service build xxx`命令时“环境变量”名不需要以`VUE_APP_`开头  
   不过用这种方法打出来的包会比不用该方法大的包体积更大，而且html代码没有被压缩  
   【】原因未知
+- 遇到文件内同名的情况，后面的会覆盖前面的
 
 
 

@@ -269,6 +269,18 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
 
 - 在文银电脑上clone Study-notes时，发现clone后里边没东西。再执行`git pull origin master`后才有东西
 
+- hrt的gitlab项目无法用http地址clone  
+
+  - 在hrt电脑上用https来clone elementUI也是不行  
+    报错如下：  
+
+    ```
+    Please make sure you have the correct access rights
+    and the repository exists.
+    ```
+
+    
+
 
 
 

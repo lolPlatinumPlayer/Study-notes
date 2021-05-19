@@ -36,47 +36,74 @@
 
 ### 设置地图样式
 
-**初始化时配置**
 
-```js
-var mapStyle = {
-  'version': 8,
-  'name': 'Dark',
-  'sources': {
-    'mapbox': {
-      'type': 'vector',
-      'url': 'mapbox://mapbox.mapbox-streets-v8'
-    },
-    'overlay': {
-      'type': 'image',
-      'url': 'https://docs.mapbox.com/mapbox-gl-js/assets/radar.gif',
-      'coordinates': [
-        [-80.425, 46.437],
-        [-71.516, 46.437],
-        [-71.516, 37.936],
-        [-80.425, 37.936]
+
+##### `options.style`
+
+去[官网](https://www.mapbox.cn/mapbox-gl-js/api/#map)里搜索“options.style”查看  
+可以是一个json或url  
+
+- json  
+  官方内容见[这里](https://docs.mapbox.com/mapbox-gl-js/style-spec/)（注意点点左侧的内容）
+
+  - 例子  
+
+    ```js
+    const mapStyle = {
+      'version': 8,
+      'name': 'Dark',
+      'sources': {
+        'mapbox': {
+          'type': 'vector',
+          'url': 'mapbox://mapbox.mapbox-streets-v8'
+        },
+        'overlay': {
+          'type': 'image',
+          'url': 'https://docs.mapbox.com/mapbox-gl-js/assets/radar.gif',
+          'coordinates': [
+            [-80.425, 46.437],
+            [-71.516, 46.437],
+            [-71.516, 37.936],
+            [-80.425, 37.936]
+          ]
+        }
+      },
+      'sprite': 'mapbox://sprites/mapbox/dark-v10',
+      'glyphs': 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
+      'layers': [
+        {
+          'id': 'overlay',
+          'source': 'overlay',
+          'type': 'raster',
+          'paint': { 'raster-opacity': 0.85 }
+        },
       ]
     }
-  },
-  'sprite': 'mapbox://sprites/mapbox/dark-v10',
-  'glyphs': 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
-  'layers': [
-    {
-      'id': 'overlay',
-      'source': 'overlay',
-      'type': 'raster',
-      'paint': { 'raster-opacity': 0.85 }
-    },
-  ]
-};
-    
+    ```
+
+- url
+
+  - 官方预定义的url
+    - 卫星图  
+      mapbox://styles/mapbox/satellite-v9
+    - 卫星图+路网  
+      mapbox://styles/mapbox/satellite-streets-v10
+    - 普通亮色地图  
+      mapbox://styles/mapbox/streets-v11
+    - 更多内容见官网
+
+
+
+##### 初始化时配置
+
+```js
 var map = new mapboxgl.Map({
   container: 'map',
   maxZoom: 5.99,
   minZoom: 4,
   zoom: 5,
   center: [-75.789, 41.874],
-  style: mapStyle
+  style: 上面的`options.style`
 })
 ```
 
@@ -84,9 +111,9 @@ var map = new mapboxgl.Map({
 
 
 
-**初始化之后设置**
+##### 初始化之后设置
 
-`map.setStyle(json或指向json的url)`  
+`map.setStyle(上面的options.style)`  
 详细内容请参考[官网](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#setstyle)
 
 - 改变后会清空地图上所有图层与数据源  
@@ -136,6 +163,7 @@ var map = new mapboxgl.Map({
   - ？？？  
     目前看到都是出现在`"mapbox-xxxx"`对象中，但是并不知道该对象是什么  
     api文档中并没有出现对瓦片数据源的操作方法  
+  
 - **api**  
   有以下内容的api  
   GeoJSON、图片、视频、canvas  
@@ -159,10 +187,50 @@ var map = new mapboxgl.Map({
     - 比普通geojson多的东西  
       feature可以有`id`属性
     - `feature`的位置写了几何体的话不会报错，但是地图上也不会出现东西  
+  
 - **聚类**  
   应该只能用于GeoJSON数据源  
   可以通过数据源的配置项和数据源的方法来控制  
   配置项查阅[样式规范](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#geojson-cluster)、方法查阅api文档
+  
+- mapbox提供的数据源，用户自建图层也可以用  
+  例子如下：  
+  
+  ```js
+  
+      mapboxgl.accessToken = token
+      window.map = new mapboxgl.Map({
+          container: 'map',
+          center: [119.2861, 26.0709],
+          zoom: 18, 
+          style: 'mapbox://styles/mapbox/satellite-v9', // 只有卫星图 
+      }); 
+      map.on("load", function (e) {
+          mapLoadComplete()
+      })
+  
+      function mapLoadComplete() {
+        window.satelliteLayer=map.getLayer('satellite')
+        map.setLayoutProperty("satellite", 'visibility', false?'visible':'none') 
+  map.on('click',function(){
+    console.log('click')
+    drawRasterLayer_useMapboxSource(map)
+  })
+  
+  
+      }
+  
+      function drawRasterLayer_useMapboxSource(map){
+        
+        map.addLayer({
+            'id': 'drawRasterLayer_useMapboxSource',
+            'type': 'raster',
+            source: "mapbox", 
+        })
+      }
+  ```
+  
+  
 
 非重点内容
 
@@ -221,7 +289,7 @@ var map = new mapboxgl.Map({
 
 
 
-# 图层
+# [图层](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/)
 
 
 
@@ -300,6 +368,17 @@ mapboxgl.MercatorCoordinate.fromLngLat({
 
 - 改变图片颜色  
   2021.3.10做了了解，只能改变一个格式的图片的颜色（好像叫swt）
+
+
+
+
+
+### raster图层
+
+- 似乎自身指定不了形状（形状只能由数据源指定）  
+- 似乎形状只能是四边形
+- mapbox的raster图层是用2个三角形表达一个四边形的，两个三角形坐标系是不同的  
+  因此在图层区域不是平行四边形时画面是不理想的，中间能看到明显界限
 
 
 
@@ -385,9 +464,6 @@ mapboxgl.MercatorCoordinate.fromLngLat({
   
 - 地图里的画面，画在墨卡托上都是等边梯形
 
-- mapbox的raster图层是用2个三角形表达一个四边形的，两个三角形坐标系是不同的  
-  因此在图层区域不时平行四边形时画面是不理想的，中间能看到明显界限
-
 - 可以用json文件配置地图样式
 
 - **绑定元素位置方法**  
@@ -413,8 +489,9 @@ mapboxgl.MercatorCoordinate.fromLngLat({
   - `yarn run build-dev`生成`mapbox-gl-dev.js`
 
 - 找到所有图层  
-  `map.getStyle().layer`
-
+  `map.getStyle().layer`  
+（2021.5.17 测试结果是`map.getStyle().layers`）
+  
 - 找到所有数据源  
   `map.getStyle().sources`
   
