@@ -878,6 +878,8 @@ out-in: 离开过渡完成后开始进入过渡
   如果只想用第一个维度，那么用写法一即可  
   如果想用第二个或第三个维度，那么必须用写法二  
   （`()`中的内容就是各个维度）
+  
+- `in后`可以是method
 
 **可迭代数据类型**
 
@@ -894,6 +896,8 @@ out-in: 离开过渡完成后开始进入过渡
   有1个维度  
   那就是：当前迭代所属的次数  
   （比如说用v-for迭代3，那输出结果就是1、2、3）
+- 字符串  
+  就相当于对`字符串.split('')`使用
 
 
 
@@ -2148,7 +2152,8 @@ el-table的不行，会报一个并不真实的错误，我觉得应该是依赖
 - 隐藏组件  
 
   > 官方在 github 的 issues 中表示不会写在文档中，需要用的自己看源码进行调用  —— [博客](https://blog.csdn.net/u012260238/article/details/103907206) 
-
+> （[A](https://github.com/Leopoldthecoder)和[B](https://github.com/QingWei-Li)确实在2016、2017年在多个isuue里说了该问题，但是2021.5.24时他们并不是[饿了么前端的poeple](https://github.com/orgs/ElemeFE/people)）
+  
   - el-scrollbar  
   
     - 猜测用法：在可能需要滚动条的地方套上  

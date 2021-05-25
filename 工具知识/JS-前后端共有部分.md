@@ -32,7 +32,7 @@ es6+会用下面这种标签来标记
   
   > 一个函数和对其周围状态（**lexical environment，词法环境**）的引用捆绑在一起（或者说函数被引用包围），这样的组合就是**闭包**（**closure**）。也就是说，闭包让你可以在一个内层函数中访问到其外层函数的作用域。在 JavaScript 中，每当创建一个函数，闭包就会在函数创建的同时被创建出来。 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Closures)
 
-
+- 0/0得到NaN
 
 
 
@@ -2618,3 +2618,16 @@ export default 组件
 # 待学习内容
 
 - toLocaleString
+
+  - 有时候可以对数字用有时不行
+
+    - 不行的例子  
+      `11111111111111111111111111111111.toLocaleString()`
+
+    - 行的例子  
+
+      ```vue
+      {{scope.row.collectionNumber.toLocaleString()}}
+      ```
+
+      
