@@ -65,9 +65,10 @@
 
 ##### 运行
 
-- 直接cdn引入就能写，且不需要token、帐号等额外的东西<b style='color:red'>？？？</b>  
-  可能可以参考[这个页面](https://www.cesium.com/docs/tutorials/quick-start/)
-
+- 直接cdn引入就能写，且不需要token、帐号等额外的东西  
+  token、帐号是地图服务、地形服务需要的  
+可能可以参考[这个页面](https://www.cesium.com/docs/tutorials/quick-start/)
+  
 - 不使用帐号的例子（并不是上一条的例子，这两条是从2个思路得出的东西）
   - 代码可以参考二开的commit id为7adcc4d57157078c1dfcd6f1587cd774b45f8a6b的commit，可能还有更早的例子，但不记得了
 
@@ -142,6 +143,16 @@ viewer.scene.skyBox = new Cesium.SkyBox({
   })
   ```
   
+  - 倾斜  
+    orientation配置项的pitch属性  
+    可以直接写数字  
+    不过下面这个用法应该更常见  
+    `pitch:Cesium.Math.toRadians(-80)`
+  - 旋转  
+    orientation配置项的heading属性  
+    例子  
+    `heading:Cesium.Math.toRadians(30,0)`
+  
 - 将镜头瞬移到指定坐标  
   `viewer.camera.setView`方法  
   使用方法参考上一条的`flyTo`方法
@@ -152,6 +163,11 @@ viewer.scene.skyBox = new Cesium.SkyBox({
     `const a=viewer.camera.position.clone`
   - 把镜头放到保存的位置  
     `viewer.camera.flyTo({destination: a})`
+  
+  
+  
+  - 倾斜信息就放在camera的pitch属性里  
+    而镜头位置是position
 
 
 
@@ -292,7 +308,7 @@ viewer.scene.skyBox = new Cesium.SkyBox({
 ```js
 // 圆
 var pointEntity = viewer.entities.add({
-  // 点击点后弹出的描述信息
+  // 点击点后弹出的描述信息 (sn大屏项目测试发现点击后不会弹出，甚至把默认控件都放出来也没看见)
   description: `行数不定的字符串`,
   position: Cesium.Cartesian3.fromDegrees(经度,纬度,高度),
   point: { pixelSize: 10, color: Cesium.Color.ORANGE }
@@ -312,7 +328,12 @@ var pointEntity = viewer.entities.add({
 **`viewer.entities.add`**  
 
 - 入参：可以是[Entity](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html)实例也可以是[Entity的配置项](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html#.ConstructorOptions)
+  - 配置项
+    - 配置对象的属性都会被添加到实例里  
+      甚至实例里还会有配置对象加下划线版本的属性（比如原属性名是a，加下划线后就是_a）
 - 返回值：[Entity](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html)实例
+
+
 
 
 
@@ -458,6 +479,9 @@ var pointEntity = viewer.entities.add({
 
 - 模型  
   [demo](https://sandcastle.cesium.com/index.html?src=3D%2520Models.html)
+  
+- 文本  
+  [demo](https://sandcastle.cesium.com/index.html?src=Labels.html)
 
 
 
@@ -508,7 +532,30 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
 
 
 
-### 鼠标事件
+### 事件
+
+笔记待整理
+
+##### 加载完成事件
+
+例子
+
+```js
+var helper = new Cesium.EventHelper();
+helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
+  if (testMachine.isLoadMost(tileNumNeedLoad)) {
+    setTimeout(()=>{
+      this.goMaSha()
+    },2000)
+  }
+}); 
+```
+
+`tileNumNeedLoad`：应该是剩余需要加载的瓦片数量
+
+
+
+##### 鼠标事件
 
 [ScreenSpaceEventHandler](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html)上有增、[减](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)监听函数等方法
 
@@ -531,6 +578,30 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
 - 事件类型  
   这个参数要输入`Cesium.ScreenSpaceEventType`的属性  
   可选值见[这里](https://cesium.com/docs/cesiumjs-ref-doc/global.html#ScreenSpaceEventType)
+
+
+
+##### 判断点击物体
+
+方法A：`viewer.scene.pick`
+
+```js
+viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEvent) {
+  var pickedFeature = viewer.scene.pick(czMouseEvent.position);
+  console.log(pickedFeature)
+}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+```
+
+**返回对象**
+
+没看到对返回对象的说明
+
+- 看[这篇文章](https://blog.csdn.net/zhangqun23/article/details/83056315)里的说明似乎只会返回第一个点击的物体
+- 返回对象的id属性似乎是用`viewer.entities.add`添加的实例
+- 没点到东西（点地球不算）的话返回undefined  
+  （经验之谈）
+
+
 
 
 
