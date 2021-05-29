@@ -65,12 +65,22 @@
 
 ##### 运行
 
-- 直接cdn引入就能写，且不需要token、帐号等额外的东西  
-  token、帐号是地图服务、地形服务需要的  
-可能可以参考[这个页面](https://www.cesium.com/docs/tutorials/quick-start/)
-  
-- 不使用帐号的例子（并不是上一条的例子，这两条是从2个思路得出的东西）
-  - 代码可以参考二开的commit id为7adcc4d57157078c1dfcd6f1587cd774b45f8a6b的commit，可能还有更早的例子，但不记得了
+- 直接cdn引入就能写
+- 用npm安装也可以
+  - `import * as Cesium from 'cesium'`  
+    不搞项目配置直接这样搞Cesium里有东西，不过`new Cesium.Viewer('czContainer')`仍然报错
+
+
+
+
+
+- 账号
+  - 不需要token、帐号等额外的东西  
+    token、帐号是地图服务、地形服务需要的  
+  - 一个不使用帐号的例子  
+      二开的commit id为7adcc4d57157078c1dfcd6f1587cd774b45f8a6b的commit，可能还有更早的例子，但不记得了  
+      InitCesium那个文件应该是用了谷歌地图，所以不需要token，不过有时要翻墙
+  - 用npm装1.67版的话，`Cesium.Ion.defaultAccessToken`默认就有值
 
 
 
@@ -85,6 +95,39 @@
 ### `viewer`
 
 - [`viewer.entities`](https://cesium.com/docs/cesiumjs-ref-doc/EntityCollection.html)
+- 似乎没有设置初始镜头的功能
+
+
+
+### 底图服务
+
+- 默认应该是bing地图，因为开地图选择控件的话默认选的是bing
+
+- 搭建本地地图服务  
+
+  - [这个博客](https://blog.csdn.net/hzh839900/article/details/78063118)里搜索“SingleTileImageryProvider”可以查看相关内容
+
+- 使用mapbox底图  
+  MapboxImageryProvider可以，MapboxStyleImageryProvider可能也可以
+
+  - MapboxImageryProvider  
+    demo如下  
+
+    ```js
+    const viewer = new Cesium.Viewer('cesiumContainer',{ 
+      imageryProvider:new Cesium.MapboxImageryProvider({
+        mapId:'mapbox.satellite',//底图类型
+        accessToken: mapbox的Token,
+      }),
+      baseLayerPicker:false
+    } );
+    ```
+
+  - MapboxStyleImageryProvider  
+    找到了2个文章，还没试过  
+
+    - https://zhuanlan.zhihu.com/p/340669216
+    - https://blog.csdn.net/qq_26991807/article/details/103862839
 
 
 
@@ -284,6 +327,16 @@ viewer.scene.skyBox = new Cesium.SkyBox({
 
 
 
+特性
+
+- 双击物体会选中  
+  - 取消方法  
+    目前想到的方法只有：直接取消cz默认的选中事件
+
+
+
+
+
 **Entity 和primitive 对比**
 
 - entity简单，primitive复杂
@@ -345,6 +398,15 @@ var pointEntity = viewer.entities.add({
 - 负责携带图形的配置项  
   - 可以通过不同配置项同时携带多种图形  
   - 这些配置项可以传这个图形的实例也可以传这个图形的配置项
+
+
+
+**操作**
+
+- 直接赋值就可以更新视图  
+  已试过`point`  
+  point的颜色、大小直接赋值，视图就能更新  
+  甚至直接给point赋值一个对象都可以
 
 
 
@@ -480,8 +542,14 @@ var pointEntity = viewer.entities.add({
 - 模型  
   [demo](https://sandcastle.cesium.com/index.html?src=3D%2520Models.html)
   
-- 文本  
+- [文本](https://cesium.com/docs/cesiumjs-ref-doc/Label.html)  
   [demo](https://sandcastle.cesium.com/index.html?src=Labels.html)
+  
+  - 偏移
+    - 以米为单位的偏移  
+      `eyeOffset`配置项
+    - 以屏幕像素为单位的偏移  
+      `pixelOffset`配置项
 
 
 
@@ -856,7 +924,10 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
 
 
 
+# 评价
 
+- 拖拽后镜头飞行状态会有画面抖动  
+  在hrtPC上已经经过多种情况的测试
 
 
 
