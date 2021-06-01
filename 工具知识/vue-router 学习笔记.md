@@ -1,10 +1,18 @@
 【】需要整理，目前可读性还有很大提升空间
 
-## 杂项
 
-- vue-router直接引入不支持ie9，不过听说实际使用支持
 
-- **让vue-router生效方法**  
+
+
+
+
+
+
+# 基础
+
+- vue-router直接引入不支持ie9，不过听说用工程化的方法使用的话是支持的
+
+- 让vue-router生效方法  
   将其html部分包裹在一个标签内，并将该标签挂载。挂载例子：  
 
   ```javascript
@@ -13,22 +21,11 @@
   }).$mount('#app')
   ```
 
-- `router-link`会被渲染为a标签，router-link标签中to属性的值代表路由（跳转到的组件）。to属性值必须以/开头且不能以/结尾。
-
-- `router-link`要加点击事件的话要写`@click.native`，而且直接写语句的话就算加了箭头函数也是没有this
-
-- `router-view`标签叫出口，路由匹配到的组件将渲染在里，可以在组件模板中使用。
-
-- vue-router每次跳转到一个组件都会触发组件的`mounted`方法  
-  离开一个组件都会执行`beforeDestroy`和`destroyed`方法
   
-  - [在同组件不同路由间调整时不会触发钩子](https://router.vuejs.org/zh/guide/essentials/dynamic-matching.html#%E5%93%8D%E5%BA%94%E8%B7%AF%E7%94%B1%E5%8F%82%E6%95%B0%E7%9A%84%E5%8F%98%E5%8C%96)
-  
-- 路由配置中无法配置params  
-  配置query也只能加到path里才能生效  
-  （路由配置指的是实例化`'vue-router'`时的`routes`参数）
 
-## 定义路由
+
+
+### 定义路由
 ```javascript
 const routes = [
     { name:'xx',path: '/dd', component: { template: '<div>foo</div>' } },
@@ -39,27 +36,96 @@ const routes = [
   里边可以带`.`带数字
 - `component`的值是组件
 
-## 创建 router 实例
+### 创建 router 实例
 ```javascript
 const router = new VueRouter({
     routes
 })
 ```
 
-## 动态路径参数
-```javascript
-const router = new VueRouter({
-    routes: [
-        {path: '/user/:xx', component:{
-        	template: '<div>{{ $route.params.xx }}</div>'
-        }}
-    ]
-})
-```
-遇到所有 “/user/:xx” 的路由，都会在{{}}中渲染出 xx。
-也可以设置多个 动态路径参数，中间可以有任何间隔，甚至没有间隔，没有间隔的话除了最后一个 动态路径参数 以外其他 动态路径参数 都只取一个字符。
 
-## 路由信息对象的属性
+
+
+
+### `router-link`
+
+- `router-link`会被渲染为a标签，router-link标签中to属性的值代表路由（跳转到的组件）。to属性值必须以/开头且不能以/结尾。
+- `router-link`要加点击事件的话要写`@click.native`，而且直接写语句的话就算加了箭头函数也是没有this
+
+
+
+
+
+### `router-view`
+
+`router-view`本身不会渲染出一个标签，只会在`router-view`的位子渲染出需要的内容  
+
+`router-view`标签上除了name属性外所有属性都会传递到渲染出来的根标签上。  
+
+- `router-view`标签叫出口，路由匹配到的组件将渲染在里，可以在组件模板中使用。
+
+### `router-view`的`name`属性
+
+name属性相当与vue的key属性，用来标识每个出口的不同。对于使用name的router-view，将不会作为component的出口，也不会作为components.default的出口。
+要想出口渲染到有name的router-view上，routes中应该用components代替component，如果两个对象同时存在，只会渲染components。
+components的属性名与router-view的name属性值对应，对于没有name的router-view，对应到components中的属性名为default。
+对于name属性值没被包含于当前路由components的属性名中的router-view，不会渲染。
+
+
+
+
+
+
+
+
+
+
+
+
+
+### History模式
+new VueRouter({})中加入 mode:'history' 开启History模式
+wb测试中会让url中html文件的盘符消失，并且去掉url中vue-router部分的开头井号
+【并未理解作用】（似乎是：1、让直接写url可以访问  2、让url看起来像正常的url。  其中第一点没测试成功过，可能要后端技术支持。第二点除了去掉盘符、井号并没有发现其他优化。）
+history模式的网页只能在http服务器上运行，直接双击html文件的话会导致：
+    1. 路由后除了钩子（已测试mounted）外什么都找不到
+        2. 所有图片、字体文件都找不到
+       不放在http服务器更目录上的话，这些资源一样找不到，不过路由可用，但是路由到“/”时，浏览器url栏显示的会变成服务器底层地址，除此外没有其他毛病
+       服务器上的图片、字体资源都是去底层目录上找
+
+
+
+
+
+
+
+
+
+# 数据获取
+
+官方页面这个章节完全看不懂（js部分）
+
+
+
+
+
+
+
+下面记录的内容来源不是官方页面
+
+- 获得当前路由信息  
+  通过`vue组件实例.$route`可以获得  
+  有很多信息，包括params、meta等  
+  （本笔记的《动态路径参数》部分也有类似用法）
+
+
+
+
+
+
+
+### 路由信息对象的属性
+
 （这里说的路径都是页面地址加井号后面部分的url地址）
 （在实例中使用时记得在前面加上“this.”）
 
@@ -81,6 +147,22 @@ const router = new VueRouter({
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+# 路由数据描述
+
+
+
 query与params不同的地方
 
 - query会反映在url里，而params不会
@@ -88,13 +170,108 @@ query与params不同的地方
 
 
 
-## 嵌套路由
+
+
+### 动态路径参数
+
+```javascript
+const router = new VueRouter({
+    routes: [
+        {path: '/user/:xx', component:{
+        	template: '<div>{{ $route.params.xx }}</div>'
+        }}
+    ]
+})
+```
+
+遇到所有 “/user/:xx” 的路由，都会在{{}}中渲染出 xx。
+也可以设置多个 动态路径参数，中间可以有任何间隔，甚至没有间隔，没有间隔的话除了最后一个 动态路径参数 以外其他 动态路径参数 都只取一个字符。
+
+
+
+
+
+### 嵌套路由
+
 在VueRouter的参数中使用children配置，children值与routes完全一致。
 如果希望子嵌套的路由是跟在父嵌套后面的话那path无需加/，如果希望子嵌套路由就是path值的话，就要加上/。
 无论path加不加/，页面呈现都是一样的，都会渲染出父路由的template，再从父路由template的router-view中渲染出子路由。
 以上两条适用与所有与path同级的路由属性（已验证：重定向redirect、别名alias【目前只学了这两个】）
 
-## 编程式的导航
+
+
+### 命名路由
+
+路由除了之前带/的字符串格式，还可以是对象形式，不过要在 to 前加上冒号 “:” 。如：
+<router-link :to="{ name: 'user', params: { userId: 123 }}">User</router-link>（和带/的字符串格式一样拥有查询和传递数据功能）
+对象形式可以用name来跳转，例子中的params对象在跳转时带了一个名值对，将userId的值设置为123。
+
+
+
+
+
+
+
+### 重定向
+
+routes的redirect属性，值是另一个path的值，发起原path路由后效果将完全和发起redirect中path一样。如果重定向不是依赖hash或者query的话，定向前的hash或者query会保留到定向后。
+也可以用name重定向，例子： redirect: { name: 'foo' } 。
+根据params重定向：
+path: '/aa/:xx', redirect: '/bb/:xx'
+为所有不存在于routes中的路由重定向：
+path: '*', redirect: '/foo'
+（去掉redirect，加上component的话，能将不存在的路由渲染出东西）
+动态返回重定向目标，格式：
+path: '/xxx/:id?',
+redirect: to => {
+    const { hash, params, query } = to
+    if (query.to === 'foo') {//后面只跟?to=foo的跳到了foo
+        return { path: '/foo', query: null }
+    }
+    if (hash === '#baz') {//hash值为baz的定向到了这里
+        return { name: 'baz', hash: '' }
+    }
+    if (params.id) {
+        return '/with-params/:id'//只带ID的跳到了这个
+    } else {
+        return '/bar'//什么都没加跳到了这个
+    }
+}
+
+### 别名
+
+/a 的别名是 /b，意味着，当用户访问 /b 时，URL 会保持为 /b，但是路由匹配则为 /a，就像用户访问 /a 一样。
+普通写法：
+alias: '/foo'
+多别名写法：
+alias: ['/baz', 'baz-alias', '/baz-alias']
+
+
+
+
+
+### 路由元信息
+
+定义路由（就是写routes中与path同级的属性）的时候可以配置meta字段（对象），meta中可以设置一级对象，对象名代表需要验证的参数，对象值经过if判断为非的不验证，if判断为是的验证。
+验证格式：
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(xx => xx.meta.requiresId)) {
+        ...
+    }//这个if在new VueRouter的scrollBehavior属性中同样适用
+}// requiresId 在路由的meta中存在、有值且值不为判断为‘非’的值，例子中if判断会返回true，其余情况返回false
+
+- 设置各路由的title（这个title指的是浏览器标签页的名称，也就是html的title标签设置的那个东西）  
+  `meta.title`的值就是各路由的title
+
+
+
+
+
+# js语句编写
+
+
+
+### 编程式的导航
 
 <span style='opacity:.5'>下面的`router`用`vue组件实例.$router`也是一样的</span>
 
@@ -120,69 +297,8 @@ query与params不同的地方
 
 
 
-## 命名路由
-路由除了之前带/的字符串格式，还可以是对象形式，不过要在 to 前加上冒号 “:” 。如：
-<router-link :to="{ name: 'user', params: { userId: 123 }}">User</router-link>（和带/的字符串格式一样拥有查询和传递数据功能）
-对象形式可以用name来跳转，例子中的params对象在跳转时带了一个名值对，将userId的值设置为123。
+### 导航钩子
 
-## `router-view`
-
-`router-view`本身不会渲染出一个标签，只会在`router-view`的位子渲染出需要的内容  
-
-`router-view`标签上除了name属性外所有属性都会传递到渲染出来的根标签上。  
-
-## `router-view`的`name`属性
-
-name属性相当与vue的key属性，用来标识每个出口的不同。对于使用name的router-view，将不会作为component的出口，也不会作为components.default的出口。
-要想出口渲染到有name的router-view上，routes中应该用components代替component，如果两个对象同时存在，只会渲染components。
-components的属性名与router-view的name属性值对应，对于没有name的router-view，对应到components中的属性名为default。
-对于name属性值没被包含于当前路由components的属性名中的router-view，不会渲染。
-
-
-
-## 重定向
-routes的redirect属性，值是另一个path的值，发起原path路由后效果将完全和发起redirect中path一样。如果重定向不是依赖hash或者query的话，定向前的hash或者query会保留到定向后。
-也可以用name重定向，例子： redirect: { name: 'foo' } 。
-根据params重定向：
-path: '/aa/:xx', redirect: '/bb/:xx'
-为所有不存在于routes中的路由重定向：
-path: '*', redirect: '/foo'
-（去掉redirect，加上component的话，能将不存在的路由渲染出东西）
-动态返回重定向目标，格式：
-path: '/xxx/:id?',
-redirect: to => {
-    const { hash, params, query } = to
-    if (query.to === 'foo') {//后面只跟?to=foo的跳到了foo
-        return { path: '/foo', query: null }
-    }
-    if (hash === '#baz') {//hash值为baz的定向到了这里
-        return { name: 'baz', hash: '' }
-    }
-    if (params.id) {
-        return '/with-params/:id'//只带ID的跳到了这个
-    } else {
-        return '/bar'//什么都没加跳到了这个
-    }
-}
-
-## 别名
-/a 的别名是 /b，意味着，当用户访问 /b 时，URL 会保持为 /b，但是路由匹配则为 /a，就像用户访问 /a 一样。
-普通写法：
-alias: '/foo'
-多别名写法：
-alias: ['/baz', 'baz-alias', '/baz-alias']
-
-## History模式
-new VueRouter({})中加入 mode:'history' 开启History模式
-wb测试中会让url中html文件的盘符消失，并且去掉url中vue-router部分的开头井号
-【并未理解作用】（似乎是：1、让直接写url可以访问  2、让url看起来像正常的url。  其中第一点没测试成功过，可能要后端技术支持。第二点除了去掉盘符、井号并没有发现其他优化。）
-history模式的网页只能在http服务器上运行，直接双击html文件的话会导致：
-    1. 路由后除了钩子（已测试mounted）外什么都找不到
-        2. 所有图片、字体文件都找不到
-       不放在http服务器更目录上的话，这些资源一样找不到，不过路由可用，但是路由到“/”时，浏览器url栏显示的会变成服务器底层地址，除此外没有其他毛病
-       服务器上的图片、字体资源都是去底层目录上找
-
-## 导航钩子
 相当于路由的生命周期钩子，注册分三种情况：全局、路由独享、组件独享。  
 有三种钩子：beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave。  
 beforeRouteEnter例子：  
@@ -191,45 +307,31 @@ beforeRouteEnter例子：
 钩子中一定要有`next()`才会正常到下一步，`next(false)`就是不到下一步（目前测试结果和不写`next()`没区别）。  
 `next()`也可以用来路由，有两种写法：1、`next('/xx')` 2、`next({name:'xx'})`。（路由后会执行那个路由的钩子，如果有的话）
 
-## 路由元信息
-定义路由（就是写routes中与path同级的属性）的时候可以配置meta字段（对象），meta中可以设置一级对象，对象名代表需要验证的参数，对象值经过if判断为非的不验证，if判断为是的验证。
-验证格式：
-router.beforeEach((to, from, next) => {
-    if (to.matched.some(xx => xx.meta.requiresId)) {
-        ...
-    }//这个if在new VueRouter的scrollBehavior属性中同样适用
-}// requiresId 在路由的meta中存在、有值且值不为判断为‘非’的值，例子中if判断会返回true，其余情况返回false
 
-- 设置各路由的title（这个title指的是浏览器标签页的名称，也就是html的title标签设置的那个东西）  
-  `meta.title`的值就是各路由的title
 
-## 路由动效
+
+
+
+
+
+
+# 效果
+
+
+
+
+
+### 路由动效
+
 可以整体设、单个路由设置、根据'$route' (to, from)设置
 https://router.vuejs.org/zh-cn/advanced/transitions.html
 
-## 数据获取
-官方页面这个章节完全看不懂（js部分）
 
 
 
 
+### 滚动行为
 
-
-
-下面记录的内容来源不是官方页面
-
-- 获得当前路由信息  
-  通过`vue组件实例.$route`可以获得  
-  有很多信息，包括params、meta等  
-  （本笔记的《动态路径参数》部分也有类似用法）
-
-
-
-
-
-
-
-## 滚动行为
 new VueRouter中的scrollBehavior属性，例子：
 scrollBehavior (to, from, savedPosition) {
     return { x: 222, y: 222 }//路由后滚动条滚动到x222，y222处
@@ -255,6 +357,28 @@ if (to.hash) {
 
 
 
+
+
+
+
+# 缺陷
+
+- 子路由必须在父路由页面中渲染  
+  这样就导致：如果一个页面属于另一个页面，无法在vue-router中体现这两个页面的从属关系
+
+
+
+
+
+# 未归类
+
+- vue-router每次跳转到一个组件都会触发组件的`mounted`方法  
+  离开一个组件都会执行`beforeDestroy`和`destroyed`方法
+  - [在同组件不同路由间调整时不会触发钩子](https://router.vuejs.org/zh/guide/essentials/dynamic-matching.html#%E5%93%8D%E5%BA%94%E8%B7%AF%E7%94%B1%E5%8F%82%E6%95%B0%E7%9A%84%E5%8F%98%E5%8C%96)
+- 路由配置中无法配置params  
+  配置query也只能加到path里才能生效  
+  （路由配置指的是实例化`'vue-router'`时的`routes`参数）
+- 刷新页面后params居然还在
 
 
 
