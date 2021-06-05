@@ -2377,7 +2377,9 @@ setTimeout(() => foo = 'baz', 500);
 
 # 请求
 
-目前未找到捕获跨域错误的方法
+<span style='opacity:.5'>（后端也可以发起请求，因此请求是前后端共有内容）</span>
+
+- 目前未找到捕获跨域错误的方法
 
 ### fetch
 
@@ -2426,6 +2428,36 @@ setTimeout(() => foo = 'baz', 500);
 `请求返回内容.json()`  
 `json()`方法只能用于`请求返回内容`，会返回一个promise，它的then会返回文件中的json内容  
 详见[mdn](https://developer.mozilla.org/en-US/docs/Web/API/Body/json)
+
+
+
+
+
+### WebSocket
+
+- 内容不多，见菜鸟教程
+- 测试网站：http://www.websocket-test.com/
+- 个人记录
+  - 服务器返回的数据存在`形参.data`里
+  - 不受到同源策略限制
+
+
+### 请求的头部【】改成XMLHttpRequest
+
+- 增加自定义字段
+  `请求.setRequestHeader(键,值)`
+  这个请求是`new XMLHttpRequest()`时可以，其他没测过
+
+  
+
+### 上传
+
+直接在formData里append File实例即可
+
+- 对于要在一个参数里放多个文件的情况  
+  只要对这个参数append多次即可
+
+
 
 # Object.assign
 

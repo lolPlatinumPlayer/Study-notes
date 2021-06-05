@@ -4,6 +4,9 @@
 
 - hrtGitLab会自动删除空文件夹  
   这个删除操作甚至在git记录里看不到
+- hrtGiltLab无法修改文件或目录的大小写  
+  （无法检测到这个修改）  
+  本地记录里显示的也是更名前的名字
 
 # 基础知识
 
@@ -224,7 +227,7 @@ github的话要多加一行`git branch -M main`
 
 ```cmd
 git remote add origin 远程服务器地址（应该都是以`.git`结尾）
-git push -u origin 你要推送的分支名 // 推送一个分支就要执行一次这个命令
+git push -u origin 你要推送的分支名 // 推送一个分支就要执行一次这个命令。如果远程仓库上该分支已有内容的话要在-u处再加上“-f”
 ```
 
 - 报错
@@ -241,6 +244,14 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
     
   - hrtGitlab在push时报错`fatal: repository 'xxxx.git/' not found`  
     解决方法：remote add时不用http的地址，改用SSH即可
+
+
+
+
+
+
+
+
 
 
 
@@ -294,13 +305,11 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
 
 
 
-# 分支基础
+# 分支
 
 ### 新建分支
 
 `git branch 分支名`
-
-
 
 
 
@@ -312,8 +321,6 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
 - 删除远程分支  
 
   > `git push --delete origin 分支名` —— [SF](https://segmentfault.com/a/1190000019539669)
-
-
 
 
 
@@ -357,6 +364,8 @@ git checkout 分支名 // 切换分支
 
 可以简写为`git checkout -b 分支名`
 
+
+
 ### 重命名分支
 
 - 重命名本地当前（指向的）分支  
@@ -366,31 +375,7 @@ git checkout 分支名 // 切换分支
 
 
 
-# 删除文件
-
-- 同时在版本库和工作区（本地）删除的文件  
-  `$ git rm XX`   
-- 只在暂存区里删除文件（不知道会不会在版本库里删掉）  
-  `$ git rm --cached XX`  
-  （实操过，还未深入研究文档）  
-  <span style='color:red'>虽然刚执行这个命令的时候被这个命令操作的文件还在，但是一次`checkout`其他分支再`merge`后就找不着这些文件了，再`checkout`回原分支也找不着。</span>  
-  回退版本就可以找回这些“丢失”的文件  
-  <span style='color:red'>但是一次关机开机（可能还有些其他操作）后这些黏贴回来的文件就又不见了</span>
-
-
-
-可以在命令中加入`-r`来递归删除
-
-
-
-要同步到分支的话要加上  
-`$ git commit -m "remark information"`  
-
-
-
-
-
-# 提交分支代码到服务端
+### 提交分支代码到服务端
 
 - `git push`  
   应该是整体提交
@@ -409,6 +394,14 @@ git checkout 分支名 // 切换分支
 
 
 
+### 覆盖
+
+- 将本地另一个分支的文件覆盖到本分支  
+  `git checkout 另一个分支名 文件路径`
+- 用一个分支覆盖另一个分支  
+  目前没找到这种操作  
+  目前的解决方案是：删掉分支b，再从分支a中复制出分支b
+
 
 
 # 比较
@@ -419,7 +412,7 @@ git checkout 分支名 // 切换分支
 
 > `git diff [first-branch]...[second-branch]` —— [和github有关的git少量说明](https://training.github.com/downloads/zh_CN/github-git-cheat-sheet/)
 
-
+如果完全一致的话就不会打印内容
 
 
 
@@ -556,13 +549,29 @@ bbbb
 
 
 
-# 将本地另一个分支的文件覆盖到本分支
-
-`git checkout 另一个分支名 文件路径`
 
 
 
 
+# 删除文件
+
+- 同时在版本库和工作区（本地）删除的文件  
+  `$ git rm XX`   
+- 只在暂存区里删除文件（不知道会不会在版本库里删掉）  
+  `$ git rm --cached XX`  
+  （实操过，还未深入研究文档）  
+  <span style='color:red'>虽然刚执行这个命令的时候被这个命令操作的文件还在，但是一次`checkout`其他分支再`merge`后就找不着这些文件了，再`checkout`回原分支也找不着。</span>  
+  回退版本就可以找回这些“丢失”的文件  
+  <span style='color:red'>但是一次关机开机（可能还有些其他操作）后这些黏贴回来的文件就又不见了</span>
+
+
+
+可以在命令中加入`-r`来递归删除
+
+
+
+要同步到分支的话要加上  
+`$ git commit -m "remark information"`  
 
 
 

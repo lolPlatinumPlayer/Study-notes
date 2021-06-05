@@ -423,6 +423,10 @@ trim:过滤用户输入的首尾空格
     如果说父组件把data传给子组件的prop  
     并且在更改data后立即调用子组件方法  
     那么方法里的prop是不会立即更新的
+  
+- 可以使用循环引用的数据
+
+
 
 
 
@@ -1408,8 +1412,19 @@ mounted: function () {
 
 - 默认值  
 
-  - 取默认值时如果默认值不符合校验规则，也是会报错的  
+  - 默认值不符合要求  
+    取默认值时如果默认值不符合校验规则，也是会报错的  
     不过有一些值是例外的，比如：`null`与`undefined`
+  - props收到undefined会用默认值，null不会
+
+- method作为prop传入后并不会改变this  
+  甚至加上bind都不好使
+
+
+
+
+
+
 
 
 
@@ -2035,6 +2050,9 @@ lin
   - 空串：空白
   - null、undefined、false、数字：提示不出现且控制台阻塞报错
   - 对象：传入对象的表现与给this.$message()传入对象的表现基本一致，其中传空对象也会提示，但没有提示内容
+- 似乎直接引入就可以用  
+  `import {  Message } from 'element-ui'`  
+  起码在vue-cli项目里是这样
 
 ##### 上传组件
 
@@ -2139,7 +2157,7 @@ el-table的不行，会报一个并不真实的错误，我觉得应该是依赖
 
 ##### 其他
 
-- 加载状态  
+- [加载状态](https://element.eleme.cn/#/zh-CN/component/loading)  
   `v-loading="布尔值"`
   
   - 如果给某个组件加了该指令  
@@ -2149,15 +2167,20 @@ el-table的不行，会报一个并不真实的错误，我觉得应该是依赖
   - 这个指令可以给template以外的任意标签使用  
     <span style='opacity:.5'>（不仅仅是element组件可以用）</span>  
   
+  报错
+  
+  - `[Vue warn]: Failed to resolve directive: loading`  
+    原因：没Vue.use(Loading)或没Vue.use(Element)
+  
 - 隐藏组件  
 
   > 官方在 github 的 issues 中表示不会写在文档中，需要用的自己看源码进行调用  —— [博客](https://blog.csdn.net/u012260238/article/details/103907206) 
 > （[A](https://github.com/Leopoldthecoder)和[B](https://github.com/QingWei-Li)确实在2016、2017年在多个isuue里说了该问题，但是2021.5.24时他们并不是[饿了么前端的poeple](https://github.com/orgs/ElemeFE/people)）
-  
+
   - el-scrollbar  
   
     - 猜测用法：在可能需要滚动条的地方套上  
-  
+    
       ```html
       <父>
         <el-scrollbar>
@@ -2165,11 +2188,11 @@ el-table的不行，会报一个并不真实的错误，我觉得应该是依赖
         </el-scrollbar>
       </父>
       ```
-  
+    
       就这样写就行，子元素过高时就会自动出现滚动条
-  
+    
     - bug  
-  
+    
       - `div.el-scrollbar__wrap`这个元素上有`margin-bottom: -5px; margin-right: -5px;`  
         这个至少导致了子元素下方5px的消失  
         （右侧5px有没消失没研究）
