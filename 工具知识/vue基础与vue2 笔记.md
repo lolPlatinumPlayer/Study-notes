@@ -1650,6 +1650,32 @@ v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
 
 
 
+# 使用ts
+
+使用ts需要“用类的形式写组件”，下一条笔记就有记录怎么写
+
+
+- 给prop加类型  
+  <span style='color:red'>没找到能成功校验的写法</span>  
+  目前看了[vue官网](https://cn.vuejs.org/v2/guide/typescript.html)和[vue-class-component](https://class-component.vuejs.org/)  
+  都是`Vue.extend`的写法，没有直接`class 组件名 extends Vue`的写法  
+  具体例子如下：
+  
+  ```ts
+  const GreetingProps = Vue.extend({
+    props: {
+      msg: String
+    }
+  })
+  
+  @Component
+  export default class HelloWorld extends GreetingProps {
+    get t(): string {
+      return typeof this.msg
+    }
+  }
+  ```
+
 
 
 # 用类的形式写组件
@@ -1863,6 +1889,7 @@ xml里组件名来源
   那么`path`去掉`/`后首字母大写，就会是组件名  
   （部分情况下这条不会生效）
 - 还找不到名字的话就会叫`Anonymous`
+- 在“Components”选项卡里选完组件实例后，可以在控制台访问到
 
 bug
 
@@ -2313,4 +2340,9 @@ iview3组件的事件名真的和文档写的医院，都带`on-`
 
 ### 其他
 
-- [固定插件](https://www.npmjs.com/package/vue-affix)
+- [固定位置的插件](https://www.npmjs.com/package/vue-affix)
+- vue-video-player  
+  可以自动播放视频，并且有声音（寿宁大屏项目）  
+  已测试浏览器：IE11、chrome90、firefox89
+- [vue-seamless-scroll](https://chenxuan0000.github.io/vue-seamless-scroll/zh/)  
+  官网说[hoverstop](https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/properties.html#hoverstop)默认值是false，实际上是true

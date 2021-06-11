@@ -43,7 +43,10 @@
   甚至可以是空对象  
   - 注意  
     第一个坐标轴里要有data  
-    因为[提示框](https://echarts.apache.org/zh/option.html#tooltip)是依据第一个坐标轴的data显示的
+    因为[提示框](https://echarts.apache.org/zh/option.html#tooltip)是依据第一个坐标轴的data显示的  
+    （一次经验似乎第一个坐标轴没data也可以显示提示框）
+  - 一次经验  
+    min、max、interval都在第二个轴上加上才会出现双y轴
 
 
 
@@ -203,7 +206,8 @@ echarts也可以做gis应用，加上百度地图即可
 
 ##### [map serie](https://echarts.apache.org/zh/option.html#series-map)
 
-- 可以使用注册的地图
+- 可以使用注册的地图  
+  方法是：通过`map`配置项指定使用的地图
 - 可以用来画地图
 
 
@@ -216,9 +220,11 @@ echarts也可以做gis应用，加上百度地图即可
 
 
 
+### 具体的图表
 
 
-### [散点图](https://echarts.apache.org/zh/option.html#series-scatter)
+
+##### [散点图](https://echarts.apache.org/zh/option.html#series-scatter)
 
 - 文本  
 
@@ -261,11 +267,16 @@ echarts也可以做gis应用，加上百度地图即可
 
     
 
-### [象形柱图](https://echarts.apache.org/zh/option.html#series-pictorialBar)
+##### [象形柱图](https://echarts.apache.org/zh/option.html#series-pictorialBar)
 
 用图片、svg、内置图形等内容当柱子的柱状图
 
 
+
+##### [热力图](https://echarts.apache.org/zh/option.html#series-heatmap)
+
+- 改变单元格宽高比的方法  
+  修改整个option的[`grid`](https://echarts.apache.org/zh/option.html#grid)配置项
 
 
 

@@ -34,6 +34,12 @@ es6+会用下面这种标签来标记
 
 - 0/0得到NaN
 
+- nullish  
+
+  > 也就是null或undefined —— [MDN](https://developer.mozilla.org/en-US/docs/Glossary/Nullish) 
+  
+  本笔记的`??`部分也有一些说明  
+
 
 
 # 数据类型
@@ -625,6 +631,8 @@ class HasSetGet {
 
 ### 浅拷贝方法
 
+对所有对象都可以用的方案
+
 - `...`（最优方案）
 - 被赋值变量=Object.assign(x,赋值变量) 
   x处根据赋值变量的值是数组还是对象来选择是输入空数组还是空对象
@@ -634,7 +642,7 @@ class HasSetGet {
   这是一个虚假的浅拷贝方案
 - 用`map`方法
 
-面对Map对象（<span style='background:#eef5f4;padding:0 10px'>es6</span>）的方案
+仅Map对象（<span style='background:#eef5f4;padding:0 10px'>es6</span>）可用的方案
 
 - `new Map(原map.entries())`
 
@@ -922,6 +930,48 @@ a<<b在数学中相当于a=a*2^b，反之类似
 
 
 
+### 可选链接运算符
+
+<span style='background:#eef5f4;padding:0 10px'>es2020</span>
+
+作用：用来获取深度子项，即使中间有些环节不存在也不会报错
+
+代码：`?.`
+
+
+
+写法
+
+- 面对属性的写法  
+  `对象?.属性`
+- 面对数组的写法  
+  `数组?.[序号]`
+- 面对方法  
+  `对象.属性?.()`  
+  解读：  
+  如果属性存在则将属性作为函数执行  
+  不存在则不执行，并返回`undefined`
+
+
+
+特性
+
+- 如果没取到值将会返回`undefined`
+
+
+
+### `||`与`??`
+
+`||`是判断布尔值，`??`是判断是否为`null`或`undefined`
+
+> 佐证材料：[博客A](https://blog.csdn.net/qq_28387069/article/details/78526037)、[博客B](https://blog.csdn.net/weixin_41650390/article/details/113739845?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control)
+
+
+
+- 这个`??`在ts 3.7以上也可以用  
+
+  > 佐证材料：[博客C](https://blog.csdn.net/qq_37164975/article/details/106132687)及其给出的[TS文档](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#nullish-coalescing)
+
 
 
 # 关键字
@@ -1113,6 +1163,8 @@ switch(表达式){
 
 
 
+
+目前观察`break`只能跳出1层for循环，而return可以无数层
 
 # 对象相关的api
 
@@ -1449,14 +1501,14 @@ a.unshift('a','b','c')
 
 只有字符串或数组能调用这个方法
 
-- 字符串调用的话  
-  字符串将会拼接在第一个元素前
 - 数组调用的话  
   `数组1.concat(数组2,数组3,......,数组n)`
   该方法返回一个数组  
   新数组的元素是调用该方法的数组及参数中所有数组的元素  
   元素的顺序与调用该方法中各数组的顺序一致  
   【】？如果传进去的不是数组则会作为元素连接
+- [字符串调用](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/concat)的话  
+  不会改变调用`concat`的变量
 
 
 ### slice
@@ -1465,7 +1517,7 @@ a.unshift('a','b','c')
 
 - 数组  
   返回一个数组，其元素从arr[begin]开始到arr[end]结尾（不包含arr[end]）  
-  可以不输入end  
+  可以不输入end。不输入的话就从第一个参数开始，一直到结束  
   end小于或等于begin时返回空数组  
   输入负数则代表从末尾开始数（-n代表倒数第n个）  
   返回数组子项顺序与原数组一致  
@@ -1477,7 +1529,8 @@ a.unshift('a','b','c')
 
 - 字符串  
   规则与数组的类似  
-  就是返回的是字符串，且在end不大于begin时返回空串
+  就是返回的是字符串，且在end不大于begin时返回空串  
+  不会改变原字符串
 
 
 
@@ -1629,6 +1682,10 @@ js中的正则表达式就是`RegExp`对象
   php方法：`\x80-\xff`  
 - `+`和`* `  
    `*`匹配重复任意次(可能是0次)，而 `+`则匹配重复1次或更多次。 ——https://mp.weixin.qq.com/s/nTXcPdrqW4H-g8baKlWXrw
+
+- 或  
+  `|`  
+  [微信公众号](https://mp.weixin.qq.com/s/nTXcPdrqW4H-g8baKlWXrw)里搜索“分枝条件”查看更多内容
 
 例子
 
