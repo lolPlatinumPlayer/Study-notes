@@ -1655,6 +1655,12 @@ v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
 使用ts需要“用类的形式写组件”，下一条笔记就有记录怎么写
 
 
+- ts使用体验不佳  
+  [这个知乎问题](https://www.zhihu.com/question/310485097/answer/591869966)里有一些描述
+  
+- 学习  
+  可以看看[这篇文章](https://zhuanlan.zhihu.com/p/29971290)
+  
 - 给prop加类型  
   <span style='color:red'>没找到能成功校验的写法</span>  
   目前看了[vue官网](https://cn.vuejs.org/v2/guide/typescript.html)和[vue-class-component](https://class-component.vuejs.org/)  
@@ -1675,6 +1681,8 @@ v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
     }
   }
   ```
+
+
 
 
 
