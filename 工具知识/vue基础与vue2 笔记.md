@@ -8,8 +8,6 @@
   method里的this是vue实例
 - 了解data在生命周期里的执行时机，其中data先于mounted执行。和其他时机对比的先后顺序待了解、data是否能执行methods待了解
 - 实例中的`$options`等成员
-- keep-alive  
-  不知道是啥东西，只知道没见过
 - component标签
 - 测试不加mixin钩子是不是还是数组
 
@@ -47,6 +45,30 @@
 
 有空整理一个有less，vuex配置完全，去掉默认页面,build.js引入前面去掉 / ,四空格缩进的模板  
 （原本写在《vue-loader 学习笔记》里）
+
+
+
+# 未归类
+
+### keep-alive
+
+用来缓存的
+
+特性
+
+- keep-alive中的组件用v-if显隐后data也不会丢失
+- keep-alive中的组件用v-if===false后在devtools里有特别的显示方式  
+  会变成半透明，且背后带个“inactive”标签
+- keep-alive中对于同一个组件  
+  一个时间里只会显示1个，加key也不好使
+- 从[博客A](https://blog.csdn.net/fu983531588/article/details/90321827)看来，并没有实践的内容
+  - 可以选择哪些组件缓存哪些不缓存
+  - keep-alive中的组件比其他组件多一些生命周期钩子
+  - 可以配合vue-router使用
+
+
+
+
 
 # 起始
 
@@ -99,6 +121,13 @@
 - 版本号
 
 **[版本清单](https://cn.vuejs.org/v2/guide/installation.html#%E5%AF%B9%E4%B8%8D%E5%90%8C%E6%9E%84%E5%BB%BA%E7%89%88%E6%9C%AC%E7%9A%84%E8%A7%A3%E9%87%8A)**<span style='opacity:.5'>（👈点这里查看）</span>
+
+
+
+##### 使用完整版的方法
+
+将webpack`配置对象.resolve.alias`的`vue$`属性设为`'vue/dist/vue.esm.js'`  
+调整配置对象的方法在《vue-cli 学习笔记》里有记录
 
 
 
@@ -399,7 +428,7 @@ trim:过滤用户输入的首尾空格
     - 赋值：`vm.$set(对象或数组,键名或序号,新值)`
     - 删除：`vm.$delete(对象或数组,键名或序号)`
     
-    这两个方法在`Vue`全局对象上也是存在的
+    这两个方法在`Vue`全局对象上也是存在的（不过没有美元符）
   
 - 对象直接赋值的话不会触发视图更新【】有空再确认下  
   键名应该可以是中文
@@ -1047,7 +1076,7 @@ methods: {
   生成的dom可以手动加入其他dom，具体看[博客](https://www.jianshu.com/p/b931abe383e3)
   
   - vue的“仅运行时”版本无法使用其实例的`$mount`方法  
-    如果像普通组件一样注册之后在模板里用的话，是没问题的
+    如果像普通组件一样注册之后在模板里用的话，是没问题的（这句话感觉不对啊，字符串模板还是编译不了。如果是用.vue文件写的字符串模板应该是没问题）
   - 提醒：
     - 这个“类”的配置时机和正常类不一样  
       这个类是`Vue.extend(配置)`时配置（生成类时配置）  
@@ -1080,7 +1109,7 @@ methods: {
 - vue 基础组件走完才会生成 总体的Vue实例那个变量  
   不过实例通过this去调，是能调到的（这个不知道是不是因为钩子执行时组件整体已经走完了）
   
-- 如果自己用new Vue或extend插入实例  
+- 如果自己用`new Vue`或`extend`插入实例  
   
   - 那vue devtools的components选项卡里是找不到这个实例的  
     （即使传入components选项也没用）  
@@ -1090,11 +1119,11 @@ methods: {
     （有一次发现会，改内联style、文本、css都会更新）
   
 - 挂载  
-  new Vue和extend都有挂载的概念  
+  `new Vue`和`extend`都有挂载的概念  
   挂载时指定的元素会被替换为vue实例控制的元素  
   而不是说指定元素不动，vue只在里边插入自己控制的元素
   
-- new Vue或extend的实例的入参  
+- `new Vue`或`extend`的实例的入参  
   放配置的[`propsData`](https://cn.vuejs.org/v2/api/#propsData)选项里
 
 
@@ -1126,7 +1155,9 @@ methods: {
       就像例子一样
     - 可以传实例  
       测试过用`Vue.extend(配置)`生成的实例
-- 局部注册：可用 `<div is='components'></div>` 动态更换组件，可用对象动态加载内容，全局注册不能动态加载
+- 局部注册  
+  也就是直接写一个配置对象  
+  可用 `<div is='components'></div>` 动态更换组件，可用对象动态加载内容，全局注册不能动态加载
   
   ```js
   new Vue({
@@ -1259,8 +1290,9 @@ this就代表实例本身，也就是说：<b style='color:red'>实例对象===�
 ##### `v-for`中的`ref`
 
 - v-for元素及其后代元素中  
-  取出ref元素都要在数组里取，即使对应ref元素只有一个
-
+  取出ref元素都要在数组里取，<span style='color:red'>即使对应ref元素只有一个</span>  
+<span style='opacity:.5'>（即使用唯一值做ref值也一样）</span>
+  
 - 找到 v-for中有ref的组件 的方法：
   `this.$refs.ref值[序号]`
   这里序号指的是：如果想要定位到的组件在拥有这个ref值的组件中排第n个，序号就是n-1
@@ -1490,7 +1522,9 @@ mounted: function () {
 
 对于组件来说有v-model和[.sync](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)两种方式
 
-v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
+- v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
+- 自己编写v-model时可以利用model选项来在组件内部做重命名  
+  详见[官方文档](https://cn.vuejs.org/v2/guide/components-custom-events.html?#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E7%9A%84-v-model)
 
 
 
@@ -1658,6 +1692,10 @@ v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
 - ts使用体验不佳  
   [这个知乎问题](https://www.zhihu.com/question/310485097/answer/591869966)里有一些描述
   
+- method互调的时候可以有校验
+  
+- 似乎只要通过模板，校验就无法成功
+  
 - 学习  
   可以看看[这篇文章](https://zhuanlan.zhihu.com/p/29971290)
   
@@ -1682,7 +1720,8 @@ v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
   }
   ```
 
-
+- 通过ref调用方法会报错（但是可以编译）  
+  解决办法`(this.$refs.xxxxxxxx as any).方法()`
 
 
 

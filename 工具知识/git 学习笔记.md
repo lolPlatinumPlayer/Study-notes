@@ -622,7 +622,8 @@ bbbb
 
 [这篇文章](https://www.jb51.net/article/200202.htm)有进行描述
 
-已测过`git checkout .`，可行
+- 方案一：`git checkout .`  
+  未add情况可行，已add不可行
 
 
 

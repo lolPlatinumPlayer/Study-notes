@@ -173,7 +173,7 @@ vue-cli含有模板：https://github.com/vuejs-templates
     
     ```
 
-    
+    也就是改变`config`这个形参，这个形参代表的就是最终的配置
 
 
 

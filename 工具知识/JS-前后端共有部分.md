@@ -790,7 +790,9 @@ try{
 }
 ```
 
-- try语句块中阻塞报错的话整体代码不会阻塞
+- 加了catch的话  
+  try语句块中阻塞报错的话整体代码不会阻塞  
+  <span style='color:red'>所以记得要在catch里把错误对象抛出来</span>
 - 这个方法可以跳出`forEach`
 - 等于then处理承诺被拒绝的功能
 
@@ -916,7 +918,9 @@ a<<b在数学中相当于a=a*2^b，反之类似
 ### `++`
 
 `a++`返回自增前的  
-`++a`返回自增后的
+`++a`返回自增后的  
+
+- 对非数字使用会返回NaN
 
 ### 取余
 
@@ -962,7 +966,7 @@ a<<b在数学中相当于a=a*2^b，反之类似
 
 ### `||`与`??`
 
-`||`是判断布尔值，`??`是判断是否为`null`或`undefined`
+`||`是判断`==false`，`??`是判断是否为`null`或`undefined`
 
 > 佐证材料：[博客A](https://blog.csdn.net/qq_28387069/article/details/78526037)、[博客B](https://blog.csdn.net/weixin_41650390/article/details/113739845?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control)
 

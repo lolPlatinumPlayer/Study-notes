@@ -90,6 +90,12 @@ function greeter(person: string) {
 
 [官网](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html#defining-types)称为“primitive types”
 
+**js也有的类型**
+
+- string
+- number
+- 其他
+
 **ts比js多的基本类型**
 
 - [tuple](https://www.typescriptlang.org/docs/handbook/basic-types.html#tuple)  

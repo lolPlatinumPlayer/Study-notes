@@ -8,7 +8,7 @@
   由[boundaryGap](https://echarts.apache.org/zh/option.html#xAxis.boundaryGap)控制
 
 - 更换数据  
-  代码从头走一遍即可（可以包含初始化代码）  
+  代码从头走一遍即可（可以包含初始化代码，但是包含初始化代码的话控制台会报警告：`There is a chart instance already initialized on the dom`）  
   有过渡动效
 
   - 不一定更新正确  
@@ -221,6 +221,20 @@ echarts也可以做gis应用，加上百度地图即可
 
 
 ### 具体的图表
+
+
+
+##### 折线图
+
+- 数据堆叠  
+  通过[`stack`属性](https://echarts.apache.org/zh/option.html#series-line.stack)控制  
+  - 使用方法  
+    指定各条线的`stack`属性  
+    属性值相同的线，将会堆叠起来
+  - 什么是『数据堆叠』？  
+    在同一个坐标系里显示多个折线图时  
+    让一条线的值凌驾于另一些线上  
+    用文字描述比较抽象，去[`stack`属性](https://echarts.apache.org/zh/option.html#series-line.stack)里看demo比较好理解
 
 
 
