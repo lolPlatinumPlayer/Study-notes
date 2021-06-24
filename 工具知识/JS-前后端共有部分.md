@@ -938,7 +938,7 @@ a<<b在数学中相当于a=a*2^b，反之类似
 
 <span style='background:#eef5f4;padding:0 10px'>es2020</span>
 
-作用：用来获取深度子项，即使中间有些环节不存在也不会报错
+作用：用来代替`.`。在用`.`会报错时`?.`不会报错，而是会返回一个`undefined`
 
 代码：`?.`
 
@@ -958,9 +958,10 @@ a<<b在数学中相当于a=a*2^b，反之类似
 
 
 
-特性
+提醒
 
-- 如果没取到值将会返回`undefined`
+- 如果不知道a对象是否有b属性其实没必要用`?.`  
+  因为就算用`.`返回的也是`undefined`
 
 
 
@@ -2496,7 +2497,7 @@ setTimeout(() => foo = 'baz', 500);
 
 ### WebSocket
 
-- 内容不多，见菜鸟教程
+- 内容不多，见[菜鸟教程](https://www.runoob.com/html/html5-websocket.html)
 - 测试网站：http://www.websocket-test.com/
 - 个人记录
   - 服务器返回的数据存在`形参.data`里

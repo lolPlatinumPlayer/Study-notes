@@ -163,4 +163,8 @@ android virtual devices（安卓虚拟设备）
 
 # 其他
 
-- > `adb` 包含在 Android SDK 平台工具软件包 —— [android调试桥](https://developer.android.google.cn/studio/command-line/adb?hl=zh_cn)
+- adb  
+  
+  > Android 调试桥 (adb) 是一种功能多样的命令行工具，可让您与设备进行通信 —— [android调试桥(adb)](https://developer.android.google.cn/studio/command-line/adb?hl=zh_cn)
+  
+  - > `adb` 包含在 Android SDK 平台工具软件包 —— [android调试桥(adb)](https://developer.android.google.cn/studio/command-line/adb?hl=zh_cn)

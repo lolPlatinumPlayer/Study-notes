@@ -457,7 +457,7 @@ var pointEntity = viewer.entities.add({
           高度
         ),
         material: Cesium.Color.RED.withAlpha(不透明度),
-    outline: true,
+      outline: true,
         outlineColor: Cesium.Color.BLACK,
   }
       ```
@@ -539,9 +539,19 @@ var pointEntity = viewer.entities.add({
         最终数量=`slicePartitions`值  
         注意：2条“经线”才会形成1个圆
 
-- 模型  
-  [demo](https://sandcastle.cesium.com/index.html?src=3D%2520Models.html)
-  
+- 矩形  
+  有2个东西可以画矩形
+
+  - [plane](https://cesium.com/learn/cesiumjs/ref-doc/PlaneGraphics.html)
+  - [rectangle](https://cesium.com/learn/cesiumjs/ref-doc/RectangleGraphics.html)
+
+  2者的区别
+
+  - rectangle可以增加厚度成多面体
+  - 设置宽高的方式
+    - plane直接设置宽高
+    - rectangle设置2个坐标，然后cz算出宽高
+
 - [文本](https://cesium.com/docs/cesiumjs-ref-doc/Label.html)  
   [demo](https://sandcastle.cesium.com/index.html?src=Labels.html)
   
@@ -551,7 +561,12 @@ var pointEntity = viewer.entities.add({
     - 以屏幕像素为单位的偏移  
       `pixelOffset`配置项
 
-
+- [多边形](https://cesium.com/learn/cesiumjs/ref-doc/PolygonGraphics.html)  
+  可以增加厚度成多面体  
+  厚度可以不等的（就是说可以做出各个地方厚度不一样的多面体）
+- 模型  
+  [demo](https://sandcastle.cesium.com/index.html?src=3D%2520Models.html)
+- [墙](https://cesium.com/learn/cesiumjs/ref-doc/WallGraphics.html)
 
 
 
@@ -632,7 +647,7 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
 
 
 
-[增加监听函数](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#setInputAction)
+[设置监听函数](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#setInputAction)
 
 `ScreenSpaceEventHandler实例.setInputAction(监听函数,事件类型)`
 
@@ -646,6 +661,10 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
 - 事件类型  
   这个参数要输入`Cesium.ScreenSpaceEventType`的属性  
   可选值见[这里](https://cesium.com/docs/cesiumjs-ref-doc/global.html#ScreenSpaceEventType)
+
+注意：这个方法的功能是设置而不是增加。如果设置了多个函数，只有最后设置的函数会生效
+
+
 
 
 
@@ -670,6 +689,20 @@ viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEven
   （经验之谈）
 
 
+
+### 材质
+
+目前只说图形的`material`配置项
+
+
+
+可以直接写一个颜色（比如`Cesium.Color.RED.withAlpha(0.5)`）
+
+可以直接写一个图片地址
+
+也可以写各个具体的实例  
+具体实例的列表见[MaterialProperty](https://cesium.com/learn/cesiumjs/ref-doc/MaterialProperty.html)  
+这个MaterialProperty类似于各具体类的父类，但实际上不是
 
 
 
