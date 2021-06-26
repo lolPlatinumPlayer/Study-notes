@@ -22,6 +22,17 @@
 
   
 
+### [按需加载](https://echarts.apache.org/zh/tutorial.html#%E5%9C%A8%E6%89%93%E5%8C%85%E7%8E%AF%E5%A2%83%E4%B8%AD%E4%BD%BF%E7%94%A8%20ECharts)
+
+挺简单的，看官网说明就行了
+
+- 如果少引了东西  
+  报错会告诉你要加什么代码  
+  （如果没有告诉你要加什么代码，那少的应该是第三方的东西）
+- `echarts.use`这个方法可以使用多次
+
+
+
 ### option
 
 > 我们把传入 `setOption` 第一个参数的东西，称为 `ECOption`，然后称传统的 ECharts 单个 option 为 `ECUnitOption`。

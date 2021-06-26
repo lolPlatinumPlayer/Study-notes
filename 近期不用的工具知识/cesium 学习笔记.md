@@ -50,6 +50,22 @@
 
 
 
+### 版本比较
+
+**66 vs 82**
+
+- 拖拽后镜头飞行状态的画面抖动  
+  在hrtPC上已经经过多种情况的测试  
+  - cdn引入方式  
+    2个版本都有，不过82比66流畅很多
+  - node_module引入方式  
+    2版本差别巨大，82完全不卡  
+    甚至加载切片都感觉快了很多
+- node_module版本67升82  
+  感觉不需要做任何改动
+
+
+
 # 基础
 
 
@@ -77,6 +93,7 @@
 - 账号
   - 不需要token、帐号等额外的东西  
     token、帐号是地图服务、地形服务需要的  
+    当然就算你没有帐号实际上也是可以用地图服务的
   - 一个不使用帐号的例子  
       二开的commit id为7adcc4d57157078c1dfcd6f1587cd774b45f8a6b的commit，可能还有更早的例子，但不记得了  
       InitCesium那个文件应该是用了谷歌地图，所以不需要token，不过有时要翻墙
@@ -692,17 +709,69 @@ viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEven
 
 ### 材质
 
-目前只说图形的`material`配置项
+[这个回答](https://stackoverflow.com/questions/50298267/how-to-use-material-fromtype-in-cesium)里说了图形和primitive有不同的材质api  
+[`Material`](https://cesium.com/learn/cesiumjs/ref-doc/Material.html?classFilter=Material)类只能primitive用
 
 
 
-可以直接写一个颜色（比如`Cesium.Color.RED.withAlpha(0.5)`）
+##### 图形的`material`配置项
 
-可以直接写一个图片地址
 
+
+可以直接写一个颜色（比如`Cesium.Color.RED.withAlpha(0.5)`）  
+可以直接写一个图片地址  
 也可以写各个具体的实例  
+
+
+
+**具体的实例**
+
 具体实例的列表见[MaterialProperty](https://cesium.com/learn/cesiumjs/ref-doc/MaterialProperty.html)  
 这个MaterialProperty类似于各具体类的父类，但实际上不是
+
+- `ImageMaterialProperty`可以用栅格图也可以用svg  
+  不过用了svg后还是会模糊
+
+
+
+##### primitive的材质
+
+- 用svg也会模糊  
+  demo如下  
+
+  ```js
+  var instance = new Cesium.GeometryInstance({
+    geometry: new Cesium.EllipseGeometry({
+      center: Cesium.Cartesian3.fromDegrees(-100.0, 20.0),
+      semiMinorAxis: 500000.0,
+      semiMajorAxis: 1000000.0,
+      rotation: Cesium.Math.PI_OVER_FOUR,
+      vertexFormat: Cesium.VertexFormat.POSITION_AND_ST
+    }),
+    id: 'object returned when this instance is picked and to get/set per-instance attributes'
+  });
+  scene.primitives.add(new Cesium.Primitive({
+    geometryInstances: instance,
+    appearance: new Cesium.EllipsoidSurfaceAppearance({
+      material: new Cesium.Material({
+        fabric: {
+          type: 'Image',
+          uniforms: {
+            image: './resource/img/redBorder1.svg',
+          }
+        }
+      })
+    })
+  }))
+  ```
+
+  
+
+##### svg
+
+2边都会模糊  
+去svg文件里加大width、height就可以变清晰  
+当然加大之后会造成性能负担导致cz整个挂掉
 
 
 
@@ -954,13 +1023,6 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
   官方人员回应：现在改用idea了，所以eclipse的方式不管用
 
 
-
-
-
-# 评价
-
-- 拖拽后镜头飞行状态会有画面抖动  
-  在hrtPC上已经经过多种情况的测试
 
 
 

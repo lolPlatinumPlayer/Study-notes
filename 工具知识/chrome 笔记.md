@@ -93,6 +93,14 @@ Page选项卡
   比如：`method:GET -.sg -Workers`
 - 如果在network里把disable cache勾起来的话，即使用同一张图片也会重新加载，network里加载的图片也是同名的
 
+##### 请求信息
+
+- 请求的ip地址  
+  General分类下的Remote Address  
+  （如果浏览器做了代理，那这里显示的就是代理的地址）
+
+
+
 
 
 ### Audits选项卡

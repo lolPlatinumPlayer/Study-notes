@@ -74,7 +74,7 @@ function greeter(person: string) {
 
 添加了类型注解的参数会被要求为必传，且数据类型加了限制
 
-类型注解在会产生参数、变量、属性、返回值的地方都可以使用
+类型注解在会产生这些内容的地方都可以使用：参数、变量、属性、返回值
 
 - 在返回值处使用类型注释的写法  
 
@@ -379,8 +379,8 @@ const bird3: BirdInterface = bird1;
 
 ##### 使用js库
 
-使用js库必须要下载它的.d.ts文件  
-下载地址：在[这个网站](https://microsoft.github.io/TypeSearch/)里可以搜出来  
+使用js库最好要下载它的.d.ts文件（不然vs会有波浪线）  
+下载地址：在[这个网站](https://www.typescriptlang.org/dt/search?search=)里可以搜出来  
 
 - 使用构建工具  
   下载完.d.ts就可以用了，编辑器和编译过程就都有提示了

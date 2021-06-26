@@ -44,7 +44,8 @@
   可能通过 `vue ui`下载依赖后会自动配置（有这个想法的依据是：一次下载less后，没有在vue.config.js里做配置也可以在单文件组件里使用，当然，有做一些其他所需的操作）
 - 可以保存配置方便下次建项目时使用
 - 可以运行npm script
-- 可以分析项目（这个功能似乎挺专业的）
+- 可以分析项目  
+  在优化体积时可以用上
 
 
 
@@ -91,7 +92,35 @@
 
 - [装lib-flexible和px2rem-loader](https://www.jianshu.com/p/79be33f2ce88)
 
-  
+
+
+
+### `--mode`
+
+这里说说`vue-cli-service build`和`vue-cli-service build --mode test`的默认区别
+
+
+
+**解读**
+
+- test的js只有一个  
+  而build的有4个：app.js、vendors.js及各自的map
+- test没有css文件
+- test的`process.env.NODE_ENV`是`'test'`  
+  这可能说明了test命令用的就是[模式文档](https://cli.vuejs.org/zh/guide/mode-and-env.html#%E6%A8%A1%E5%BC%8F)里test模式
+- test的总体积比build稍小  
+  但是去掉map的话就比build大很多
+
+
+
+**相关资料**
+
+百度不到相关资料（2021.6.25）  
+[模式文档](https://cli.vuejs.org/zh/guide/mode-and-env.html#%E6%A8%A1%E5%BC%8F)里并没有说这2者的区别  
+不过提到了`test`模式和`production`模式，但是也没有讲这2个模式的区别  
+webpack4里并没有test模式  
+
+
 
 
 

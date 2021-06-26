@@ -1283,6 +1283,9 @@ this就代表实例本身，也就是说：<b style='color:red'>实例对象===�
   - `beforeDestroy`可用
   - `destroyed`不可用
 
+- v-for中的ref都要去数组里取  
+  if、else中不用
+
 
 
 
@@ -1689,22 +1692,33 @@ mounted: function () {
 使用ts需要“用类的形式写组件”，下一条笔记就有记录怎么写
 
 
+
+学习
+
+- 可以看看[这篇文章](https://zhuanlan.zhihu.com/p/29971290)
+
+
+
+特性
+
+
 - ts使用体验不佳  
   [这个知乎问题](https://www.zhihu.com/question/310485097/answer/591869966)里有一些描述
-  
 - method互调的时候可以有校验
-  
 - 似乎只要通过模板，校验就无法成功
   
-- 学习  
-  可以看看[这篇文章](https://zhuanlan.zhihu.com/p/29971290)
-  
+
+操作
+
+- 给已有项目增加ts的方法  
+  补上需要的node_module、加上tsconfig.json就行
+
 - 给prop加类型  
   <span style='color:red'>没找到能成功校验的写法</span>  
   目前看了[vue官网](https://cn.vuejs.org/v2/guide/typescript.html)和[vue-class-component](https://class-component.vuejs.org/)  
   都是`Vue.extend`的写法，没有直接`class 组件名 extends Vue`的写法  
   具体例子如下：
-  
+
   ```ts
   const GreetingProps = Vue.extend({
     props: {
@@ -1722,6 +1736,8 @@ mounted: function () {
 
 - 通过ref调用方法会报错（但是可以编译）  
   解决办法`(this.$refs.xxxxxxxx as any).方法()`
+
+
 
 
 
