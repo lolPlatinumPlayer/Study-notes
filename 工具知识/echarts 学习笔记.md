@@ -7,29 +7,31 @@
 - 图表内容是否靠两边  
   由[boundaryGap](https://echarts.apache.org/zh/option.html#xAxis.boundaryGap)控制
 
-- 更换数据  
-  代码从头走一遍即可（可以包含初始化代码，但是包含初始化代码的话控制台会报警告：`There is a chart instance already initialized on the dom`）  
-  有过渡动效
-
-  - 不一定更新正确  
-    比如多serie就有可能出现更新不正确的情况  
-    解决办法：setOption前线clear一下
-
 - [开关图例的交互能力](https://echarts.apache.org/zh/option.html#legend.selectedMode)  
 
   - 开启：鼠标划过会高亮、点击图例可以选择显示的数据
   - 关闭：鼠标划过不会高亮、点击没有反应
 
-  
 
-### [按需加载](https://echarts.apache.org/zh/tutorial.html#%E5%9C%A8%E6%89%93%E5%8C%85%E7%8E%AF%E5%A2%83%E4%B8%AD%E4%BD%BF%E7%94%A8%20ECharts)
 
-挺简单的，看官网说明就行了
 
-- 如果少引了东西  
-  报错会告诉你要加什么代码  
-  （如果没有告诉你要加什么代码，那少的应该是第三方的东西）
-- `echarts.use`这个方法可以使用多次
+### [`setOption`](https://echarts.apache.org/zh/api.html#echartsInstance.setOption)
+
+- 要绘制图表的话必须执行这个方法  
+
+- 可以用来更换数据  
+  默认有过渡动效
+  - 不一定更新正确  
+    比如多serie就有可能出现更新不正确的情况  
+    解决办法：setOption前线clear一下
+- 初始动画  
+  第一次调用时默认有初始动画  
+  后续连续调用不会有  
+  [`clear`](https://echarts.apache.org/zh/api.html#echartsInstance.clear)后`setOption`有
+
+
+
+
 
 
 
@@ -328,6 +330,23 @@ echarts也可以做gis应用，加上百度地图即可
 
 
 ### [文本超出隐藏](https://echarts.apache.org/zh/option.html#series-pie.label.bleedMargin)
+
+
+
+### [按需加载](https://echarts.apache.org/zh/tutorial.html#%E5%9C%A8%E6%89%93%E5%8C%85%E7%8E%AF%E5%A2%83%E4%B8%AD%E4%BD%BF%E7%94%A8%20ECharts)
+
+挺简单的，看官网说明就行了
+
+- 如果少引了东西  
+  基本会报错告诉你要加什么代码  
+  如果没有，则是以下2个情况之一
+  - 如果没报错，但是效果变了  
+    那可能是少引用了某些组件（比如`MarkLineComponent`就是这样，`MarkLineComponent`对应的是`markLine`配置项）
+  - 如果报错了但没有告诉你要加什么代码  
+    那少的应该是第三方的东西
+- `echarts.use`这个方法可以使用多次
+
+
 
 
 

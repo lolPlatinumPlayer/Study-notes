@@ -1,9 +1,18 @@
 # 未整理内容
 
 - 似乎样式会强制加上scope
+
 - 自定义组件在小程序里都会变成web component  
   已验证了全局组件
-  
+
+  - 并且无法改变组件内样式
+  - 组件根元素也和web不一样  
+    - web是组件内根元素就是组件标签代表的元素
+    - 小程序是如下的  
+      第一层：组件标签代表的元素  
+      第二层：`#shadow-root`  
+      第三层：组件内根元素
+
   
 
 
@@ -16,6 +25,12 @@
 
 - 依据文件名进行搜索  
   快捷键：ctrl+P
+
+
+
+### 调试
+
+- [这个页面](https://uniapp.dcloud.net.cn/snippet?id=%e4%bd%bf%e7%94%a8hbuilderx%e5%86%85%e7%bd%ae%e6%b5%8f%e8%a7%88%e5%99%a8%e8%b0%83%e8%af%95h5)说了一些调试内容
 
 
 
@@ -102,8 +117,30 @@
   再调试，一步到位，也有热更新功能
 - 更新调试app并不需要下载app  
   需要下载app的话应该是app自身的要求
+  
+  
+
+##### iOS
+
 - 苹果手机也不一定可以真机调试  
   焰荣的iphone就不行
+
+
+
+关于iTunes版本与iOS14
+
+- HBuilder官网要求itunes在12.10.9.3以下  
+  装了2018/4/26发布于[微软](https://www.microsoft.com/zh-cn/p/itunes/9pb2mz1zmb1s?cid=appledotcom&rtc=1&activetab=pivot:overviewtab)的版本后发现确实连不上HBuilder（不过iPhone可以和iOS连接）
+- [苹果官网](https://support.apple.com/downloads/itunes)12.10以前的最新版是12.4
+- 使用12.4连接，iTunes会提示至少需要12.5
+- 在EFreeLife网站下载[12.8](https://www.efreelife.com/ipsw/itunes/164)后  
+  打开会提示`不能读取文件 iTunes Library.itl,因为它是由更高版本的iTunes所创建的`（原因是之前装了2018/4/26发布于[微软](https://www.microsoft.com/zh-cn/p/itunes/9pb2mz1zmb1s?cid=appledotcom&rtc=1&activetab=pivot:overviewtab)的版本）  
+  按[百度的方法](https://jingyan.baidu.com/article/0964eca24699648285f5369c.html)删除`iTunes Library.itl`后可以打开iTunes   
+  但iTunes连手机时还是失败并提示要求下载更新的版本  
+  HBuilder一开始也检测不到手机，不过静置一段时间后HBuilder就可以真机调试了！  
+  （杭兴也说他那里连不上iTunes但是可以连HBuilder）
+
+
 
 
 
@@ -176,7 +213,15 @@ App.vue代表应用
 
 
 
-### 官方组件
+### 组件库
+
+- uni-app本身就内置了一些组件，不需要引入就可以使用  
+  从组件名分辨不出来是否是内置组件，不过可以在[官网](https://uniapp.dcloud.io/component/view)查看所有内置组件
+- 以`u-`开头的组件是[uView](https://www.uviewui.com/components/intro.html)的组件，不需要在vue实例里注册
+
+
+
+##### 官方组件
 
 分为内置组件和[扩展组件（uni ui）](https://github.com/dcloudio/uni-ui)
 
@@ -188,7 +233,7 @@ App.vue代表应用
 
 
 
-##### 简易弹框
+###### 简易弹框
 
 [`uni.showModal`](https://uniapp.dcloud.net.cn/api/ui/prompt?id=showmodal)
 
@@ -226,7 +271,7 @@ App.vue代表应用
 
 
 
-##### [过渡动画](https://ext.dcloud.net.cn/plugin?id=985)
+###### [过渡动画](https://ext.dcloud.net.cn/plugin?id=985)
 
 也就是uni-transition组件
 
