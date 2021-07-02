@@ -18,7 +18,6 @@
 ### [`setOption`](https://echarts.apache.org/zh/api.html#echartsInstance.setOption)
 
 - 要绘制图表的话必须执行这个方法  
-
 - 可以用来更换数据  
   默认有过渡动效
   - 不一定更新正确  
@@ -28,6 +27,9 @@
   第一次调用时默认有初始动画  
   后续连续调用不会有  
   [`clear`](https://echarts.apache.org/zh/api.html#echartsInstance.clear)后`setOption`有
+- 后续setOption  
+  可以只传部分配置  
+  除非数据变更，不然是没有动画的（animation设为true也没有）
 
 
 

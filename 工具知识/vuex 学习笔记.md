@@ -59,7 +59,7 @@ state代表完整的数据，而getter则是从完整数据中提取出需要操
 
 - 定义  
 store的getters中写：  
-   
+  
    ```js
    函数名(state,getters){
      /*
@@ -70,9 +70,10 @@ store的getters中写：
      /* 或者
      return getters.其他getter的名称; */
    }
-```
+   ```
+
    
-   
+  
 
 ### mapGetters
 

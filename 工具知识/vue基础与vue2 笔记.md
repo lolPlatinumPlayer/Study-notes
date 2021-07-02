@@ -1689,7 +1689,7 @@ mounted: function () {
 
 # 使用ts
 
-使用ts需要“用类的形式写组件”，下一条笔记就有记录怎么写
+
 
 
 
@@ -1706,7 +1706,8 @@ mounted: function () {
   [这个知乎问题](https://www.zhihu.com/question/310485097/answer/591869966)里有一些描述
 - method互调的时候可以有校验
 - 似乎只要通过模板，校验就无法成功
-  
+- 默认情况下和vue2结合会报错但是可以打包和运行  
+  减少报错的方法是“用类的形式写组件”，下一条笔记就有记录怎么写
 
 操作
 
@@ -1745,7 +1746,7 @@ mounted: function () {
 
 vue2虽然原生也支持类的写法，不过会有一些问题（比如method里没有this）
 
-建议使用这2个依赖：[vue-class-component](https://class-component.vuejs.org/)、[Vue Property Decorator](https://github.com/kaorun343/vue-property-decorator)
+建议使用这2个依赖：[vue-class-component](https://class-component.vuejs.org/)、[vue-property-decorator](https://github.com/kaorun343/vue-property-decorator)
 
 ### vue-class-component
 
@@ -1837,7 +1838,8 @@ export default class HelloWorld extends Vue {
 
 ##### 其他选项
 
-其他选项传给装饰器
+其他选项传给装饰器或者vue-property-decorator  
+需要传给vue-property-decorator的选项包括但不限于props、watch
 
 ```vue
 <template>
@@ -1847,16 +1849,24 @@ export default class HelloWorld extends Vue {
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import OtherComponent from './OtherComponent.vue'
+import ComponentA from './ComponentA.vue'
 
 @Component({
   components: {
-    OtherComponent
+    ComponentA,
   }
 })
 export default class HelloWorld extends Vue {}
 </script>
 ```
+
+
+
+### [vue-property-decorator](https://github.com/kaorun343/vue-property-decorator)
+
+👆使用方法看github
+
+可以从包里取出`Vue`、`Component`（Component来自vue-class-component）
 
 
 

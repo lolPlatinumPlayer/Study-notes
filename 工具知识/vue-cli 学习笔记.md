@@ -97,18 +97,23 @@
 
 ### `--mode`
 
-这里说说`vue-cli-service build`和`vue-cli-service build --mode test`的默认区别
+这里说说`vue-cli-service build`和`vue-cli-service build --mode xxx`的默认区别
 
 
 
 **解读**
 
-- test的js只有一个  
+- xxx的webpack配置的mode选项默认都是development  
+  不过可以通过在`.env.模式名`文件里写`NODE_ENV='production'`来改为production
+- xxx的js只有一个  
   而build的有4个：app.js、vendors.js及各自的map
-- test没有css文件
-- test的`process.env.NODE_ENV`是`'test'`  
-  这可能说明了test命令用的就是[模式文档](https://cli.vuejs.org/zh/guide/mode-and-env.html#%E6%A8%A1%E5%BC%8F)里test模式
-- test的总体积比build稍小  
+- xxx没有css文件
+- 默认`process.env.NODE_ENV`  
+  （在`.env.模式名`文件里写`NODE_ENV=任意字符串`可以修改`process.env.NODE_ENV`）
+  - xxx为test时`process.env.NODE_ENV`是`'test'`  
+    这可能说明了test命令用的就是[模式文档](https://cli.vuejs.org/zh/guide/mode-and-env.html#%E6%A8%A1%E5%BC%8F)里test模式
+  - xxx为其他时`process.env.NODE_ENV`是`'development'`
+- xxx的总体积比build稍小  
   但是去掉map的话就比build大很多
 
 
@@ -187,7 +192,7 @@ vue-cli含有模板：https://github.com/vuejs-templates
       设成空串似乎也可以走代理——网友
   ```
 
-- [调整webpack配置](https://cli.vuejs.org/zh/guide/webpack.html#%E7%AE%80%E5%8D%95%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%B9%E5%BC%8F)  
+- [调整webpack配置](https://cli.vuejs.org/zh/guide/webpack.html)  
 
   - 通过给`configureWebpack`赋值对象确实可以调整，不过容易出错（目前没有符合预期地运行过）  
 
@@ -285,7 +290,7 @@ vue-cli含有模板：https://github.com/vuejs-templates
 **该方法的特性**
 
 - 增加“环境变量”的方法和`NODE_ENV`的一致  
-- 不过用`vue-cli-service serve xxx`命令时“环境变量”名必须以`VUE_APP_`开头  
+- 不过用`vue-cli-service serve xxx`命令时“环境变量”名必须以`VUE_APP_`开头（这里说的“环境变量”不包括`NODE_ENV`，`NODE_ENV`是可以写在名为`.env.模式名`的文本文件里的）  
   不然不生效
 - 用`vue-cli-service build xxx`命令时“环境变量”名不需要以`VUE_APP_`开头  
   不过用这种方法打出来的包会比不用该方法大的包体积更大，而且html代码没有被压缩  
