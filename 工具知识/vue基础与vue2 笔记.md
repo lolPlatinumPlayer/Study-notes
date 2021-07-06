@@ -105,7 +105,7 @@
     包含『运行时』和『编译器』
 
   - 仅运行时（runtime-only）  
-  不包含『编译器』的版本  
+    不包含『编译器』的版本  
     
     > 当使用 vue-loader 或 vueify 的时候，*.vue 文件内部的模板会在构建时预编译成 JavaScript。你在最终打好的包里实际上是不需要编译器的，所以只用运行时版本即可。 —— [官网](https://cn.vuejs.org/v2/guide/installation.html#%E8%BF%90%E8%A1%8C%E6%97%B6-%E7%BC%96%E8%AF%91%E5%99%A8-vs-%E5%8F%AA%E5%8C%85%E5%90%AB%E8%BF%90%E8%A1%8C%E6%97%B6)
 
@@ -554,7 +554,6 @@ watch: {
       const [idx0,idx1,idx2]=this.monitor.idxChain
     }
     ```
-    
 
 
 
@@ -668,15 +667,17 @@ Vue对象中methods属性的 属性 可以匿名函数为值，在Mustache中输
 
 # 样式
 
-
 ### v-bind:class
-标签中输入v-bind:class="{ a:b }"，b为真时class="a"；  
-v-bind:class="['a','b']"，class="a,b"；  
-v-bind:class=""中可直接写data中的属性名来调用（属性值可为数组可为对象）；  
-v-bind:class="[ a , b ]"，这种写法调用data中的a、b属性；a、b处也可以写三元表达式  
-以上两行亦可调用计算属性；  
-class的值可以直接写三元表达式  
-v-bind不会覆盖组件已有样式  
+
+- 不会覆盖组件已有类名
+
+- 有3种合法值
+  - 字符串
+  - 数组
+  - 对象  
+    属性值为true时加上类名
+
+
 
 
 ### v-bind:style
@@ -1294,7 +1295,7 @@ this就代表实例本身，也就是说：<b style='color:red'>实例对象===�
 
 - v-for元素及其后代元素中  
   取出ref元素都要在数组里取，<span style='color:red'>即使对应ref元素只有一个</span>  
-<span style='opacity:.5'>（即使用唯一值做ref值也一样）</span>
+  <span style='opacity:.5'>（即使用唯一值做ref值也一样）</span>
   
 - 找到 v-for中有ref的组件 的方法：
   `this.$refs.ref值[序号]`
@@ -1402,7 +1403,7 @@ mounted: function () {
 
   - 双向绑定  
     - 第一级属性  
-    默认不绑定，加上[sync](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)修饰符与对应事件后可以绑定  
+      默认不绑定，加上[sync](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)修饰符与对应事件后可以绑定  
       （[《sync教程》](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)有提到这种用法）  
     - 第二级属性  
       都会默认绑定，且不需要再写其他代码
@@ -1425,7 +1426,7 @@ mounted: function () {
   }  
   ```
   （这种方法修改子组件数据可以规避控制台警告，目前建议使用这种方式）
-让 继承数据 经过处理后再显示有三种方法：
+  让 继承数据 经过处理后再显示有三种方法：
 
 1. 直接在{{}}里写表达式，效果与第二点相同
   

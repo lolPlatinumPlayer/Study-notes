@@ -7,6 +7,7 @@
 - hrtGiltLab无法修改文件或目录的大小写  
   （无法检测到这个修改）  
   本地记录里显示的也是更名前的名字
+  - 在真真win10联想笔记本上可以检测到大小写变更
 
 # 基础知识
 
@@ -142,10 +143,6 @@
 
 
 
-# 初始化
-
-
-
 ### 全局设置
 
 ```cmd
@@ -155,7 +152,11 @@ git config --global user.email "417783514@qq.com"
 
 
 
-### `git init`
+# 初始化
+
+
+
+**`git init`**
 
 把这个目录变成Git可以管理的仓库（表述可能不正确）
 （内含工作区与版本库，.git文件夹以外都是工作区，.git是版本库）
@@ -171,8 +172,6 @@ git config --global user.email "417783514@qq.com"
 
 
 
-##### 初次连接服务端
-
 协议
 
 - https  
@@ -184,11 +183,6 @@ git config --global user.email "417783514@qq.com"
   推送不需要密码
 
 
-
-
-
-- 要生成密钥，并在服务端添加密钥，然后再来一些操作即可连接  
-  （这条可能对应的是SSH协议的）
 
 
 
@@ -212,7 +206,7 @@ git push -u origin master
 
 
 
-##### 已有本地仓库的话做如下操作
+##### 将已有的本地仓库连接远程仓库
 
 <span style='opacity:.5'>（下方内容已测试，都可用）</span>
 
@@ -249,39 +243,38 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
 
 
 
-
-
-
-
-
-
-
-
 ##### 将远程库克隆到本地
 
 `git clone 地址`
 
 这个`地址`都是以`.git`结尾的  
-会在输入命令时所在文件夹里新建一个文件夹  
+
+- 会在输入命令时所在文件夹里新建一个文件夹  
 
 - 只`clone`一个分支  
   `git clone -b branchA 地址`
 
-关于下载到的本地文件夹的名称
-
-- 指定名称  
-  `git clone 远程地址 文件夹名称`
-- 不指定名称  
-  会分配一个名称  
-  关于分配名称的规则看[官方说明](https://git-scm.com/docs/git-clone/zh_HANS-CN#git-clone-ltgt)  
-  根据经验看大多都是`.git`前的那级路径
+- 关于下载到的本地文件夹的名称
+  - 指定名称  
+    `git clone 远程地址 文件夹名称`
+  - 不指定名称  
+    会分配一个名称  
+    关于分配名称的规则看[官方说明](https://git-scm.com/docs/git-clone/zh_HANS-CN#git-clone-ltgt)  
+    根据经验看大多都是`.git`前的那级路径
+- [clone ssh](https://www.cnblogs.com/akidongzi/p/8366535.html)  
+  - 提示：↖这个博客里说的“~/.ssh 目录”就是类似`C:\Users\Administrator\.ssh`这样的路径
+  - hrtGitlab可以添加多个私钥
+  - 提示：公钥是以`ssh-rsa `开头的
+- hrt gitlab有次下下来用`git branch`命令只能看到master分支  
+  不过checkout到其他分支也会有其他分支的代码
 
 经验
 
 - 在文银电脑上clone Study-notes时，发现clone后里边没东西。再执行`git pull origin master`后才有东西
 
 - hrt的gitlab项目无法用http地址clone  
-
+  用个人笔记本也无法clone
+  
   - 在hrt电脑上用https来clone elementUI也是不行  
     报错如下：  
 
@@ -291,8 +284,6 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
     ```
 
     
-
-
 
 
 
@@ -429,10 +420,6 @@ git checkout 分支名 // 切换分支
 
 
 
-
-
-
-
 # 合并
 
 > 不像其他的版本控制系统，Git 并不会尝试过于聪明的合并冲突解决方案。 Git 的哲学是聪明地决定无歧义的合并方案 —— [《Pro Git》](https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E9%AB%98%E7%BA%A7%E5%90%88%E5%B9%B6)
@@ -544,10 +531,6 @@ bbbb
   2. `git add`有冲突的文件
 
   3. `git commit`
-
-
-
-
 
 
 
@@ -858,7 +841,6 @@ cd d:nospace/learngit
   比如说第10个至第15个commit间共更改了哪些内容，而不是看一个个commit分别改了哪些内容  
   （如果不行的话看看合并commit要怎么操作）
 
-  
   
 
 
