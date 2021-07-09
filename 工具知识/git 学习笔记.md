@@ -788,7 +788,9 @@ git commit -m 'xxx'
   同上，不过这个命令是在使用powershel时出现的，在git bash和powershell间反复操作后，最终在git bash上成功push  
   不成功是网页上的github无法访问，成功时网页上的github也能访问
 
-
+- 报错`error: invalid path`  
+  这是因为git仓库里部分文件用了windows下不可用的文件名  
+  - 部分不可用的文件名：aux、com1、com2、com3
 
 
 

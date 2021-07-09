@@ -1,5 +1,17 @@
 # android studio
 
+除了as外安卓开发还可以用Eclipse和IntelliJ作为编辑器
+
+- 需配合使用的工具
+  - jdk
+  - Android SDK  
+    [官网](https://developer.android.google.cn/studio/install?hl=zh-cn#windows)的安装视频里有下载Android SDK的选项  
+    但是2021.7.9下载的202.7486908版本android studio里并没有这个选项
+    - AS启动时如果没在默认位置检测到Android SDK  
+      会弹窗提示`Unable to access Android SDK add-on list`  
+      ![`Unable to access Android SDK add-on list`](https://img-blog.csdn.net/20180809133741180?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTAzNTgxNjg=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)  
+      可以百度到不少相关资料
+
 - 开启项目后gradle下半天的问题  
   开系统翻墙也不好使  
   - 解决方法：

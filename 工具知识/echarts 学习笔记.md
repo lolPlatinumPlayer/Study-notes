@@ -11,6 +11,7 @@
 
   - 开启：鼠标划过会高亮、点击图例可以选择显示的数据
   - 关闭：鼠标划过不会高亮、点击没有反应
+- [扩展插件列表](https://echarts.apache.org/zh/download-extension.html)
 
 
 
@@ -53,15 +54,25 @@
 - y轴的轴线默认是不显示的  
   [官网](https://echarts.apache.org/zh/option.html#yAxis.axisLine.show)默认显示的说法是错误的  
   如果对调2轴，则是x轴不显示（对调2轴指的是对调xAxis和yAxis的type）
-- 可以随意搞多个坐标轴  
-  比如这种写法:`yAxis[对象,对象]`  
-  甚至可以是空对象  
+  
+- 多个坐标轴
+
+  - 使用例子  
+    1. `yAxis[对象,对象]`  
+       可以是空对象
+    2. serie里加上`yAxisIndex`  
+       序号从0开始
+
   - 注意  
     第一个坐标轴里要有data  
     因为[提示框](https://echarts.apache.org/zh/option.html#tooltip)是依据第一个坐标轴的data显示的  
     （一次经验似乎第一个坐标轴没data也可以显示提示框）
   - 一次经验  
     min、max、interval都在第二个轴上加上才会出现双y轴
+
+- 常规情况下  
+  如果不用dataset的话x轴要传入data  
+  不然x轴下方不显示名称
 
 
 
@@ -172,8 +183,8 @@ rich:{
 
 ### 地图
 
-echarts也可以做gis应用，加上百度地图即可  
-[官方示例](https://echarts.apache.org/examples/zh/index.html#chart-type-map)在这  
+echarts也可以做gis应用，加上第三方地图即可  
+<span style='opacity:.5'>（[官方示例](https://echarts.apache.org/examples/zh/index.html#chart-type-map)在这）</span>  
 
 但是效果会差一点，[这个例子](https://echarts.apache.org/examples/zh/editor.html?c=map-polygon)体现了所有已知bug（可能是bmap的所有已知bug）  
 已知bug如下
@@ -186,7 +197,15 @@ echarts也可以做gis应用，加上百度地图即可
 
   
 
-不用百度地图的话似乎都是用geo配置或者gl，用的话似乎都是bmap配置
+不用第三方地图的话似乎都是用geo配置或者gl
+
+
+
+##### 第三方地图
+
+都需要插件，像百度地图需要[bmap](https://github.com/apache/echarts/tree/master/extension-src/bmap)  
+leaflet、mapbox、高德等也需要插件  
+可以去官网的[扩展插件列表](https://echarts.apache.org/zh/download-extension.html)里寻找相关内容
 
 
 
@@ -198,15 +217,20 @@ echarts也可以做gis应用，加上百度地图即可
 
 
 
-##### `geo`配置项
+##### geo与map serie
 
-这个配置项配的就是地图本身，要在地图上加效果的话要通过serie来实现
+map serie应该是geo的超集<span style='opacity:.5'>（因为map serie可以生成geo，所以这么说）</span>  
+不过一般情况下用geo就足够了，除非要修改显示的区域名或者做visualMap  
+可以通过map serie的[geoIndex配置项](https://echarts.apache.org/zh/option.html#series-map.geoIndex)将map serie和geo连起来
+
+
+
+###### `geo`配置项
 
 - 淡出（blur）  
   淡出效果颜色是残留的  
   （就是说鼠标划过后进入淡出状态，并且会一直保持）  
   但是残留的颜色并不是每块都是你给的颜色（bug）
-
 - 取消选中  
   默认情况下取消选中并不会还原成未选中的样式（bug）  
   [这篇博文](https://www.cnblogs.com/linfblog/p/12150971.html)有解决方式
@@ -216,14 +240,26 @@ echarts也可以做gis应用，加上百度地图即可
   1. 首先，注册地图时要在geojson的properties里设置好name
   2. 设置指定区域的样式时  
      需要在[`name`配置项](https://echarts.apache.org/zh/option.html#geo.regions.name)里输入指定区域的name
+- 设置区域名称的坐标  
+  geojson里的`properties.cp`就是坐标  
+  可以不填，不填echarts也会给你算一个坐标出来
+- 数据交互  
+  不连map serie的话没有传给geo数据的配置项  
+  连的话传map serie里就行了
+  - 鼠标划过显示数据<span style='opacity:.5'>（不连map serie的方案）</span>  
+    - 实现方法  
+      最外层tooltip配置的formatter回调可以获取到地图数据的name属性<span style='opacity:.5'>（地图数据指的是传给`echarts.registerMap`的geojson数据）</span>  
+      依据name属性就知道划过哪个区域，然后自己拼出需要展示的文本
 
 
 
-##### [map serie](https://echarts.apache.org/zh/option.html#series-map)
+###### [map serie](https://echarts.apache.org/zh/option.html#series-map)
 
 - 可以使用注册的地图  
   方法是：通过`map`配置项指定使用的地图
 - 可以用来画地图
+- 可以更改显示的区域名称  
+  通过`nameMap`配置项
 
 
 
@@ -323,13 +359,35 @@ echarts也可以做gis应用，加上百度地图即可
 
 
 
+### dataset
+
+有2个例子：[demo1](https://echarts.apache.org/examples/zh/editor.html?c=dataset-simple0)和[demo2](https://echarts.apache.org/examples/zh/editor.html?c=dataset-simple1)  
+demo1更合理
+
+- 表格形式的矩阵  
+  demo1就是  
+  左上角数值没发现作用，不过要求是字符串
 
 
-### [颜色](https://echarts.apache.org/zh/option.html#color)
+
+### 颜色
+
+##### [一级颜色配置项](https://echarts.apache.org/zh/option.html#color)
 
 可以下发
 
+##### 渐变色
 
+有2中写法：对象写法和实例写法
+
+- 对象写法  
+  要看具体配置支不支持  
+  具体写法去配置里看  
+  这里列出部分支持的配置：[项地图区域颜色](https://echarts.apache.org/zh/option.html#geo.itemStyle.areaColor)、[折线图颜色](https://echarts.apache.org/zh/option.html#series-line.itemStyle.color)
+
+- 实例写法  
+  `echarts.graphic.LinearGradient`  
+  在官网没找到文档
 
 ### [文本超出隐藏](https://echarts.apache.org/zh/option.html#series-pie.label.bleedMargin)
 
