@@ -63,7 +63,15 @@
     2. `cordova run android`  
        这时手机上就会提示有app可以安装了
 
+- ios  
 
+  - > 要求
+    >
+    > - 基于 Intel 的 Mac 上的 OS X 操作系统
+    > - Xcode® 11.0（最低要求版本）仅在 OS X 版本 10.14.4 (Mojave) 或更高版本上运行，并包含 iOS 13 SDK（软件开发工具包）
+    > - 要将应用程序提交到 Apple App Store℠，需要最新版本的 Apple 工具
+    >
+    > —— [官网](https://cordova.apache.org/docs/en/10.x/guide/platforms/ios/index.html#requirements-and-support)
 
 
 
