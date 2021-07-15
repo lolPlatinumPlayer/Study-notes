@@ -1,14 +1,58 @@
-【】需要整理，目前可读性还有很大提升空间
 
 
 
 
+这是第三版的笔记
+
+
+
+- > 第四版只支持Vue3 —— [第四版仓库](https://github.com/vuejs/vue-router-next)
+
+- 变量名意义
+
+  - `VueRouter`  
+    vue-router的node_module包导出的变量
+
+    - 导入方式  
+
+      ```js
+      import VueRouter from "vue-router"
+      ```
+
+      
 
 
 
 
 
 # 基础
+
+工程化的完整例子如下
+
+```js
+import Vue from "vue"
+import VueRouter from "vue-router"
+Vue.use(VueRouter)
+
+const router=new VueRouter({
+  routes:[
+    { 
+      name:'xx',
+      path: '/dd',
+      component: { template: '<div>foo</div>' } 
+    },
+  ]
+})
+
+new Vue({
+    // 其他内容
+    router,
+}).$mount('#app')
+```
+
+然后在`<router-view></router-view>`内就可以渲染路由了
+
+
 
 - vue-router直接引入不支持ie9，不过听说用工程化的方法使用的话是支持的
 
@@ -21,14 +65,19 @@
   }).$mount('#app')
   ```
 
-  
+
+
 
 
 
 ### 定义路由
 ```javascript
 const routes = [
-    { name:'xx',path: '/dd', component: { template: '<div>foo</div>' } },
+    { 
+        name:'xx',
+        path: '/dd',
+        component: { template: '<div>foo</div>' } 
+    },
 ]
 ```
 - `name`值可以带`.`带数字
@@ -47,10 +96,18 @@ const router = new VueRouter({
 
 
 
-### `router-link`
+### [`router-link`](https://router.vuejs.org/zh/api/#router-link)
 
-- `router-link`会被渲染为a标签，router-link标签中to属性的值代表路由（跳转到的组件）。to属性值必须以/开头且不能以/结尾。
+- `router-link`标签中to属性的值代表路由（跳转到的组件）
+  - to传入字符串时  
+    必须以/开头且不能以/结尾
+  - to传入对象时  
+    对象和`router.push()`里的一致
 - `router-link`要加点击事件的话要写`@click.native`，而且直接写语句的话就算加了箭头函数也是没有this
+- 渲染标签  
+  默认会被渲染为a标签  
+  要修改渲染的标签的话要用[tag属性](https://router.vuejs.org/zh/api/#tag)  
+  <span style='opacity:.5'>（提醒：用is不行，用is的话就已经不是`router-link`标签了）</span>
 
 
 
@@ -200,43 +257,50 @@ const router = new VueRouter({
 
 
 
-### 命名路由
-
-路由除了之前带/的字符串格式，还可以是对象形式，不过要在 to 前加上冒号 “:” 。如：
-<router-link :to="{ name: 'user', params: { userId: 123 }}">User</router-link>（和带/的字符串格式一样拥有查询和传递数据功能）
-对象形式可以用name来跳转，例子中的params对象在跳转时带了一个名值对，将userId的值设置为123。
-
-
-
-
-
 
 
 ### 重定向
 
-routes的redirect属性，值是另一个path的值，发起原path路由后效果将完全和发起redirect中path一样。如果重定向不是依赖hash或者query的话，定向前的hash或者query会保留到定向后。
-也可以用name重定向，例子： redirect: { name: 'foo' } 。
-根据params重定向：
-path: '/aa/:xx', redirect: '/bb/:xx'
-为所有不存在于routes中的路由重定向：
-path: '*', redirect: '/foo'
-（去掉redirect，加上component的话，能将不存在的路由渲染出东西）
-动态返回重定向目标，格式：
-path: '/xxx/:id?',
-redirect: to => {
-    const { hash, params, query } = to
-    if (query.to === 'foo') {//后面只跟?to=foo的跳到了foo
-        return { path: '/foo', query: null }
-    }
-    if (hash === '#baz') {//hash值为baz的定向到了这里
-        return { name: 'baz', hash: '' }
-    }
-    if (params.id) {
-        return '/with-params/:id'//只带ID的跳到了这个
-    } else {
-        return '/bar'//什么都没加跳到了这个
-    }
-}
+routes的redirect属性
+
+- 值要求是另一个path的值
+
+- 发起原path路由后效果将完全和发起redirect中path一样
+
+- 如果重定向不是依赖hash或者query的话，定向前的hash或者query会保留到定向后。
+
+- 也可以用name重定向  
+  例子： `redirect: { name: 'foo' } `
+
+- 根据params重定向：  
+  `path: '/aa/:xx', redirect: '/bb/:xx'`
+
+- 为所有不存在于routes中的路由重定向：  
+  `path: '*', redirect: '/foo'`  
+  （去掉redirect，加上component的话，能将不存在的路由渲染出东西）
+
+- 动态返回重定向目标  
+  格式：
+
+  ```js
+  path: '/xxx/:id?',
+  redirect: to => {
+      const { hash, params, query } = to
+      if (query.to === 'foo') {//后面只跟?to=foo的跳到了foo
+          return { path: '/foo', query: null }
+      }
+      if (hash === '#baz') {//hash值为baz的定向到了这里
+          return { name: 'baz', hash: '' }
+      }
+      if (params.id) {
+          return '/with-params/:id'//只带ID的跳到了这个
+      } else {
+          return '/bar'//什么都没加跳到了这个
+      }
+  }
+  ```
+
+  
 
 ### 别名
 
@@ -299,13 +363,36 @@ router.beforeEach((to, from, next) => {
 
 ### 导航钩子
 
-相当于路由的生命周期钩子，注册分三种情况：全局、路由独享、组件独享。  
-有三种钩子：beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave。  
-beforeRouteEnter例子：  
-`beforeEach((to, from, next) => { ... })`  
-`to`代表下一个路由，`from`是跳转前路由。加点后面可以跟上 路由信息对象属性，并且可以打印出来。`query`和`params`可以再点下一级属性。  
-钩子中一定要有`next()`才会正常到下一步，`next(false)`就是不到下一步（目前测试结果和不写`next()`没区别）。  
-`next()`也可以用来路由，有两种写法：1、`next('/xx')` 2、`next({name:'xx'})`。（路由后会执行那个路由的钩子，如果有的话）
+（[2018年的文档](https://github.com/vuejs/vue-router/blob/ca2561f79345c136eccb146caaefe75d78f5855e/docs/zh/advanced/navigation-guards.md)就称为导航守卫）
+
+相当于路由的生命周期钩子
+
+注册分三种情况：全局、路由独享、组件独享  
+
+- [组件独享（组件内的守卫）](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E7%BB%84%E4%BB%B6%E5%86%85%E7%9A%84%E5%AE%88%E5%8D%AB)  
+  这里说的组件就是普通的vue组件
+
+  - 有三个钩子：beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave  
+
+  - beforeRouteEnter例子：  
+
+    ```js
+    mounted() {},
+    beforeRouteEnter(to, from, next)  {
+      debugger 
+      next()
+    },
+    ```
+    `to`代表下一个路由，`from`是跳转前路由。  
+    加点后面可以跟上 路由信息对象属性，并且可以打印出来。`query`和`params`可以再点下一级属性。  
+    钩子中一定要有`next()`才会正常到下一步，`next(false)`就是不到下一步（目前测试结果和不写`next()`没区别）。  
+    `next()`也可以用来路由，有两种写法：
+
+    1. `next('/xx')` 
+    2. `next({name:'xx'})`。
+
+- 路由后会执行那个路由的钩子  
+  （如果有的话）
 
 
 
@@ -375,8 +462,9 @@ if (to.hash) {
 - vue-router每次跳转到一个组件都会触发组件的`mounted`方法  
   离开一个组件都会执行`beforeDestroy`和`destroyed`方法
   - [在同组件不同路由间调整时不会触发钩子](https://router.vuejs.org/zh/guide/essentials/dynamic-matching.html#%E5%93%8D%E5%BA%94%E8%B7%AF%E7%94%B1%E5%8F%82%E6%95%B0%E7%9A%84%E5%8F%98%E5%8C%96)
-- 路由配置中无法配置params  
-  配置query也只能加到path里才能生效  
+- 路由配置中配置params不生效（用router-link、router.push形式可以带）  
+  配置query也只能加到path里才能生效（用属性形式不生效）  
+  用属性形式配meta生效   
   （路由配置指的是实例化`'vue-router'`时的`routes`参数）
 - 刷新页面后params居然还在
 

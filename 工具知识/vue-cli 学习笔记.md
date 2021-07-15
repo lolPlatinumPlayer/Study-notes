@@ -165,33 +165,63 @@ vue-cli含有模板：https://github.com/vuejs-templates
   不加并不会导致source map出现问题，不论在同名vue文件还是js文件里打断点，出现位置都是正确的  
   控制是否增加随机字符串的配置项是[filenameHashing](https://cli.vuejs.org/zh/config/#filenamehashing)
   
-- 代理  
+- [代理](https://cli.vuejs.org/zh/config/#devserver-proxy)
   
   > 使用[http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware#proxycontext-config)实现了代理 —— [官网](https://cli.vuejs.org/zh/config/#devserver-proxy)
   
-  - 代理全部内容又加其他代理配置的写法  
-  例子如下：  
-    
+  代理需要在配置和请求2个地方共同操作，才能实现代理
+  
+  - 代理全部内容的配置  
+  
     ```js
     devServer: {
-      port: 9090,
-      proxy:{
-        '/':{
-          target: proxyUrl,
-        }
-      },
+      proxy:请求发往的地址,
     }
     ```
-  ```
     
-    [这里](https://github.com/chimurai/http-proxy-middleware#context-matching)写的`'**'`并不好使
+    - 如果要加其他配置的话这要写  
+    
+      ```js
+      devServer: {
+        proxy:{
+          '/':{
+            target: 请求发往的地址,
+          }
+        },
+      }
+      ```
+    
+      [http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware#context-matching)说的`'**'`并不好使
     
   - 需要走代理的请求的写法  
   
-    - axios的BaseUrl设为`'./'`  
-      设成空串似乎也可以走代理——网友
-  ```
-
+    - axios的baseURL设为`'./'`或者不设  
+      （可能不用axios也可以代理，只要请求路径是相对地址就行）
+      
+      > 设成空串似乎也可以走代理——网友
+    
+  - 代理部分接口的配置  
+  
+    ```js
+    proxy: {
+      "/请求中包含的地址": { // 这个地址出现在请求任意位置都可以
+        target: `${baseUrl}`, 
+        /* pathRewrite: {
+           "^/bigdata": "/bigdata",
+        }, */
+      },
+    },
+    ```
+  
+    - 注释起来的部分不知道作用  
+      不过就算"/请求中包含的地址"不是请求的开头  
+      放开注释之后也可以正常运作
+  
+  - 注意  
+    axios的baseURL设为`'./'`或者不设的接口走的肯定是本地地址  
+    所以 **走本地地址并不代表被代理**  
+    没被代理的接口的状态码为404
+  
 - [调整webpack配置](https://cli.vuejs.org/zh/guide/webpack.html)  
 
   - 通过给`configureWebpack`赋值对象确实可以调整，不过容易出错（目前没有符合预期地运行过）  

@@ -202,3 +202,7 @@ Page选项卡
 - 缩放  
   chrome89的缩放并不是整页放大，而是把页面上的内容放大（可能就是把各个长度单位放大）  
   firefox80在模拟设备尺寸时是整页放大，其它时候和chrome一致
+- 同步帐号数据  
+  Proxy SwitchyOmega里选择diy proxy即可  
+  有时候在[数据页面](https://chrome.google.com/sync?hl=zh-CN)一直刷新也不会同步  
+  重开浏览器即可

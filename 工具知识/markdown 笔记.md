@@ -282,8 +282,19 @@
           * [个人教程](ch1/handbook.md)
     ```
 
+- vuepress  
+  [vue3文档](https://github.com/vuejs/docs-next-zh-cn)应该就是用vuepress转的
+
+- [vue-router3](https://github.com/vuejs/vue-router/tree/dev/docs/zh)的文档就是用md写的  
+  估计也是用vuepress
+
+- docsify  
+  能把md转为网站
+
 - [看云](https://help.kancloud.cn/41497)  
   还未研究
+  
+- webpack有md相关的loader
 
 # 待研究内容
 
