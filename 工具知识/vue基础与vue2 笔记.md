@@ -874,6 +874,26 @@ out-in: 离开过渡完成后开始进入过渡
       }
     }
     ```
+    
+  - 一个特别的用法  
+  
+    ```vue
+    <style lang="less" scoped>
+        /deep/.van-tabs__wrap{
+            height: 90px;
+        }
+    </style>
+    ```
+  
+    编译后的样式如下  
+  
+    ```css
+    [data-v-09865096] .van-tabs__wrap {
+        height: 90px;
+    }
+    ```
+  
+    
   
   
 
@@ -1253,27 +1273,35 @@ methods: {
 
 
 
-##### this
+实例里this就代表实例本身
 
-实例中this会代理data、computed、method
-可以用于钩子、method、computed中
-this就代表实例本身，也就是说：<b style='color:red'>实例对象===实例内的`this`</b>
-
-
-
-- 获取到指定的vue组件实例的方法  
-  - `this.$parent`
-  
-  - `this.$children`  
-  
-    > `this.$children`的排序是不确定的，不建议使用 —— 郑涛
-  
-  - `this.$refs`
-  
-  - 访问根实例  
-    `this.$root`
+- 通过实例找到prop  
+  在`_prop`属性上可以找到全部的prop值（包括没传的）
+- 通过实例找到name  
+  `$options.name`  
+  （部分组件上`$options.componentName`也是，elementUI的表单类组件就有）  
+  而`$options._componentTag`是模板里的标签名
 - 实例名.$el.textContent = 该实例dom里所有文本内容   
   ？？？
+
+
+
+##### 获取到指定的vue组件实例的方法  
+
+- `this.$parent`
+
+- [`this.$children`](https://cn.vuejs.org/v2/api/#vm-children)  
+
+  > 当前实例的直接子组件
+  >
+  > 不保证顺序
+  >
+  > —— [官网](https://cn.vuejs.org/v2/api/#vm-children)  
+
+- `this.$refs`
+
+- 访问根实例  
+  `this.$root`
 
 
 

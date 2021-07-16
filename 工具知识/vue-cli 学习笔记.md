@@ -195,10 +195,8 @@ vue-cli含有模板：https://github.com/vuejs-templates
     
   - 需要走代理的请求的写法  
   
-    - axios的baseURL设为`'./'`或者不设  
+    - axios的baseURL设为`'./'`或者空串或者不设  
       （可能不用axios也可以代理，只要请求路径是相对地址就行）
-      
-      > 设成空串似乎也可以走代理——网友
     
   - 代理部分接口的配置  
   
@@ -218,7 +216,7 @@ vue-cli含有模板：https://github.com/vuejs-templates
       放开注释之后也可以正常运作
   
   - 注意  
-    axios的baseURL设为`'./'`或者不设的接口走的肯定是本地地址  
+    axios的baseURL设为`'./'`或者空串或者不设的接口走的肯定是本地地址  
     所以 **走本地地址并不代表被代理**  
     没被代理的接口的状态码为404
   
