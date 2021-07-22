@@ -1439,7 +1439,7 @@ a.unshift('a','b','c')
 
 
 ### splice
-`arr.splice(index,howmany,item1,.....,itemX)`
+`arr.splice(index,howmany,item1,item2,不定数量的item,itemN)`
 从数组中添加/删除项目，然后返回被删除的项目，会改变原数组
 
 1. `index`  
@@ -1450,7 +1450,7 @@ a.unshift('a','b','c')
    > 如果被省略了，或者它的值大于等于`array.length - start`(也就是说，如果它大于或者等于`start`之后的所有元素的数量)，那么`start`之后数组的所有元素都会被删除。
    >
    > —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/splice#%E5%8F%82%E6%95%B0)
-1. `item1, ..., itemX`	  
+1. `item1,item2,不定数量的item,itemN`	  
    向数组添加的新项目  
    （可以省略）
 
@@ -1507,7 +1507,7 @@ a.unshift('a','b','c')
 只有字符串或数组能调用这个方法
 
 - 数组调用的话  
-  `数组1.concat(数组2,数组3,......,数组n)`
+  `数组1.concat(数组2,数组3,任意数量的数组,数组n)`
   该方法返回一个数组  
   新数组的元素是调用该方法的数组及参数中所有数组的元素  
   元素的顺序与调用该方法中各数组的顺序一致  
@@ -1528,10 +1528,10 @@ a.unshift('a','b','c')
   输入负数则代表从末尾开始数（-n代表倒数第n个）  
   返回数组子项顺序与原数组一致  
   （原数组不会被改变）
-- 如果end过大，那就截到数组最后一位
-  
-  - 复制数组  
-  不输入参数
+  - 如果end过大，那就截到数组最后一位
+    
+    - 复制数组  
+    不输入参数
   
 - 字符串  
   规则与数组的类似  
@@ -1673,11 +1673,19 @@ js中的正则表达式就是`RegExp`对象
   
   
 # 正则核心
-- 正则的`[]`几乎可以把中间所有原来有功能的符号转为无功能的（包括空格，中间加`]`是不行的，`]`直接写就能匹配。webstorm中`[[]`都是不行的，webstorm里要写成`\[`）  
+- 匹配在正则中有功能的符号  
+   `[]`几乎可以把中间所有原来有功能的符号转为无功能的（包括空格，中间加`]`是不行的，`]`直接写就能匹配。webstorm中`[[]`都是不行的，webstorm里要写成`\[`）  
    （[微信公众号](https://mp.weixin.qq.com/s/nTXcPdrqW4H-g8baKlWXrw)上说是反义的说法不对）  
-   - 只能包裹一个字符  
+   - 该目的下只能包裹一个字符  
      包裹多个字符的时候判断结果是错的  
      比如`/[$]initData[$]/`就能正确发挥作用而`/[$initData$]/`不能
+- 匹配区间  
+   （比如说匹配数字1到3之间的任意数字）  
+   语法示例如下
+   - `/[a-z]/`  
+     所有小写字母
+   - `/[a-zA-Z]]/`  
+     所有字母
 - **不包含**  
    `(?!不想包含的内容).`  
    `.`应该可以换成其他代表数量的符号？？`.`不代表数量吧
@@ -1688,7 +1696,6 @@ js中的正则表达式就是`RegExp`对象
   php方法：`\x80-\xff`  
 - `+`和`* `  
    `*`匹配重复任意次(可能是0次)，而 `+`则匹配重复1次或更多次。 ——https://mp.weixin.qq.com/s/nTXcPdrqW4H-g8baKlWXrw
-
 - 或  
   `|`  
   [微信公众号](https://mp.weixin.qq.com/s/nTXcPdrqW4H-g8baKlWXrw)里搜索“分枝条件”查看更多内容
@@ -2331,7 +2338,7 @@ setTimeout(() => foo = 'baz', 500);
     如果要在这些代码全部执行完毕后执行其他代码，只需要对这些`promise`进行`Promise.all`就行（`promise`里有要`resolve`）
 3. ```javascript
         async function getBorderCanvas({width,height,lineWidth,color}) {
-            // ......
+            // 其他代码
             const afterLoading= new Promise((resolve) => {
                 let img = new Image()
                 img.src ='resource/border-img.png'
@@ -2704,6 +2711,8 @@ function a(p0,p1='p1'){
     1. 将字符串转为数组
     `[...'hello']` // [ "h", "e", "l", "l", "o" ]
 （更多内容见http://es6.ruanyifeng.com/#docs/array#扩展运算符）
+    
+- 可运用于`undefined`
 
 # 装饰器
 

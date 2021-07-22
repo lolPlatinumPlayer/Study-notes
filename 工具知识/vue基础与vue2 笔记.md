@@ -56,17 +56,32 @@
 
 特性
 
-- keep-alive中的组件用v-if显隐后data也不会丢失
+- keep-alive直接对组件的显隐效果感觉和v-show一样
+
+  - 显隐后data不会丢失
+  - 显隐组件中有echarts容器，图表不会丢失
+
+- 如果显隐dom，dom后代上有组件  
+  那显隐后会丢失组件里的echarts画面
+
+- keep-alive有时会导致后代的非组件内容丢失  
+  例子：slot上加v-if
+
 - keep-alive中的组件用v-if===false后在devtools里有特别的显示方式  
   会变成半透明，且背后带个“inactive”标签
+  
 - keep-alive中对于同一个组件  
   一个时间里只会显示1个，加key也不好使
+  
 - 可以写规则筛选哪些组件缓存哪些不缓存  
   规则可以用数组（字符串形式也可以）或正则来写
+  
 - 从[博客A](https://blog.csdn.net/fu983531588/article/details/90321827)看来  
   （以下内容并未实践）
   - keep-alive中的组件比其他组件多一些生命周期钩子
   - 可以配合vue-router使用
+  
+  
 
 
 
@@ -1597,6 +1612,11 @@ mounted: function () {
   - `<template slot="插槽名">xxx</template>`
   - `<template v-slot:插槽名>xxx</template>`
   - `<template #插槽名>xxx</template>`
+- 不能使用v-show  
+  [慕课网](https://www.imooc.com/article/details/id/25193)上有人说尤雨溪已经回复过这个问题  
+  - 替代方案  
+    `keep-alive`加`v-if`
+- slot上的style不会传递下去
 
 疑似bug：
 
@@ -2438,6 +2458,12 @@ iview3组件的事件名真的和文档写的医院，都带`on-`
 
 - [输入框组件](https://vant-contrib.gitee.io/vant/#/zh-CN/field)在van-cell-group组件中的效果和van-cell一致  
 （[文档](https://vant-contrib.gitee.io/vant/#/zh-CN/field)里只有组合用的demo但并没有说这一点）
+  
+- [标签页组件](https://vant-contrib.gitee.io/vant/#/zh-CN/tab)的转场动画有bug  
+
+  - 会导致所有标签页的高度一致
+  - 来回切换后会导致多页拼在一起  
+    并且可以用手指滑动到下一页
   
   
   

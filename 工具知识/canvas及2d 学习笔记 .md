@@ -27,7 +27,7 @@
 第一次使用`getContext`方法时就确定了上下文（比如说第二次使用`getContext`方法时不管第二个参数怎么传，其实都是没什么卵用的）
 
 一个canvas只能`getContext`一种类型（2d、webgl、webgl2、bitmaprenderer）  
-后`getContext`其他类型的话只会返回`null`。
+在第一次`getContext`后，如果`getContext`其他类型，那都是返回`null`
 
 - 上下文对象里存有canvas dom  
   存在名为`canvas`的属性里

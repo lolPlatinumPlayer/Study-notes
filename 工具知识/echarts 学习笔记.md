@@ -7,11 +7,9 @@
 - 图表内容是否靠两边  
   由[boundaryGap](https://echarts.apache.org/zh/option.html#xAxis.boundaryGap)控制
 
-- [开关图例的交互能力](https://echarts.apache.org/zh/option.html#legend.selectedMode)  
-
-  - 开启：鼠标划过会高亮、点击图例可以选择显示的数据
-  - 关闭：鼠标划过不会高亮、点击没有反应
 - [扩展插件列表](https://echarts.apache.org/zh/download-extension.html)
+
+
 
 
 
@@ -160,16 +158,16 @@ rich:{
 
 
 
-### 事件
+### [事件](https://echarts.apache.org/zh/api.html#events)
 
 可以监听各种事件  
 
+- [监听事件](https://echarts.apache.org/zh/api.html#echartsInstance.on)
 - 事件的返回内容
   - “鼠标事件”  
     在[“鼠标事件”的最上方](https://echarts.apache.org/zh/api.html#events.%E9%BC%A0%E6%A0%87%E4%BA%8B%E4%BB%B6)有描述
   - 其他事件  
     其他事件里的`ACTION`就是返回内容
-
 - [“鼠标事件”](https://echarts.apache.org/zh/api.html#events.%E9%BC%A0%E6%A0%87%E4%BA%8B%E4%BB%B6)  
   文档里说的“鼠标事件”其实只包含“图表主体”的鼠标事件  
   图例等内容不会触发这些事件
@@ -177,7 +175,12 @@ rich:{
   触发时机有2个：鼠标划过图例、点击图例  
   从返回内容里无法区分是哪种触发情况
 - downplay  
-  和hightlight一样，只不过hixxx是开始时触发，而dwxxx是结束时触发
+  和hightlight一样，只不过highlight是开始时触发，而downplay是结束时触发
+
+- 可以触发交互事件  
+  [文档](https://echarts.apache.org/zh/tutorial.html#ECharts%20%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%92%8C%E8%A1%8C%E4%B8%BA)里搜索“代码触发 ECharts 中组件的行为”可以看到相关内容  
+  并且有个[demo](https://echarts.apache.org/examples/zh/editor.html?c=doc-example/pie-highlight)
+  - 无法手动触发点击事件
 
 
 
@@ -286,6 +289,8 @@ map serie应该是geo的超集<span style='opacity:.5'>（因为map serie可以�
     在同一个坐标系里显示多个折线图时  
     让一条线的值凌驾于另一些线上  
     用文字描述比较抽象，去[`stack`属性](https://echarts.apache.org/zh/option.html#series-line.stack)里看demo比较好理解
+- `showSymbol`配置项  
+  默认为`true`，但是传入undefined的话不显示节点
 
 
 
@@ -384,12 +389,62 @@ demo1更合理
   要看具体配置支不支持  
   具体写法去配置里看  
   这里列出部分支持的配置：[项地图区域颜色](https://echarts.apache.org/zh/option.html#geo.itemStyle.areaColor)、[折线图颜色](https://echarts.apache.org/zh/option.html#series-line.itemStyle.color)
-
 - 实例写法  
   `echarts.graphic.LinearGradient`  
   在官网没找到文档
 
+
+
 ### [文本超出隐藏](https://echarts.apache.org/zh/option.html#series-pie.label.bleedMargin)
+
+
+
+### 单独设置每一项  
+
+<span style='opacity:.5'>（比如说柱状图每个柱子不同颜色）</span>
+
+`serie.data`写子项为对象的数组
+
+- 可以和集体设置的配置重复  
+  会自动合并  
+  （比如说集体设置了`label.show:true`，单独设置了`label.color`，那这2项都会保留）  
+  如果最枝叶的属性都重复的话，会使用data里的
+- 设置折线图的showSymbol无效  
+  替代方案：设置symbolSize
+
+
+
+### 图例
+
+- [开关图例的交互能力](https://echarts.apache.org/zh/option.html#legend.selectedMode)  
+
+  - 开启：鼠标划过会高亮、点击图例可以选择显示的数据
+  - 关闭：鼠标划过不会高亮、点击没有反应
+
+- 设置图例图标的形状  
+  icon、itemWidth、itemHeight、  
+
+  - 以下内容设了没有变化  
+
+    - borderRadius
+
+    - ```js
+      itemStyle:{
+        decal :{
+          symbol:'circle'
+        }
+      }
+      ```
+
+- data中一项不设或设为空串  
+  那图例里不会显示这一项  
+  tooltip里会显示
+  
+- 文本  
+
+- 文本的样式  
+  可以用[富文本标签](https://echarts.apache.org/zh/option.html#legend.textStyle.rich)  
+  要注意官方例子是错误的（例子里写在label配置里，实际上没有这个配置）
 
 
 
@@ -417,6 +472,7 @@ demo1更合理
     一开始设置了`yAxis.max`，后续渲染如果没有max的话就会消失，再渲染有max的话就会又出现  
   - 重复渲染：  
     指的是对于同一个元素从头走一遍代码  
+- 在折线图的data里设置showSymbol无效
 
 
 
@@ -432,19 +488,11 @@ demo1更合理
     - yAxis.max与markLine值相等
     - 图表数据有多项null，有2项为数值，且数字比yAxis.max大
     - 有通过从头走一遍代码的方式来更新视图
+  
 - [雷达图serie的itemStyle属性](https://echarts.apache.org/zh/option.html#series-radar.itemStyle)部分无效  
   无效部分为border系列的属性
-
-
-
-### 未归类
-
-- 单独设置每一项  
-  <span style='opacity:.5'>（比如说柱状图每个柱子不同颜色）</span>  
-  `serie.data`写子项为对象的数组
-  - 可以和集体设置的配置重复  
-    会自动合并  
-    （比如说集体设置了`label.show:true`，单独设置了`label.color`，那这2项都会保留）
+  
+  
 
 
 
