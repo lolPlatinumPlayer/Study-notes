@@ -17,13 +17,15 @@
 - try catch可以避免Fatal error的阻塞
 - Parse error（解析错误）会导致整个php脚本失效，情况有：（不加 ; 、使用类似 1=1+1; 语句等）
 - 自定义错误处理器无法处理Parse error和Fatal error
-  
 ## 头部
+
+这些代码写在最外层就行（已测php7.3）
 
 - **跨域**
 
   ```php
-  header("Access-Control-Allow-Origin: http://127.0.0.1:8080 （星号代表所有）");
+  header("Access-Control-Allow-Origin: http://127.0.0.1:8080");
+  // 星号代表所有↑
   header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
   header('Access-Control-Allow-Headers:x-requested-with,content-type');
   header('Access-Control-Allow-Credentials:true');
@@ -155,7 +157,6 @@ php接收字段中有数组的话，接收后赋值给变量的都会变成php�
   - CURDATE()以'YYYY-MM-DD'的格式返回今天的日期，可以直接存到DATE字段中。 
   - CURTIME()以'HH:MM:SS'的格式返回当前的时间，可以直接存到TIME字段中。 
 - 部分存在godaddy数据库里的中文不能查看到正确文字，但是不影响读取
-  
 
 ## 猜测
 
