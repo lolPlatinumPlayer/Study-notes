@@ -844,73 +844,7 @@ transition标签中的mode属性，值可为
 in-out: （默认）离开过渡与进入过渡同时进行
 out-in: 离开过渡完成后开始进入过渡
 
-
-
-### 样式作用域
-
-更多内容看[官方文档](https://vue-loader.vuejs.org/zh/guide/scoped-css.html)
-
-使用方式：在`style`标签上增加`scoped`属性
-
-效果：
-
-- `style`标签内的样式将只作用于当前组件
-
-原理：
-
-- 在一个作用域内给所有覆盖到的html标签加上相同的 『随机属性』  
-  在样式的最后一级也加上这个『随机属性』  
-  这样就能实现作用域
-
-注意：
-
-- 加`scoped`后外部还是能控制内部样式的
-- 『随机属性』加不到渲染函数渲染出的标签上
-- 『随机属性』会加到`slot`标签间的内容
-
-更多
-
-- [深度作用选择器](https://vue-loader.vuejs.org/zh/guide/scoped-css.html#%E6%B7%B1%E5%BA%A6%E4%BD%9C%E7%94%A8%E9%80%89%E6%8B%A9%E5%99%A8)  
-  `>>>`或`/deep/`或`::v-deep`  
-  
-  - 在样式里加『随机属性』属性时加在深度作用选择器前面的那个元素上  
-  
-  - 深度作用选择器之后的内容编译成css后，都不会带『随机属性』
-  
-  - 深度作用选择器会被编译成一个后代选择器（也就是` `）  
-    （hrt的sxy系统与ptxy系统中只能用`::v-deep`）  
-    （hrt的sxy系统与ptxy系统中`.a::v-deep.b`并不会编译成`.a .b`，要自己在中间加上空格才行，不过下面这种情况会编译出后代选择器）  
-  
-    ```scss
-    .el-select{
-      width: 100%;
-      ::v-deep.el-input__suffix{
-        display: none;
-      }
-    }
-    ```
-    
-  - 一个特别的用法  
-  
-    ```vue
-    <style lang="less" scoped>
-        /deep/.van-tabs__wrap{
-            height: 90px;
-        }
-    </style>
-    ```
-  
-    编译后的样式如下  
-  
-    ```css
-    [data-v-09865096] .van-tabs__wrap {
-        height: 90px;
-    }
-    ```
-  
-    
-  
-  
+- 
 
 # 判断与循环
 
@@ -1105,7 +1039,22 @@ methods: {
   </template>
   ```
 
-  
+- 模板里可以用非响应式的数据  
+  （非响应式数据指的是：通过类似`this.a=1`这种方式声明的数据）  
+
+  - 非响应式数据的变更不会触发视图更新  
+    不过更新视图的时候也会按照非响应式数据的当前值来  
+    （就是说非响应式数据变更在视图上也是有意义的）
+  - 声明时机的要求
+    - 至少在mounted钩子执行后数据要存在  
+      否则非响应式数据无法在一开始就影响视图  
+      不过后续是可以影响的
+    - 报错  
+      - 在mounted钩子执行前如果数据不存在会报错  
+        （意思是在mounted钩子里声明也会报错）  
+        报错颜色为红色，内容的第一句话为`Property or method "a" is not defined on the instance but referenced during render` 
+      - 在mounted之前的钩子声明不会报错  
+        （完整的钩子列表为：data、beforeCreate、created、beforeMount）
 
 
 
@@ -1225,50 +1174,6 @@ methods: {
   官方提示是：要符合html标签命名规则，同时又不能是html已有标签名
 - `Vue.extend`似乎也可以注册  
   看这个[例子](http://jsfiddle.net/6x2v9y20/24/)
-
-### [单文件组件](https://cn.vuejs.org/v2/guide/single-file-components.html)
-
-组件可以单文件化，放进`.vue`文件里
-
-- 可以把模板、样式、js分成3个文件  
-  示例代码如下：
-
-  ```vue
-  <template>
-    <div>This will be pre-compiled</div>
-  </template>
-  <script src="./my-component.js"></script>
-  <style src="./my-component.css"></style>
-  ```
-
-
-
-- src 导入要遵循和require() 调用一样的路径解析规则，也就是说需要用以 ./ 开头的相对路径，引用npm资源的话不用加 ./
-- .vue文件的编写
-  - 一整个文件就是一个组件，所以不能用vue实例。
-  - 与普通组件不同之处是最外层组件是包裹在 export default中，用
-  - name属性代表组件名称。
-  - 单文件组件中要使用全局组件的话，要先import Vue from 'vue'  
-    - 一次测试发现不是这样  
-      - 测试环境  
-        在main.js里`Vue.component`了
-      - 测试时间  
-        2021.5.18
-- 单文件组件的使用
-  要先 import componentName from './fileName.vue'
-  然后再在引入文件的components属性中写上componentName，之后组件就能正常使用了
-  （componentName与被引入文件中代码无关）
-
-
-
-- .vue文件生成的就是一个配置对象  
-  （vue组件实例的配置对象）
-
-
-
-
-
-更多内容看[Vue 单文件组件 (SFC) 规范](https://vue-loader.vuejs.org/zh/spec.html)及[vue-loader指南](https://vue-loader.vuejs.org/zh/guide/)
 
 
 
@@ -1394,7 +1299,9 @@ mounted: function () {
     如果模板里依赖mounted里才制造的数据的话是有问题的，因为模板先于mounted渲染  
     解决方法是放在beforeMount里
   
-- updated：data变更时调用*【】未实测、未测试prop改变的情况、未测试data变而视图不变的情况*
+- beforeUpdate与updated  
+  有在模板里用的data改变后就会触发  
+  就算不会触发任何dom操作也会触发这2个生命周期
 
 - 疑似bug：mounted中如果引用methods中函数前有语句的话，会报错  
   解决方法：在这些函数后面加上分号“;”
@@ -1746,6 +1653,127 @@ mounted: function () {
 ### 组件教程更新未看内容
 
 [这](https://cn.vuejs.org/v2/guide/components-edge-cases.html#%E7%A8%8B%E5%BA%8F%E5%8C%96%E7%9A%84%E4%BA%8B%E4%BB%B6%E4%BE%A6%E5%90%AC%E5%99%A8)及之后
+
+
+
+# [单文件组件](https://cn.vuejs.org/v2/guide/single-file-components.html)（SFC）
+
+- 可以把模板、样式、js分成3个文件  
+  示例代码如下：
+
+  ```vue
+  <template>
+    <div>This will be pre-compiled</div>
+  </template>
+  <script src="./my-component.js"></script>
+  <style src="./my-component.css"></style>
+  ```
+
+- 可以写多个style标签
+- src 导入要遵循和require() 调用一样的路径解析规则，也就是说需要用以 ./ 开头的相对路径，引用node_modules资源的话不用加 ./
+- 和普通js组件的区别  
+  - 可以把css和组件代码放在一个文件里
+  - 导出的对象会比配置多一些内容  
+    没有template属性，有render属性  
+    也是一个普通对象（构造函数就是Object）
+  - 本笔记下方“export default”记录的内容
+- 导出组件
+  - export default  
+    这种方式导出的组件可以不写template属性  
+    template标签就代表了模板
+  - export  
+    用这种方式导出的组件和普通js文件里导出没有差别  
+    （普通js里能导出的组件代码，复制到SFC里用export导出，不会产生任何差异）
+- 注释  
+  包括但不限于以下2种方式
+  - 三个基础标签外的地方写任何文本都是注释  
+    （基础标签指的是template/script/style）  
+  - 模板的引号之间可以写注释（甚至可以写多行注释）
+- 单文件组件的使用
+  要先 import componentName from './fileName.vue'
+  然后再在引入文件的components属性中写上componentName，之后组件就能正常使用了
+
+
+
+
+- .vue文件生成的就是一个配置对象  
+  （vue组件实例的配置对象）
+
+
+
+
+
+更多内容看[Vue 单文件组件 (SFC) 规范](https://vue-loader.vuejs.org/zh/spec.html)及[vue-loader指南](https://vue-loader.vuejs.org/zh/guide/)
+
+
+
+
+
+### [样式作用域](https://vue-loader.vuejs.org/zh/guide/scoped-css.html)
+
+使用方式：在`style`标签上增加`scoped`属性
+
+效果：
+
+- `style`标签内的样式将只作用于当前组件
+
+原理：
+
+- 在一个作用域内给所有覆盖到的html标签加上相同的 『随机属性』  
+  在样式的最后一级也加上这个『随机属性』（样式包括[@keyframes](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@keyframes)）  
+  这样就能实现作用域
+
+注意：
+
+- 加`scoped`后外部还是能控制内部样式的
+- 『随机属性』加不到渲染函数渲染出的标签上
+- 『随机属性』会加到`slot`标签间的内容
+
+更多
+
+- [深度作用选择器](https://vue-loader.vuejs.org/zh/guide/scoped-css.html#%E6%B7%B1%E5%BA%A6%E4%BD%9C%E7%94%A8%E9%80%89%E6%8B%A9%E5%99%A8)  
+  `>>>`或`/deep/`或`::v-deep`  
+
+  - 在样式里加『随机属性』属性时加在深度作用选择器前面的那个元素上  
+
+  - 深度作用选择器之后的内容编译成css后，都不会带『随机属性』
+
+  - 深度作用选择器会被编译成一个后代选择器（也就是` `）  
+    （hrt的sxy系统与ptxy系统中只能用`::v-deep`）  
+    （hrt的sxy系统与ptxy系统中`.a::v-deep.b`并不会编译成`.a .b`，要自己在中间加上空格才行，不过下面这种情况会编译出后代选择器）  
+
+    ```scss
+    .el-select{
+      width: 100%;
+      ::v-deep.el-input__suffix{
+        display: none;
+      }
+    }
+    ```
+
+  - 一个特别的用法  
+
+    ```vue
+    <style lang="less" scoped>
+        /deep/.van-tabs__wrap{
+            height: 90px;
+        }
+    </style>
+    ```
+
+    编译后的样式如下  
+
+    ```css
+    [data-v-09865096] .van-tabs__wrap {
+        height: 90px;
+    }
+    ```
+
+    
+
+  
+
+
 
 
 
@@ -2112,11 +2140,11 @@ bug
     prop和from的属性都写中文的话验证是不能完全生效的  
     （一次经验中是只生效的第一项）
   - 自定义验证规则
-    就是validator方法（与type、required、message等同级）
-    validator方法形参为：rule、 value、 callback、 source、 options
-    rule中有与validator同级的type、required、message等信息
-    value是要验证的值
-    callback是验证方法（validate）的回调，不传参代表符合验证条件，有传参则代表不符合验证条件，会触发相关视图效果
+    就是validator方法（与type、required、message等同级）  
+    validator方法形参为：rule、 value、 callback、 source、 options  
+    rule中有与validator同级的type、required、message等信息  
+    value是要验证的值  
+    callback是验证方法（validate）的回调，不传参代表符合验证条件，有传参则代表不符合验证条件，会触发相关视图效果（传true也是一样的）  
     callback是单参数的，这个传参是控制台提示信息，会在不符合验证时在控制台进行打印
   - 触发验证的时机  
     由rules属性的属性的子项的trigger属性控制  
@@ -2140,7 +2168,8 @@ bug
   
 - `:model`是必填的
   prop也要填model传入对象的属性
-  表单的各种操作都是依据model和prop完成的（包括清空表单）
+  表单的各种操作都是依据model和prop完成的（包括清空表单）  
+  就算是一项一项设的校验规则要通过整体表单校验的话也要设置prop  
   （虽然个人感觉没必要设计model）
   
 - 重置表单

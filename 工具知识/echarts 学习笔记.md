@@ -1,3 +1,12 @@
+**评价**
+
+- 配置式的  
+- 编程能力不行，劣质的事件就是个例子  
+  （禁用事件的口子都没有，提供的事件也没什么用，文档和实际作用还有出入）  
+- 移动端不行，点击会触发鼠标划过的事件（还没法hack）
+
+
+
 
 
 # echarts5
@@ -27,7 +36,7 @@
   后续连续调用不会有  
   [`clear`](https://echarts.apache.org/zh/api.html#echartsInstance.clear)后`setOption`有
 - 后续setOption  
-  可以只传部分配置  
+  <span style='color:red'>可以只传部分配置</span>  
   除非数据变更，不然是没有动画的（animation设为true也没有）
 
 
@@ -52,7 +61,6 @@
 - y轴的轴线默认是不显示的  
   [官网](https://echarts.apache.org/zh/option.html#yAxis.axisLine.show)默认显示的说法是错误的  
   如果对调2轴，则是x轴不显示（对调2轴指的是对调xAxis和yAxis的type）
-  
 - 多个坐标轴
 
   - 使用例子  
@@ -62,15 +70,18 @@
        序号从0开始
 
   - 注意  
-    第一个坐标轴里要有data  
-    因为[提示框](https://echarts.apache.org/zh/option.html#tooltip)是依据第一个坐标轴的data显示的  
-    （一次经验似乎第一个坐标轴没data也可以显示提示框）
-  - 一次经验  
-    min、max、interval都在第二个轴上加上才会出现双y轴
-
+    - 第一个坐标轴里要有data  
+      因为[提示框](https://echarts.apache.org/zh/option.html#tooltip)是依据第一个坐标轴的data显示的  
+      （一次经验似乎第一个坐标轴没data也可以显示提示框）
+    - 有时y轴配置了也不会出来的  
+      如果没被`yAxisIndex`指定，且没有同时加上`min`和`max`  
+      那就不会出来
+- 隐藏坐标轴将仍然占据空间  
+  （隐藏方法为把show设为false）
 - 常规情况下  
   如果不用dataset的话x轴要传入data  
   不然x轴下方不显示名称
+- [延展坐标轴数值](https://echarts.apache.org/zh/option.html#yAxis.boundaryGap)
 
 
 
@@ -163,24 +174,46 @@ rich:{
 可以监听各种事件  
 
 - [监听事件](https://echarts.apache.org/zh/api.html#echartsInstance.on)
+
 - 事件的返回内容
   - “鼠标事件”  
     在[“鼠标事件”的最上方](https://echarts.apache.org/zh/api.html#events.%E9%BC%A0%E6%A0%87%E4%BA%8B%E4%BB%B6)有描述
   - 其他事件  
     其他事件里的`ACTION`就是返回内容
+  
 - [“鼠标事件”](https://echarts.apache.org/zh/api.html#events.%E9%BC%A0%E6%A0%87%E4%BA%8B%E4%BB%B6)  
   文档里说的“鼠标事件”其实只包含“图表主体”的鼠标事件  
   图例等内容不会触发这些事件
-- highlight  
-  触发时机有2个：鼠标划过图例、点击图例  
-  从返回内容里无法区分是哪种触发情况
-- downplay  
-  和hightlight一样，只不过highlight是开始时触发，而downplay是结束时触发
-
+  
 - 可以触发交互事件  
   [文档](https://echarts.apache.org/zh/tutorial.html#ECharts%20%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%92%8C%E8%A1%8C%E4%B8%BA)里搜索“代码触发 ECharts 中组件的行为”可以看到相关内容  
   并且有个[demo](https://echarts.apache.org/examples/zh/editor.html?c=doc-example/pie-highlight)
+  
   - 无法手动触发点击事件
+  
+- 调用clear与setOption方法不会清除对点击事件的监听
+
+- 对于折线图  
+
+  > <span style='color:orange'>所有事件都是相对节点而言的</span> —— 杭兴
+
+具体事件
+
+-   高亮  
+    - 高亮出现 'highlight'  
+      - 触发时机  
+        一般情况下是和图例交互时触发（也就是划过图例、点击图例）  
+        禁止图例交互的话，和图例交互时不会触发（禁止方法为：将`legend. selectedMode`设为`false` ）  
+        - 在折线图里  
+          把tooltip.trigger设为axis的话，只要鼠标划进图表主体就会触发
+      - 从返回内容里无法区分是哪种触发情况
+    - 高亮消失 'downplay'
+
+- 点击折线图（的节点）  
+  'click'与'selectchanged'  
+  这2个事件在折线图上表现一致
+
+
 
 
 
@@ -290,7 +323,9 @@ map serie应该是geo的超集<span style='opacity:.5'>（因为map serie可以�
     让一条线的值凌驾于另一些线上  
     用文字描述比较抽象，去[`stack`属性](https://echarts.apache.org/zh/option.html#series-line.stack)里看demo比较好理解
 - `showSymbol`配置项  
-  默认为`true`，但是传入undefined的话不显示节点
+  - 默认为`true`，但是传入undefined的话不显示节点
+  - 如果showSymbol设为false，那label不会显示  
+    （这点官网没提到）
 
 
 
@@ -445,6 +480,44 @@ demo1更合理
 - 文本的样式  
   可以用[富文本标签](https://echarts.apache.org/zh/option.html#legend.textStyle.rich)  
   要注意官方例子是错误的（例子里写在label配置里，实际上没有这个配置）
+  
+- 选择
+
+  - 选择模式（[`selectedMode`](https://echarts.apache.org/zh/option.html#legend.selectedMode)）  
+    - 禁选：`false`
+    - 单选：`'single'`
+    - 多选：`true`或者`'multiple'`都是多选  
+      目前没发现差别
+  - 初始选中状态（[`selected`](https://echarts.apache.org/zh/option.html#legend.selected)）  
+    键名写serie的name属性  
+    键值写是否选中
+  - 全选与反选按钮（[`selector`](https://echarts.apache.org/zh/option.html#legend.selector)）
+
+
+
+### 说明
+
+[`tooltip`](https://echarts.apache.org/zh/option.html#tooltip)
+
+- trigger里item和axis的区别
+  - axis点哪里都会出现提示框，提示框展示坐标系里全部数据
+
+  - item只有点到折线拐点才会出现，提示框展示选中折线数据
+
+  - none不出现提示框，但是可以出现提示线。  
+    提示线由tooltip.axisPointer.type控制  
+    示例代码  
+
+    ```js
+    tooltip: {
+      trigger: 'item',
+      axisPointer: {
+        type: 'cross',
+      }
+    },
+    ```
+
+    
 
 
 

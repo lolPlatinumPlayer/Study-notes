@@ -296,6 +296,8 @@
   
 - webpack有md相关的loader
 
+- [animate.css的文档](https://github.com/animate-css/animate.css/tree/main/docsSource)似乎也是md生成的
+
 # 待研究内容
 
 

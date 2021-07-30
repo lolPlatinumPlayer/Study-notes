@@ -304,15 +304,23 @@ mesh的geometry在赋值新的bufferGeometry后会变成新的形状【】更广
     ```
   
 - **任意形状的平面加厚成的几何体**
-  `new THREE.ExtrudeGeometry( THREE.Shape实例, js对象 )`
-  `js对象`的常用属性：  
+  `new THREE.ExtrudeGeometry( THREE.Shape实例, js对象 )`  
   
-  - depth：厚度  
-  - steps：加厚部分的分段数  
+  - `js对象`的常用属性：  
+    - depth：厚度  
+    - steps：加厚部分的分段数（不包含斜角）   
+      可以设为0 
   
-- bevelEnabled：控制是否使用斜角（默认为true）
+    - bevelEnabled：控制是否使用斜角（默认为true）
   
-  更多属性及其他内容见[three官网](https://threejs.org/docs/#api/zh/geometries/ExtrudeGeometry)
+    更多属性及其他内容见[three官网](https://threejs.org/docs/#api/zh/geometries/ExtrudeGeometry)
+  
+  特性
+  
+  - 会看到对面边（也不知道是不是少了顶盖）  
+    （当然MeshBasicMaterial是看不出来的）  
+    设置side和depthTest:false也不好使  
+    甚至在上方新建一个平面都盖不住
   
 - **任意的面**
   ```javascript

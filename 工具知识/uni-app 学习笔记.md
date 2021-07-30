@@ -113,10 +113,24 @@
   终端会提示“如手机上HBuilder调试基座未启动,请手动启动”  
   后来重启2端的HBuilder再次尝试就成功了，不过这个提示还在  
   不过没有热更新功能
+  
 - 后来把手机上的HBuilder卸载了，并更新了手机系统（记不清先后顺序了）  
   再调试，一步到位，也有热更新功能
+  
 - 更新调试app并不需要下载app  
   需要下载app的话应该是app自身的要求
+  
+- 有上面经验后还是会出现问题  
+  提示`项目 'shouNingAppMobile' 编译成功`  
+  但是手机上没有任何反应  
+  后面把手机上hbuilder卸载了  
+  关闭了电脑上的hubuilder  
+  以管理员权限运行hbuilder  
+  再运行这次在提示`项目 'shouNingAppMobile' 编译成功`后就会继续提示`正在建立手机连接...`  
+  并且在手机上安装hbuilder  
+  安装后点打开，是不好使的  
+  关闭手机端hbuilder，且在pc端停止运行项目  
+  再运行项目即可
   
   
 
@@ -213,6 +227,27 @@ App.vue代表应用
 
 
 
+##### 页面
+
+- 导航栏  
+
+  - 指定一些页面隐藏导航栏  
+
+    - 方法  
+      在pages.json里配置  
+      目前发现如下2种方法（目前没发现2种方法的差别）  
+
+      - 将style属性的navigationStyle属性设为custom
+      - 将style属性的app-plus属性的titleNView设为false
+
+      （已测试网页端和安卓app端，可以隐藏包含webview的页面）
+
+    - > 小程序端 web-view 组件一定有原生导航栏，下面一定是全屏的 web-view 组件，navigationStyle: custom 对 web-view 组件无效 —— [官网](https://uniapp.dcloud.net.cn/component/web-view)
+    
+      （微信）小程序是一定有导航栏的，和是不是webview没关系
+
+
+
 ### 组件库
 
 - uni-app本身就内置了一些组件，不需要引入就可以使用  
@@ -296,6 +331,30 @@ App.vue代表应用
 - `uni.navigateTo({url:一个地址})`  
   可以写相对地址也可以写绝对地址  
   <span style='color:red'>写错地址不会报错也没有任何反应</span>
+
+
+
+### webview
+
+- 调试  
+  可以开启或关闭网页控制台的输出  
+  - 例子  
+    寿宁app7月23日或之前的某个版本就可以  
+    7月26日的代码就没了
+    - 不过把webview内核改为腾讯x5内核后，控制台又会输出了  
+      7月23日到7月26日间并没有改动webview内核
+  - 功能限制
+    - 一次只能打印一个东西（`console.log(a,b,c)`只会打出a）
+    - 打对象不会显示属性  
+      只会显示类名
+    - 打得出函数
+- 在app端webview会占满全屏  
+  改webview的css也是全屏
+- 加上进度条  
+  在标签上加上如下属性：  
+  `:webview-styles="{progress:{color: '你要的颜色'}}"`
+
+
 
 
 

@@ -220,30 +220,8 @@ vue-cli含有模板：https://github.com/vuejs-templates
     所以 **走本地地址并不代表被代理**  
     没被代理的接口的状态码为404
   
-- [调整webpack配置](https://cli.vuejs.org/zh/guide/webpack.html)  
-
-  - 通过给`configureWebpack`赋值对象确实可以调整，不过容易出错（目前没有符合预期地运行过）  
-
-  - 感觉低入侵的写法是这样的：  
-
-    ```js
-    var HtmlWebpackPlugin = require('html-webpack-plugin');
-    
-    module.exports = {
-        configureWebpack:  config => {
-            config.plugins.forEach((val) => {
-                if (val instanceof HtmlWebpackPlugin) {
-                    val.options.title='aaaa' // 修改语句
-                }
-            })
-        }
-    }
-    
-    ```
-
-    也就是改变`config`这个形参，这个形参代表的就是最终的配置
-
-
+  
+  
 
 ### 命令
 
@@ -255,9 +233,6 @@ vue-cli含有模板：https://github.com/vuejs-templates
     特性：有热更新，而且不用刷新手机页面
 - 打包项目  
   [`vue-cli-service build`](https://cli.vuejs.org/zh/guide/cli-service.html#vue-cli-service-build)
-- 查看最终使用的webpack配置  
-  - 官网的说法：[`vue-cli-service inspect`](https://cli.vuejs.org/zh/guide/cli-service.html#vue-cli-service-build)
-  - 网友的说法：[博客](https://blog.csdn.net/huzhenv5/article/details/104040077)
 
 
 
@@ -268,6 +243,59 @@ vue-cli含有模板：https://github.com/vuejs-templates
   比如这个命令：`vue init webpack-simple foo`
   
   
+
+
+
+### webpack
+
+- [调整webpack配置](https://cli.vuejs.org/zh/guide/webpack.html)  
+  方法如下：
+
+  - 给`configureWebpack`赋值对象  
+    确实可以调整，不过容易出错（目前没有符合预期地运行过）  
+
+  - 给`configureWebpack`赋值函数
+
+    - 改变config形参  
+      这个形参代表的就是最终的配置
+
+      ```js
+      var HtmlWebpackPlugin = require('html-webpack-plugin');
+      
+      module.exports = {
+          configureWebpack:  config => {
+              config.plugins.forEach((val) => {
+                  if (val instanceof HtmlWebpackPlugin) {
+                      val.options.title='aaaa' // 修改语句
+                  }
+              })
+          }
+      }
+      ```
+  
+  - [链式修改](https://cli.vuejs.org/zh/guide/webpack.html#%E9%93%BE%E5%BC%8F%E6%93%8D%E4%BD%9C-%E9%AB%98%E7%BA%A7)
+  
+- 查看最终使用的webpack配置  
+
+  - 使用[`vue-cli-service inspect`](https://cli.vuejs.org/zh/guide/cli-service.html#vue-cli-service-inspect)命令  
+    （这个命令要通过package.json里才能执行）  
+    直接执行这个命令可以在终端输出webpack配置  
+    该命令的其他操作详见[官网](https://cli.vuejs.org/zh/guide/webpack.html#%E4%BF%AE%E6%94%B9%E6%8F%92%E4%BB%B6%E9%80%89%E9%A1%B9)（比如将配置直接存在js里的方法）
+
+    - `vue inspect`  
+
+      > `vue inspect`和`vue-cli-service inspect`是相等的 —— [官网](https://cli.vuejs.org/zh/guide/webpack.html#%E4%BF%AE%E6%94%B9%E6%8F%92%E4%BB%B6%E9%80%89%E9%A1%B9)
+
+      不过这个`vue inspect`可以直接在终端使用
+  
+    - 执行这2个命令会输出vue.config.js里打印的东西
+    
+  - 打印configureWebpack函数里的形参  
+    （不推荐）  
+  默认情况下深层级的内容不可见  
+    也没找到使用node调试的方法
+  
+    
 
 
 

@@ -1,5 +1,34 @@
 目前对mapbox的理解就是：一个致力于拓扑分析的地图，并拥有一些拓扑分析以外的功能
 
+# 初始化
+
+- 离线  
+
+  - 示例代码  
+
+    ```js
+    mapboxgl.accessToken = "必须要有"
+    var map = new mapboxgl.Map({
+      container: "map",
+      zoom: 4,
+      center: [117.210215, 39.1],
+      style: {
+        "version": 8,
+        "name": "Mapbox Streets",
+        "sprite": "mapbox://sprites/mapbox/streets-v8",
+        "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+        "sources": {},
+        "layers": []
+      }
+    })
+    ```
+
+    - 画面出来还算快  
+    - 除了自建图层外，其他内容都是透明的
+    - 控制台会红色报错
+
+
+
 # 地图
 
 通过实例化`mapboxgl.Map`来初始化地图  
@@ -7,7 +36,11 @@
 
 
 
-### 改变镜头
+### 镜头
+
+
+
+**移动镜头**
 
 - **jumpTo**  
   瞬间将镜头参数瞬间改成输入值
@@ -21,7 +54,7 @@
 
 
 
-**地图方位的配置项**
+**设置初始镜头**
 
 这些内容如果在实例化地图时没有传入，那就会去『地图样式』中进行查找  
 『地图样式』中没有的话默认就是`0`
@@ -33,6 +66,21 @@
 - zoom  
   地图放大的等级  
   （zoom越大，地图也越大）
+- 限制倾斜  
+  pitchWithRotate设为false
+- 限制缩放  
+  scrollZoom设为false
+
+
+
+**获得镜头信息**
+
+- map.getCenter()
+- map.getZoom()
+- map.getPitch()
+- map.getBearing()
+
+
 
 ### 设置地图样式
 
@@ -291,6 +339,9 @@ var map = new mapboxgl.Map({
 
 # [图层](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/)
 
+- 无法调整垂直方向的位置  
+  （起码目前没找着调整的方法）
+
 
 
 ### 自定义图层
@@ -307,7 +358,7 @@ xy轴方向与canvas一致
 mapboxgl.MercatorCoordinate.fromLngLat({
   lng: 30.498,
   lat: 50.541
-})
+},0/*这个0代表的是海拔*/)
 ```
 
 
@@ -379,6 +430,41 @@ mapboxgl.MercatorCoordinate.fromLngLat({
 - 似乎形状只能是四边形
 - mapbox的raster图层是用2个三角形表达一个四边形的，两个三角形坐标系是不同的  
   因此在图层区域不是平行四边形时画面是不理想的，中间能看到明显界限
+
+
+
+### 挤压多边形图层
+
+```js
+map.addLayer({
+  'id': 'room-extrusion',
+  'type': 'fill-extrusion',
+  'source': {
+    'type': 'geojson',
+    'data': mapAreaPolygon
+  },
+  'paint': {
+    'fill-extrusion-color': 'blue',
+    // 如果“底部高度”高于“顶部高度”的话，会出现类似“去顶盖”的效果
+    // 2个高度都不能小于0
+    'fill-extrusion-height': 300000, // 顶部高度
+    // 'fill-extrusion-base': 500000, // 底部高度
+    'fill-extrusion-opacity': 1,
+    'fill-extrusion-translate': [0, 30], // [向右偏移量,向下偏移量]
+
+    /* 
+    默认 map
+    - map
+      相对于平面地图偏移
+    - viewport  
+      相对于（浏览器）窗口偏移
+    */
+    'fill-extrusion-translate-anchor': 'viewport',
+  }
+})
+```
+
+
 
 
 

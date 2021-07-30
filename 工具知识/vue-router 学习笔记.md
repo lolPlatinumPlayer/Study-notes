@@ -107,7 +107,8 @@ const router = new VueRouter({
 - 渲染标签  
   默认会被渲染为a标签  
   要修改渲染的标签的话要用[tag属性](https://router.vuejs.org/zh/api/#tag)  
-  <span style='opacity:.5'>（提醒：用is不行，用is的话就已经不是`router-link`标签了）</span>
+  <span style='opacity:.5'>（提醒：用is不行，用is的话就已经不是`router-link`标签了）</span>  
+  <span style='opacity:.5'>（用tag的话控制台会提示vue-router4不支持）</span>
 
 
 
