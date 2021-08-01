@@ -532,9 +532,80 @@ map.addLayer({
 
 
 
+# 使用three
 
 
 
+threebox
+
+- [原项目](https://github.com/peterqliu/threebox)  
+  已经被归档了（不维护了）
+
+  - `npm run dev`  
+    在把package.json的dev-dependencies改为devDependencies后装node_modules可以正常运行（可能不改也可以）
+
+  - `npm run build`  
+    目前有问题  
+    【】读一下报错，如果还不能解决就去提issue
+
+    - 直接跑的报错如下  
+
+      ```cmd
+      PS D:\learning_materials\canvas_app\mapbox_gl_js\code\threebox> yarn build
+      yarn run v1.22.10
+      warning package.json: Potential typo "dev-dependencies", did you mean "devDependencies"?
+      $ browserify -g ./node_modules/uglifyify exports.js > dist/threebox.min.js
+      SyntaxError: Unexpected token: name (static) while parsing file: D:\learning_materials\canvas_app\mapbox_gl_js\code\thre
+      ebox\src\objects\objects.js
+          at Z.get (D:\learning_materials\canvas_app\mapbox_gl_js\code\threebox\node_modules\terser\dist\bundle.min.js:1:463)
+          at Readable.errorExit (D:\learning_materials\canvas_app\mapbox_gl_js\code\threebox\node_modules\browserify\bin\cmd.j
+      s:79:27)
+          at Readable.emit (events.js:314:20)
+          at Labeled.<anonymous> (D:\learning_materials\canvas_app\mapbox_gl_js\code\threebox\node_modules\read-only-stream\in
+      dex.js:28:44)
+          at Labeled.emit (events.js:314:20)
+          at Labeled.<anonymous> (D:\learning_materials\canvas_app\mapbox_gl_js\code\threebox\node_modules\stream-splicer\inde
+      x.js:130:18)
+          at Labeled.emit (events.js:314:20)
+          at Deps.<anonymous> (D:\learning_materials\canvas_app\mapbox_gl_js\code\threebox\node_modules\stream-splicer\index.j
+      s:130:18)
+          at Deps.emit (events.js:314:20)
+          at DuplexWrapper.<anonymous> (D:\learning_materials\canvas_app\mapbox_gl_js\code\threebox\node_modules\module-deps\i
+      ndex.js:414:22)
+      error Command failed with exit code 1.
+      info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+      ```
+
+    - 在把package.json的dev-dependencies改为devDependencies后装node_modules后跑的报错如下  
+
+      ```cmd
+      PS D:\learning_materials\canvas_app\mapbox_gl_js\code\threebox> yarn build
+      yarn run v1.22.10
+      warning package.json: "dependencies" has dependency "tape" with range "^4.10.1" that collides with a dependency in "devD
+      ependencies" of the same name with version "^4.6.3"
+      $ browserify -g ./node_modules/uglifyify exports.js > dist/threebox.min.js
+      SyntaxError: Unexpected token: name (static) while parsing file: D:\learning_materials\canvas_app\mapbox_gl_js\code\thre
+      ebox\src\objects\objects.js
+          at Z.get (D:\learning_materials\canvas_app\mapbox_gl_js\code\threebox\node_modules\terser\dist\bundle.min.js:1:463)
+          at Readable.errorExit (D:\learning_materials\canvas_app\mapbox_gl_js\code\threebox\node_modules\browserify\bin\cmd.j
+      s:79:27)
+          at Readable.emit (events.js:314:20)
+          at Labeled.<anonymous> (D:\learning_materials\canvas_app\mapbox_gl_js\code\threebox\node_modules\read-only-stream\in
+      dex.js:28:44)
+          at Labeled.emit (events.js:314:20)
+          at Labeled.<anonymous> (D:\learning_materials\canvas_app\mapbox_gl_js\code\threebox\node_modules\stream-splicer\inde
+      x.js:130:18)
+          at Labeled.emit (events.js:314:20)
+          at Deps.<anonymous> (D:\learning_materials\canvas_app\mapbox_gl_js\code\threebox\node_modules\stream-splicer\index.j
+      s:130:18)
+          at Deps.emit (events.js:314:20)
+          at DuplexWrapper.<anonymous> (D:\learning_materials\canvas_app\mapbox_gl_js\code\threebox\node_modules\module-deps\i
+      ndex.js:414:22)
+      error Command failed with exit code 1.
+      info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+      ```
+
+- [后继者项目](https://github.com/jscastro76/threebox)
 
 # 未归类
 
@@ -576,7 +647,7 @@ map.addLayer({
 
 - 找到所有图层  
   `map.getStyle().layer`  
-（2021.5.17 测试结果是`map.getStyle().layers`）
+  （2021.5.17 测试结果是`map.getStyle().layers`）
   
 - 找到所有数据源  
   `map.getStyle().sources`
