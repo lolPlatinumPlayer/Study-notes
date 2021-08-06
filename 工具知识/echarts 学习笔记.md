@@ -329,6 +329,16 @@ map serie应该是geo的超集<span style='opacity:.5'>（因为map serie可以�
 
 
 
+##### 饼图
+
+- 标注线背后的小圆点  
+  [例子A](https://www.makeapie.com/editor.html?c=xtg5fuK0vU)、[例子B](https://www.makeapie.com/editor.html?c=x1zOZDoSxq)  
+  网上找了一段时间，只找到用富文本实现的方法  
+  而且都是echarts4的  
+  改成echarts5后会出现问题（位置偏移、颜色丢失）
+
+
+
 ##### [散点图](https://echarts.apache.org/zh/option.html#series-scatter)
 
 - 文本  
@@ -678,7 +688,7 @@ demo1更合理
 
 - 名称轴默认放不下是会隐藏名称  
   这个其实大家都会认为是bug  
-  接绝方法：把`名称轴.axisLabel.interval`赋值为`0`
+  解决办法：把`名称轴.axisLabel.interval`赋值为`0`
 
 
 

@@ -2,6 +2,8 @@
 
 **学习进度**
 
+- 水面  
+  [demo](https://sandcastle.cesium.com/?src=Lighting.html&label=All)
 - 线路A  
   下次从https://www.cesium.com/docs/tutorials/cesium-workshop/ 的Setup开始学
 - 线路B

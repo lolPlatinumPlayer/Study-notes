@@ -285,7 +285,72 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
 
     
 
+### 与同一个电脑上的仓库通信
 
+[这个页面](https://git-scm.com/book/zh/v2)有搭建git服务的说明
+
+有2种方式初始化远程仓库：git --bare ini和git init  
+2种方式在『不把实体文件放远程仓库』的情况下，效果是一致的  
+（不过git init可以通过命令展示出实体文件）
+
+- 用git --bare ini初始化远程仓库
+  - [博客A](https://www.cnblogs.com/cosiray/archive/2012/06/01/2530967.html)里似乎说应该用这种方式
+  - 这种方式初始化的远程仓库里似乎找不到实体文件
+
+- 用git init初始化远程仓库
+  - 直接push会失败  
+    报错如下
+
+    ```cmd
+    Enumerating objects: 5, done.
+    Counting objects: 100% (5/5), done.
+    Writing objects: 100% (3/3), 263 bytes | 263.00 KiB/s, done.
+    Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+    remote: error: refusing to update checked out branch: refs/heads/master
+    remote: error: By default, updating the current branch in a non-bare repository
+    remote: is denied, because it will make the index and work tree inconsistent
+    remote: with what you pushed, and will require 'git reset --hard' to match
+    remote: the work tree to HEAD.
+    remote:
+    remote: You can set the 'receive.denyCurrentBranch' configuration variable
+    remote: to 'ignore' or 'warn' in the remote repository to allow pushing into
+    remote: its current branch; however, this is not recommended unless you
+    remote: arranged to update its work tree to match what you pushed in some
+    remote: other way.
+    remote:
+    remote: To squelch this message and still keep the default behaviour, set
+    remote: 'receive.denyCurrentBranch' configuration variable to 'refuse'.
+    To D:/learning_materials/git_remote_test/remote
+     ! [remote rejected] master -> master (branch is currently checked out)
+    error: failed to push some refs to 'D:/learning_materials/git_remote_test/remote'
+    ```
+
+    - ```
+      [receive]
+      	denyCurrentBranch = ignore
+      ```
+      
+      可以推送  
+      但是只会更新git里的内容，仓库里的实体文件不会变  
+      这个方法来自[博客A](https://www.cnblogs.com/cosiray/archive/2012/06/01/2530967.html)，是加在远程仓库的.git/config里的
+      
+      - 让远程仓库实体文件同步的方法  
+        在远程仓库有任何改动前输入`git reset --hard`  
+      - 实体文件不同步的问题  
+        除了不好把东西复制出来  
+        在远程仓库进行改动也会导致其他仓库的改动消失
+
+  - pull成功
+
+- clone命令  
+  仓库地址写相对于当前仓库的相对路径  
+  - 路径例子
+    - 同级  
+      `对方文件夹名`
+    - 同级文件夹的子文件夹  
+      `同级文件夹名/文件夹名`
+    - 与父级同级的文件夹  
+      `../文件夹名`
 
 
 

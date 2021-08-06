@@ -195,6 +195,38 @@ var map = new mapboxgl.Map({
 有7种类型： vector、raster、 raster-dem、GeoJSON、图片、视频（[样式规范](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/)写了前6种，实际上还有第七种：canvas）  
 使用方式有很多种
 
+- 设置与使用数据源  
+  有2种方法：先设置后使用、与直接在新建图层时用字面量写数据源  
+  （推荐先设置后使用）
+
+  - 先设置后使用
+
+    - 设置数据源  
+
+      ```js
+      map.addSource(数据源名称, {
+        'type': 'geojson',
+        'data':geojson数据,
+      });
+      ```
+
+      要在map的load事件后使用
+
+    - 使用数据源  
+
+      ```js
+      map.addLayer({
+        "id": "power-line",
+        "type": "line",
+        "source": 数据源名称,
+        "layout": {},
+        "paint": {}
+      })
+      ```
+
+  - 用字面量写  
+    （这里就不赘述了）
+
 - **瓦片**  
 
   - raster数据源可以用瓦片  
@@ -245,37 +277,33 @@ var map = new mapboxgl.Map({
   例子如下：  
   
   ```js
-  
-      mapboxgl.accessToken = token
-      window.map = new mapboxgl.Map({
-          container: 'map',
-          center: [119.2861, 26.0709],
-          zoom: 18, 
-          style: 'mapbox://styles/mapbox/satellite-v9', // 只有卫星图 
-      }); 
-      map.on("load", function (e) {
-          mapLoadComplete()
-      })
-  
-      function mapLoadComplete() {
-        window.satelliteLayer=map.getLayer('satellite')
-        map.setLayoutProperty("satellite", 'visibility', false?'visible':'none') 
-  map.on('click',function(){
-    console.log('click')
-    drawRasterLayer_useMapboxSource(map)
+  mapboxgl.accessToken = token
+  window.map = new mapboxgl.Map({
+      container: 'map',
+      center: [119.2861, 26.0709],
+      zoom: 18, 
+      style: 'mapbox://styles/mapbox/satellite-v9', // 只有卫星图 
+  }); 
+  map.on("load", function (e) {
+      mapLoadComplete()
   })
   
+  function mapLoadComplete() {
+      window.satelliteLayer=map.getLayer('satellite')
+      map.setLayoutProperty("satellite", 'visibility', false?'visible':'none') 
+      map.on('click',function(){
+          console.log('click')
+          drawRasterLayer_useMapboxSource(map)
+      })
+  }
   
-      }
-  
-      function drawRasterLayer_useMapboxSource(map){
-        
-        map.addLayer({
-            'id': 'drawRasterLayer_useMapboxSource',
-            'type': 'raster',
-            source: "mapbox", 
-        })
-      }
+  function drawRasterLayer_useMapboxSource(map){
+      map.addLayer({
+          'id': 'drawRasterLayer_useMapboxSource',
+          'type': 'raster',
+          source: "mapbox", 
+      })
+  }
   ```
   
   
@@ -294,11 +322,12 @@ var map = new mapboxgl.Map({
 
 描述：可以标记feature的状态，
 
-功能：可以根据状态响应样式，或者给其他程序读取状态
+功能：可以根据状态响应样式、或者给其他程序读取状态
 
 目前已知状态的方法有：setFeatureState、getFeatureState、removeFeatureState
 
-
+- `setFeatureState`  
+  1.2.0版本id只能为数字
 
 
 
@@ -339,8 +368,24 @@ var map = new mapboxgl.Map({
 
 # [图层](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/)
 
-- 无法调整垂直方向的位置  
+- 无法调整高度（垂直方向的位置）  
   （起码目前没找着调整的方法）
+
+- 依据状态响应样式  
+  demo  
+
+  ```js
+  'paint': {
+    'fill-color':[
+      'case',
+      ['boolean', ['feature-state', 'isHighLight'], false],
+      '#000',
+      '#062a80'
+    ]
+  }
+  ```
+
+  
 
 
 
@@ -370,6 +415,22 @@ mapboxgl.MercatorCoordinate.fromLngLat({
 用symbol图层接收单点geojson数据源，然后使用类似下面的`layout`  
 
 - 关于避让  
+
+
+
+### 线图层
+
+- 模糊  
+  - 在拐点过于密集时会出现锯齿  
+    ![mapbox线模糊出现锯齿](https://img.wenhairu.com/images/2021/08/02/9h9Lp.png)
+
+
+
+### 多边形图层
+
+- 背景图  
+  背景图会依据缩放自适应大小  
+  目前还没找到固定背景图的方法
 
 
 

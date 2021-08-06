@@ -172,7 +172,16 @@
   操作很好理解
 - 直接uniapp调试的话可能会因尺寸过大而被拒接  
   可以发行后进行真机调试  
-  发行的操作步骤为：点上方工具栏的“发行” -> 点“小程序-微信（仅适用于uni-app）”  -> 在弹窗里点“发行”
+  发行的操作步骤如下：
+  1. 点上方工具栏的“发行”  
+     （要填AppID）
+  2. 点“小程序-微信（仅适用于uni-app）” 
+  3. 在弹窗里点“发行”
+  4. 在微信开发者工具里新建项目  
+     （有时候不用这一步，HBuilder会自己打开）  
+     目录：用HBuilder控制台打印的目录  
+     AppID：点“发行”时填的AppID
+  5. 点微信开发者工具里的“真机调试”按钮
 
 
 
@@ -220,10 +229,23 @@ App.vue代表应用
 
 寿宁移动端项目里  
 
-- onShow、onHide在进出页面时会执行
+<span style='opacity:.5'>早期结论</span>
+
+- onShow、onHide在进出页面时会执行 
 - onLoad、mounted在初次进入页面时会执行  
   执行顺序为onLoad、onShow、mounted
 - destroyed都不会执行
+
+<span style='opacity:.5'>8月6日安卓app测试</span>
+
+- onHide  
+  （在webLink页面上测试的）
+  - 在离开页面时不会执行
+  - 把应用退到后台才会执行
+- onUnload  
+  （在webLink页面上测试的）
+  - 在离开页面时会执行
+  - 把应用退到后台不会执行
 
 
 
@@ -326,6 +348,38 @@ App.vue代表应用
 
 
 
+页面旋转
+
+- 锁定旋转方向  
+  网上都是说在onLaunch里加plus.screen.lockOrientation  
+  杭兴说这个方法只有app有用  
+  （已测iOS网页、iOS微信小程序,meiyong）
+  
+- 安卓app  
+  
+  - 默认应该是禁止旋转  
+    不过真机调试的时候是允许旋转的  
+  - app禁止旋转的话里边webview也无法旋转  
+    （包括video标签也无法旋转）
+  
+- 设为自动旋转
+
+  - 方法一  
+    
+    ```js
+    //#ifdef APP-PLUS
+    plus.screen.unlockOrientation(); //解除屏幕方向的锁定  
+    //#endif
+    ```
+
+    安卓app可用（打包后也可以）
+
+  - 方法二  
+    在[配置列表](https://uniapp.dcloud.io/collocation/pages?id=%e9%85%8d%e7%bd%ae%e9%a1%b9%e5%88%97%e8%a1%a8)里设置`globalStyle.pageOrientation`  
+    （官方说可以，个人未测过）
+
+
+
 ### 导航
 
 - `uni.navigateTo({url:一个地址})`  
@@ -353,6 +407,38 @@ App.vue代表应用
 - 加上进度条  
   在标签上加上如下属性：  
   `:webview-styles="{progress:{color: '你要的颜色'}}"`
+
+和uniapp互动
+
+- 非网页端用uni.postMessage通信  
+  - 网页端直接用window.parent.postMessage
+  - 小程序消息只有离开webview时才能接收
+- 小程序端导航到webview外
+  - 离开webview  
+    `uni.navigateBack({delta: 1})`
+  - 离开webview并到指定页面  
+    `uni.switchTab({ url: '/pages/home/home' })`  
+    （uni.navigateBack没用，甚至离开webview之后也没用）
+
+
+
+### 配置
+
+- 配置小程序的[页面配置](https://developers.weixin.qq.com/miniprogram/dev/reference/configuration/page.html)  
+  在pages.json的如下位置加的内容会加到小程序的配置里  
+
+  ```json
+  {
+    "path": "hospital/index",
+    "style": {
+      配置
+      "navigationBarTitleText": "医疗服务",
+      "enablePullDownRefresh": false
+    }
+  }
+  ```
+
+  
 
 
 

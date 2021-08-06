@@ -2746,4 +2746,12 @@ export default 组件
       {{scope.row.collectionNumber.toLocaleString()}}
       ```
 
-      
+  
+  一个可以加上千分符的方法（未测试功能是否完善）
+  var a=1234567894532;
+  console.log(a.toLocaleString())
+  对数字好使，不过数字上没有这个方法（vue method里可以直接对数字用），加个括号就行了  
+  
+  
+    
+  对字符串没用
