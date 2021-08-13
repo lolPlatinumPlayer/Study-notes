@@ -1779,15 +1779,9 @@ mounted: function () {
 
 # 使用ts
 
-
-
-
-
 学习
 
 - 可以看看[这篇文章](https://zhuanlan.zhihu.com/p/29971290)
-
-
 
 特性
 
@@ -1798,6 +1792,8 @@ mounted: function () {
 - 似乎只要通过模板，校验就无法成功
 - 默认情况下和vue2结合会报错但是可以打包和运行  
   减少报错的方法是“用类的形式写组件”，下一条笔记就有记录怎么写
+- 可以在任意的SFC中加入ts  
+  （比如说A SFC用了B SFC，可以只在B里加ts，而A不用加）
 
 操作
 
@@ -1805,26 +1801,29 @@ mounted: function () {
   补上需要的node_module、加上tsconfig.json就行
 
 - 给prop加类型  
-  <span style='color:red'>没找到能成功校验的写法</span>  
-  目前看了[vue官网](https://cn.vuejs.org/v2/guide/typescript.html)和[vue-class-component](https://class-component.vuejs.org/)  
-  都是`Vue.extend`的写法，没有直接`class 组件名 extends Vue`的写法  
-  具体例子如下：
-
-  ```ts
-  const GreetingProps = Vue.extend({
-    props: {
-      msg: String
-    }
-  })
+  <span style='color:red'>没找到能成功校验的写法</span>（起码vue原有的控制台报错不会出来）  
   
-  @Component
-  export default class HelloWorld extends GreetingProps {
-    get t(): string {
-      return typeof this.msg
+  - 看了[vue官网](https://cn.vuejs.org/v2/guide/typescript.html)和[vue-class-component](https://class-component.vuejs.org/)  
+    都是`Vue.extend`的写法，没有直接`class 组件名 extends Vue`的写法  
+    具体例子如下：
+    
+    ```ts
+    const GreetingProps = Vue.extend({
+      props: {
+        msg: String
+      }
+    })
+    
+    @Component
+    export default class HelloWorld extends GreetingProps {
+      get t(): string {
+        return typeof this.msg
+      }
     }
-  }
-  ```
-
+    ```
+    
+  - [vue-property-decorator](https://github.com/kaorun343/vue-property-decorator#Prop)的写法也不行
+  
 - 通过ref调用方法会报错（但是可以编译）  
   解决办法`(this.$refs.xxxxxxxx as any).方法()`
 
@@ -1840,9 +1839,27 @@ vue2虽然原生也支持类的写法，不过会有一些问题（比如method�
 
 ### vue-class-component
 
-**使用前提**
+使用前提
 
 > 需要在项目中配置[TypeScript](https://www.typescriptlang.org/)或[Babel](https://babeljs.io/) —— [官网](https://class-component.vuejs.org/guide/installation.html#build-setup)
+
+
+
+- 不需要写name  
+  类名会自动添加为vue组件的name  
+  当然，写name也是可以的，name属性的权重比类名更高  
+  写法如下  
+
+  ```js
+  @Component({
+    name: 'chartBBB',
+  })
+  export default class chartB extends Vue {
+    这部分代码省略
+  }
+  ```
+
+  
 
 
 
@@ -1929,7 +1946,7 @@ export default class HelloWorld extends Vue {
 ##### 其他选项
 
 其他选项传给装饰器或者vue-property-decorator  
-需要传给vue-property-decorator的选项包括但不限于props、watch
+需要传给vue-property-decorator的选项包括但不限于props、watch（watch放@Component里也可以）
 
 ```vue
 <template>
@@ -1950,15 +1967,23 @@ export default class HelloWorld extends Vue {}
 </script>
 ```
 
+目前看到官方放@Component里的配置有（只是稍微看了下官方文档）  
+components、computed、methods
+
 
 
 ### [vue-property-decorator](https://github.com/kaorun343/vue-property-decorator)
 
-👆使用方法看github
+👆使用方法看github（并不复杂，除了readme也没看到其他文档）
 
 可以从包里取出`Vue`、`Component`（Component来自vue-class-component）
 
-
+- prop  
+  `@Prop(String) readonly name: string  | undefined`
+  - vue原本的prop配置放`@Prop()`中间
+  - `@Prop()`后的东西应该就是ts的
+  - 不验证的写法  
+    `@Prop() readonly lastCarParkNum: any | undefined`  
 
 
 

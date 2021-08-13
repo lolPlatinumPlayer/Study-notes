@@ -1141,17 +1141,39 @@ switch(表达式){
 
 ### for in 
 
+
+
+**对对象使用**
+
 `for(const 属性名 in 对象) `  
 遍历一个对象除symbol外的可枚举属性（本笔记有记录什么叫可枚举属性）
 
-- 对于数组也可以使用`for(const 序号 in 数组)`  
+- 只会遍历执行该语句前的属性  
+  （该语句中新增的属性不会被遍历）  
+  证明代码如下  
 
-  其特性如下：  
+  ```js
+  let list=['a','b','c','d','e','f',]
+  let a= {aaa:1,bbb:1},i=0
+  for(const key in a){
+    a[list[i]]=i
+    i++
+  }
+  console.log(a) // 输出：{aaa: 1, bbb: 1, a: 0, b: 1}
+  ```
 
-  - 所有被赋值的子项都会进入循环
-  - 如果遇到数组元素为空时，不会执行本次循环
-  - 循环体内获得的序号是字符串
-  - 对数组并不会一定按顺序遍历
+  
+
+
+
+**对数组使用**
+
+`for(const 序号 in 数组)`  
+
+- 所有被赋值的子项都会进入循环
+- 如果遇到数组元素为空时，不会执行本次循环
+- 循环体内获得的序号是字符串
+- 对数组并不会一定按顺序遍历
 
 
 
@@ -1413,7 +1435,9 @@ callback中返回的是布尔值，为真的子项会进入新数组
 
 
 ### join
-arr.join(分隔符)返回一个字符串，这个字符串包含arr数组所有子项，子项间用分隔符分隔  
+`arr.join(分隔符)`
+
+返回一个字符串，这个字符串包含arr数组所有子项，子项间用分隔符分隔  
 如果不填分隔符，则用`,`分隔。可以用空串做分隔符  
 子项在各种类型下的情况：
 
@@ -1460,12 +1484,16 @@ a.unshift('a','b','c')
 
 [`arr.sort`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
 
-返回排序后的数组，会改变原数组
+对输入数组进行排序并返回
 
 - [回调](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#%E5%8F%82%E6%95%B0)  
   可选  
   要求返回数字  
-  排序规则：依据返回数字大于0、等于0、小于0进行排序
+  - 详解  
+    有2个形参  
+    - 返回值<0 第一个形参排在第二个前面
+    - 返回值>0 第一个形参排在第二个后面
+    - 返回值=0 <span style='color:red'>最好不要返回0</span>
 
 
 
@@ -2753,5 +2781,5 @@ export default 组件
   对数字好使，不过数字上没有这个方法（vue method里可以直接对数字用），加个括号就行了  
   
   
-    
+  
   对字符串没用

@@ -5,6 +5,7 @@
   - 如果没有的话  
     了解项目中用了ts写出的库后，编译项目阶段，输入该库的内容能否拥有类型检查（应该是有的）
 - [ts与资源](https://v4.webpack.docschina.org/guides/typescript/#%E5%AF%BC%E5%85%A5%E5%85%B6%E4%BB%96%E8%B5%84%E6%BA%90)  
+- js文件可以引用ts文件吗
 
 不着急了解的功能
 
@@ -109,48 +110,48 @@ function greeter(person: string) {
   赋予一组数字意义  
 （vue3里似乎赋予了字符串？）
   
-- 例子  
-  
-    ```ts
-    enum Color {
-      Red,
-      Green,
-      Blue,
-    }
-  ```
-  
-  这段代码的作用
-  
-    - 定义了`Color`类型  
-    - 可以通过`Color.Red`、`Color.Green`调出`0`和`1`
-  - 可以通过`Color[0]`、`Color[1]`调出`'Red'`和`'Green'`
-  
-  - 控制数字  
-  生成的数字默认从0开始
-  
-  - 指定开始的数字  
-  
+  - 例子  
+    
       ```ts
       enum Color {
-        Red = 4,
+        Red,
         Green,
         Blue,
       }
     ```
-  
-    这种写法指定了从4开始
-  
-  - 指定每一位的数字  
-  
-      ```ts
-      enum Color {
-        Red = -1,
-        Green = 2,
-        Blue = 4,
-      }
-    ```
-  
     
+    这段代码的作用
+    
+      - 定义了`Color`类型  
+      - 可以通过`Color.Red`、`Color.Green`调出`0`和`1`
+    - 可以通过`Color[0]`、`Color[1]`调出`'Red'`和`'Green'`
+    
+    - 控制数字  
+    生成的数字默认从0开始
+    
+    - 指定开始的数字  
+    
+        ```ts
+        enum Color {
+          Red = 4,
+          Green,
+          Blue,
+        }
+      ```
+    
+      这种写法指定了从4开始
+    
+    - 指定每一位的数字  
+    
+        ```ts
+        enum Color {
+          Red = -1,
+          Green = 2,
+          Blue = 4,
+        }
+      ```
+    
+      
   
 - any  
   不指定类型的话ts默认就会给你分配any类型  
