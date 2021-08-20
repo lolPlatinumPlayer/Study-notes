@@ -78,10 +78,15 @@
   
 - 从[博客A](https://blog.csdn.net/fu983531588/article/details/90321827)看来  
   （以下内容并未实践）
-  - keep-alive中的组件比其他组件多一些生命周期钩子
+  - keep-alive中的组件比其他组件多一些生命周期钩子  
+    比如[activated](https://cn.vuejs.org/v2/api/#activated)和[deactivated](https://cn.vuejs.org/v2/api/#deactivated)
   - 可以配合vue-router使用
   
-  
+
+和v-show区别
+
+- v-show不能配合`is`使用
+- v-show没有显隐的生命周期
 
 
 
@@ -441,15 +446,12 @@ trim:过滤用户输入的首尾空格
 
 
 
-### data选项
+### [data选项](https://cn.vuejs.org/v2/api/#data)
 
-- 必须是函数，在其中写入“return{a:1}”可以让所有同名组件拥有独立的a数据（值为1）
-
-- Vue对象中data属性用来存放vue操作的数据，可在Mustache中写属性名直接打印，也可在其他vue属性中用 this.属性名 来调用，vue对象外可用 `vue对象名.属性名` 调用。
-
-- 可用对象代理
-
+- 可以通过[`this.$data`](https://cn.vuejs.org/v2/api/#vm-data)访问
+  
 - 子项与视图更新
+  
   - 子项变化会不会触发视图更新取决于子项在初始情况存不存在
   
   - 如果希望在操作初始不存在的子项后更新视图
@@ -461,20 +463,16 @@ trim:过滤用户输入的首尾空格
 - 对象直接赋值的话不会触发视图更新【】有空再确认下  
   键名应该可以是中文
   
-- 重置指定data  
-  `this.data名=this.$options.data().data名`
+- 重置data
+  
+  - 重置指定data  
+    `this.data名=this.$options.data().data名`
+  - 重置所有data  
+    `Object.assign(this.$data,this.$options.data())`
   
 - 异步更新  
 
-  - 同组件data  
-    虽然官网说data是异步更新的  
-    但是如下写法仍然可行  
-
-    ```js
-    const obj={}
-    this.dataA={}
-    console.log(this.dataA===obj) // 结果为true
-    ```
+  - 改变data后视图更新是异步的
 
   - “跨组件data”    
     如果说父组件把data传给子组件的prop  
@@ -1499,6 +1497,8 @@ mounted: function () {
 
 - 官方名称：[插槽](https://cn.vuejs.org/v2/guide/components-slots.html)
 - vue2.6.0前后插槽api是不同的
+- 默认插槽也就是名为default的具名插槽  
+  （这点在[2.6.0版本文档](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%85%B7%E5%90%8D%E6%8F%92%E6%A7%BD)和[2.6.0之前版本文档](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%B8%A6%E6%9C%89-slot-scope-attribute-%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%8F%92%E6%A7%BD)里都有说）
 
 使用步骤：
 
@@ -1515,9 +1515,12 @@ mounted: function () {
 - 一个组件可以接收多份模板代码（`slot`）  
   这情况官方名称是：[具名插槽](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%85%B7%E5%90%8D%E6%8F%92%E6%A7%BD)  
   写法有4种  
-  - `<普通标签 slot="插槽名">xxx</普通标签>`
-  - `<template slot="插槽名">xxx</template>`
-  - `<template v-slot:插槽名>xxx</template>`
+  - `<普通标签 slot="插槽名">xxx</普通标签>`  
+    2.6.0起不推荐，3.0废弃
+  - `<template slot="插槽名">xxx</template>`  
+    2.6.0起不推荐，3.0废弃
+  - `<template v-slot:插槽名>xxx</template>`  
+    2.6.0新增
   - `<template #插槽名>xxx</template>`
 - 不能使用v-show  
   [慕课网](https://www.imooc.com/article/details/id/25193)上有人说尤雨溪已经回复过这个问题  
@@ -1717,6 +1720,19 @@ mounted: function () {
 
 - `style`标签内的样式将只作用于当前组件
 
+- 『随机属性』与当前组件使用的组件
+
+  - 当前组件产生的随机属性只会加到使用组件的最外层标签上
+  - 『随机属性』不会加到渲染函数渲染出的标签上【】待验证
+
+  - 模板中传入使用组件插槽的标签也会加上当前组件的『随机属性』（只在默认插槽上测试过）
+
+- 『随机属性』会加到插槽上（只在默认插槽上测试过）
+
+- 一个组件的不同实例的『随机属性』是相同的
+
+- 一个标签可以有多个随机属性（不会互相覆盖）
+
 原理：
 
 - 在一个作用域内给所有覆盖到的html标签加上相同的 『随机属性』  
@@ -1726,8 +1742,6 @@ mounted: function () {
 注意：
 
 - 加`scoped`后外部还是能控制内部样式的
-- 『随机属性』加不到渲染函数渲染出的标签上
-- 『随机属性』会加到`slot`标签间的内容
 
 更多
 
@@ -1770,9 +1784,6 @@ mounted: function () {
     ```
 
     
-
-  
-
 
 
 

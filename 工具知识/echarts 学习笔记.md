@@ -133,8 +133,11 @@ rich:{
 
 ### [标线](https://echarts.apache.org/zh/option.html#series-line.markLine)
 
-用来在折线图上画线段的  
-有[丰富的手段](https://echarts.apache.org/zh/option.html#series-line.markLine.data)设置起点和终点
+用来在折线图、柱状图上画线段的  
+有[丰富的手段](https://echarts.apache.org/zh/option.html#series-line.markLine.data)设置起点和终点  
+（官网上没说柱状图可以用，但是实际上可以）
+
+- 柱图标线上的tooltip显示效果不完美
 
 
 
