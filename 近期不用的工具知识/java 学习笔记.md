@@ -5,13 +5,15 @@
 
 ### 安装
 
-安装步骤看[菜鸟教程](https://www.runoob.com/java/java-environment-setup.html)
+安装步骤看[菜鸟教程](https://www.runoob.com/java/java-environment-setup.html)（怡茹推荐了一个[博客](https://blog.csdn.net/qq_39154376/article/details/107857776)，还没仔细看过）
 
 jdk下载地址见[知乎](https://zhuanlan.zhihu.com/p/111022749)（比如jdk8的地址是：[jdk8镜像](https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/8/jdk/x64/windows/OpenJDK8U-jdk_x64_windows_hotspot_8u272b10.msi)）
 
 ##### 确认jdk是否安装成功
 
 cmd输入`java -version`
+
+- > 如果没有输出成功不代表没装，如果没配环境变量的话就会导致输出不成功 —— 冯怡茹
 
 
 

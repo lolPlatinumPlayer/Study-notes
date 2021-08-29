@@ -4,10 +4,19 @@
 
 - hrtGitLab会自动删除空文件夹  
   这个删除操作甚至在git记录里看不到
+  
 - hrtGiltLab无法修改文件或目录的大小写  
   （无法检测到这个修改）  
   本地记录里显示的也是更名前的名字
   - 在真真win10联想笔记本上可以检测到大小写变更
+  
+- 更新git  
+
+  > - 2.13及之前版本中不存在更新命令
+  > - 2.14.2和2.16.1之间的命令是git update
+  > - 2.16.1之后是git update-git-for-windows
+  >
+  > —— [stackoverflow](https://stackoverflow.com/questions/13790592/how-to-upgrade-git-on-windows-to-the-latest-version/48924212#48924212)
 
 # 基础知识
 
@@ -869,7 +878,9 @@ git commit -m 'xxx'
   - git bash：可用
   - cmd：不可用
 
-码云
+
+
+### 码云
 
 - 码云上多行commit信息的显示不好  
   一开始只会显示一行，要鼠标移上去一会才会显示全部内容
@@ -879,14 +890,35 @@ git commit -m 'xxx'
 
 
 
-git bash
+### github
+
+仓库的身份验证
+
+- > - 2021年 8月13日开始禁止使用帐号密码进行验证
+  > - 必须在2021年8月13日之前通过 HTTPS（推荐）或 SSH密钥开始使用PAT
+  >
+  >  —— [github blog](https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/)
+
+- PAT  
+
+  - [使用方式](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+    - 用git bash
+    - 用github desktop
+    - 用GitHub CLI
+    - 用Git Credential Manager Core (GCM Core)
+
+- [2FA](https://docs.github.com/en/github/authenticating-to-github/securing-your-account-with-two-factor-authentication-2fa)
+
+
+
+### git bash
 
 - 即使窗口关闭过，也能查看之前的命令记录  
   且能查看其他目录下的命令
 
 
 
-webstorm
+### webstorm
 
 webstorm相关内容去webstorm的笔记里查看（位于《其他工具 学习笔记》）
 
