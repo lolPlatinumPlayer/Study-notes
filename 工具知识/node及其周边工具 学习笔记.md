@@ -19,7 +19,7 @@
 
 > 10、12、14版分别起始与18年、19年、20年的4月，服务终止于21年、22年、23年的4月30日 —— [node官网](https://nodejs.org/zh-cn/about/releases/)
 
-> 你可以使用 [n](https://github.com/tj/n)，[nvm](https://github.com/creationix/nvm) 或 [nvm-windows](https://github.com/coreybutler/nvm-windows) 在同一台电脑中管理多个 Node 版本 —— [vue-cli](https://cli.vuejs.org/zh/guide/installation.html)
+
 
 ### 入门
 
@@ -362,6 +362,52 @@ hello.world();
 
 
 
+### 版本切换
+
+> 你可以使用 [n](https://github.com/tj/n)，[nvm](https://github.com/creationix/nvm) 或 [nvm-windows](https://github.com/coreybutler/nvm-windows) 在同一台电脑中管理多个 Node 版本 —— [vue-cli](https://cli.vuejs.org/zh/guide/installation.html)
+
+- [nvm-windows](https://github.com/coreybutler/nvm-windows#why-another-version-manager)说了一些关于node管理工具的信息
+
+
+
+##### nvm-windows
+
+原nvm只能用于mac/linux  
+nvm-windows是另一个独立项目
+
+
+
+安装
+
+- [详细安装说明](https://github.com/coreybutler/nvm-windows/wiki#manual-installation)  
+  用nvm-noinstall.zip安装后这些环境变量就有了，并不是像教程里说的那样还要手动配置
+
+- > 安装前要卸载node —— [readme](https://github.com/coreybutler/nvm-windows#why-another-version-manager)
+
+- 要用nvm-setup.zip
+  nvm-noinstall.zip的操作起来没反应
+
+
+
+[使用](https://github.com/coreybutler/nvm-windows#usage)
+
+- 安装node  
+  `nvm install 版本号`
+- 切换node版本  
+  `nvm use 版本号`
+- 卸载指定版本node  
+  `nvm uninstall 版本号`
+
+
+
+问题
+
+- [1.1.7](https://github.com/coreybutler/nvm-windows/releases/tag/1.1.7)在切换node版本后会导致无法全局使用node和npm，原因是快捷方式没更新
+  - 解决办法  
+    删掉快捷方式，再输入`nvm use 版本号`命令
+
+
+
 
 
 # express
@@ -445,6 +491,10 @@ bug
     处于webstorm第二个终端窗口  
     这个窗口的地址是二级的  
     使用二级地址里的`package.json`里的`scripts`运行
+
+
+
+
 
 
 

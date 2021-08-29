@@ -4,6 +4,8 @@
 
 - 水面  
   [demo](https://sandcastle.cesium.com/?src=Lighting.html&label=All)
+- 镜头锁定住一点进行环绕  
+  应该是可以做的
 - 线路A  
   下次从https://www.cesium.com/docs/tutorials/cesium-workshop/ 的Setup开始学
 - 线路B
@@ -12,6 +14,8 @@
     - 加图片
 - 连接webpack的教程学到[这](https://www.cesium.com/docs/tutorials/cesium-and-webpack/#manage-cesiumjs-static-files)之前  
   本地代码地址为：[地址](D:\learning_materials\cesium\code\cesium-webpack-app)
+
+
 
 
 
