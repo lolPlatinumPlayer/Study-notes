@@ -117,6 +117,9 @@
           helper = store
   ```
   
+- 取消免密  
+  把上文的`helper = store`这行删掉就行了
+
 - “远程仓库名”  
   连接远程仓库时可以设置“远程仓库名”（hrt的git环境强制要设置“远程仓库名”）  
   命令为：`git remote add 远程仓库名 ssh://xxx.git`  
@@ -901,11 +904,17 @@ git commit -m 'xxx'
 
 - PAT  
 
-  - [使用方式](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-    - 用git bash
-    - 用github desktop
-    - 用GitHub CLI
-    - 用Git Credential Manager Core (GCM Core)
+  - [PAT使用方式](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+    
+    - 用git bash  
+      用https还是老样子，只是把密码改成了PAT  
+      - <span style='color:red'>注意：</span>  
+        有时候发现输不了密码，那是因为设置了免密
+    - 用github desktop（[github blog](https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/)里说了停用帐号密码不会影响desktop）
+    - 用GitHub CLI（[缓存凭证](https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git)中提到了）
+    - 用Git Credential Manager Core (GCM Core)（[缓存凭证](https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git)中提到了）
+    
+  - > PAT只能用于 HTTPS Git 操作。如果您的存储库使用 SSH 远程 URL，则需要将远程从 SSH 切换到 HTTPS —— [PAT使用方式](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 
 - [2FA](https://docs.github.com/en/github/authenticating-to-github/securing-your-account-with-two-factor-authentication-2fa)
 
@@ -945,10 +954,6 @@ cd d:nospace/learngit
 
 
 ### git衍生内容学习笔记
-
-
-
-研究git对单项目免密方法
 
 
 感觉发件者获取公钥进行加密，收件者再用私钥解密这个模式没啥问题啊
