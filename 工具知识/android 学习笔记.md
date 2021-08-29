@@ -1,39 +1,72 @@
+# 简要综述
+
+- 编辑器  
+  除了as外还可以用Eclipse和IntelliJ作为编辑器
+- [API级别](https://developer.android.google.cn/guide/topics/manifest/uses-sdk-element#ApiLevels)
+
+
+
 # android studio
 
-除了as外安卓开发还可以用Eclipse和IntelliJ作为编辑器
+[界面及名称说明](https://developer.android.google.cn/studio/intro#the_user_interface)
 
-- 需配合使用的工具
-  - jdk
+### 需配合使用的工具
+
+这里只记录各工具与android studio衔接的部分
+
+- 查看jdk与Android SDK的安装位置  
+
+  - jdk  
+    - AS203版本  
+      要去Gradle的设置里找  
+      （打开Gradle设置的方法在本笔记搜索“打开Gradle设置”即可查看）
+    - AS202版本  
+      点左上角File按钮，然后点Project Structure按钮
   - Android SDK  
-    [官网](https://developer.android.google.cn/studio/install?hl=zh-cn#windows)的安装视频里有下载Android SDK的选项  
-    但是2021.7.9下载的202.7486908版本android studio里并没有这个选项
-    - AS启动时如果没在默认位置检测到Android SDK  
-      会弹窗提示`Unable to access Android SDK add-on list`  
-      ![`Unable to access Android SDK add-on list`](https://img-blog.csdn.net/20180809133741180?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTAzNTgxNjg=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)  
-      可以百度到不少相关资料
+    点左上角File按钮，然后点Project Structure按钮
 
-- 开启项目后gradle下半天的问题  
-  开系统翻墙也不好使  
-  - 解决方法：
-    1. 翻墙下好gradle的压缩包  
-       （比如gradle-6.5-bin.zip就是[这个地址](https://downloads.gradle-dn.com/distributions/gradle-6.5-bin.zip)）
-    2. 关掉AS
-    3. 找到类似`C:\Users\Administrator\.gradle\wrapper\dists\gradle-6.5-bin\6nifqtx7604sqp1q6g8wikw7p`这样的目录
-    4. 把类似`gradle-6.5-bin.zip.lck`和`gradle-6.5-bin.zip`的2个文件删掉
-    5. 放入下好的gradle压缩包
-    6. 开启AS
-    7. 剩下的AS会处理好，也会把压缩文件解压出来
+- jdk  
+
+  - > OpenJDK（Java 开发工具包）与 Android Studio 捆绑在一起 —— [官方推荐的教程](https://developer.android.com/codelabs/android-training-hello-world?index=..%2F..%2Fandroid-training#2)
+
+  - > 安装android studio时就要配上jdk —— 冯怡茹
+
+  - > java -version没输出成功不代表没有jdk，AS是只要电脑硬盘里有jdk选位置就行了 —— 冯怡茹
+- Android SDK  
+  [官网](https://developer.android.google.cn/studio/install?hl=zh-cn#windows)的安装视频里有下载Android SDK的选项  
+  但是2021.7.9下载的202.7486908版本android studio里并没有这个选项
+
+  - AS启动时如果没在默认位置检测到Android SDK  
+    会弹窗提示`Unable to access Android SDK add-on list`  
+    ![`Unable to access Android SDK add-on list`](https://img-blog.csdn.net/20180809133741180?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTAzNTgxNjg=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)（不知道是不是只有第一次打开时才有，2021.7.9下载的版本在日常使用中是没看见这个弹窗的)  
+    可以百度到不少相关资料【】搞这个
+    
+  - >android studio需要android sdk，一般是软件下载完之后可以再配置的 —— 冯怡茹
+
+- gradle
+  - 开启项目后gradle下半天的问题  
+    开系统翻墙也不好使  
+    - 解决方法：
+      1. 翻墙下好gradle的压缩包  
+         （比如gradle-6.5-bin.zip就是[这个地址](https://downloads.gradle-dn.com/distributions/gradle-6.5-bin.zip)）
+      2. 关掉AS
+      3. 找到类似`C:\Users\Administrator\.gradle\wrapper\dists\gradle-6.5-bin\6nifqtx7604sqp1q6g8wikw7p`这样的目录
+      4. 把类似`gradle-6.5-bin.zip.lck`和`gradle-6.5-bin.zip`的2个文件删掉
+      5. 放入下好的gradle压缩包
+      6. 开启AS
+      7. 剩下的AS会处理好，也会把压缩文件解压出来
+  - 打开Gradle设置方法  
+    AS203版本
+    - 方法一：在右侧打开  
+      按下图顺序点击  
+      ![在AS右侧打开gradle设置的方法](..\图片\在AS右侧打开gradle设置的方法.png)
+    - 方法二：在file按钮里打开  
+      先点击左上角file按钮  
+      再点击Settings按钮  
+      再点下图红框  
+      ![在file按钮里打开gradle设置的方法](..\图片\在file按钮里打开gradle设置的方法.png)
 
 
-
-# 命令行
-
-- `android.BAT`  
-  以`“android sdk”绝对路径\tools\android.BAT`开头在命令行里可以执行一些命令  
-  - 查看可执行命令：  
-    执行`“android sdk”绝对路径\tools\android.BAT`来查看  
-  - 可执行命令示例：  
-    `D:\devtools\android\android_sdk\tools\android.BAT list target`
 
 
 
@@ -101,10 +134,32 @@
 如果已经配置完毕的话，只要点击Run按钮（![toolbar-run](../图片/app开发/toolbar-run.png)）就可以模拟真实设备（要稍等一会才会开启）
 
 - 如果没有模拟成功  
-  1. 需要在Tools/AVD Manager里查看是否有可用的配置
-  2. 有的话，检查是否在下拉列表里选择了可用的AVD  
-     下拉列表如下：  
-     ![下拉列表中的AVD](../图片/app开发/下拉列表中的AVD.png)
+  1. 需要在Tools列表的AVD Manager选项卡里查看是否有可用的配置
+     1. 有的话  
+        检查是否在下拉列表里选择了可用的AVD  
+        下拉列表如下：  
+        ![下拉列表中的AVD](../图片/app开发/下拉列表中的AVD.png)
+
+     2. 有一次装好AS发现很多地方都找不到AVD Manager  
+        像上面截图的这个列表里就没有（好像列表都没看见）  
+        Tools列表里也没有AVD Manager  
+        不过这时候右上角是有![AVD Manager](https://developer.android.google.cn/studio/images/buttons/toolbar-avd-manager.png)图标的  
+        这3个地方点开效果都一样的  
+        同时还有如下报错   
+
+        ```
+        Could not automatically detect an ADB binary. Some emulator functionality will not work until a custom path to ADB is added. This can be done in Extended Controls后续内容懒得打字了
+        ```
+
+        后来在几次关闭、新建项目后这些东西就都有了，也不报错了（除了新建、关闭项目外什么操作都没做)
+
+- 打开虚拟设备后一直白屏的问题  
+  按[这篇文章](https://blog.csdn.net/cjzjolly/article/details/79892191)把Graphics选项改为Software后再开就正常了  
+
+  - 详细描述  
+    有一次一开始并没有白屏问题  
+    开关多次后不知道在哪个环节出现了白屏问题  
+    并且多次重启也不行
 
 
 
@@ -167,16 +222,46 @@ android virtual devices（安卓虚拟设备）
 
 
 
+**AVD Manager**
+
+- AS里很多地方都可以打开AVD Manager（不同地方点开效果一样的）  
+  比如右上角的这个按钮![AVD 管理器图标](https://developer.android.google.cn/studio/images/buttons/toolbar-avd-manager.png)  
+  点开可以看到一个个AVD  
+  双击AVD即可在屏幕上呼出虚拟手机
 
 
-# [API级别](https://developer.android.google.cn/guide/topics/manifest/uses-sdk-element#ApiLevels)
+
+# 命令行
+
+- `android.BAT`  
+  以`“android sdk”绝对路径\tools\android.BAT`开头在命令行里可以执行一些命令  
+  - 查看可执行命令：  
+    执行`“android sdk”绝对路径\tools\android.BAT`来查看  
+  - 可执行命令示例：  
+    `D:\devtools\android\android_sdk\tools\android.BAT list target`
 
 
 
 # 其他
 
+
+
+### android sdk  
+
+- 判断Android SDK是否安装成功  
+
+  > 命令`android -h` —— [某个不一定靠谱的博客](https://blog.csdn.net/weixin_33898233/article/details/93065818)
+
 - adb  
-  
+
   > Android 调试桥 (adb) 是一种功能多样的命令行工具，可让您与设备进行通信 —— [android调试桥(adb)](https://developer.android.google.cn/studio/command-line/adb?hl=zh_cn)
-  
+
   - > `adb` 包含在 Android SDK 平台工具软件包 —— [android调试桥(adb)](https://developer.android.google.cn/studio/command-line/adb?hl=zh_cn)
+
+
+
+
+
+# 学习
+
+- [官方推荐的教程](https://developer.android.com/courses)
