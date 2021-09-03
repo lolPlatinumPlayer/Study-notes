@@ -726,7 +726,8 @@ v-bind:style="{ color: activeColor, fontSize: fontSize + 20 + 'px' }"
 
 - 所有显示/不显示切换都可以带上该种过渡效果
 - 需加效果部分须在transition标签内
-- 可以在transition标签中加入appear来设置节点在初始渲染的过渡
+- 设置节点在初始渲染的过渡  
+  可以在transition标签中加入appear来设置
 - 可以使用css的animation属性
 
 ##### 多个元素过渡
@@ -1175,6 +1176,12 @@ methods: {
 
 
 
+### [函数式组件](https://cn.vuejs.org/v2/guide/render-function.html#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6)
+
+[这个文章](https://www.jianshu.com/p/3e22abebc97b)也可以看一看
+
+
+
 
 ### 让组件在超出html标签嵌套规则的情况下正常使用
 在需要组件的地方先写一个符合 标签嵌套规则 的标签，加上is属性，如：  
@@ -1500,7 +1507,7 @@ mounted: function () {
 - 默认插槽也就是名为default的具名插槽  
   （这点在[2.6.0版本文档](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%85%B7%E5%90%8D%E6%8F%92%E6%A7%BD)和[2.6.0之前版本文档](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%B8%A6%E6%9C%89-slot-scope-attribute-%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%8F%92%E6%A7%BD)里都有说）
 
-使用步骤：
+最简使用步骤：
 
 1. 在组件中写`<slot></slot>`
 2. 使用组件的时候，在组件首尾标签间的模板就会渲染到`<slot></slot>`处
@@ -1526,7 +1533,11 @@ mounted: function () {
   [慕课网](https://www.imooc.com/article/details/id/25193)上有人说尤雨溪已经回复过这个问题  
   - 替代方案  
     `keep-alive`加`v-if`
-- slot上的style不会传递下去
+- slot上的style不会传递下去  
+  class似乎也不会
+- 通过vue实例访问slot  
+  方法：通过[`$slots`](https://cn.vuejs.org/v2/api/#vm-slots)或[`$scopedSlots`](https://cn.vuejs.org/v2/api/#vm-scopedSlots)  
+  （模板里也可用）
 
 疑似bug：
 
@@ -1540,38 +1551,38 @@ mounted: function () {
 
     ```vue
     <template v-for="(item, key) in colDict">
-                <el-table-column
-                  :prop="key"
-                  :label="item.name"
-                  :key="key"
-                  v-if="item.valFn"
-                >
-                  <template slot-scope="scope">
-                    {{ item.valFn(scope.row[key]) }}
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  :prop="key"
-                  :label="item.name"
-                  :key="key"
-                  v-else
-                ></el-table-column>
-              </template>
+      <el-table-column
+        :prop="key"
+        :label="item.name"
+        :key="key"
+        v-if="item.valFn"
+      >
+        <template slot-scope="scope">
+          {{ item.valFn(scope.row[key]) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        :prop="key"
+        :label="item.name"
+        :key="key"
+        v-else
+      ></el-table-column>
+    </template>
     ```
 
   - 不可用  
 
     ```vue
     <el-table-column
-                v-for="(item, key) in colDict"
-                :prop="key"
-                :label="item.name"
-                :key="key"
-              >
-                <template v-if="item.valFn" slot-scope="scope">
-                  {{ item.valFn(scope.row[key]) }}
-                </template>
-              </el-table-column>
+      v-for="(item, key) in colDict"
+      :prop="key"
+      :label="item.name"
+      :key="key"
+    >
+      <template v-if="item.valFn" slot-scope="scope">
+        {{ item.valFn(scope.row[key]) }}
+      </template>
+    </el-table-column>
     ```
 
   
@@ -2102,7 +2113,9 @@ bug
 
 **按需导入**
 
-官方例子让你配`babel-preset-es2015`实际上这样是不好的，没装`babel-preset-es2015`的话会遇到问题，`babel-preset-es2015`早就被babel放弃了，跟上潮流把`babel-preset-es2015`改成`@babel/preset-env`才能让一切顺利
+官方例子让你配`babel-preset-es2015`实际上这样是不好的  
+（没装`babel-preset-es2015`的话会遇到问题，而`babel-preset-es2015`早就被babel放弃了）  
+跟上潮流把`babel-preset-es2015`改成`@babel/preset-env`才能让一切顺利
 
 
 
@@ -2382,6 +2395,17 @@ el-table的不行，会报一个并不真实的错误，我觉得应该是依赖
 
 
 
+##### 可优化空间
+
+轮播
+
+- 只有一张时隐藏指示器和箭头
+- 鼠标拖动翻页
+
+
+
+
+
 ##### 其他
 
 - [加载状态](https://element.eleme.cn/#/zh-CN/component/loading)  
@@ -2401,10 +2425,11 @@ el-table的不行，会报一个并不真实的错误，我觉得应该是依赖
   
 - 隐藏组件  
 
-  > 官方在 github 的 issues 中表示不会写在文档中，需要用的自己看源码进行调用  —— [博客](https://blog.csdn.net/u012260238/article/details/103907206) 
-> （[A](https://github.com/Leopoldthecoder)和[B](https://github.com/QingWei-Li)确实在2016、2017年在多个isuue里说了该问题，但是2021.5.24时他们并不是[饿了么前端的poeple](https://github.com/orgs/ElemeFE/people)）
-
   - el-scrollbar  
+
+    > 官方在 github 的 issues 中表示不会写在文档中，需要用的自己看源码进行调用  —— [博客](https://blog.csdn.net/u012260238/article/details/103907206) 
+  
+  （[用户A](https://github.com/Leopoldthecoder)和[用户B](https://github.com/QingWei-Li)确实在2016、2017年在多个issue里说了该问题，但是2021.5.24时他们并不是[饿了么前端的poeple](https://github.com/orgs/ElemeFE/people)）
   
     - 猜测用法：在可能需要滚动条的地方套上  
     
