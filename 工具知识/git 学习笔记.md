@@ -4,10 +4,20 @@
 
 - hrtGitLab会自动删除空文件夹  
   这个删除操作甚至在git记录里看不到
+  
 - hrtGiltLab无法修改文件或目录的大小写  
   （无法检测到这个修改）  
   本地记录里显示的也是更名前的名字
+  
   - 在真真win10联想笔记本上可以检测到大小写变更
+  
+- 升级git  
+
+  > - 2.13及之前版本中不存在更新命令
+  > - 2.14.2和2.16.1之间的命令是git update
+  > - 2.16.1之后是git update-git-for-windows
+  >
+  > —— [stackoverflow](https://stackoverflow.com/questions/13790592/how-to-upgrade-git-on-windows-to-the-latest-version/48924212#48924212)
 
 # 基础知识
 
@@ -108,6 +118,9 @@
           helper = store
   ```
   
+- 取消免密  
+  把上文的`helper = store`这行删掉就行了
+
 - “远程仓库名”  
   连接远程仓库时可以设置“远程仓库名”（hrt的git环境强制要设置“远程仓库名”）  
   命令为：`git remote add 远程仓库名 ssh://xxx.git`  
@@ -424,10 +437,18 @@ git checkout 分支名 // 切换分支
 
 ### 重命名分支
 
-- 重命名本地当前（指向的）分支  
+本地的
+
+- 重命名当前（指向的）分支  
   `git branch -m 新的分支名`
-- 重命名本地非当前（指向的）分支  
+- 重命名非当前（指向的）分支  
   `git branch -m 旧的分支名 新的分支名`
+
+远程的
+
+- 百度到的都是先删除，然后本地改完再提交
+
+
 
 
 
@@ -869,7 +890,9 @@ git commit -m 'xxx'
   - git bash：可用
   - cmd：不可用
 
-码云
+
+
+### 码云
 
 - 码云上多行commit信息的显示不好  
   一开始只会显示一行，要鼠标移上去一会才会显示全部内容
@@ -879,14 +902,41 @@ git commit -m 'xxx'
 
 
 
-git bash
+### github
+
+仓库的身份验证
+
+- > - 2021年 8月13日开始禁止使用帐号密码进行验证
+  > - 必须在2021年8月13日之前通过 HTTPS（推荐）或 SSH密钥开始使用PAT
+  >
+  >  —— [github blog](https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/)
+
+- PAT  
+
+  - [PAT使用方式](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+    
+    - 用git bash  
+      用https还是老样子，只是把密码改成了PAT  
+      - <span style='color:red'>注意：</span>  
+        有时候发现输不了密码，那是因为设置了免密
+    - 用github desktop（[github blog](https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/)里说了停用帐号密码不会影响desktop）
+    - 用GitHub CLI（[缓存凭证](https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git)中提到了）
+    - 用Git Credential Manager Core (GCM Core)（[缓存凭证](https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git)中提到了）
+    
+  - > PAT只能用于 HTTPS Git 操作。如果您的存储库使用 SSH 远程 URL，则需要将远程从 SSH 切换到 HTTPS —— [PAT使用方式](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+
+- [2FA](https://docs.github.com/en/github/authenticating-to-github/securing-your-account-with-two-factor-authentication-2fa)
+
+
+
+### git bash
 
 - 即使窗口关闭过，也能查看之前的命令记录  
   且能查看其他目录下的命令
 
 
 
-webstorm
+### webstorm
 
 webstorm相关内容去webstorm的笔记里查看（位于《其他工具 学习笔记》）
 
@@ -913,10 +963,6 @@ cd d:nospace/learngit
 
 
 ### git衍生内容学习笔记
-
-
-
-研究git对单项目免密方法
 
 
 感觉发件者获取公钥进行加密，收件者再用私钥解密这个模式没啥问题啊

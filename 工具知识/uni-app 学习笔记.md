@@ -266,7 +266,7 @@ App.vue代表应用
 
     - > 小程序端 web-view 组件一定有原生导航栏，下面一定是全屏的 web-view 组件，navigationStyle: custom 对 web-view 组件无效 —— [官网](https://uniapp.dcloud.net.cn/component/web-view)
     
-      （微信）小程序是一定有导航栏的，和是不是webview没关系
+      （微信）小程序就算去了导航栏，右上角的按钮也去不掉
 
 
 

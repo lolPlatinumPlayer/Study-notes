@@ -81,7 +81,19 @@
 - 常规情况下  
   如果不用dataset的话x轴要传入data  
   不然x轴下方不显示名称
-- [延展坐标轴数值](https://echarts.apache.org/zh/option.html#yAxis.boundaryGap)
+- 设置y轴最大值  
+  - 用max设置  
+    设置后有可能出现最后一条横线和其他横线间距不均匀的情况  
+    甚至有可能近到一条横线的y轴数值无法显示
+  - [自动计算时调整最大值](https://echarts.apache.org/zh/option.html#yAxis.boundaryGap)（自动计算指的是不设置`max`）  
+    `boundaryGap: [最小值, 最大值]`  
+    - 最小值  
+      一般情况下用`'0%'`  
+      如果设`50%`的话，在最大一条数据和最小数据差别比较大时，会向下延展，设'100%'会延展更多（表述不清楚，实践就懂了）
+- y轴数值强制显示  
+  应该没办法实现  
+  试过[`interval: 0`](https://echarts.apache.org/zh/option.html#yAxis.axisLabel.interval)  
+  甚至写其他数字也没效果，可能因为不是类目轴
 
 
 
@@ -133,8 +145,11 @@ rich:{
 
 ### [标线](https://echarts.apache.org/zh/option.html#series-line.markLine)
 
-用来在折线图上画线段的  
-有[丰富的手段](https://echarts.apache.org/zh/option.html#series-line.markLine.data)设置起点和终点
+用来在折线图、柱状图上画线段的  
+有[丰富的手段](https://echarts.apache.org/zh/option.html#series-line.markLine.data)设置起点和终点  
+（官网上没说柱状图可以用，但是实际上可以）
+
+- 柱图标线上的tooltip显示效果不完美
 
 
 
@@ -503,6 +518,12 @@ demo1更合理
     键值写是否选中
   - 全选与反选按钮（[`selector`](https://echarts.apache.org/zh/option.html#legend.selector)）
 
+- 居中  
+  - 水平居中图例整体  
+    不设置left和right就可以居中（目前没找到其他方法）
+  - 让图例子项水平对齐  
+    没找到方法
+
 
 
 ### 说明
@@ -701,3 +722,18 @@ demo1更合理
 
 
 
+### 未归类
+
+- 使用和“item”中文本一样的颜色    
+  随便写一个非法的字符串色值即可  
+  （注意：主题不要设为dark）  
+  （只测过echarts4）
+
+  - 可用场景：富文本、图例的color配置
+  
+- echarts[主题](https://echarts.apache.org/v4/zh/api.html#echarts.init)设为'dark'会导致部分“item”颜色丢失  
+
+  - [这个例子](https://www.makeapie.com/editor.html?c=xCCPKm1NLI)就可以体现  
+    这个例子中设为dark会导致小圆点和圆点后的文本都变成白色  
+
+  （只测过echarts4）
