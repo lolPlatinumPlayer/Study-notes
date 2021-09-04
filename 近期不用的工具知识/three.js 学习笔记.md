@@ -1,17 +1,23 @@
-## [入门代码](https://threejs.org/docs/index.html#manual/zh/introduction/Creating-a-scene)
+# 简要综述
 
-## js判断浏览器是否支持webGL
+### [入门代码](https://threejs.org/docs/index.html#manual/zh/introduction/Creating-a-scene)
+
+### js判断浏览器是否支持webGL
 
 https://threejs.org/docs/index.html#manual/zh/introduction/WebGL-compatibility-check
 
+### bug
 
-## 坐标系（默认情况下）
+- i5 5代核显对sprite和mesh重叠颜色时可能出现问题
+
+### 坐标系（默认情况下）
+
 x轴向右  
 y轴向上  
 z轴向屏幕外  
 
 
-## `Object3D`
+# `Object3D`
 很多类都继承自`Object3D`（如场景类、组类、对象类等）  
 `add`方法：可以同时添加不限个数的对象、光源，也可以多次添加 
 
@@ -62,15 +68,23 @@ scene.add(cube); // 将对象加进场景中
  
 
 
-## 场景
+# 场景
 - 创建：`let scene=new THREE.Scene()`
 - 添加内容：`Object3D`的`add`方法
 - 改变背景色  
-  `scene.background = new THREE.Color( 十六进制或字符串 )`  
-  这里字符串色值可以缩写
+  - WebGLRenderer（CanvasRenderer不能用这个方法）  
+    `scene.background = new THREE.Color( 十六进制或字符串 )`  
+    这里字符串色值可以缩写
+  - CanvasRenderer  
+    只能用清除色当背景色  
+    `renderer.setClearColor`方法  
+  - 透明背景色  
+    （上面说的2种渲染器都可用）  
+    操作方法：将渲染器的alpha配置项设为true，并且不设置scene.background和renderer.setClearColor  
+    例如：`new THREE.CanvasRenderer({ alpha: true })`
 
 
-## 相机
+# 相机
 - 创建：`let camera=new THREE.PerspectiveCamera(视角,获取图像宽高比,最近渲染距离,最远渲染距离)`
   - 获取图像宽高比：就是相机捕获到的图像的宽高比，猜测：一般这个图像会拉伸着塞进canvas里
   - 是否渲染：只有同时在渲染距离与视角内的物体才会被渲染
@@ -98,8 +112,12 @@ scene.add(cube); // 将对象加进场景中
 - 缩放：scale
 - quaternion暂不理解
 
+# 渲染器
 
-## 渲染器
+- 类型
+  - webgl
+  - canvas
+
 - 创建：`let renderer = new THREE.WebGLRenderer()`
 - 设置canvas节点尺寸：`renderer.setSize(宽度,高度)`  
   宽高只接受数字，渲染时会自动加上px
@@ -108,7 +126,7 @@ scene.add(cube); // 将对象加进场景中
 - 最终渲染
   `renderer.render( scene, camera )`
 
-## 光源
+# 光源
 
 - **点光源**  
 
@@ -130,7 +148,7 @@ scene.add(cube); // 将对象加进场景中
 
 
 
-## 材质
+# 材质
 
 物体的`material`属性可以使用`material`实例，也可以使用由`material`实例组成的数组  
 
@@ -145,19 +163,6 @@ scene.add(cube); // 将对象加进场景中
 - `material`实例由纹理（map）与颜色等构成
 
 - `copy`方法：只能在属于同一个类的材质间使用
-
-- 网格：？
-  - 直接上色：MeshBasicMaterial  
-    什么情况下都固定颜色
-  - 漫反射：MeshLambertMaterial、MeshPhongMaterial（MeshPhongMaterial会反光而MeshLambertMaterial不会，MeshPhongMaterial还多了很多成员）  
-    没有光源的话将不显示
-  - 特别花的花纹：MeshDistanceMaterial  
-  
-- 线：  
-
-  `new THREE.LineDashedMaterial({color:'red'})`  
-
-  线的宽度基本只能是1像素，size是无法生效的，官网有提到具体原因  
 
 - 更换贴图：给material.map赋值新new的图片或者新new的canvas  
   （不过在whs的精灵组件中可以给spriteMaterial.map赋值）
@@ -189,7 +194,7 @@ scene.add(cube); // 将对象加进场景中
 
 
 
-##### 贴图/纹理
+### 贴图/纹理
 
 three中在纹理和贴图间没有明显的界限，经常会叫“纹理贴图”  
 英文就是Texture，有时候是map  
@@ -203,11 +208,40 @@ three中在纹理和贴图间没有明显的界限，经常会叫“纹理贴图
   ```
 
   注意：three里视频的画面和videoDom的是一致的
+  
+- 使用canvas  
+
+  ```js
+  var material = new THREE.SpriteMaterial({
+    color: '#097bdb',
+    map:new THREE.CanvasTexture(canvas的dom),
+  })
+  ```
+
+  
+
+
+
+### 具体材质
+
+- 网格：？
+
+  - 直接上色：MeshBasicMaterial  
+    什么情况下都固定颜色
+  - 漫反射：MeshLambertMaterial、MeshPhongMaterial（MeshPhongMaterial会反光而MeshLambertMaterial不会，MeshPhongMaterial还多了很多成员）  
+    没有光源的话将不显示
+  - 特别花的花纹：MeshDistanceMaterial  
+
+- 线：  
+
+  `new THREE.LineDashedMaterial({color:'red'})`  
+
+  线的宽度基本只能是1像素，size是无法生效的，官网有提到具体原因  
 
 
 
 
-## 形状
+# 形状
 mesh的geometry在赋值新的bufferGeometry后会变成新的形状【】更广泛的场景待测试
 
 - **立方体**  
@@ -352,8 +386,11 @@ mesh的geometry在赋值新的bufferGeometry后会变成新的形状【】更广
     函数中要调用`target.set(最终x坐标,最终y坐标,最终z坐标)`来生成最终的点  
     最终坐标的单位与three空间一致  
 
+# Sprite对象（总朝着相机的一个平面）
 
-## Sprite对象（总朝着相机的一个平面）
+老版本还有一个SpriteCanvasMaterial对象（新版不知道有没有，起码文档没有）  
+SpriteCanvasMaterial只能在CanvasRenderer里用
+
 ```javascript
 const spriteMap = new THREE.TextureLoader().load("图片地址") // 这个加载是异步的
 const spriteMaterial = new THREE.SpriteMaterial({
@@ -384,7 +421,7 @@ const sprite = new THREE.Sprite(spriteMaterial)
   xy为0时在左下角，为1时在右上角，值的大小不限  
   之后旋转位移缩放等都会以此为中心  
 
-## Points对象（总朝着相机的多个平面）
+# Points对象（总朝着相机的多个平面）
 
 要配合[PointsMaterial](https://threejs.org/docs/#api/zh/materials/PointsMaterial)使用
 
@@ -410,7 +447,7 @@ const p = new THREE.Points(pG,pM)
 
 
 
-## 鼠标拾取（鼠标碰了什么物体）
+# 鼠标拾取（鼠标碰了什么物体）
 
 ```javascript
 var raycaster = new THREE.Raycaster();
@@ -442,12 +479,12 @@ window.addEventListener( 'mousemove', onMouseMove, false );
 - 组本身是无法被拾取的
 
 
-## 组
+# 组
 只有两个添加子项的方法：
 1. `Object3D`的`add`方法
 2. `子项.addTo(组)`
 
-## 动画
+# 动画
 
 **渲染器动画**
 
@@ -504,7 +541,7 @@ animate();
 
   更多内容详见[官网](https://threejs.org/docs/index.html#api/zh/animation/KeyframeTrack)   
 
-## 矩阵
+# 矩阵
 
 - **新建矩阵**  
 
@@ -558,19 +595,19 @@ animate();
 
     应该代表：物体中的向量直接乘以这个矩阵就会变成实际显示的向量
 
-## 着色器
+# 着色器
 
 用`ShaderMaterial`  
 `attribute`估计来自`BufferGeometry`或`InstancedBufferGeometry`的`setAttribute`方法（以前可能叫`addAttribute`）
 
-## 性能提升
+# 性能提升
 
 - 使用引用材质
 - 去除阴影
 - 把`MeshPhongMaterial`改为`MeshLambertMaterial`
 
 
-## 其他
+# 其他
 - **向量的`set`方法**  
 
   可以通过`set`改变向量的值  
@@ -586,7 +623,7 @@ animate();
   - `copy`方法都是对各种BufferGeometry用的
 
 
-## three辅助方法
+# 辅助方法
 - 渲染几何体所有面的法线
     ```javascript
     geometry = new THREE.BoxGeometry( 10, 10, 10, 2, 2, 2 );
@@ -599,28 +636,25 @@ animate();
 
 
 
+# 配合three使用的工具
+
+### [官方编辑器](https://threejs.org/editor/)
+
+编辑后可以导出代码
+
+- 似乎不能导入模型
 
 
-
-# 记录
-
-- i5 5代核显对sprite和mesh重叠颜色时可能出现问题
-
-
-
-# 配合使用的工具
-
-
-## stats
+### stats
 功能：提供一个帧率显示面板
 地址：https://github.com/mrdoob/stats.js
 
 
-## dat.gui
+### dat.gui
 功能：提供一个可以控制指定数据的面板
 地址：https://github.com/dataarts/dat.gui
 
-##### 自写教程
+**自写教程**
 
 - `const gui = new dat.GUI()`  
   `gui.add(对象,对象的键名,最小值,最大值)`  
@@ -630,7 +664,7 @@ animate();
 
 
 
-## OrbitControls
+### OrbitControls
 功能：鼠标控制相机
 使用方法：
 1. `const ms_Controls = new THREE.OrbitControls(camera, renderer.domElement);`
@@ -639,7 +673,7 @@ animate();
 地址：可能是https://github.com/fibo/three-orbitcontrols
 three仓库里有源码，路径为“examples/js/controls/OrbitControls.js”
 
-## postprocessing
+### postprocessing
 
 似乎是在渲染器上做后期效果的
 

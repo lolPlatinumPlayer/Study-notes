@@ -282,9 +282,23 @@
           * [个人教程](ch1/handbook.md)
     ```
 
-- vuepress  
-  [vue3文档](https://github.com/vuejs/docs-next-zh-cn)应该就是用vuepress转的
-
+- VuePress与VitePress  
+  
+>- VuePress使用webpack与vue2
+  >- VitePress使用vite与vue3
+  >- VitePress有所有VuePress优点
+  >
+  >—— 尤雨溪（[视频](https://www.bilibili.com/video/BV1JK4y1G7bf)第10分钟）
+  
+  - vuepress  
+    [vue3文档](https://github.com/vuejs/docs-next-zh-cn)应该就是用vuepress转的
+  
+  - VitePress
+    
+  - > 如果有新项目要做文档，推荐VitePress —— 尤雨溪（[视频](https://www.bilibili.com/video/BV1JK4y1G7bf)第13分钟）
+    
+    - > 可以用，但还在开发阶段—— 尤雨溪（[视频](https://www.bilibili.com/video/BV1JK4y1G7bf)第13分钟）
+  
 - [vue-router3](https://github.com/vuejs/vue-router/tree/dev/docs/zh)的文档就是用md写的  
   估计也是用vuepress
 

@@ -78,10 +78,15 @@
   
 - 从[博客A](https://blog.csdn.net/fu983531588/article/details/90321827)看来  
   （以下内容并未实践）
-  - keep-alive中的组件比其他组件多一些生命周期钩子
+  - keep-alive中的组件比其他组件多一些生命周期钩子  
+    比如[activated](https://cn.vuejs.org/v2/api/#activated)和[deactivated](https://cn.vuejs.org/v2/api/#deactivated)
   - 可以配合vue-router使用
   
-  
+
+和v-show区别
+
+- v-show不能配合`is`使用
+- v-show没有显隐的生命周期
 
 
 
@@ -441,15 +446,12 @@ trim:过滤用户输入的首尾空格
 
 
 
-### data选项
+### [data选项](https://cn.vuejs.org/v2/api/#data)
 
-- 必须是函数，在其中写入“return{a:1}”可以让所有同名组件拥有独立的a数据（值为1）
-
-- Vue对象中data属性用来存放vue操作的数据，可在Mustache中写属性名直接打印，也可在其他vue属性中用 this.属性名 来调用，vue对象外可用 `vue对象名.属性名` 调用。
-
-- 可用对象代理
-
+- 可以通过[`this.$data`](https://cn.vuejs.org/v2/api/#vm-data)访问
+  
 - 子项与视图更新
+  
   - 子项变化会不会触发视图更新取决于子项在初始情况存不存在
   
   - 如果希望在操作初始不存在的子项后更新视图
@@ -461,20 +463,16 @@ trim:过滤用户输入的首尾空格
 - 对象直接赋值的话不会触发视图更新【】有空再确认下  
   键名应该可以是中文
   
-- 重置指定data  
-  `this.data名=this.$options.data().data名`
+- 重置data
+  
+  - 重置指定data  
+    `this.data名=this.$options.data().data名`
+  - 重置所有data  
+    `Object.assign(this.$data,this.$options.data())`
   
 - 异步更新  
 
-  - 同组件data  
-    虽然官网说data是异步更新的  
-    但是如下写法仍然可行  
-
-    ```js
-    const obj={}
-    this.dataA={}
-    console.log(this.dataA===obj) // 结果为true
-    ```
+  - 改变data后视图更新是异步的
 
   - “跨组件data”    
     如果说父组件把data传给子组件的prop  
@@ -728,7 +726,8 @@ v-bind:style="{ color: activeColor, fontSize: fontSize + 20 + 'px' }"
 
 - 所有显示/不显示切换都可以带上该种过渡效果
 - 需加效果部分须在transition标签内
-- 可以在transition标签中加入appear来设置节点在初始渲染的过渡
+- 设置节点在初始渲染的过渡  
+  可以在transition标签中加入appear来设置
 - 可以使用css的animation属性
 
 ##### 多个元素过渡
@@ -1177,6 +1176,12 @@ methods: {
 
 
 
+### [函数式组件](https://cn.vuejs.org/v2/guide/render-function.html#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6)
+
+[这个文章](https://www.jianshu.com/p/3e22abebc97b)也可以看一看
+
+
+
 
 ### 让组件在超出html标签嵌套规则的情况下正常使用
 在需要组件的地方先写一个符合 标签嵌套规则 的标签，加上is属性，如：  
@@ -1499,8 +1504,10 @@ mounted: function () {
 
 - 官方名称：[插槽](https://cn.vuejs.org/v2/guide/components-slots.html)
 - vue2.6.0前后插槽api是不同的
+- 默认插槽也就是名为default的具名插槽  
+  （这点在[2.6.0版本文档](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%85%B7%E5%90%8D%E6%8F%92%E6%A7%BD)和[2.6.0之前版本文档](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%B8%A6%E6%9C%89-slot-scope-attribute-%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%8F%92%E6%A7%BD)里都有说）
 
-使用步骤：
+最简使用步骤：
 
 1. 在组件中写`<slot></slot>`
 2. 使用组件的时候，在组件首尾标签间的模板就会渲染到`<slot></slot>`处
@@ -1515,15 +1522,22 @@ mounted: function () {
 - 一个组件可以接收多份模板代码（`slot`）  
   这情况官方名称是：[具名插槽](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%85%B7%E5%90%8D%E6%8F%92%E6%A7%BD)  
   写法有4种  
-  - `<普通标签 slot="插槽名">xxx</普通标签>`
-  - `<template slot="插槽名">xxx</template>`
-  - `<template v-slot:插槽名>xxx</template>`
+  - `<普通标签 slot="插槽名">xxx</普通标签>`  
+    2.6.0起不推荐，3.0废弃
+  - `<template slot="插槽名">xxx</template>`  
+    2.6.0起不推荐，3.0废弃
+  - `<template v-slot:插槽名>xxx</template>`  
+    2.6.0新增
   - `<template #插槽名>xxx</template>`
 - 不能使用v-show  
   [慕课网](https://www.imooc.com/article/details/id/25193)上有人说尤雨溪已经回复过这个问题  
   - 替代方案  
     `keep-alive`加`v-if`
-- slot上的style不会传递下去
+- slot上的style不会传递下去  
+  class似乎也不会
+- 通过vue实例访问slot  
+  方法：通过[`$slots`](https://cn.vuejs.org/v2/api/#vm-slots)或[`$scopedSlots`](https://cn.vuejs.org/v2/api/#vm-scopedSlots)  
+  （模板里也可用）
 
 疑似bug：
 
@@ -1537,38 +1551,38 @@ mounted: function () {
 
     ```vue
     <template v-for="(item, key) in colDict">
-                <el-table-column
-                  :prop="key"
-                  :label="item.name"
-                  :key="key"
-                  v-if="item.valFn"
-                >
-                  <template slot-scope="scope">
-                    {{ item.valFn(scope.row[key]) }}
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  :prop="key"
-                  :label="item.name"
-                  :key="key"
-                  v-else
-                ></el-table-column>
-              </template>
+      <el-table-column
+        :prop="key"
+        :label="item.name"
+        :key="key"
+        v-if="item.valFn"
+      >
+        <template slot-scope="scope">
+          {{ item.valFn(scope.row[key]) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        :prop="key"
+        :label="item.name"
+        :key="key"
+        v-else
+      ></el-table-column>
+    </template>
     ```
 
   - 不可用  
 
     ```vue
     <el-table-column
-                v-for="(item, key) in colDict"
-                :prop="key"
-                :label="item.name"
-                :key="key"
-              >
-                <template v-if="item.valFn" slot-scope="scope">
-                  {{ item.valFn(scope.row[key]) }}
-                </template>
-              </el-table-column>
+      v-for="(item, key) in colDict"
+      :prop="key"
+      :label="item.name"
+      :key="key"
+    >
+      <template v-if="item.valFn" slot-scope="scope">
+        {{ item.valFn(scope.row[key]) }}
+      </template>
+    </el-table-column>
     ```
 
   
@@ -1717,6 +1731,19 @@ mounted: function () {
 
 - `style`标签内的样式将只作用于当前组件
 
+- 『随机属性』与当前组件使用的组件
+
+  - 当前组件产生的随机属性只会加到使用组件的最外层标签上
+  - 『随机属性』不会加到渲染函数渲染出的标签上【】待验证
+
+  - 模板中传入使用组件插槽的标签也会加上当前组件的『随机属性』（只在默认插槽上测试过）
+
+- 『随机属性』会加到插槽上（只在默认插槽上测试过）
+
+- 一个组件的不同实例的『随机属性』是相同的
+
+- 一个标签可以有多个随机属性（不会互相覆盖）
+
 原理：
 
 - 在一个作用域内给所有覆盖到的html标签加上相同的 『随机属性』  
@@ -1726,8 +1753,6 @@ mounted: function () {
 注意：
 
 - 加`scoped`后外部还是能控制内部样式的
-- 『随机属性』加不到渲染函数渲染出的标签上
-- 『随机属性』会加到`slot`标签间的内容
 
 更多
 
@@ -1770,9 +1795,6 @@ mounted: function () {
     ```
 
     
-
-  
-
 
 
 
@@ -2091,7 +2113,9 @@ bug
 
 **按需导入**
 
-官方例子让你配`babel-preset-es2015`实际上这样是不好的，没装`babel-preset-es2015`的话会遇到问题，`babel-preset-es2015`早就被babel放弃了，跟上潮流把`babel-preset-es2015`改成`@babel/preset-env`才能让一切顺利
+官方例子让你配`babel-preset-es2015`实际上这样是不好的  
+（没装`babel-preset-es2015`的话会遇到问题，而`babel-preset-es2015`早就被babel放弃了）  
+跟上潮流把`babel-preset-es2015`改成`@babel/preset-env`才能让一切顺利
 
 
 
@@ -2371,6 +2395,17 @@ el-table的不行，会报一个并不真实的错误，我觉得应该是依赖
 
 
 
+##### 可优化空间
+
+轮播
+
+- 只有一张时隐藏指示器和箭头
+- 鼠标拖动翻页
+
+
+
+
+
 ##### 其他
 
 - [加载状态](https://element.eleme.cn/#/zh-CN/component/loading)  
@@ -2390,10 +2425,11 @@ el-table的不行，会报一个并不真实的错误，我觉得应该是依赖
   
 - 隐藏组件  
 
-  > 官方在 github 的 issues 中表示不会写在文档中，需要用的自己看源码进行调用  —— [博客](https://blog.csdn.net/u012260238/article/details/103907206) 
-> （[A](https://github.com/Leopoldthecoder)和[B](https://github.com/QingWei-Li)确实在2016、2017年在多个isuue里说了该问题，但是2021.5.24时他们并不是[饿了么前端的poeple](https://github.com/orgs/ElemeFE/people)）
-
   - el-scrollbar  
+
+    > 官方在 github 的 issues 中表示不会写在文档中，需要用的自己看源码进行调用  —— [博客](https://blog.csdn.net/u012260238/article/details/103907206) 
+  
+  （[用户A](https://github.com/Leopoldthecoder)和[用户B](https://github.com/QingWei-Li)确实在2016、2017年在多个issue里说了该问题，但是2021.5.24时他们并不是[饿了么前端的poeple](https://github.com/orgs/ElemeFE/people)）
   
     - 猜测用法：在可能需要滚动条的地方套上  
     

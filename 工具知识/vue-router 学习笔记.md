@@ -142,6 +142,9 @@ components的属性名与router-view的name属性值对应，对于没有name的
 
 
 ### History模式
+
+> 这种模式要玩好，还需要后台配置支持 —— [第三版文档](https://router.vuejs.org/zh/guide/essentials/history-mode.html#%E5%90%8E%E7%AB%AF%E9%85%8D%E7%BD%AE%E4%BE%8B%E5%AD%90)
+
 new VueRouter({})中加入 mode:'history' 开启History模式
 wb测试中会让url中html文件的盘符消失，并且去掉url中vue-router部分的开头井号
 【并未理解作用】（似乎是：1、让直接写url可以访问  2、让url看起来像正常的url。  其中第一点没测试成功过，可能要后端技术支持。第二点除了去掉盘符、井号并没有发现其他优化。）
@@ -150,10 +153,6 @@ history模式的网页只能在http服务器上运行，直接双击html文件�
         2. 所有图片、字体文件都找不到
        不放在http服务器更目录上的话，这些资源一样找不到，不过路由可用，但是路由到“/”时，浏览器url栏显示的会变成服务器底层地址，除此外没有其他毛病
        服务器上的图片、字体资源都是去底层目录上找
-
-
-
-
 
 
 
@@ -325,9 +324,6 @@ router.beforeEach((to, from, next) => {
     }//这个if在new VueRouter的scrollBehavior属性中同样适用
 }// requiresId 在路由的meta中存在、有值且值不为判断为‘非’的值，例子中if判断会返回true，其余情况返回false
 
-- 设置各路由的title（这个title指的是浏览器标签页的名称，也就是html的title标签设置的那个东西）  
-  `meta.title`的值就是各路由的title
-
 
 
 
@@ -340,23 +336,26 @@ router.beforeEach((to, from, next) => {
 
 <span style='opacity:.5'>下面的`router`用`vue组件实例.$router`也是一样的</span>
 
-**router.push()**
+[`router.push()`](https://router.vuejs.org/zh/guide/essentials/navigation.html#router-push-location-oncomplete-onabort)  
+（👆更多内容见文档）
 
 与`<router-link :to="...">`效果一致  
-括号中常写的有2种情况：
+参数可以是字符串或者对象
 
-- 直接写字符串，这个字符串是path（前面要有`/`）
-- 对象，可以依据name跳转，也可以依据path，还可以带query或者params（如meta等其他参数传了也没有效果）
-
-
-
-**router.replace()**
-
-完全替换当前历史记录，不管如何前进后退再执行这个方法都会完全替换掉当前的历史记录，并且对其他历史记录没有任何影响。<router-link :to="..." replace>也有同样效果。
+- 字符串  
+  这个字符串是path（前面要有`/`）
+- 对象  
+  可以依据name跳转，也可以依据path，还可以带query或者params（如meta等其他参数传了也没有效果）
 
 
 
-**router.go(n)**
+[`router.replace()`](https://router.vuejs.org/zh/guide/essentials/navigation.html#router-replace-location-oncomplete-onabort)
+
+完全替换当前历史记录，不管如何前进后退再执行这个方法都会完全替换掉当前的历史记录，并且对其他历史记录没有任何影响。`<router-link :to="..." replace>`也有同样效果。
+
+
+
+[`router.go(n)`](https://router.vuejs.org/zh/guide/essentials/navigation.html#router-go-n)
 
 在历史记录中向前或者后退多少步。【知道这些方法怎么执行后测试一下超负荷会有什么结果】
 
@@ -364,19 +363,20 @@ router.beforeEach((to, from, next) => {
 
 ### 导航钩子
 
-（[2018年的文档](https://github.com/vuejs/vue-router/blob/ca2561f79345c136eccb146caaefe75d78f5855e/docs/zh/advanced/navigation-guards.md)就称为导航守卫）
+（[2018年的文档](https://github.com/vuejs/vue-router/blob/ca2561f79345c136eccb146caaefe75d78f5855e/docs/zh/advanced/navigation-guards.md)就已经称为导航守卫了）
 
 相当于路由的生命周期钩子
 
 注册分三种情况：全局、路由独享、组件独享  
 
 - [组件独享（组件内的守卫）](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E7%BB%84%E4%BB%B6%E5%86%85%E7%9A%84%E5%AE%88%E5%8D%AB)  
-  这里说的组件就是普通的vue组件
-
-  - 有三个钩子：beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave  
-
-  - beforeRouteEnter例子：  
-
+  【】2021.08.30测试在SFC里不可用  
+这里说的组件就是普通的vue组件  
+  
+- 有三个钩子：beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave  
+  
+- beforeRouteEnter例子：  
+  
     ```js
     mounted() {},
     beforeRouteEnter(to, from, next)  {
@@ -387,11 +387,11 @@ router.beforeEach((to, from, next) => {
     `to`代表下一个路由，`from`是跳转前路由。  
     加点后面可以跟上 路由信息对象属性，并且可以打印出来。`query`和`params`可以再点下一级属性。  
     钩子中一定要有`next()`才会正常到下一步，`next(false)`就是不到下一步（目前测试结果和不写`next()`没区别）。  
-    `next()`也可以用来路由，有两种写法：
-
+  `next()`也可以用来路由，有两种写法：
+  
     1. `next('/xx')` 
-    2. `next({name:'xx'})`。
-
+  2. `next({name:'xx'})`。
+  
 - 路由后会执行那个路由的钩子  
   （如果有的话）
 
@@ -468,6 +468,13 @@ if (to.hash) {
   用属性形式配meta生效   
   （路由配置指的是实例化`'vue-router'`时的`routes`参数）
 - 刷新页面后params居然还在
+- [路由懒加载](https://router.vuejs.org/zh/guide/advanced/lazy-loading.html)  
+  [这个博客也可以看](https://blog.csdn.net/xm1037782843/article/details/88225104)  
+  懒加载可以把项目从一个大包拆成一个页面一个包，进入页面时再加载页面的包  
+  - 不过在加载过程中不会跳到相应页面，也没有任何反应  
+    - 解决办法：  
+      空白时间也就是beforeEach和afterEach之间的时间  
+      可以通过这个特性加上加载效果
 
 
 
