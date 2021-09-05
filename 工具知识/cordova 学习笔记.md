@@ -47,7 +47,7 @@
 
 没有前置条件
 
-##### android平台 
+##### android平台
 
 前置条件应该在[这个页面](https://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#installing-the-requirements)里都说了  
 
@@ -66,19 +66,46 @@
   2. `cordova run android`  
      这时手机上就会提示有app可以安装了
   
-- AS里能在模拟设备里跑项目不代表cordova就能跑  
-  不过`cordova platform add android`可以装成功  
-  即使AS能跑，跑cordova时也有可能报如下错误  
+- AS里能在模拟设备里跑项目
+  
+  - 就代表到达执行`cordova platform add android`的条件了
 
-  ```cmd
-  Checking Java JDK and Android SDK versions
-  ANDROID_SDK_ROOT=undefined (recommended setting)
-  ANDROID_HOME=undefined (DEPRECATED)
-  Failed to run "javac -version", make sure that you have a JDK version 8 installed.
-  You can get it from the following location:
-  https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
-  ```
-
+  - 不代表cordova能跑项目（`cordova run android`）  
+    
+    - 如果jdk有问题的话就会报如下错误  
+    
+      ```cmd
+      Checking Java JDK and Android SDK versions
+      ANDROID_SDK_ROOT=undefined (recommended setting)
+      ANDROID_HOME=undefined (DEPRECATED)
+      Failed to run "javac -version", make sure that you have a JDK version 8 installed.
+      You can get it from the following location:
+      https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+      ```
+    
+      解决办法：在Path系统变量前加上“java命令行地址”（比如`D:\devtools\jdk\8\software_body\bin;`）
+    
+    - 如果gradle有问题的话就会报如下错误  
+    
+      ```cmd
+      ANDROID_SDK_ROOT=undefined (recommended setting)
+      ANDROID_HOME=undefined (DEPRECATED)
+      Using Android SDK: C:\Users\Administrator\AppData\Local\Android\sdk
+      Could not find an installed version of Gradle either in Android Studio,
+      or on your system to install the gradle wrapper. Please include gradle
+      in your path, or install Android Studio
+      ```
+    
+      解决办法：配置gradle的环境变量（详细去《android 学习笔记》搜索“配置环境变量”查看）  
+      配好后再运行cordova run android就会下载gradle-6.5-all.zip（环境变量配的是7.0.2）  
+      命令行也会展示进度，到最后就会`Waiting for emulator to start...`  
+      后续运行cordova run android就很快了，马上就会`Waiting for emulator to start...`  
+      一次经验，出现上面这个提示后开模拟器也没反应，要先开模拟器，再执行cordova run android才行
+    
+    
+    
+    
+  
   
 
 ##### ios平台  
