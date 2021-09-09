@@ -10,6 +10,8 @@
 - 实例中的`$options`等成员
 - 测试不加mixin钩子是不是还是数组
 - [动态组件 & 异步组件](https://cn.vuejs.org/v2/guide/components-dynamic-async.html)
+- 不足
+  - 模板里报错难以调试
 
 
 
@@ -48,7 +50,7 @@
 
 
 
-# 未归类
+
 
 ### [keep-alive](https://cn.vuejs.org/v2/api/#keep-alive)
 
@@ -566,7 +568,8 @@ watch: {
 }
 ```
 - watcher中的匿名函数为单参数时，被监听变量一旦改变就执行函数内容，单参数代表监听变量变化后的值
-- 匿名函数为双参数时，前一个参数代表变化后的监听变量，后一个代表变化前的。
+- 匿名函数为双参数时，参数1代表变化后的监听变量，参数2代表变化前的  
+  （第一次触发时参数2会是undefined）
 
 - 这种格式的watch无法发现数组、对象的后代内容变化，也无法输出后代内容。  
 
@@ -857,6 +860,14 @@ out-in: 离开过渡完成后开始进入过渡
 这写属性前面不用加:也能获取代理的内容，加了反而会有问题  
 
 可以用在`template`标签上
+
+- 这种方法切换模板后dom不一定全部更改  
+  有可能只是更改部分dom的属性
+
+- 用这种方法从a模板到b模板，再切回a模板  
+  并不一定会用原本的dom
+
+
 
 
 ### v-show
@@ -1652,6 +1663,22 @@ mounted: function () {
   这意味着：如果传入的其他属性是动态的，那就可以被watch，值更改后也会更新视图
 - 其他属性默认会渲染在html上  
   关闭这个特性的方法：把[inheritAttrs](https://cn.vuejs.org/v2/api/#inheritAttrs)选项设为false
+
+
+
+### 其他配置
+
+就是官方没有给出的配置（像data、computed、methods都是官方给出的配置）
+
+（以下内容已在uniapp vue2上测试）
+
+- 获取  
+  通过`vm.$options.配置`访问
+- 在模板里也可用`$options.配置`访问  
+  如果配置是方法的话  
+  模板里执行方法的this是undefined
+- 在method里通过`this.$options.配置`调用方法的话  
+  方法里的this是一个类似method所处vm的对象
 
 
 

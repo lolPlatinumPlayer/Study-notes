@@ -727,20 +727,21 @@ bbbb
 
 **用`reset --hard`**
 
-- 退到指定commit  
-  `git reset --hard commit的id`
-
-· 回退到上个版本
-`git reset --hard HEAD^`
-
 【】--hard 似乎很有问题？？
 
-如果commit后有做修改，那执行这个命令就会回到这个commit
-HEAD后面`^`的数量代表回退2的`^`数量次方步（廖雪峰中说多少个`^`代表回退多少步），可以用~199这种简写
-
-· 变成未来某个版本
-$ git reset --hard 2b595d5eac
-hard后面是未来版本的版本号的头几位，输入后git会自动检索
+- 退到指定commit  
+  `git reset --hard commit的id`
+-  回退到上个版本
+  `git reset --hard HEAD^`  
+  如果commit后有做修改，那执行这个命令就会回到这个commit  
+  HEAD后面`^`的数量代表回退2的`^`数量次方步（廖雪峰中说多少个`^`代表回退多少步），可以用~199这种简写
+  - 与远程仓库互动  
+    reset --hard只会回退本地仓库
+    - 本地回退后让远程仓库也会退的方法  
+      目前只找到一个：`git push --force`（这命令应该是强推）
+- 变成未来某个版本
+  $ git reset --hard 2b595d5eac
+  hard后面是未来版本的版本号的头几位，输入后git会自动检索
 
 
 

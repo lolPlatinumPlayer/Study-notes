@@ -364,6 +364,10 @@ const bird3: BirdInterface = bird1;
 
 和es module一致，起码可以导出`type`定义的内容
 
+- 导入报错  
+  只要不导入模块（变量）都不会报错  
+  比如`import './mixin/echartsMixin'`这种方式引入的，都不会报错
+
 
 
 ### 使用source map

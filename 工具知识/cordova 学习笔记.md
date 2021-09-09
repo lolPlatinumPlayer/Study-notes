@@ -98,7 +98,7 @@
     
       解决办法：配置gradle的环境变量（详细去《android 学习笔记》搜索“配置环境变量”查看）  
       配好后再运行cordova run android就会下载gradle-6.5-all.zip（环境变量配的是7.0.2）  
-      命令行也会展示进度，到最后就会`Waiting for emulator to start...`  
+      命令行也会展示进度，到最后就会`Waiting for emulator to start...`并产生一个apk  
       后续运行cordova run android就很快了，马上就会`Waiting for emulator to start...`  
       一次经验，出现上面这个提示后开模拟器也没反应，要先开模拟器，再执行cordova run android才行
     
