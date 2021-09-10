@@ -1,7 +1,7 @@
 
 
 
-### 创建项目
+# 创建项目
 
 - 不使用模板  
   `cordova create 路径`
@@ -13,22 +13,12 @@
 
 
 
-### 运行项目
-
-简要步骤：
-
-1. `cordova platform add 平台`
-2. 准备好平台的前置条件
-3. `cordova run 平台名`
-
-
-
-##### 平台概念  
+# 平台概念  
 
 - 查看已添加和可添加的平台  
   `cordova platform list`  
   该命令列出的平台可能不全  
-  不过就算是没列出来的平台，也可以使用`cordova platform add 平台`命令
+  有的平台就算没列出来也可以使用`cordova platform add 平台`命令
   - 已知平台有：
     - android
     - browser
@@ -43,17 +33,56 @@
 
 
 
-##### browser平台  
+# 运行项目
+
+简要步骤：
+
+1. `cordova platform add 平台`
+2. 准备好平台的前置条件
+3. 在项目里放入www文件夹（前端包）
+4. `cordova run 平台名`  
+   （如果没有www文件夹的话会报错`urrent working directory is not a Cordova-based project`）
+
+
+
+### browser平台  
 
 没有前置条件
 
-##### android平台
+- `cordova run browser`  
+  就相当于起了一个http服务器，并在浏览器里打开页面  
+  - 起了之后改文件也不会变  
+    （刷新也没用）
 
-前置条件应该在[这个页面](https://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#installing-the-requirements)里都说了  
+
+
+### android平台
+
+##### 特性
+
+- 前置条件  
+  应该在[这个页面](https://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#installing-the-requirements)里都说了  
+
+- AS里能在模拟设备里跑项目
+
+  - 就代表到达执行`cordova platform add android`的条件了
+  - 不代表cordova能跑项目（`cordova run android`）  
+- 跑项目成功的一些细节  
+  跑项目指的是`cordova run android`命令
+  - 成功的标志  
+    控制台打印出`Waiting for emulator to start...`
+  - 成功的同时会产生apk  
+    产生位置为`platforms\android\app\build\outputs\apk\debug`
+  - 初次运行成功有可能比较慢  
+    比如要下载gradle  
+    后续运行就很快了
+
+- `cordova run android`后产生的apk  
+  - `assets/www`就是`www`文件夹里的东西复制来后加了一些cordova的js
+
+##### 操作
 
 - 使用模拟设备运行  
-  如果AS里模拟不成功的话说明还没达到可以在cordova里模拟的条件
-  
   1. 开启模拟的设备  
      （比如通过AS开启）
   2. `cordova run android`  
@@ -66,49 +95,58 @@
   2. `cordova run android`  
      这时手机上就会提示有app可以安装了
   
-- AS里能在模拟设备里跑项目
-  
-  - 就代表到达执行`cordova platform add android`的条件了
 
-  - 不代表cordova能跑项目（`cordova run android`）  
-    
-    - 如果jdk有问题的话就会报如下错误  
-    
-      ```cmd
-      Checking Java JDK and Android SDK versions
-      ANDROID_SDK_ROOT=undefined (recommended setting)
-      ANDROID_HOME=undefined (DEPRECATED)
-      Failed to run "javac -version", make sure that you have a JDK version 8 installed.
-      You can get it from the following location:
-      https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
-      ```
-    
-      解决办法：在Path系统变量前加上“java命令行地址”（比如`D:\devtools\jdk\8\software_body\bin;`）
-    
-    - 如果gradle有问题的话就会报如下错误  
-    
-      ```cmd
-      ANDROID_SDK_ROOT=undefined (recommended setting)
-      ANDROID_HOME=undefined (DEPRECATED)
-      Using Android SDK: C:\Users\Administrator\AppData\Local\Android\sdk
-      Could not find an installed version of Gradle either in Android Studio,
-      or on your system to install the gradle wrapper. Please include gradle
-      in your path, or install Android Studio
-      ```
-    
-      解决办法：配置gradle的环境变量（详细去《android 学习笔记》搜索“配置环境变量”查看）  
-      配好后再运行cordova run android就会下载gradle-6.5-all.zip（环境变量配的是7.0.2）  
-      命令行也会展示进度，到最后就会`Waiting for emulator to start...`  
-      后续运行cordova run android就很快了，马上就会`Waiting for emulator to start...`  
-      一次经验，出现上面这个提示后开模拟器也没反应，要先开模拟器，再执行cordova run android才行
-    
-    
-    
-    
-  
+##### 问题排查
+
+- 执行`cordova run android`时  
+  （这里没列出的问题可以查阅《android 学习笔记.md》）
+
+  - 如果jdk有问题的话就会报如下错误  
+
+    ```cmd
+    Checking Java JDK and Android SDK versions
+    ANDROID_SDK_ROOT=undefined (recommended setting)
+    ANDROID_HOME=undefined (DEPRECATED)
+    Failed to run "javac -version", make sure that you have a JDK version 8 installed.
+    You can get it from the following location:
+    https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+    ```
+
+    解决办法：在Path系统变量前加上“java命令行地址”（比如`D:\devtools\jdk\8\software_body\bin;`）
+
+  - 如果gradle有问题的话就会报如下错误  
+
+    ```cmd
+    ANDROID_SDK_ROOT=undefined (recommended setting)
+    ANDROID_HOME=undefined (DEPRECATED)
+    Using Android SDK: C:\Users\Administrator\AppData\Local\Android\sdk
+    Could not find an installed version of Gradle either in Android Studio,
+    or on your system to install the gradle wrapper. Please include gradle
+    in your path, or install Android Studio
+    ```
+
+    解决办法：配置gradle的环境变量（详细去《android 学习笔记》搜索“配置环境变量”查看）  
+    配好后再运行cordova run android就会下载gradle-6.5-all.zip（环境变量配的是7.0.2）  
+    命令行也会展示进度，到最后就会打印`Waiting for emulator to start...`（看到这句话就代表命令执行成功了）  
+
+  - 可能在下载gradle-6.5-all.zip上出现问题  
+
+    - 问题表现：
+      - 等待时间过长
+      - 命令执行失败并报错`Could not unzip`
+    - 解决方案：  
+      翻墙下载[gradle-6.5-all.zip](https://downloads.gradle-dn.com/distributions/gradle-6.5-all.zip)  
+      并替换类似如下地址中的`gradle-6.5-all.zip`  
+      `C:\Users\Administrator\.gradle\wrapper\dists\gradle-6.5-all\2oz4ud9k3tuxjg84bbf55q0tn`
+
   
 
-##### ios平台  
+
+
+
+
+
+### ios平台  
 
 - > 要求
   >
@@ -119,23 +157,6 @@
   > —— [官网](https://cordova.apache.org/docs/en/10.x/guide/platforms/ios/index.html#requirements-and-support)
 
 
-
-
-
-##### 可能遇到的问题
-
-执行`cordova run 平台名`时
-
-- 安卓  
-  这里没列出的问题可以查阅《android 学习笔记.md》
-  - 可能在下载gradle-6.5-all.zip上出现问题  
-    - 问题表现：
-      - 等待时间过长
-      - 命令执行失败并报错`Could not unzip`
-    - 解决方案：  
-      翻墙下载[gradle-6.5-all.zip](https://downloads.gradle-dn.com/distributions/gradle-6.5-all.zip)  
-      并替换类似如下地址中的`gradle-6.5-all.zip`  
-      `C:\Users\Administrator\.gradle\wrapper\dists\gradle-6.5-all\2oz4ud9k3tuxjg84bbf55q0tn`
 
 
 

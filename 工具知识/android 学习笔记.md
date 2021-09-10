@@ -296,6 +296,12 @@ android virtual devices（安卓虚拟设备）
 
 
 
+### apk
+
+其实就是zip文件改了个后缀
+
+
+
 
 
 # 学习
