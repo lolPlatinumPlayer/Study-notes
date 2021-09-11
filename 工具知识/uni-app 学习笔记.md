@@ -13,7 +13,9 @@
       第二层：`#shadow-root`  
       第三层：组件内根元素
 
-  
+- [请求代理](https://blog.csdn.net/zhoumengshun/article/details/108779325)  
+  manifest.json源码里的`h5.devServer.proxy`配置就是  
+  （似乎和vue-cli4是一致的）
 
 
 
@@ -170,18 +172,24 @@
 - 微信开发者工具里的操作  
   点“真机调试”按钮  
   操作很好理解
+  
 - 直接uniapp调试的话可能会因尺寸过大而被拒接  
-  可以发行后进行真机调试  
-  发行的操作步骤如下：
-  1. 点上方工具栏的“发行”  
-     （要填AppID）
-  2. 点“小程序-微信（仅适用于uni-app）” 
-  3. 在弹窗里点“发行”
-  4. 在微信开发者工具里新建项目  
-     （有时候不用这一步，HBuilder会自己打开）  
-     目录：用HBuilder控制台打印的目录  
-     AppID：点“发行”时填的AppID
-  5. 点微信开发者工具里的“真机调试”按钮
+  有2个解决方案  
+  其中发行的方案压缩率更高
+  - 可以发行后进行真机调试  
+    发行的操作步骤如下：
+  
+      1. 点上方工具栏的“发行”  
+         （要填AppID）
+      2. 点“小程序-微信（仅适用于uni-app）” 
+      3. 在弹窗里点“发行”
+      4. 在微信开发者工具里新建项目  
+         （有时候不用这一步，HBuilder会自己打开）  
+         目录：用HBuilder控制台打印的目录  
+         AppID：点“发行”时填的AppID
+      5. 点微信开发者工具里的“真机调试”按钮
+  - 勾选运行小程序时压缩代码  
+    - 勾选步骤：上方工具栏的运行 =》 运行到小程序模拟器 =》 运行时是否压缩代码
 
 
 
@@ -227,7 +235,10 @@ App.vue代表应用
 
 ##### [生命周期](https://uniapp.dcloud.io/collocation/frame/lifecycle)
 
-寿宁移动端项目里  
+（这部分内容都测试于：寿宁移动端项目）  
+
+- 页面生命周期甚至包含尺寸变化、滚动到底部、点分享按钮等事件
+- onLoad参数包含url中get形式的参数
 
 <span style='opacity:.5'>早期结论</span>
 
@@ -251,6 +262,21 @@ App.vue代表应用
 
 ##### 页面
 
+- 配置方法  
+  在pages.json的pages或subPackages里配置  
+  （pages和subPackages应该是主包和分包的区别）
+  - 文件路径和url路径必须保持一致  
+    都是通过子项的path配置指定的
+
+- [subPackages](https://uniapp.dcloud.net.cn/collocation/pages?id=subpackages)配置方法  
+  主要做小程序的分包，2.7.12开始也做了app的分包  
+  subPackages一个子项代表一个分包  
+  一个分包可以包含多个页面
+
+  - 路径的编写  
+    root配置项加上pages子项的path构成一个路径  
+    其中root的结尾和path的开头都不用加`/`
+
 - 导航栏  
 
   - 指定一些页面隐藏导航栏  
@@ -267,6 +293,14 @@ App.vue代表应用
     - > 小程序端 web-view 组件一定有原生导航栏，下面一定是全屏的 web-view 组件，navigationStyle: custom 对 web-view 组件无效 —— [官网](https://uniapp.dcloud.net.cn/component/web-view)
     
       （微信）小程序就算去了导航栏，右上角的按钮也去不掉
+
+
+
+##### 组件
+
+- 组件的method应该不能起名为uniapp的生命周期  
+  否则不生效（`vm.$options.methods`里都找不到）  
+  已试过onReachBottom
 
 
 
@@ -335,8 +369,8 @@ App.vue代表应用
 - 原理  
   会渲染出一个标签  
   不过在小程序里这个标签是持续显示的  
-  所以不要依赖这个标签去做样式  
-  写代码时就当它不会产生标签就行
+  - 所以不要依赖这个标签去做样式  
+    写代码时就当它不会产生标签就行
 
 
 
@@ -385,6 +419,88 @@ App.vue代表应用
 - `uni.navigateTo({url:一个地址})`  
   可以写相对地址也可以写绝对地址  
   <span style='color:red'>写错地址不会报错也没有任何反应</span>
+
+
+
+### 原生api
+
+文件相关
+
+- 下载文件  
+  代码示例如下  
+
+  ```js
+  download(item){
+    const {name,backEndPath}=item
+    item.status='下载中'
+    const downloadTask = uni.downloadFile({
+      url: READIMAGE_URL+backEndPath,
+      success: (res) => {
+        if (res.statusCode === 200) {
+          const {tempFilePath}=res
+          console.log('下载成功',tempFilePath);
+          item.localPath=tempFilePath
+          item.status='下载成功'
+          /* uni.saveFile({ // 未测试
+            tempFilePath: res.tempFilePath,
+            success: (red)=> {
+              item.status='保存成功'
+              console.log('保存成功',red)
+            },
+            fail:()=>{
+              item.status='保存失败'
+            },
+          }) */
+        }else{
+          item.status='下载失败'
+        }
+      },
+      fail:()=>{
+        item.status='下载失败'
+      },
+    });
+    downloadTask.onProgressUpdate((res) => {
+      item.percent=res.progress
+      // console.log('已经下载的数据长度' + res.totalBytesWritten);
+      // console.log('预期需要下载的数据总长度' + res.totalBytesExpectedToWrite);
+    });
+  },
+  ```
+
+- 打开文件  
+  示例代码如下  
+
+  ```js
+  openFile(item){
+    uni.showLoading({
+      title: '正在打开文件'
+    })
+    // > 打开文件有效值 doc, xls, ppt, pdf, docx, xlsx, pptx ———— https://www.cnblogs.com/lizhao123/p/11498948.html
+    // 经过测试，jpg也是可以的。已测试平台：安卓app、安卓小程序
+    uni.openDocument({
+      /* 
+      - 不加escape
+        安卓app、安卓小程序可用
+      - 加escape  
+        安卓小程序不可用
+        https://www.cnblogs.com/lizhao123/p/11498948.html里说iOS要这样写对于文件名为中文的文件才可以成功
+      */
+      filePath: item.localPath,
+      // filePath: escape(item.localPath),
+      success: function(res) {
+      },
+      fail(e) {
+        console.error('打开失败',e)
+        item.status='格式不支持'
+      },
+      complete(){
+        uni.hideLoading();
+      },
+    })
+  },
+  ```
+
+  
 
 
 

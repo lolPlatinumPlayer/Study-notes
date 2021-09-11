@@ -106,7 +106,7 @@
 - xxx的webpack配置的mode选项默认都是development  
   不过可以通过在`.env.模式名`文件里写`NODE_ENV='production'`来改为production
 - xxx的js只有一个  
-  而build的有4个：app.js、vendors.js及各自的map
+  而build的有4个：app.js、vendors.js及各自的map文件
 - xxx没有css文件
 - 默认`process.env.NODE_ENV`  
   （在`.env.模式名`文件里写`NODE_ENV=任意字符串`可以修改`process.env.NODE_ENV`）
@@ -114,7 +114,7 @@
     这可能说明了test命令用的就是[模式文档](https://cli.vuejs.org/zh/guide/mode-and-env.html#%E6%A8%A1%E5%BC%8F)里test模式
   - xxx为其他时`process.env.NODE_ENV`是`'development'`
 - xxx的总体积比build稍小  
-  但是去掉map的话就比build大很多
+  但是build去掉map文件的话就比xxx小很多
 
 
 
