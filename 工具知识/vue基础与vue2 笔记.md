@@ -83,7 +83,6 @@
   - keep-alive中的组件比其他组件多一些生命周期钩子  
     比如[activated](https://cn.vuejs.org/v2/api/#activated)和[deactivated](https://cn.vuejs.org/v2/api/#deactivated)
   - 可以配合vue-router使用
-  
 
 和v-show区别
 
@@ -116,7 +115,8 @@
 **术语**
 
 - 编译器  
-  将模板字符串编译成为js渲染函数的代码
+  将字符串的template选项编译成为js渲染函数的代码  
+  （因此只要template选项用字符串就需要编译器，也就是完整版的vue）
   
 - 选项  
   组件配置对象的第一级属性
@@ -162,7 +162,7 @@
 ##### 使用完整版的方法
 
 将webpack`配置对象.resolve.alias`的`vue$`属性设为`'vue/dist/vue.esm.js'`  
-调整配置对象的方法在《vue-cli 学习笔记》里有记录
+调整配置对象的方法在《vue-cli 学习笔记》里搜索“调整webpack配置”查看
 
 
 
@@ -1072,6 +1072,17 @@ methods: {
 
 # 组件
 
+- 让组件在超出html标签嵌套规则的情况下正常使用  
+  在需要组件的地方先写一个符合 标签嵌套规则 的标签，加上is属性，如：  
+
+  ```vue
+  <table>
+      <tbody is="little"></tbody>
+  </table>
+  ```
+
+  这样组件就能在table标签中显示了  
+
 
 
 ### 组件与实例的生成
@@ -1150,7 +1161,7 @@ methods: {
 ### 组件注册
 用类的方式使用组件：[这个内容可能有助于“用类的方式使用组件”](https://cn.vuejs.org/v2/guide/typescript.html#%E5%9F%BA%E4%BA%8E%E7%B1%BB%E7%9A%84-Vue-%E7%BB%84%E4%BB%B6)
 
-- 全局注册：要在父实例前注册才有效
+- [全局注册](https://cn.vuejs.org/v2/api/#Vue-component)  
   
   ```js
   Vue.component('my-component', {
@@ -1163,9 +1174,10 @@ methods: {
       就像例子一样
     - 可以传实例  
       测试过用`Vue.extend(配置)`生成的实例
+  - 要在父实例前注册才有效
 - 局部注册  
   也就是直接写一个配置对象  
-  可用 `<div is='components'></div>` 动态更换组件，可用对象动态加载内容，全局注册不能动态加载
+  可用 `<div is='components'></div>` 动态更换组件，可用对象动态加载内容，全局注册不能动态加载？？
   
   ```js
   new Vue({
@@ -1176,9 +1188,9 @@ methods: {
   })
   ```
 
-字符串模版（js中的名称）可用大小驼峰或者kebab-case (短横线隔开式) 命名，在非字符串模板（html中的名称）中用kebab-case都能捕获到。  
-（就算在html中使用模板语法，也只有引号内可以分辨大小写，引号外依旧不分别）  
-（template在实例中也可用，会把捕获到的dom内容替换为template中内容）  
+- 字符串模版（js中的名称）可用大小驼峰或者kebab-case (短横线隔开式) 命名，在非字符串模板（html中的名称）中用kebab-case都能捕获到。？？  
+  （就算在html中使用模板语法，也只有引号内可以分辨大小写，引号外依旧不分别）  
+  （template在实例中也可用，会把捕获到的dom内容替换为template中内容） ？？
 
 - name属性不可以是中文名  
   官方提示是：要符合html标签命名规则，同时又不能是html已有标签名
@@ -1193,15 +1205,89 @@ methods: {
 
 
 
+### [异步组件](https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6)
 
-### 让组件在超出html标签嵌套规则的情况下正常使用
-在需要组件的地方先写一个符合 标签嵌套规则 的标签，加上is属性，如：  
-```
-<table>
-    <tbody is="little"></tbody>
-</table>
-```
-这样组件就能在table标签中显示了  
+异步组件就是可以异步插入的组件  
+使用方式和普通组件一致，但是异步组件内部可以定义何时插入自己  
+（插入后才会在vue devtools里显示）
+
+- 异步组件没有异步加载的功能  
+  
+  > 只在需要的时候才从服务器加载
+  
+  官网的这句话说的不是异步组件的特性
+
+- 这个异步只会异步一次  
+  而且是各实例间共享的  
+  也就是说不同时间里用v-if显示了同一个异步组件（不同实例），那这个异步的时间将都是一致的  
+
+  - 测试代码如下  
+
+    ```vue
+    <template>
+      <div id="app">
+        1{{isShow1}} 2{{isShow2}} 3{{isShow3}} 4{{isShow4}}
+        <button @click="isShow1=!isShow1">button</button>
+        <async1 v-if="isShow1" style="color:red" />
+        <async1 v-if="isShow2" style="color:green" />
+        <async1 v-if="isShow3" style="color:blue" />
+        <async1 v-if="isShow4" style="color:orange" />
+      </div>
+    </template>
+    
+    <script>
+    import Vue from 'vue'
+    Vue.component('async1',function (resolve, reject) {
+      console.log('time start')
+      setTimeout(function () {
+        console.log('time end')
+        // 向 `resolve` 回调传递组件定义
+        resolve({
+          template: '<div>I am async!</div>'
+        })
+      },2000)
+    })
+    
+    export default {
+      name: 'App',
+      components: {
+        /* async1: function (resolve, reject) {
+          console.log('time start')
+          setTimeout(function () {
+            console.log('time end')
+            // 向 `resolve` 回调传递组件定义
+            resolve({
+              template: '<div>I am async!</div>'
+            })
+          },2000)
+        }, */
+      },
+      data(){
+        return{
+          isShow1:false,
+          isShow2:false,
+          isShow3:false,
+          isShow4:false,
+        }
+      },
+      watch:{
+        isShow1(isShow1){
+          setTimeout(()=>{
+            this.isShow2=isShow1
+          },1000)
+          setTimeout(()=>{
+            this.isShow3=isShow1
+          },2000)
+          setTimeout(()=>{
+            this.isShow4=isShow1
+          },3000)
+        }
+      }
+    }
+    </script>
+    ```
+
+- 【】测缓存、reject、异步加载
 
 
 
@@ -1335,7 +1421,8 @@ mounted: function () {
 
 ### 组件的事件
 
-- vue组件上@click不会触发事件，@click.native才行
+- 组件上用`@click`这种写法不会触发原生事件  
+  要用`@click.native`这种写法才行
 
 **js操作**
 
@@ -1618,18 +1705,14 @@ mounted: function () {
 用这种方法向组件外传值是可以发生引用传递的，因引用传递导致组件外数据变化时甚至能用watch监听到（未做详细测试）
 
 
-##### 在子组件上触发methods中的函数（在html子组件上用本地事件触发method中的函数）
-在子组件标签中写好“@click.native="b"”就会在点击后触发b函数
-
-
 
 ##### 依赖注入
 
 祖先组件与后代组件通信的方式
 
-- ### [依赖注入](https://cn.vuejs.org/v2/guide/components-edge-cases.html#依赖注入)
+- [依赖注入说明](https://cn.vuejs.org/v2/guide/components-edge-cases.html#依赖注入)
 
-- [api](https://cn.vuejs.org/v2/api/#provide-inject)
+- [api说明](https://cn.vuejs.org/v2/api/#provide-inject)
 
 - 可以注入方法
 
@@ -2566,7 +2649,7 @@ iview3组件的事件名真的和文档写的医院，都带`on-`
 **[第二版](https://vant-contrib.gitee.io/vant/#/zh-CN/)**
 
 - [导入](https://vant-contrib.gitee.io/vant/#/zh-CN/quickstart)  
-  按👆这里配了babel按需导入的话真的写个`import { Button } from 'vant'`就完事了  
+  按👆这里配了babel<span style="color:red">按需导入</span>的话真的写个`import { Button } from 'vant'`就完事了  
   不需要写`Vue.use(Button)`
 
 - Picker组件的setValues对于树结构的columns也可以正常生效
@@ -2574,7 +2657,7 @@ iview3组件的事件名真的和文档写的医院，都带`on-`
 - popup组件的close、before-leave、leave事件都不好使
 
 - [输入框组件](https://vant-contrib.gitee.io/vant/#/zh-CN/field)在van-cell-group组件中的效果和van-cell一致  
-（[文档](https://vant-contrib.gitee.io/vant/#/zh-CN/field)里只有组合用的demo但并没有说这一点）
+  （[文档](https://vant-contrib.gitee.io/vant/#/zh-CN/field)里只有组合用的demo但并没有说这一点）
   
 - [标签页组件](https://vant-contrib.gitee.io/vant/#/zh-CN/tab)的转场动画有bug  
 

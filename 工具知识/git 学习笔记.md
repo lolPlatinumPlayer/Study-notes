@@ -395,9 +395,8 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
 
 ### 把文件提交到分支
 
-（使用下面两个命令前先要确保这个文件存在）
-
-先`add`后`commit`
+方法一：先`add`后`commit`   
+（使用这2个命令前先要确保这个文件存在）？？？
 
 - **`add`**
   `git add readme.txt`
@@ -410,6 +409,12 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
   因此可以多次add后一次性commit来提交
   （测试提交未更改的文件，似乎失败了）  
   （已add文件被更改后还是会允许commit的，当然，add后的变化是不会被commit上去）
+
+方法二：[`git commit -a`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt--a)
+
+- 提交曾经add过的文件  
+  （普通的commit命令面对add后commit的文件，是需要再add一遍的）  
+  （没试过）
 
 
 
@@ -569,6 +574,30 @@ bbbb
 - 即使当前不在要pull的分支也能执行完毕？？？
 
 
+
+### 规则
+
+冲突规则
+
+- 不太聪明
+  - 例子A（[合并](https://github.com/lolPlatinumPlayer/Study-notes/commit/3c91721f1f4ba6357adad9a678888da82f337265)[hrtPC](https://github.com/lolPlatinumPlayer/Study-notes/commit/a38bef5cfcd6848a4fd8b206c388abd0008c33c0)）  
+    2个独立修改中本地的重构了一个区块、远程的在这个区块中的一行背后加了几个字  
+    - 结果冲突显示的却是  
+      本地加了一行代码（不是远程改的那行）  
+      而远程加了重构的那个区块  
+      同时重构的区块是还在的，甚至是不冲突的
+    - 我认为更好的方案：  
+      直接显示远程改的那行冲突（怎么想都应该是这样啊）
+
+合并commit
+
+- 合并commit下显示的内容  
+  就是合并这个操作添加的内容  
+  （比如说合并了一个commit，如果不冲突的话合并的commit下的内容和被合并的commit是完全一致的）
+  - 冲突中完全删除要合并内容的部分  
+    （比如说合并一个commit和当前的commit冲突了，然后要合并commit一点内容都没被选择留下）  
+    那么合并commit里也不会存在要合并内容提交的部分  
+    （像例子A（[合并](https://github.com/lolPlatinumPlayer/Study-notes/commit/3c91721f1f4ba6357adad9a678888da82f337265)[hrtPC](https://github.com/lolPlatinumPlayer/Study-notes/commit/a38bef5cfcd6848a4fd8b206c388abd0008c33c0)）中，[hrtPC](https://github.com/lolPlatinumPlayer/Study-notes/commit/a38bef5cfcd6848a4fd8b206c388abd0008c33c0)对cordova笔记的更改在[合并](https://github.com/lolPlatinumPlayer/Study-notes/commit/3c91721f1f4ba6357adad9a678888da82f337265)里就找不到）
 
 
 
@@ -934,6 +963,12 @@ git commit -m 'xxx'
 
 - 即使窗口关闭过，也能查看之前的命令记录  
   且能查看其他目录下的命令
+
+
+
+### Sourcetree
+
+除了webstorm外，唯一一个可以查看历史commit更改的工具
 
 
 

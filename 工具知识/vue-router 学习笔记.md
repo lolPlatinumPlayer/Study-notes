@@ -370,12 +370,19 @@ router.beforeEach((to, from, next) => {
 注册分三种情况：全局、路由独享、组件独享  
 
 - [组件独享（组件内的守卫）](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E7%BB%84%E4%BB%B6%E5%86%85%E7%9A%84%E5%AE%88%E5%8D%AB)  
-  【】2021.08.30测试在SFC里不可用  
-这里说的组件就是普通的vue组件  
+  这里说的组件就是普通的vue组件  
+
+  - 触发时机
+    - beforeRouteEnter、beforeRouteLeave  
+      组件因路由而被创建、销毁时会触发
+    - beforeRouteUpdate  
+      网说是“路由改变，但是组件复用”时触发，不过个人未测过  
+    - 如果组件不是router-view中出来的  
+      那3个钩子都不会触发
+
+- 有三个钩子：beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave ？？？ 
   
-- 有三个钩子：beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave  
-  
-- beforeRouteEnter例子：  
+- beforeRouteEnter例子：  ？？？
   
     ```js
     mounted() {},
@@ -398,6 +405,46 @@ router.beforeEach((to, from, next) => {
 
 
 
+
+
+
+
+
+- 在$router.go(-1)无法回退时  
+  全局守卫都不会触发（已测过[前置](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E5%85%A8%E5%B1%80%E5%89%8D%E7%BD%AE%E5%AE%88%E5%8D%AB)、[解析](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E5%85%A8%E5%B1%80%E8%A7%A3%E6%9E%90%E5%AE%88%E5%8D%AB)、[后置](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E5%85%A8%E5%B1%80%E5%90%8E%E7%BD%AE%E9%92%A9%E5%AD%90)）
+
+
+
+##### 判断是否无法回退  
+
+换句话说就是：判断是否回退到初始页面
+
+- 目前的判断方法  
+
+  ```js
+  mounted(){
+    this.$router.beforeEach ((to, from, next) => {
+      this.isGoingBack=false
+      next()
+    })
+  },
+  methods:{
+    goBack(){
+      this.$router.go(-1)
+      this.isGoingBack=true
+      requestAnimationFrame(()=>{ // 经过测试：2个requestAnimationFrame会比2个setTimoute0或者2个$nextTicket更靠谱
+        requestAnimationFrame(()=>{
+          if(this.isGoingBack){
+            // 到这就说明无法回退了
+            debugger
+          }
+        })
+      })
+    },
+  },
+  ```
+
+  
 
 
 
