@@ -12,6 +12,8 @@
 - [动态组件 & 异步组件](https://cn.vuejs.org/v2/guide/components-dynamic-async.html)
 - 不足
   - 模板里报错难以调试
+- 组件教程更新未看内容  
+  [这](https://cn.vuejs.org/v2/guide/components-edge-cases.html#%E7%A8%8B%E5%BA%8F%E5%8C%96%E7%9A%84%E4%BA%8B%E4%BB%B6%E4%BE%A6%E5%90%AC%E5%99%A8)及之后
 
 
 
@@ -1242,7 +1244,7 @@ methods: {
   
   官网的这句话说的不是异步组件的特性
 
-- 这个异步只会异步一次  
+- 这个异步只会异步一次（这应该就是官网说的“把结果缓存起来”）  
   而且是各实例间共享的  
   也就是说不同时间里用v-if显示了同一个异步组件（不同实例），那这个异步的时间将都是一致的  
 
@@ -1312,7 +1314,13 @@ methods: {
     </script>
     ```
 
-- 【】测缓存、reject、异步加载
+- 并不会像keep-alive那样缓存data
+
+- reject  
+  那异步组件就不会出现  
+  并且会报一个臃肿的错误
+
+- 【】测异步加载
 
 
 
@@ -1811,10 +1819,6 @@ mounted: function () {
 - 这个属性不会返回用`组件实例.$on`监听的监听器
 
 
-
-### 组件教程更新未看内容
-
-[这](https://cn.vuejs.org/v2/guide/components-edge-cases.html#%E7%A8%8B%E5%BA%8F%E5%8C%96%E7%9A%84%E4%BA%8B%E4%BB%B6%E4%BE%A6%E5%90%AC%E5%99%A8)及之后
 
 
 
