@@ -14,10 +14,38 @@
 
 
 
+# 使用vue3的理由
+
+应用场景：分段加载组件（可能）、弹框组件
+
+
+
 # 生命周期
 
-- setup里用onMounted  
-  不需要在setup里return onMounted
+- setup里用生命周期  
+  
+  - 命名：在普通生命周期前加上on  
+    比如mounted就是onMounted  
+    （源自[Vue Mastery](https://www.vuemastery.com/courses/vue-3-essentials/lifecycle-hooks/)1分42秒）
+  
+  - 不支持的生命周期  
+    beforeCreate、created  
+    （源自[Vue Mastery](https://www.vuemastery.com/courses/vue-3-essentials/lifecycle-hooks/)1分52秒）
+  
+    - 原因  
+  
+      - [官网](https://v3.cn.vuejs.org/guide/composition-api-lifecycle-hooks.html)说法
+  
+        > 在这些钩子中编写的任何代码都应该直接在 `setup` 函数中编写
+  
+      - [Vue Mastery](https://www.vuemastery.com/courses/vue-3-essentials/lifecycle-hooks/)说法（1分54秒）  
+        beforeCreate就是setup  
+        created就是setup之后
+  
+- 命名更改
+
+  - beforeDestory、destroyed更名为beforeUnmount、unmounted  
+    （源自[Vue Mastery](https://www.vuemastery.com/courses/vue-3-essentials/lifecycle-hooks/)1分15秒）
 
 
 
@@ -33,7 +61,10 @@
     - state
     - 普通函数
   - computed返回内容
+    
     - ref返回内容
+    
+  - > 应该避免使用 `this` —— [官网](https://v3.cn.vuejs.org/guide/composition-api-introduction.html#setup-%E7%BB%84%E4%BB%B6%E9%80%89%E9%A1%B9)
   
 - reactive与ref  
   reactive制造一整套vue2中的data  
@@ -54,11 +85,23 @@
 
 
 
+# 内置组件
+
+### [teleport](https://v3.cn.vuejs.org/api/built-in-components.html#teleport)
+
+作用是更改模板的渲染位置
+
+- 目标元素条件  
+  在使用teleport的组件mounted前就要存在（beforeMount时就要存在）  
+  （提醒：经过测试，如果没用v-if的话父子组件是同时mounted的）
+
+
+
 
 
 # 个人记录
 
-下次学https://www.yuque.com/hugsun/vue3/composition#jAd66
+下次学https://www.yuque.com/hugsun/vue3/component#RCVh8
 
 - hrtPC一个项目新建后停在了如下命令行(项目本身可以运行)  
 

@@ -155,6 +155,7 @@
   但iTunes连手机时还是失败并提示要求下载更新的版本  
   HBuilder一开始也检测不到手机，不过静置一段时间后HBuilder就可以真机调试了！  
   （杭兴也说他那里连不上iTunes但是可以连HBuilder）
+  - 一次在超长时间连接iphone后，开启了iTunes，过了半个小时，可以连手机了，可以访问存储空间，不过iTunes上还是没有显示手机（测试说用的数据线只能充电，不能传数据）
 
 
 
@@ -193,6 +194,16 @@
 
 
 
+### 打包
+
+- app  
+  发行 =》 云打包
+- 网站  
+  发行 =》 网站（后面还跟着一堆）  
+  弹窗里的“网站域名”没必要写
+
+
+
 ### bug
 
 - HBuilder开微信开发者工具白屏  
@@ -208,6 +219,8 @@
 - `uni`全局对象  
   源自uni-app  
   官网的[《API》页面](https://uniapp.dcloud.net.cn/api/README)里的内容都是从`uni`里来的
+  
+  
 
 
 
@@ -238,13 +251,16 @@ App.vue代表应用
 （这部分内容都测试于：寿宁移动端项目）  
 
 - 页面生命周期甚至包含尺寸变化、滚动到底部、点分享按钮等事件
-- onLoad参数包含url中get形式的参数
+- onLoad参数包含url中get形式的参数  
+- 组件的mounted与onShow在web上的区别
+  - 路由的返回不会触发mounted，但是会触发onShow
 
 <span style='opacity:.5'>早期结论</span>
 
 - onShow、onHide在进出页面时会执行 
 - onLoad、mounted在初次进入页面时会执行  
-  执行顺序为onLoad、onShow、mounted
+  执行顺序为onLoad、onShow、mounted  
+  onLoad的nextTick就可以获取dom了
 - destroyed都不会执行
 
 <span style='opacity:.5'>8月6日安卓app测试</span>
@@ -374,6 +390,13 @@ App.vue代表应用
 
 
 
+##### [uView](https://www.uviewui.com/components/intro.html)
+
+- 可以复制代码到项目里用  
+  sn移动端就是这样做的，改代码也可以生效
+
+
+
 ### 事件
 
 - [事件映射表](https://uniapp.dcloud.net.cn/vue-basics?id=%e4%ba%8b%e4%bb%b6%e6%98%a0%e5%b0%84%e8%a1%a8)里列出了部分事件  
@@ -422,6 +445,13 @@ App.vue代表应用
 
 
 
+### api
+
+- 图片全屏  
+  [`uni.previewImage`](https://uniapp.dcloud.net.cn/api/media/image?id=unipreviewimageobject)
+
+
+
 ### 原生api
 
 文件相关
@@ -441,16 +471,6 @@ App.vue代表应用
           console.log('下载成功',tempFilePath);
           item.localPath=tempFilePath
           item.status='下载成功'
-          /* uni.saveFile({ // 未测试
-            tempFilePath: res.tempFilePath,
-            success: (red)=> {
-              item.status='保存成功'
-              console.log('保存成功',red)
-            },
-            fail:()=>{
-              item.status='保存失败'
-            },
-          }) */
         }else{
           item.status='下载失败'
         }
@@ -466,7 +486,7 @@ App.vue代表应用
     });
   },
   ```
-
+  
 - 打开文件  
   示例代码如下  
 
@@ -477,6 +497,7 @@ App.vue代表应用
     })
     // > 打开文件有效值 doc, xls, ppt, pdf, docx, xlsx, pptx ———— https://www.cnblogs.com/lizhao123/p/11498948.html
     // 经过测试，jpg也是可以的。已测试平台：安卓app、安卓小程序
+    // 经过测试，rar也是可以的。已测试平台：安卓app
     uni.openDocument({
       /* 
       - 不加escape
@@ -498,13 +519,33 @@ App.vue代表应用
       },
     })
   },
+```
+  
+- 保存文件  
+  示例代码如下  
+
+  ```js
+  uni.saveFile({
+    tempFilePath: res.tempFilePath,
+    success: (...a)=> {
+      console.log('保存成功',a)
+      item.saveStatus='保存成功'
+    },
+    fail:e=>{
+      console.log('保存失败',e)
+      item.saveStatus='保存失败'
+      uni.showToast({title:"保存失败",icon:"none"});
+    },
+  })
   ```
 
-  
+  - 下载的文件名  
+    没法固定，安卓app是时间戳、安卓小程序又是另一个、win10chrome倒是有按下载路径作为文件名过  
+    （文件名和下载路径也没关系）
 
 
 
-### webview
+### [webview](https://uniapp.dcloud.net.cn/component/web-view)
 
 - 调试  
   可以开启或关闭网页控制台的输出  
@@ -518,23 +559,74 @@ App.vue代表应用
     - 打对象不会显示属性  
       只会显示类名
     - 打得出函数
+  
 - 在app端webview会占满全屏  
-  改webview的css也是全屏
+  改webview的css也是全屏  
+  
+  > 会自动铺满整个页面（nvue 使用需要手动指定宽高）
+  
 - 加上进度条  
   在标签上加上如下属性：  
   `:webview-styles="{progress:{color: '你要的颜色'}}"`
+  
+- 可用少量uniapp的api  
+  具体在[这个页面](https://uniapp.dcloud.net.cn/component/web-view?id=web-view)搜索“加载的网页中支持调用部分”查看
 
 和uniapp互动
 
 - 非网页端用uni.postMessage通信  
   - 网页端直接用window.parent.postMessage
   - 小程序消息只有离开webview时才能接收
+  - 目前uniapp端都是用@message  
+    但是官网说@onPostMessage时比@message多了个“实时”
 - 小程序端导航到webview外
   - 离开webview  
     `uni.navigateBack({delta: 1})`
   - 离开webview并到指定页面  
     `uni.switchTab({ url: '/pages/home/home' })`  
     （uni.navigateBack没用，甚至离开webview之后也没用）
+
+
+
+### 语法支持
+
+资料
+
+- [官网页面A](https://uniapp.dcloud.io/use)（已无法通过[首页](https://uniapp.dcloud.io/)进入）
+
+特性
+
+- div支持良好
+- v-bind  
+  - 打包小程序不支持（2021.09.13）  
+    会红色报错`Error: 暂不支持 v-bind="" 用法`
+
+- 在自定义组件中使用属性保留名作为prop  
+
+  - 小程序上会有一些问题（2021.09.13）  
+
+    - 打包会提示（普通颜色）：`[HBuilder] 13:58:42.643 提示：id 作为属性保留名,不允许在自定义组件 other-body 中定义为 props`
+    - 提示了也仍然可以发布
+    - 不过如果watch id的话，watch是不会触发的  
+    - 而且id会加到标签上
+    - 无法通过this.id获得到
+
+    （没百度到相关信息）
+
+- window对象
+
+  - 小程序里没有window对象  
+    （点发行后在微信开发者工具控制台里就可以看到报错）
+
+- 在模板里使用原生函数  
+
+  - 小程序不支持  
+    已测过Number  
+    微信开发者工具控制台上就会报错，而且报错不会说Number有问题
+
+- mixin的components
+  - 小程序不支持  
+    注意：不会报错
 
 
 
@@ -613,6 +705,14 @@ App.vue代表应用
     - 这个`isLogin`依赖了vuex一个module里的另一个state（应该是state）
 
     - 从别的页面改变依赖的state后再进入这个页面就有这个情况
+
+
+
+# 缺点
+
+- 性能差  
+  sn项目中同一个时间轴功能，性能甚至不如webview
+- 小程序一堆不支持的语法
 
 
 

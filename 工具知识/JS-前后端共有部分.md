@@ -877,7 +877,27 @@ let/const属于es6
 1. let/const在声明语句前使用会直接报错“is not defined”，而var会返回undefined，因为var的声明会提升至作用域顶部，而赋值不会提升
 2. var可以重复声明，而let/const会报错“has already been declared”
 3. var不会在在花括号形成独立作用域，而let/const会（这个花括号包括条件语句、循环语句中的花括号以及直接写的花括号）
-4. var声明变量会给window的原型加属性，而let、const不会
+4. 在最外层用var声明变量会给window的原型加属性，而let、const不会  
+
+   - 一个用var不会加到window上的例子  
+
+     ```js
+     function getPromise(pass=true){
+       var b=pass
+       return new Promise((resolve,reject)=>{
+         setTimeout(()=>{
+           if(pass){
+             resolve(new Date())
+           }else{
+             reject(new Date())
+           }
+         },1000)
+       })
+     }
+     var a=getPromise(true)
+     ```
+
+     
 
 let与var仅有以上区别
 
@@ -1547,7 +1567,9 @@ a.unshift('a','b','c')
   - 查找与输入值全等的元素  
     下面这2个方法在没查找到元素时都是返回`-1`
     - 查找第一个全等的元素的序号  
-      `arr.indexOf(值)`
+      `arr.indexOf(值)`  
+      
+      > 如果不存在，则返回-1 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf)
     - 查找最后一个全等的元素的序号  
       `arr.lastIndexOf(值)`
 
@@ -2295,7 +2317,17 @@ setTimeout(() => foo = 'baz', 500);
     
     - 如果fn里return了一个值  
       那被返回的promise的then的参数就是return值
+    - 新的promise也是能catch的
     
+  - `promise.catch(fn)`也会返回一个promise  
+
+    - 如果进了catch的话要让返回promise失败只能使用throw（throw什么都可以）
+      - 返回promise成功的话  
+        返回promise的then的参数也是catch回调的return值
+      - 返回promise失败的话  
+        返回promise的catch的参数是throw的内容
+    - 没进catch的话那结果和没有catch是一样的
+
   - 【】测测多个then之间是否是同步执行的
 
   

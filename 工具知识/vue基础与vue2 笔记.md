@@ -396,6 +396,14 @@ directives: {
 
 # 数据驱动视图
 
+- 强制更新视图  
+  [`vm.$forceUpdate`](https://cn.vuejs.org/v2/api/#vm-forceUpdate)  
+  改data不触发更新时可以手动更新一下（只要有更新，不管是不是强制更新，都是按照data来的）
+- 更新的最小单位应该是组件  
+  因为有过一个经历：一个响应式data数据更新视图后，非响应式data也会更新到视图上
+
+
+
 
 ### “Mustache” 语法
 双大括号，如“<span v-once>This will never change: {{ msg }}</span>”
@@ -465,6 +473,23 @@ trim:过滤用户输入的首尾空格
 - 对象直接赋值的话不会触发视图更新【】有空再确认下  
   键名应该可以是中文
   
+  - 通过赋值undefined来增加属性不会触发更新  
+    测试于uni-app 2021.09.14 sn项目
+  
+- 响应式
+
+  - 判断是否响应式的方法  
+    目前没找到确定就是响应式的方法  
+    不过有确定不是响应式的方法：把data打印出来，对象或数组上没有`__ob__: Observer`的就不是响应式
+  - 响应式的内容变更后会触发视图更新  
+    （改没有`__ob__: Observer`的对象的属性不会触发视图更新）
+  - 制造非响应式数据的例子  
+    1. 对于一个值为数组长度为1的data
+    2. 使用语句：`vm.数组data[1]=对象`  
+       其实用`vm.数组data[序号]=任意内容`都是不会触发视图更新的  
+       但是`vm.数组data[1]=对象`可以看到对象上没有`__ob__: Observer`
+    3. 该data的第二项将是非响应式的
+
 - 重置data
   
   - 重置指定data  
@@ -1593,6 +1618,9 @@ mounted: function () {
 对于组件来说有v-model和[.sync](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)两种方式
 
 - v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
+
+- > .sync无法用在v-for中 —— VSCode提示
+
 - 自己编写v-model时可以利用model选项来在组件内部做重命名  
   详见[官方文档](https://cn.vuejs.org/v2/guide/components-custom-events.html?#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E7%9A%84-v-model)
 
@@ -1636,6 +1664,16 @@ mounted: function () {
 - 通过vue实例访问slot  
   方法：通过[`$slots`](https://cn.vuejs.org/v2/api/#vm-slots)或[`$scopedSlots`](https://cn.vuejs.org/v2/api/#vm-scopedSlots)  
   （模板里也可用）
+- 默认值  
+  直接写slot标签中就行  
+  官网的说法叫[后备内容](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%90%8E%E5%A4%87%E5%86%85%E5%AE%B9)
+  - 如果外部写了插槽但是插槽里没东西或者是空串，那也会用默认值  
+    已在uniapp里测试
+    - 会用默认值的例子  
+      `<template v-slot:noMore></template>`  
+      `<template v-slot:noMore>      </template>`
+    - 不会用默认值的例子  
+      `<template v-slot:noMore>{{''}}</template>`
 
 疑似bug：
 
