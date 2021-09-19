@@ -2547,20 +2547,20 @@ setTimeout(() => foo = 'baz', 500);
 
 - 目前未找到捕获跨域错误的方法
 
-### fetch
+### [fetch](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch)
 
 <span style='background:#eef5f4;padding:0 10px'>es6</span>
 
+demo
+
 ```javascript
-    fetch(这里可以放请求、php文件或其他文件,{ // 加第二个参数可以规避在跨域时的报错，但并没有解决跨域获取不到东西的问题
-        method: "GET",
-        mode: "no-cors",
-        //body:xxx
-    }).then((请求返回的内容)=>{
-        return 请求返回的内容.对于这个内容的方法()//这里可选的方法详见https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#Body
-    }).then((上一个then return出来的东西)=>{
-        //一些操作
-    })
+fetch(某个请求地址,{ // 加第二个参数可以规避在跨域时的报错，但并没有解决跨域获取不到东西的问题
+    method: "GET",
+    mode: "no-cors",
+    //body:xxx
+}).then((请求返回的内容)=>{
+    return 请求返回的内容.对于这个内容的方法()//这里可选的方法详见https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#Body
+})
 ```
 - **普通post请求**  
   各参数放进一个对象转为字符串后放进`body`属性  
@@ -2568,25 +2568,50 @@ setTimeout(() => foo = 'baz', 500);
 - **form的post请求**  
   `body`里放`FormData`实例  
   每个参数用实例的`append`方法加
-- get方法不能拥有body属性，传参只能写在请求地址里（这点网上资料都没提到）  
+
+基本介绍
+
+- fetch方法返回一个promise实例
 - fetch据说可以全面替代xhr（js请求除了xhr就是fetch），完整见[mdn](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch)
+
+入参
+
+- 第一个参数  
+  - 可以是字符串  
+    代表请求地址（比如普通接口地址、php文件地址、其他文件地址）
+  - 可以是[`Request`](https://developer.mozilla.org/zh-CN/docs/Web/API/Request)对象  
+    demo见[这里](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AF%B7%E6%B1%82%E5%AF%B9%E8%B1%A1)
+- 第二个参数  
+  一个配置对象
+  - 请求头  
+    `headers`配置项  
+    可以是[`Headers`](https://developer.mozilla.org/zh-CN/docs/Web/API/Headers)也可以是对象字面量（[中文MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/fetch#%E8%AF%AD%E6%B3%95)里说是“包含 [`ByteString`](https://developer.mozilla.org/zh-CN/docs/conflicting/Web/JavaScript/Reference/Global_Objects/String)值的对象字面量”）
+    - 对于[禁改的头部](https://developer.mozilla.org/zh-CN/docs/Glossary/Forbidden_header_name)  
+      不会报错，但也无法修改成功  
+      测试于对象字面量的Referer
+    - 可以传任意的头部（自己写什么头部都可以）
+
+其他特性
+
+- get方法不能拥有body属性，传参只能写在请求地址里（这点网上资料都没提到）  
+- 
 
 ### new request
 
 （未测试不用new request是否能成功）
 
 ```javascript
-    let myImage = document.querySelector('img');
-    var myRequest = new Request('flowers.gif');
-    fetch(myRequest) // 返回一个Promise对象
-        .then((res)=>{
-            console.log('res:',res);
-            return res.blob() // res.text()是一个Promise对象，但是个人测试发现是php echo出来的文本
-        })//return的东西会给下一个then用
-        .then((res)=>{
-            var objectURL = URL.createObjectURL(res);
-            myImage.src = objectURL;
-        })
+let myImage = document.querySelector('img');
+var myRequest = new Request('flowers.gif');
+fetch(myRequest) // 返回一个Promise对象
+    .then((res)=>{
+        console.log('res:',res);
+        return res.blob() // res.text()是一个Promise对象，但是个人测试发现是php echo出来的文本
+    })//return的东西会给下一个then用
+    .then((res)=>{
+        var objectURL = URL.createObjectURL(res);
+        myImage.src = objectURL;
+    })
 ```
 
 
