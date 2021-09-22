@@ -390,10 +390,31 @@ App.vue代表应用
 
 
 
+###### [滚动区域](https://uniapp.dcloud.net.cn/component/scroll-view)
+
+- 滚动到指定元素出现  
+  用`scroll-into-view`prop  
+  - 指定元素是后代就行了，并不是像官网说的要是子元素
+  - 滚动到的位置  
+    会尽量把指定元素放到边缘  
+    横线就是最左边  
+    纵向就是最上边
+
+
+
 ##### [uView](https://www.uviewui.com/components/intro.html)
 
 - 可以复制代码到项目里用  
   sn移动端就是这样做的，改代码也可以生效
+
+
+
+bug
+
+- [tabsSwiper](https://www.uviewui.com/components/tabsSwiper.html)滚动位置不正确
+  - 解决办法  
+    去源码里找到setScrollViewToCenter方法  
+    然后把tab = this.tabsInfo[this.animationFinishCurrent]的animationFinishCurrent改为current
 
 
 
@@ -519,6 +540,7 @@ App.vue代表应用
       },
     })
   },
+  ```
 ```
   
 - 保存文件  
@@ -537,7 +559,7 @@ App.vue代表应用
       uni.showToast({title:"保存失败",icon:"none"});
     },
   })
-  ```
+```
 
   - 下载的文件名  
     没法固定，安卓app是时间戳、安卓小程序又是另一个、win10chrome倒是有按下载路径作为文件名过  

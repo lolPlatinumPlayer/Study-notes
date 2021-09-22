@@ -393,6 +393,10 @@ nvm-windows是另一个独立项目
 
 - 安装node  
   `nvm install 版本号`
+- 查看已安装版本  
+  `nvm list`  
+  <span style="color:red">列表里会展示安装报错的版本</span>
+
 - 切换node版本  
   `nvm use 版本号`
 - 卸载指定版本node  
@@ -402,11 +406,15 @@ nvm-windows是另一个独立项目
 
 问题
 
-- [1.1.7](https://github.com/coreybutler/nvm-windows/releases/tag/1.1.7)在切换node版本后会导致无法全局使用node和npm，原因是快捷方式没更新
+[1.1.7版](https://github.com/coreybutler/nvm-windows/releases/tag/1.1.7)
+
+- 在切换node版本后会导致无法全局使用node和npm，原因是快捷方式没更新
   - 解决办法  
     删掉快捷方式，再输入`nvm use 版本号`命令
-
-
+- 对于安装报错的版本  
+  - 也会展示在nvm list列表里
+  - 也可以用nvm use切换，且没有任何报错  
+    **但是不能使用npm命令**
 
 
 
