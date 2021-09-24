@@ -1,28 +1,21 @@
 
 
-# 未归类
 
-- hrtGitLab会自动删除空文件夹  
-  这个删除操作甚至在git记录里看不到
-  
-- hrtGiltLab无法修改文件或目录的大小写  
-  （无法检测到这个修改）  
-  本地记录里显示的也是更名前的名字
-  
-  - 在真真win10联想笔记本上可以检测到大小写变更
+
+# 基础知识
+
+- 输路径时如果路径中有空格的话  
+  路径要用单引号包起来  
   
 - 升级git  
-
+  
   > - 2.13及之前版本中不存在更新命令
   > - 2.14.2和2.16.1之间的命令是git update
   > - 2.16.1之后是git update-git-for-windows
   >
   > —— [stackoverflow](https://stackoverflow.com/questions/13790592/how-to-upgrade-git-on-windows-to-the-latest-version/48924212#48924212)
 
-# 基础知识
 
-- 输路径时如果路径中有空格的话  
-  路径要用单引号包起来  
 
 ### 英文专有名词
 
@@ -182,6 +175,9 @@ git config --global user.email "417783514@qq.com"
 ### 连接远程仓库
 
 - 一个远程仓库可以下载到一个电脑的不同路径上
+- 更改连接的远程仓库  
+  `git remote set-url origin 远程仓库地址`  
+  <span style='opacity:.5'>远程仓库地址是指以`.git`结尾的那个地址</span>
 
 
 
@@ -302,15 +298,15 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
 
 [这个页面](https://git-scm.com/book/zh/v2)有搭建git服务的说明
 
-有2种方式初始化远程仓库：git --bare ini和git init  
+有2种方式初始化远程仓库：`git --bare ini`和`git init`  
 2种方式在『不把实体文件放远程仓库』的情况下，效果是一致的  
 （不过git init可以通过命令展示出实体文件）
 
-- 用git --bare ini初始化远程仓库
+- 用`git --bare ini`初始化远程仓库
   - [博客A](https://www.cnblogs.com/cosiray/archive/2012/06/01/2530967.html)里似乎说应该用这种方式
   - 这种方式初始化的远程仓库里似乎找不到实体文件
 
-- 用git init初始化远程仓库
+- 用`git init`初始化远程仓库
   - 直接push会失败  
     报错如下
 
@@ -366,11 +362,6 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
       `../文件夹名`
 
 
-
-# 更改本地仓库连接的远程仓库
-
-`git remote set-url origin 远程仓库地址`  
-<span style='opacity:.5'>远程仓库地址是指以`.git`结尾的那个地址</span>
 
 
 
@@ -910,7 +901,7 @@ git commit -m 'xxx'
 
 
 
-# git相关的内容
+# git相关工具
 
 - 不要使用windows自带记事本编辑文件  
   （可能是因为会把编码改为GBK）
@@ -956,6 +947,26 @@ git commit -m 'xxx'
   - > PAT只能用于 HTTPS Git 操作。如果您的存储库使用 SSH 远程 URL，则需要将远程从 SSH 切换到 HTTPS —— [PAT使用方式](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 
 - [2FA](https://docs.github.com/en/github/authenticating-to-github/securing-your-account-with-two-factor-authentication-2fa)
+
+
+
+### github desktop
+
+- 在github上改了仓库名后都可以用desktop推送  
+  甚至.git/config里的`[remote "origin"]`都还是旧的名字
+
+
+
+### gitlab
+
+- hrtGitLab会自动删除空文件夹  
+  这个删除操作甚至在git记录里看不到
+
+- hrtGiltLab无法修改文件或目录的大小写  
+  （无法检测到这个修改）  
+  本地记录里显示的也是更名前的名字
+
+  - 在真真win10联想笔记本上可以检测到大小写变更
 
 
 

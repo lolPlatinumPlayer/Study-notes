@@ -30,9 +30,10 @@
 
 
 
-### 调试
+### 调试（含uniapp）
 
 - [这个页面](https://uniapp.dcloud.net.cn/snippet?id=%e4%bd%bf%e7%94%a8hbuilderx%e5%86%85%e7%bd%ae%e6%b5%8f%e8%a7%88%e5%99%a8%e8%b0%83%e8%af%95h5)说了一些调试内容
+- uniapp vConsole只能加在web版上
 
 
 
@@ -140,6 +141,7 @@
 
 - 苹果手机也不一定可以真机调试  
   焰荣的iphone就不行
+- iOS12.5.3的iPhone6不需要iTunes就能用HBuilder X 3.2.3进行真机调试
 
 
 
@@ -219,6 +221,9 @@
 - `uni`全局对象  
   源自uni-app  
   官网的[《API》页面](https://uniapp.dcloud.net.cn/api/README)里的内容都是从`uni`里来的
+  
+- app端内置5+能力  
+  详见[官网](https://uniapp.dcloud.io/use-html5plus)
   
   
 
@@ -309,6 +314,19 @@ App.vue代表应用
     - > 小程序端 web-view 组件一定有原生导航栏，下面一定是全屏的 web-view 组件，navigationStyle: custom 对 web-view 组件无效 —— [官网](https://uniapp.dcloud.net.cn/component/web-view)
     
       （微信）小程序就算去了导航栏，右上角的按钮也去不掉
+      
+    - 解决去掉导航栏后顶部距离不好把握的问题  
+    
+      - 问题描述  
+        - 各个手机顶部距离是不一样的，因此给定值不行  
+        - 部分手机（比如iOS）在系统顶部条出现的区域无法操作app
+      - 解决办法  
+        - 非webview页面可以用`--status-bar-height`css变量
+        - webview由于会占满全屏且无法使用外部css变量  
+          因此只能把`uni.getSystemInfoSync().statusBarHeight`传到webview里
+      - 参考资料  
+        [css变量](https://uniapp.dcloud.net.cn/frame?id=css%e5%8f%98%e9%87%8f)  
+        [自定义导航栏使用注意](https://uniapp.dcloud.net.cn/collocation/pages?id=customnav)
 
 
 
@@ -466,7 +484,7 @@ bug
 
 
 
-### api
+### 非原生api
 
 - 图片全屏  
   [`uni.previewImage`](https://uniapp.dcloud.net.cn/api/media/image?id=unipreviewimageobject)
@@ -516,9 +534,6 @@ bug
     uni.showLoading({
       title: '正在打开文件'
     })
-    // > 打开文件有效值 doc, xls, ppt, pdf, docx, xlsx, pptx ———— https://www.cnblogs.com/lizhao123/p/11498948.html
-    // 经过测试，jpg也是可以的。已测试平台：安卓app、安卓小程序
-    // 经过测试，rar也是可以的。已测试平台：安卓app
     uni.openDocument({
       /* 
       - 不加escape
@@ -541,7 +556,17 @@ bug
     })
   },
   ```
-```
+  
+  - 支持格式  
+    [官网](https://uniapp.dcloud.io/api/file/file?id=opendocument)说了一串支持格式  
+    经过测试，实际上是iOS小程序只限于那些格式  
+    下面是测出额外支持的格式（肯定还有更多支持的格式）
+  
+    | jpg                          | rar     | zip                          |
+    | ---------------------------- | ------- | ---------------------------- |
+    | 安卓app、安卓小程序、iOS app | 安卓app | 安卓app、安卓小程序、iOS app |
+  
+    
   
 - 保存文件  
   示例代码如下  
@@ -549,7 +574,7 @@ bug
   ```js
   uni.saveFile({
     tempFilePath: res.tempFilePath,
-    success: (...a)=> {
+    success: (a)=> { // 只有1个参数
       console.log('保存成功',a)
       item.saveStatus='保存成功'
     },
@@ -559,11 +584,20 @@ bug
       uni.showToast({title:"保存失败",icon:"none"});
     },
   })
-```
+  ```
 
   - 下载的文件名  
-    没法固定，安卓app是时间戳、安卓小程序又是另一个、win10chrome倒是有按下载路径作为文件名过  
-    （文件名和下载路径也没关系）
+    没法固定，安卓app是时间戳、安卓小程序又是另一个（安卓小程序文件名和下载路径也没关系）  
+    win10chrome倒是有按下载路径作为文件名过
+    
+  - 保存文件后会删除临时文件  
+  
+    > 会把临时文件移动，因此调用成功后传入的 tempFilePath 将不可用 —— [官方文档](https://uniapp.dcloud.io/api/file/file?id=savefile)
+    
+    个人测试结果：安卓小程序会、安卓app不会（可以使用『打开文件』api）
+    
+  - 测试  
+    安卓小程序端可以搜到下载的文件
 
 
 
@@ -589,10 +623,21 @@ bug
   
 - 加上进度条  
   在标签上加上如下属性：  
-  `:webview-styles="{progress:{color: '你要的颜色'}}"`
+  `:webview-styles="{progress:{color: '你要的颜色'}}"`  
+  iOS app里进度条颜色不会跟着这个走
   
-- 可用少量uniapp的api  
+- 可用个别uniapp的api  
   具体在[这个页面](https://uniapp.dcloud.net.cn/component/web-view?id=web-view)搜索“加载的网页中支持调用部分”查看
+  
+- 缓存  
+  默认不缓存
+  
+- 有5+能力  
+  可以在[官网](https://uniapp.dcloud.io/component/web-view)搜索“加载的 HTML 中是有 5+ 环境的”查看
+
+- 底部留白  
+  是有留白以适配iPhoneX等机型的，不需要在webview内部再进行处理  
+  留白部分就是纯白色
 
 和uniapp互动
 
@@ -601,12 +646,42 @@ bug
   - 小程序消息只有离开webview时才能接收
   - 目前uniapp端都是用@message  
     但是官网说@onPostMessage时比@message多了个“实时”
+  
 - 小程序端导航到webview外
   - 离开webview  
     `uni.navigateBack({delta: 1})`
   - 离开webview并到指定页面  
     `uni.switchTab({ url: '/pages/home/home' })`  
     （uni.navigateBack没用，甚至离开webview之后也没用）
+  
+- uniapp发消息给webview  
+  获取一个代表webview的对象后发送消息
+
+- 获取一个代表webview的对象  
+
+  - 普通vue环境  
+
+    ```js
+    var currentWebview = this.$scope.$getAppWebview()
+    setTimeout(function() {
+      代表webview的对象 = currentWebview.children()[0]
+    }, 1000)
+    ```
+
+    - 不延时的话currentWebview是空数组  
+      [官网](https://uniapp.dcloud.io/component/web-view?id=app%e7%ab%afweb-view%e7%9a%84%e6%89%a9%e5%b1%95)也说了`如果是页面初始化调用时，需要延时一下`  
+      官网延时用的就是setTimeout1000
+
+    - 就算webview不是第一个元素  
+      用`currentWebview.children()[0]`也能获取到
+
+    - > currentWebview相当于html5plus里的plus.webview.currentWebview()。在uni-app里vue页面直接使用plus.webview.currentWebview()无效，非v3编译模式使用this.$mp.page.$getAppWebview()
+
+  - nvue环境  
+    （没实操过，是看[评论中“阿宁啊”用户和别人的对话](https://ask.dcloud.net.cn/article/id-38730)得出的结果。[官网](https://uniapp.dcloud.io/component/web-view)最底部demo也是这样写的）  
+
+    - 可以用ref获取到代表webview的对象  
+      比如：`this.$refs.aaa`就是代表webview的对象
 
 
 
@@ -727,6 +802,13 @@ bug
     - 这个`isLogin`依赖了vuex一个module里的另一个state（应该是state）
 
     - 从别的页面改变依赖的state后再进入这个页面就有这个情况
+
+- iOS app英文[连字](https://www.zhihu.com/question/25872415?rf=26390404)问题  
+  - 解决办法  
+    给`*`或`page`加一条样式：`font-family: Microsoft YaHei, Arial, Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, sans-serif;`  
+  - 更多内容  
+    应该是默认就会连字的  
+    不过webview里默认不会
 
 
 
