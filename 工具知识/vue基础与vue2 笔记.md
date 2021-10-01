@@ -1710,7 +1710,7 @@ mounted: function () {
   - 替代方案  
     `keep-alive`加`v-if`
 - slot上的style不会传递下去  
-  class似乎也不会
+  class应该也不会（class在uniapp上是不会的）
 - 通过vue实例访问slot  
   方法：通过[`$slots`](https://cn.vuejs.org/v2/api/#vm-slots)或[`$scopedSlots`](https://cn.vuejs.org/v2/api/#vm-scopedSlots)  
   （模板里也可用）
