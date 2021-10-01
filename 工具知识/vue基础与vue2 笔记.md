@@ -1234,9 +1234,40 @@ methods: {
 
 ### [异步组件](https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6)
 
-异步组件就是可以异步插入的组件  
-使用方式和普通组件一致，但是异步组件内部可以定义何时插入自己  
-（插入后才会在vue devtools里显示）
+vue2的异步组件是一种组织普通组件的方法
+
+使用方法
+
+- 在普通组件设置配置的地方放置一个函数  
+  函数有3种写法  
+  3种写法都要设置配置（SFC最终也是一个配置，因此放置一个SFC也是可以的）
+
+  - resolve(配置)
+
+  - 返回promise
+
+  - [返回对象](https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%A4%84%E7%90%86%E5%8A%A0%E8%BD%BD%E7%8A%B6%E6%80%81)  
+    下面放上官网的demo  
+
+    ```js
+    const AsyncComponent = () => ({
+      // 需要加载的组件 (应该是一个 `Promise` 对象)
+      component: import('./MyComponent.vue'),
+      // 异步组件加载时使用的组件
+      loading: LoadingComponent,
+      // 加载失败时使用的组件
+      error: ErrorComponent,
+      // 展示加载时组件的延时时间。默认值是 200 (毫秒)
+      delay: 200,
+      // 如果提供了超时时间且组件加载也超时了，
+      // 则使用加载失败时使用的组件。默认值是：`Infinity`
+      timeout: 3000
+    })
+    ```
+
+    
+
+特性
 
 - 异步组件没有异步加载的功能  
   
@@ -1320,7 +1351,18 @@ methods: {
   那异步组件就不会出现  
   并且会报一个臃肿的错误
 
-- 【】测异步加载
+- 同步组件插入后才会在vue devtools里显示
+  
+- 异步加载
+
+  - `require(['./my-async-component'], resolve)`  
+    可行  
+    按[官网](https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6)的意思这个语法是来自webpack的
+  - 返回`import('./components/ComA.vue')`  
+    可行  
+    这个语法应该源自[webpack](https://workingforvh.gitbook.io/study-notes/gong-ju-zhi-shi/gou-jian-gong-ju-xue-xi-bi-ji#yi-bu-jia-zai-mo-kuai)
+  - `import ComA from './components/ComA.vue'`  
+    这种写法是不会异步加载的
 
 
 
