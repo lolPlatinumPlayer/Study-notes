@@ -33,7 +33,16 @@
 
 
 
+# [工作流](https://cordova.apache.org/docs/en/10.x/guide/overview/index.html#development-paths)
+
+分为 **跨平台 (CLI) 工作流** 和 **以平台为中心的工作流**
+
+
+
 # 运行项目
+
+这里只说『跨平台 (CLI) 工作流』  
+<span style='opacity:.5'>（不过`cordova platform add android`后会显示`Using cordova-fetch for cordova-android@^9.0.0`，不知道这是不是意味着用的是以平台为中心的工作流）</span>
 
 简要步骤：
 
@@ -163,16 +172,26 @@
 
 
 
+# 打包
 
+cordova build
+
+生成的包和运行项目时的一模一样
+
+
+
+# 未归类
+
+- 移动目录  
+  - 移动后无法执行命令  
+    会报错：`No Java files found that extend CordovaActivity`
+  - 解决办法  
+    `cordova platform rm android`后`cordova platform add android`
 
 
 
 
 # 学习
-
-待学习内容
-
-- 项目搞起来
 
 
 
