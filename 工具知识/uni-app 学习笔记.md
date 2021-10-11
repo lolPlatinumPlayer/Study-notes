@@ -266,14 +266,15 @@ App.vue代表应用
 
 （这部分内容都测试于：寿宁移动端项目）  
 
-- 页面生命周期甚至包含尺寸变化、滚动到底部、点分享按钮等事件
-- onLoad参数包含url中get形式的参数  
+- 页面生命周期列表  
+  uniapp的生命周期甚至包含尺寸变化、滚动到底部、点分享按钮等事件  
+  除了[这一页](https://uniapp.dcloud.io/collocation/frame/lifecycle)的生命周期外，还包含[小程序的分享事件](https://uniapp.dcloud.net.cn/api/plugins/share?id=onshareappmessage)
 - 组件的mounted与onShow在web上的区别
   - 路由的返回不会触发mounted，但是会触发onShow
 
 <span style='opacity:.5'>早期结论</span>
 
-- onShow、onHide在进出页面时会执行 
+- onShow、onHide在进出页面时会执行 【】有机会详细测试下这条
 - onLoad、mounted在初次进入页面时会执行  
   执行顺序为onLoad、onShow、mounted  
   onLoad的nextTick就可以获取dom了
@@ -298,8 +299,9 @@ App.vue代表应用
   在pages.json的pages或subPackages里配置  
   （pages和subPackages应该是主包和分包的区别）
   - 文件路径和url路径必须保持一致  
-    都是通过子项的path配置指定的
-
+    都是通过子项的path配置指定的  
+  （从这里也可以看出来没法用一个组件生成多个页面）
+  
 - [subPackages](https://uniapp.dcloud.net.cn/collocation/pages?id=subpackages)配置方法  
   主要做小程序的分包，2.7.12开始也做了app的分包  
   subPackages一个子项代表一个分包  
@@ -338,6 +340,12 @@ App.vue代表应用
       - 参考资料  
         [css变量](https://uniapp.dcloud.net.cn/frame?id=css%e5%8f%98%e9%87%8f)  
         [自定义导航栏使用注意](https://uniapp.dcloud.net.cn/collocation/pages?id=customnav)
+  
+- 获取url  
+
+  - 获取`?`后的部分  
+    通过onLoad钩子的第一个参数即可获得  
+    这个参数是一个对象，是由`?`后的内容转换来的
 
 
 
@@ -771,6 +779,9 @@ bug
 
 # 问题排查
 
+并不是所有问题排查都记录在这一部分  
+如果问题只与本笔记记录的其他某个知识点有关，那问题直接会记在那个知识点下
+
 
 
 ### 各端差异
@@ -838,6 +849,26 @@ bug
 
   - 解决办法：放在setTimeout里面，具体延迟多久看具体场景
   - [官方解释](https://ask.dcloud.net.cn/question/90442)：showToast 和 showLoading 会相互覆盖，而 hideLoading 也会关闭 showToast
+  
+- 小程序组件传参，传undefined会变null
+  >杭兴也是这么认为的
+  - 例子：sn项目搜索“小程序里undefined传进组件会变成null”  
+  已提issue：https://github.com/dcloudio/uni-app/issues/2892
+
+- 小程序对于键值为undefined的对象,v-for不会去迭代  
+  已提issue：https://github.com/dcloudio/uni-app/issues/2893
+
+- 小程序v-for对象，在新增对象属性后，标签上的属性渲染是重复的（这里说的属性包括ref）  
+  已提issue：https://github.com/dcloudio/uni-app/issues/2894
+
+  - 解决办法
+    - 办法A  
+      在模板中使用键名的部分用method返回  
+  	比如你要用`'字符串'+键名`，那么就写一个method接收键名，然后返回`'字符串'+键名`
+    - 办法B  
+      建一个计算属性，这个计算属性是对象的数组版，然后迭代这个计算属性
+
+- 小程序mustache里会把null显示出来
 
 
 
