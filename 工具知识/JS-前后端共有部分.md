@@ -721,6 +721,10 @@ div上似乎没有聚焦、失焦事件
   但是交互性就不强  
   比如打印dom，是无法通过点击跳转到dom的  
   打印错误对象，里边的连接也是无法点击的
+- 分组打印  
+  [`console.group`](https://developer.mozilla.org/en-US/docs/Web/API/console/group)与[`console.groupEnd`](https://developer.mozilla.org/en-US/docs/Web/API/console/groupEnd)  
+  `group`传入分组名，`groupEnd`无入参  
+  - 可以嵌套
 
 **其他非错误打印**
 
@@ -1628,13 +1632,16 @@ a.unshift('a','b','c')
 
 
 
-# 分割字符串
+# 字符串转数组
 
 返回一个数组，这个数组是输入字符串按`separator`分割后组成的
 格式：`字符串.split(separator,howmany)`
       `separator`是用来分割的字符串（结果不会包含`separator`）
       `howmany`指定分割出来的数组长度的最大值
 若 用来分割的字符 在头或者在尾，则头或者尾一侧的子项为空字符串
+
+- 若字符串中没有`separator`  
+  则返回长度为1的数组，子项就是调用split的字符串
 
 
 

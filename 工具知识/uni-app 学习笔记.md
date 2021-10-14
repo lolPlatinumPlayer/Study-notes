@@ -22,7 +22,8 @@
 # 调试
 
 - [这个页面](https://uniapp.dcloud.net.cn/snippet?id=%e4%bd%bf%e7%94%a8hbuilderx%e5%86%85%e7%bd%ae%e6%b5%8f%e8%a7%88%e5%99%a8%e8%b0%83%e8%af%95h5)说了一些调试内容
-- uniapp vConsole只能加在web版上
+- uniapp vConsole只能加在web版上  
+  （原因可能是html只在web端用。虽然没在官网上看到这个说法，不过sn项目的html的注释里有这样说）
 
 
 
@@ -271,6 +272,7 @@ App.vue代表应用
   除了[这一页](https://uniapp.dcloud.io/collocation/frame/lifecycle)的生命周期外，还包含[小程序的分享事件](https://uniapp.dcloud.net.cn/api/plugins/share?id=onshareappmessage)
 - 组件的mounted与onShow在web上的区别
   - 路由的返回不会触发mounted，但是会触发onShow
+- 通过`uni.navigateBack()`进入页面的话不会触发onLoad（已测：网页端）
 
 <span style='opacity:.5'>早期结论</span>
 
@@ -436,6 +438,9 @@ App.vue代表应用
     会尽量把指定元素放到边缘  
     横线就是最左边  
     纵向就是最上边
+- 垂直滚动时不一定要设置高度  
+  （官网说要通过css设置height，这是错误的）  
+
 
 
 
@@ -500,15 +505,32 @@ bug
 [api列表](https://uniapp.dcloud.net.cn/api/README?id=%e8%b7%af%e7%94%b1)
 
 - `uni.navigateTo({url:一个地址})`  
-  可以写相对地址也可以写绝对地址  
-  <span style='color:red'>写错地址不会报错也没有任何反应</span>
+  - 可以写相对地址也可以写绝对地址  
+    - 写相对路径一定要以`/`开头  
+  - <span style='color:red'>写错地址不会报错也没有任何反应</span>
+  - 可以导航到同路径不同query的页面  
+    和导航到其他页面效果一致（已测浏览器端）
 - `uni.redirectTo`  
-  调用该方法后调用返回上一页是不会到达这个页面的  
+  调用该方法后 调用返回上一页方法 是不会到达这个页面的  
   而是会到达该页面的上一页
 
 [标签](https://uniapp.dcloud.net.cn/component/navigator?id=navigator)
 
+特性
 
+
+
+
+
+
+
+
+
+
+
+### 获取dom信息
+
+可以用[createSelectorQuery](https://uniapp.dcloud.net.cn/api/ui/nodes-info?id=createselectorquery)等方法获取dom，在用[boundingClientRect](https://uniapp.dcloud.net.cn/api/ui/nodes-info?id=nodesrefboundingclientrect)等方法获取dom信息
 
 
 
@@ -771,9 +793,35 @@ bug
   }
   ```
 
+
+
+
+### 未归类
+
+- 解析html建议用[uview的u-parse组件](https://www.uviewui.com/components/parse.html)  
+  不然样式上不上去（因为小程序会把v-html转为rich-text组件）  
+  而且uview点图片后有全屏图片的功能
+
+
+
+
+
+# 其他特性
+
+- 刷新的话页面滚动位置不会变  
+  要变的话可以加如下代码  
+
+  ```js
+  mounted(){
+    uni.pageScrollTo({
+      scrollTop: 0,
+    })
+  },
+  ```
+
   
 
-
+  
 
 
 
@@ -794,6 +842,8 @@ bug
   安卓app、小程序里没有
 - `alert()`  
   安卓app无效
+- `:style="{/*xxx*/}"`  这种写法小程序不可用  
+  直接无法编译（报错只会告诉你哪个文件错了，不会告诉你更多信息）
 
 
 
@@ -869,6 +919,19 @@ bug
       建一个计算属性，这个计算属性是对象的数组版，然后迭代这个计算属性
 
 - 小程序mustache里会把null显示出来
+
+- 小程序出现2条分割线  
+  原因：画分割线的元素类名叫divider  
+  解决办法：改用其他类名
+  
+- [prop的默认值为函数的话在小程序上有问题](https://github.com/dcloudio/uni-app/issues/2943)
+
+- 小程序模板里不能直接调用$refs  
+  比如：`<scroll-view @scrolltolower="$refs.xxx.mmm">`  
+  否则一进页面就报错`Cannot read property 'mmm' of undefined`（不需要等事件触发就会报）  
+  而且就算事件触发了也不能正确执行  
+
+  - 替代方案：在method里用$refs
 
 
 

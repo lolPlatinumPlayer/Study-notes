@@ -408,9 +408,11 @@ directives: {
 
 
 ### “Mustache” 语法
-双大括号，如“<span v-once>This will never change: {{ msg }}</span>”
-可包含单个JS表达式，如“{{ message.split('').reverse().join('') }}”
+双大括号，如“<span v-once>This will never change: {{ msg }}</span>”  
+可包含单个JS表达式，如“{{ message.split('').reverse().join('') }}”  
 当中语法与JS一致，可包含限定作用域内变量，限定作用域为：用new Vue(){}新建对象中data的属性值。可用逗号“,”隔开多个内容。
+
+> 会将数据解释为普通文本，而非 HTML 代码 —— [官网](https://cn.vuejs.org/v2/guide/syntax.html#%E6%96%87%E6%9C%AC)
 
 - 有些内容不会被渲染  
   已知的如下：
@@ -1547,7 +1549,7 @@ mounted: function () {
       默认不绑定，加上[sync](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)修饰符与对应事件后可以绑定  
       （[《sync教程》](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)有提到这种用法）  
     - 第二级属性  
-      都会默认绑定，且不需要再写其他代码
+      默认绑定
 
 - prop必须存在于props选项，不然无法使用
 
