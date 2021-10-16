@@ -2285,6 +2285,9 @@ sxy项目做MyTableCol组件时依据观察得来的结论
 
 ### Vue Devtools
 
+- [是否允许项目使用devtools](https://cn.vuejs.org/v2/api/#devtools)  
+  注意：要在生产环境开启的话一定要把`Vue.config.devtools = true`放在第一行（import语句外的第一行）
+
 xml里组件名来源
 
 - 优先找组件的name属性

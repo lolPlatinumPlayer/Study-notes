@@ -1,7 +1,10 @@
+本笔记对于小程序的描述只保证在微信小程序下是正确的
+
+
+
 # 未整理内容
 
 - 似乎样式会强制加上scope
-
 - 自定义组件在小程序里都会变成web component  
   已验证了全局组件
 
@@ -12,10 +15,11 @@
       第一层：组件标签代表的元素  
       第二层：`#shadow-root`  
       第三层：组件内根元素
-
 - [请求代理](https://blog.csdn.net/zhoumengshun/article/details/108779325)  
   manifest.json源码里的`h5.devServer.proxy`配置就是  
   （似乎和vue-cli4是一致的）
+
+- url的query中可以携带中文
 
 
 
@@ -313,36 +317,6 @@ App.vue代表应用
     root配置项加上pages子项的path构成一个路径  
     其中root的结尾和path的开头都不用加`/`
 
-- 导航栏  
-
-  - 指定一些页面隐藏导航栏  
-
-    - 方法  
-      在pages.json里配置  
-      目前发现如下2种方法（目前没发现2种方法的差别）  
-
-      - 将style属性的navigationStyle属性设为custom
-      - 将style属性的app-plus属性的titleNView设为false
-
-      （已测试网页端和安卓app端，可以隐藏包含webview的页面）
-
-    - > 小程序端 web-view 组件一定有原生导航栏，下面一定是全屏的 web-view 组件，navigationStyle: custom 对 web-view 组件无效 —— [官网](https://uniapp.dcloud.net.cn/component/web-view)
-    
-      （微信）小程序就算去了导航栏，右上角的按钮也去不掉
-      
-    - 解决去掉导航栏后顶部距离不好把握的问题  
-    
-      - 问题描述  
-        - 各个手机顶部距离是不一样的，因此给定值不行  
-        - 部分手机（比如iOS）在系统顶部条出现的区域无法操作app
-      - 解决办法  
-        - 非webview页面可以用`--status-bar-height`css变量
-        - webview由于会占满全屏且无法使用外部css变量  
-          因此只能把`uni.getSystemInfoSync().statusBarHeight`传到webview里
-      - 参考资料  
-        [css变量](https://uniapp.dcloud.net.cn/frame?id=css%e5%8f%98%e9%87%8f)  
-        [自定义导航栏使用注意](https://uniapp.dcloud.net.cn/collocation/pages?id=customnav)
-  
 - 获取url  
 
   - 获取`?`后的部分  
@@ -457,6 +431,12 @@ bug
   - 解决办法  
     去源码里找到setScrollViewToCenter方法  
     然后把tab = this.tabsInfo[this.animationFinishCurrent]的animationFinishCurrent改为current
+- [u-search](https://www.uviewui.com/components/search.html)组件为固定高度（高度无法用align-items: stretch撑开）
+- [Navbar](https://www.uviewui.com/components/navbar.html#props)  
+  height prop默认值其实不是44（官网说是44）  
+  这个值到了小程序上就是48（起码微信开发者工具里看是48）
+  - 如果把height设为44的话  
+    `calc(var(--status-bar-height) + 44px`会比『该组件高度+状态栏高度』要高
 
 
 
@@ -520,9 +500,106 @@ bug
 
 
 
+### 顶部内容
 
+包括：导航栏、状态栏 、胶囊按钮（小程序）
 
+（状态栏就是显示时间、电量的那一栏，uniapp和uview都是这么叫的）
 
+（胶囊按钮就是每个小程序右上角都有的几个按钮）
+
+- 指定一些页面隐藏导航栏  
+
+  - 特性
+
+    - 小程序就算去了导航栏，也有2个东西去不掉
+
+      1. 胶囊按钮
+      2. 状态栏
+
+    - >小程序端 web-view 组件一定有原生导航栏  
+      >navigationStyle: custom 对 web-view 组件无效 
+      >—— [uniapp官网](https://uniapp.dcloud.net.cn/component/web-view)
+
+    - 小程序
+
+  - 方法  
+    在pages.json里配置  
+    目前发现如下2种方法（目前没发现2种方法的差别）  
+
+    - 将style属性的navigationStyle属性设为custom
+    - 将style属性的app-plus属性的titleNView设为false
+
+    （已测试网页端和安卓app端，可以隐藏包含webview的页面）
+
+  - 解决去掉导航栏后顶部距离不好把握的问题  
+
+    - 问题描述  
+      - 各个手机顶部距离是不一样的，因此给定值不行  
+      - 部分手机（比如iOS）在系统顶部条出现的区域无法操作app
+    - 解决办法  
+      - 非webview页面可以用`--status-bar-height`css变量
+      - webview由于会占满全屏且无法使用外部css变量  
+        因此只能把`uni.getSystemInfoSync().statusBarHeight`传到webview里
+    - 参考资料  
+      [css变量](https://uniapp.dcloud.net.cn/frame?id=css%e5%8f%98%e9%87%8f)  
+      [自定义导航栏使用注意](https://uniapp.dcloud.net.cn/collocation/pages?id=customnav)
+
+- 设置导航栏与状态栏的背景色
+  - pages.json的navigationBarBackgroundColor配置  
+    （寿宁项目小程序里设置什么值最后都是透明，不知道是不是因为用了"navigationStyle":"custom"）
+    - 要求必须是HexColor  
+      "#00000000"可以通过编译（但是没看过效果）
+
+- 胶囊按钮附近的样式问题  
+
+  - 解决方案：获得胶囊按钮的尺寸信息  
+    [`getMenuButtonBoundingClientRect`](https://uniapp.dcloud.net.cn/api/ui/menuButton?id=getmenubuttonboundingclientrect)方法  
+    （和微信的[`getMenuButtonBoundingClientRect`](https://developers.weixin.qq.com/miniprogram/dev/api/ui/menu/wx.getMenuButtonBoundingClientRect.html)方法应该是一致的）  
+
+    - 该方法只存在于小程序平台
+    - 返回数值是针对屏幕左上角而言的  
+      （比如right=left+width）
+
+  - 文本不会进入胶囊按钮的区域  
+    但是也没法设置与胶囊按钮间的间距  
+    （这条信息并不是很确定）
+
+  - 示例代码  
+
+    ```vue
+    <template>
+      <div class='NavigationBar'>
+        <div class="topSpace"></div>
+        <div class="bar">
+          <u-icon class="backBtn" name="arrow-left" @click="goBack"></u-icon>
+    			<u-search 
+            v-model="searchText" 
+            :placeholder="placeholder" 
+            bg-color='#F7F7F7' 
+            color='#333' 
+            placeholder-color='#A9A9A9'
+            action-text="搜索  "
+    			  :search-icon-color="searchText?'#333':'#A9A9A9'" 
+            :action-style="{
+              color: '#333333',
+              'font-size': '30rpx',
+              'font-weight':'bold',
+              'padding-right':'0',
+              'padding-left':'21rpx',
+              width:'auto', // 重置u-search上的width
+            }" 
+            @search='search' 
+            @custom='search'
+          ></u-search>
+          <div class="rightSpace" v-html="'&nbsp;&nbsp;'"></div>
+          <div class="rightSpace" v-html="'&nbsp;&nbsp;'"></div>
+        </div>
+      </div>
+    </template>
+    ```
+
+    
 
 
 
@@ -932,6 +1009,22 @@ bug
   而且就算事件触发了也不能正确执行  
 
   - 替代方案：在method里用$refs
+  
+- 在外部给组件上样式的话小程序会有问题  
+  （由于目前还未学习小程序，因此这部分内容还不能归纳进小程序里）  
+  （其中slot在微信开发者工具里看是在#shadow-root外的）  
+
+  - 问题表现  
+    （组件内部上是没问题的）  
+    （外部不管是用class还是style都不行）
+    - padding挤压不到slot 
+    - 加padding或margin后，上方会比其他平台多一个固定距离  
+      （有一个例外，就是padding:0或margin:0，其他的就算是padding:0 1px也是一样的）  
+      （这个距离不管padding或margin是多少都是一样的）
+  - 解决办法  
+    把要加的样式传给组件，组件用style去上
+
+- 小程序端给view、text加了`box-sizing: border-box;`
 
 
 
