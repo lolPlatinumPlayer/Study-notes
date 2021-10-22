@@ -54,45 +54,6 @@
 
 
 
-### [keep-alive](https://cn.vuejs.org/v2/api/#keep-alive)
-
-用来缓存的
-
-特性
-
-- keep-alive直接对组件的显隐效果感觉和v-show一样
-
-  - 显隐后data不会丢失
-  - 显隐组件中有echarts容器，图表不会丢失
-
-- 如果显隐dom，dom后代上有组件  
-  那显隐后会丢失组件里的echarts画面
-
-- keep-alive有时会导致后代的非组件内容丢失  
-  例子：slot上加v-if
-
-- keep-alive中的组件用v-if===false后在devtools里有特别的显示方式  
-  会变成半透明，且背后带个“inactive”标签
-  
-- keep-alive中对于同一个组件  
-  一个时间里只会显示1个，加key也不好使
-  
-- 可以写规则筛选哪些组件缓存哪些不缓存  
-  规则可以用数组（字符串形式也可以）或正则来写
-  
-- 从[博客A](https://blog.csdn.net/fu983531588/article/details/90321827)看来  
-  （以下内容并未实践）
-  - keep-alive中的组件比其他组件多一些生命周期钩子  
-    比如[activated](https://cn.vuejs.org/v2/api/#activated)和[deactivated](https://cn.vuejs.org/v2/api/#deactivated)
-  - 可以配合vue-router使用
-
-和v-show区别
-
-- v-show不能配合`is`使用
-- v-show没有显隐的生命周期
-
-
-
 ### 替换模板标签
 
 `is`属性  
@@ -433,14 +394,38 @@ v-html中似乎不能对变量进行运算
 
 
 ### v-model
+##### 自然输入控件
+
 input、textarea等自然输入控件中属性加上v-model="xxx"，可实现input中输入数据与Vue对象data属性中的xxx属性的双向绑定，即输入数据===xxx属性，显示也同步。该点在单多选下拉input中同样适用。
-多选按钮：在xxx声明为数组时可以获取选中框的value（使用vue的标签中应用v-bind），声明为空时将以true、false反映选中状态。
-单选按钮：只要有声明xxx，xxx值都为选中按钮的value。（相同v-model的单选按钮会自动绑定到一起）
-select下拉列表：只要有声明xxx，xxx值都为选中选项option中的内容。
-勾选框：true或false。绑定数值方法：v-bind:true-value="'a'"
-（因为v-model是双向数据绑定，所以用v-for循环出来的内容直接写循环中的某一项就行，不用再从循环依赖的数据里一层一层点出来）
+
+- 多选按钮  
+  在xxx声明为数组时可以获取选中框的value（使用vue的标签中应用v-bind），声明为空时将以true、false反映选中状态。
+- 单选按钮  
+  只要有声明xxx，xxx值都为选中按钮的value。（相同v-model的单选按钮会自动绑定到一起）
+- select下拉列表  
+  只要有声明xxx，xxx值都为选中选项option中的内容。
+- 勾选框  
+  true或false。绑定数值方法：v-bind:true-value="'a'"
+
+##### v-model的修饰符
+
+添加在v-model.后
+lazy:使v-model不会在输入未完成时就同步
+number:将输入数值变为Number类型（如果原值的转换结果为 NaN 则返回原值，如果输入第一位为数字，那后续也只能输入数字）
+trim:过滤用户输入的首尾空格
+
+
+
+##### 其他
 
 - v-model可以传入v-for循环出来的东西
+- 小知识点：因为v-model是双向数据绑定，所以用v-for循环出来的内容直接写循环中的某一项就行，不用再从循环依赖的数据里一层一层点出来
+- 编写有v-model功能的组件
+  - [初级教程](https://cn.vuejs.org/v2/guide/components.html#%E5%9C%A8%E7%BB%84%E4%BB%B6%E4%B8%8A%E4%BD%BF%E7%94%A8-v-model)
+    - 注意：要设一个叫value的prop<span style='opacity:.5'>（虽然[官网](https://cn.vuejs.org/v2/guide/components.html#%E5%9C%A8%E7%BB%84%E4%BB%B6%E4%B8%8A%E4%BD%BF%E7%94%A8-v-model)有说，但是官网说得很拗口）</span>
+  - 更改prop名与事件名  
+    - [教程](https://cn.vuejs.org/v2/guide/components-custom-events.html?#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E7%9A%84-v-model)
+    - [api文档](https://cn.vuejs.org/v2/api/#model)
 
 坑：
 
@@ -450,12 +435,7 @@ select下拉列表：只要有声明xxx，xxx值都为选中选项option中的�
     要放computed里  
     如果v-model输入非法值的话编译会阻塞报错：`'Assigning to rvalue'`
 
-
-##### v-model的修饰符
-添加在v-model.后
-lazy:使v-model不会在输入未完成时就同步
-number:将输入数值变为Number类型（如果原值的转换结果为 NaN 则返回原值，如果输入第一位为数字，那后续也只能输入数字）
-trim:过滤用户输入的首尾空格
+还有一部分内容记录在了本笔记的“双向数据绑定”部分
 
 
 
@@ -551,19 +531,24 @@ trim:过滤用户输入的首尾空格
 getter作用：依赖几个数据生成另一个数据，并赋值给计算属性。
 getter的简写方法：在计算属性中直接写入无参数匿名函数，return一个值。
 在Mustache中写入计算属性，会直接运行getter中的函数。
-使用计算属性会进行缓存，函数只有当其依赖数据（使用的变量）改变时才会重新运行，多次调用只会调用计算结果而不会运行函数。
 
-可以让路由参与运算，并且一开始计算结果就是正确的
+- 使用计算属性会进行缓存，函数只有当其依赖数据（使用的变量）改变时才会重新运行，多次调用只会调用计算结果而不会运行函数。
+
+- 可以让路由参与运算，并且一开始计算结果就是正确的
 
 - 用getter来做相关操作可能会出现问题  
   （可能setter可以）  
   （引导记下这条笔记的例子也有点问题，组件内没把value绑到再下级的组件上）  
-  getter感觉只是保证了值的正确，然而其中的代码似乎不一定每次都执行
-  - 例子  
-    写了个组件，内外用v-model通信  
-    外部一开始传入null，内部输出都是对象  
-    写了个计算属性为输出结果，并在getter中emit、console.log  
-    然而经常是不打印的，而且vue devtools（2.6.10）里数据也不一定及时更新
+  - getter感觉只是保证了值的正确，然而其中的代码似乎不一定每次都执行
+    - 例子A  
+      写了个组件，内外用v-model通信  
+      外部一开始传入null，内部输出都是对象  
+      写了个计算属性为输出结果，并在getter中emit、console.log  
+      然而经常是不打印的，而且vue devtools（2.6.10）里数据也不一定及时更新
+    - 例子B  
+      2021.09.29版的SandVideo  
+      改变videoPlayerOption.sources[0].src并不会让finalVideoPlayerOption执行  
+      不过finalVideoPlayerOption.sources[0].src是会跟着变的
 
 
 ##### 计算属性的setter（set属性）
@@ -621,7 +606,10 @@ watch: {
 
 **监听子项**
 
-监听变量处用字符串写法，子项前只能用点，数组的话在点后写序号
+监听变量处用字符串写法，子项前只能用点
+
+- 数组的话在点后写序号  
+  如果数组用中括号形式写会报错`Watcher only accepts simple dot-delimited paths`
 
 - 监听对象属性的话，该属性消失后也会触发回调。  
 
@@ -1095,7 +1083,9 @@ methods: {
       - 在mounted之前的钩子声明不会报错  
         （完整的钩子列表为：data、beforeCreate、created、beforeMount）
 
-
+- 模板不支持使用`?.`  
+  否则无法通过编译  
+  （为深入了解是不是babel问题，应该不是）
 
 
 
@@ -1231,140 +1221,6 @@ methods: {
 ### [函数式组件](https://cn.vuejs.org/v2/guide/render-function.html#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6)
 
 [这个文章](https://www.jianshu.com/p/3e22abebc97b)也可以看一看
-
-
-
-### [异步组件](https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6)
-
-vue2的异步组件是一种组织普通组件的方法
-
-使用方法
-
-- 在普通组件设置配置的地方放置一个函数  
-  函数有3种写法  
-  3种写法都要设置配置（SFC最终也是一个配置，因此放置一个SFC也是可以的）
-
-  - resolve(配置)
-
-  - 返回promise
-
-  - [返回对象](https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%A4%84%E7%90%86%E5%8A%A0%E8%BD%BD%E7%8A%B6%E6%80%81)  
-    下面放上官网的demo  
-
-    ```js
-    const AsyncComponent = () => ({
-      // 需要加载的组件 (应该是一个 `Promise` 对象)
-      component: import('./MyComponent.vue'),
-      // 异步组件加载时使用的组件
-      loading: LoadingComponent,
-      // 加载失败时使用的组件
-      error: ErrorComponent,
-      // 展示加载时组件的延时时间。默认值是 200 (毫秒)
-      delay: 200,
-      // 如果提供了超时时间且组件加载也超时了，
-      // 则使用加载失败时使用的组件。默认值是：`Infinity`
-      timeout: 3000
-    })
-    ```
-
-    
-
-特性
-
-- 异步组件没有异步加载的功能  
-  
-  > 只在需要的时候才从服务器加载
-  
-  官网的这句话说的不是异步组件的特性
-
-- 这个异步只会异步一次（这应该就是官网说的“把结果缓存起来”）  
-  而且是各实例间共享的  
-  也就是说不同时间里用v-if显示了同一个异步组件（不同实例），那这个异步的时间将都是一致的  
-
-  - 测试代码如下  
-
-    ```vue
-    <template>
-      <div id="app">
-        1{{isShow1}} 2{{isShow2}} 3{{isShow3}} 4{{isShow4}}
-        <button @click="isShow1=!isShow1">button</button>
-        <async1 v-if="isShow1" style="color:red" />
-        <async1 v-if="isShow2" style="color:green" />
-        <async1 v-if="isShow3" style="color:blue" />
-        <async1 v-if="isShow4" style="color:orange" />
-      </div>
-    </template>
-    
-    <script>
-    import Vue from 'vue'
-    Vue.component('async1',function (resolve, reject) {
-      console.log('time start')
-      setTimeout(function () {
-        console.log('time end')
-        // 向 `resolve` 回调传递组件定义
-        resolve({
-          template: '<div>I am async!</div>'
-        })
-      },2000)
-    })
-    
-    export default {
-      name: 'App',
-      components: {
-        /* async1: function (resolve, reject) {
-          console.log('time start')
-          setTimeout(function () {
-            console.log('time end')
-            // 向 `resolve` 回调传递组件定义
-            resolve({
-              template: '<div>I am async!</div>'
-            })
-          },2000)
-        }, */
-      },
-      data(){
-        return{
-          isShow1:false,
-          isShow2:false,
-          isShow3:false,
-          isShow4:false,
-        }
-      },
-      watch:{
-        isShow1(isShow1){
-          setTimeout(()=>{
-            this.isShow2=isShow1
-          },1000)
-          setTimeout(()=>{
-            this.isShow3=isShow1
-          },2000)
-          setTimeout(()=>{
-            this.isShow4=isShow1
-          },3000)
-        }
-      }
-    }
-    </script>
-    ```
-
-- 并不会像keep-alive那样缓存data
-
-- reject  
-  那异步组件就不会出现  
-  并且会报一个臃肿的错误
-
-- 同步组件插入后才会在vue devtools里显示
-  
-- 异步加载
-
-  - `require(['./my-async-component'], resolve)`  
-    可行  
-    按[官网](https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6)的意思这个语法是来自webpack的
-  - 返回`import('./components/ComA.vue')`  
-    可行  
-    这个语法应该源自[webpack](https://workingforvh.gitbook.io/study-notes/gong-ju-zhi-shi/gou-jian-gong-ju-xue-xi-bi-ji#yi-bu-jia-zai-mo-kuai)
-  - `import ComA from './components/ComA.vue'`  
-    这种写法是不会异步加载的
 
 
 
@@ -1673,8 +1529,6 @@ mounted: function () {
 
 - > .sync无法用在v-for中 —— VSCode提示
 
-- 自己编写v-model时可以利用model选项来在组件内部做重命名  
-  详见[官方文档](https://cn.vuejs.org/v2/guide/components-custom-events.html?#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E7%9A%84-v-model)
 
 
 
@@ -1695,9 +1549,9 @@ mounted: function () {
 - 不定数量不定层级的标签
 - 文本
 
-特性：
+操作：
 
-- 一个组件可以接收多份模板代码（`slot`）  
+- 一个组件接收多份模板代码（`slot`）  
   这情况官方名称是：[具名插槽](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%85%B7%E5%90%8D%E6%8F%92%E6%A7%BD)  
   写法有4种  
   - `<普通标签 slot="插槽名">xxx</普通标签>`  
@@ -1707,15 +1561,25 @@ mounted: function () {
   - `<template v-slot:插槽名>xxx</template>`  
     2.6.0新增
   - `<template #插槽名>xxx</template>`
+- 通过vue实例访问slot  
+  方法：通过[`$slots`](https://cn.vuejs.org/v2/api/#vm-slots)或[`$scopedSlots`](https://cn.vuejs.org/v2/api/#vm-scopedSlots)  
+  （模板里也可用）
+
+- 动态  
+  - [定义动态的插槽名](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%8A%A8%E6%80%81%E6%8F%92%E6%A7%BD%E5%90%8D)
+  - 可以用for循环生成  
+  - name可以用`:`（`v-bind`）
+- 访问组件内数据  
+  官方名称为：[作用域插槽](https://cn.vuejs.org/v2/guide/components-slots.html#作用域插槽)
+
+特性：
+
 - 不能使用v-show  
   [慕课网](https://www.imooc.com/article/details/id/25193)上有人说尤雨溪已经回复过这个问题  
   - 替代方案  
     `keep-alive`加`v-if`
 - slot上的style不会传递下去  
   class应该也不会（class在uniapp上是不会的）
-- 通过vue实例访问slot  
-  方法：通过[`$slots`](https://cn.vuejs.org/v2/api/#vm-slots)或[`$scopedSlots`](https://cn.vuejs.org/v2/api/#vm-scopedSlots)  
-  （模板里也可用）
 - 默认值  
   直接写slot标签中就行  
   官网的说法叫[后备内容](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%90%8E%E5%A4%87%E5%86%85%E5%AE%B9)
@@ -2249,6 +2113,191 @@ sxy项目做MyTableCol组件时依据观察得来的结论
       attrs属性是不存在的
 
     
+
+# 性能优化
+
+
+
+### [keep-alive](https://cn.vuejs.org/v2/api/#keep-alive)
+
+用来缓存的
+
+特性
+
+- keep-alive直接对组件的显隐效果感觉和v-show一样
+
+  - 显隐后data不会丢失
+  - 显隐组件中有echarts容器，图表不会丢失
+
+- 如果显隐dom，dom后代上有组件  
+  那显隐后会丢失组件里的echarts画面
+
+- keep-alive有时会导致后代的非组件内容丢失  
+  例子：slot上加v-if
+
+- keep-alive中的组件用v-if===false后在devtools里有特别的显示方式  
+  会变成半透明，且背后带个“inactive”标签
+
+- keep-alive中对于同一个组件  
+  一个时间里只会显示1个，加key也不好使
+
+- 可以写规则筛选哪些组件缓存哪些不缓存  
+  规则可以用数组（字符串形式也可以）或正则来写
+
+- 从[博客A](https://blog.csdn.net/fu983531588/article/details/90321827)看来  
+  （以下内容并未实践）
+  - keep-alive中的组件比其他组件多一些生命周期钩子  
+    比如[activated](https://cn.vuejs.org/v2/api/#activated)和[deactivated](https://cn.vuejs.org/v2/api/#deactivated)
+  - 可以配合vue-router使用
+
+和v-show区别
+
+- v-show不能配合`is`使用
+- v-show没有显隐的生命周期
+
+
+
+
+
+### [异步组件](https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6)
+
+vue2的异步组件是一种组织普通组件的方法
+
+使用方法
+
+- 在普通组件设置配置的地方放置一个函数  
+  函数有3种返回配置的方法（SFC最终也是一个配置，因此在配置处放置一个SFC也是可以的）  
+  3种方法如下：
+
+  - `resolve(配置)`  
+    （`resolve`是第一个参数）  
+    比如:
+
+    ```js
+    components: {
+      UiRule: (resolve) => require(["./choice-rule"], resolve),
+    },
+    ```
+
+  - 返回promise
+
+  - [返回对象](https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%A4%84%E7%90%86%E5%8A%A0%E8%BD%BD%E7%8A%B6%E6%80%81)  
+    下面放上官网的demo  
+
+    ```js
+    const AsyncComponent = () => ({
+      // 需要加载的组件 (应该是一个 `Promise` 对象)
+      component: import('./MyComponent.vue'),
+      // 异步组件加载时使用的组件
+      loading: LoadingComponent,
+      // 加载失败时使用的组件
+      error: ErrorComponent,
+      // 展示加载时组件的延时时间。默认值是 200 (毫秒)
+      delay: 200,
+      // 如果提供了超时时间且组件加载也超时了，
+      // 则使用加载失败时使用的组件。默认值是：`Infinity`
+      timeout: 3000
+    })
+    ```
+
+    
+
+特性
+
+- 异步组件没有异步加载的功能  
+
+  > 只在需要的时候才从服务器加载
+
+  官网的这句话说的不是异步组件的特性
+
+- 这个异步只会异步一次（这应该就是官网说的“把结果缓存起来”）  
+  而且是各实例间共享的  
+  也就是说不同时间里用v-if显示了同一个异步组件（不同实例），那这个异步的时间将都是一致的  
+
+  - 测试代码如下  
+
+    ```vue
+    <template>
+      <div id="app">
+        1{{isShow1}} 2{{isShow2}} 3{{isShow3}} 4{{isShow4}}
+        <button @click="isShow1=!isShow1">button</button>
+        <async1 v-if="isShow1" style="color:red" />
+        <async1 v-if="isShow2" style="color:green" />
+        <async1 v-if="isShow3" style="color:blue" />
+        <async1 v-if="isShow4" style="color:orange" />
+      </div>
+    </template>
+    
+    <script>
+    import Vue from 'vue'
+    Vue.component('async1',function (resolve, reject) {
+      console.log('time start')
+      setTimeout(function () {
+        console.log('time end')
+        // 向 `resolve` 回调传递组件定义
+        resolve({
+          template: '<div>I am async!</div>'
+        })
+      },2000)
+    })
+    
+    export default {
+      name: 'App',
+      components: {
+        /* async1: function (resolve, reject) {
+          console.log('time start')
+          setTimeout(function () {
+            console.log('time end')
+            // 向 `resolve` 回调传递组件定义
+            resolve({
+              template: '<div>I am async!</div>'
+            })
+          },2000)
+        }, */
+      },
+      data(){
+        return{
+          isShow1:false,
+          isShow2:false,
+          isShow3:false,
+          isShow4:false,
+        }
+      },
+      watch:{
+        isShow1(isShow1){
+          setTimeout(()=>{
+            this.isShow2=isShow1
+          },1000)
+          setTimeout(()=>{
+            this.isShow3=isShow1
+          },2000)
+          setTimeout(()=>{
+            this.isShow4=isShow1
+          },3000)
+        }
+      }
+    }
+    </script>
+    ```
+
+- 并不会像keep-alive那样缓存data
+
+- reject  
+  那异步组件就不会出现  
+  并且会报一个臃肿的错误
+
+- 同步组件插入后才会在vue devtools里显示
+
+- 异步加载
+
+  - `require(['./my-async-component'], resolve)`  
+    可行  
+    按[官网](https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6)的意思这个语法是来自webpack的
+  - 返回`import('./components/ComA.vue')`  
+    可行  
+    这个语法应该源自[webpack](https://workingforvh.gitbook.io/study-notes/gong-ju-zhi-shi/gou-jian-gong-ju-xue-xi-bi-ji#yi-bu-jia-zai-mo-kuai)
+  - `import ComA from './components/ComA.vue'`  
+    这种写法是不会异步加载的
 
 
 

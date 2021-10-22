@@ -172,6 +172,17 @@ console.log('a[3]',a[3]) // undefined
 
   - `数组+''`
   - `数组.toString()`
+  
+- 可通过修改`length`属性来删除尾部元素  
+  例子如下  
+
+  ```js
+  const arr = [11, 22, 33, 44, 55, 66]
+  arr.length = 3
+  console.log(arr)
+  ```
+
+  
 
 # 函数
 
@@ -987,7 +998,9 @@ a<<b在数学中相当于a=a*2^b，反之类似
 
 
 
-### 可选链接运算符
+### [可选链接运算符](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Optional_chaining)
+
+MDN称为“可选链操作符”
 
 <span style='background:#eef5f4;padding:0 10px'>es2020</span>
 
@@ -1020,7 +1033,7 @@ a<<b在数学中相当于a=a*2^b，反之类似
 
 ### `||`与`??`
 
-`||`是判断`==false`，`??`是判断是否为`null`或`undefined`
+`||`是判断`==false`，[`??`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator)是判断是否为`null`或`undefined`
 
 > 佐证材料：[博客A](https://blog.csdn.net/qq_28387069/article/details/78526037)、[博客B](https://blog.csdn.net/weixin_41650390/article/details/113739845?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control)
 
@@ -1645,6 +1658,15 @@ a.unshift('a','b','c')
 
 
 
+# `toString`
+
+多种数据类型都可以执行这个方法来返回字符串
+
+- **用于数字类型时**  
+  可以传一个参数来进行进制转换，可以把十进制转为指定进制的字符串  
+
+
+
 
 # [`JSON.stringify()`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify)
 返回 转为JSON格式字符串 的 传入js对象或数组
@@ -1690,13 +1712,6 @@ function(key, value) {
 - 数组元素为`undefined`、`NaN`、`empty`的会转为`null`
 - 对象属性值为`undefined`的属性不会打印
 - 对象属性值为`NaN`的会转为`null`
-
-# `toString`
-
-多种数据类型都可以执行这个方法来返回字符串
-
-- **用于数字类型时**  
-  可以传一个参数来进行进制转换，可以把十进制转为指定进制的字符串  
 
 
 
@@ -2235,6 +2250,12 @@ setTimeout(() => foo = 'baz', 500);
   console.log(rest); // [30, 40, 50]
   ```
   
+- ```js
+  const aa =['1997', 'John Doe', 'US', 'john@doe.com', 'New York']
+  const { 2: country, 4: state } = aa
+  console.log({ country, state }) // {country: 'US', state: 'New York'}
+  ```
+
 - ```javascript
   ({ a, b } = { b: 10, c:111,a: 20 }); //这个语法等号前不能用数组形式
   console.log(a); // 20

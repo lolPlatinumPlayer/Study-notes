@@ -222,12 +222,42 @@ history模式的网页只能在http服务器上运行，直接双击html文件�
 
 query与params不同的地方
 
-- query会反映在url里，而params不会
 - query是在路由中输入名值对中的名，而params只能在routes中输入名？？？
 
 
 
+### param  
 
+如果一个path是这样的`'xxx/:id/:type'`，那id和type就是param
+
+- 可以通过`this.$route.params.id`、`this.$route.params.type`访问
+
+- $router.push的2种写法
+
+  - path直接完整地拼出来  
+    比如：
+
+    ```js
+    this.$router.push({
+      path: `/xxx/123/edit`
+    })
+    ```
+
+  - name+对象形式的params
+
+  - 下面这种写法是不行的  
+
+    ```js
+    this.$router.push({
+      path: `/xxx/:id/:type`,
+      params: {
+        id:123,
+        type:'edit',
+      },
+    })
+    ```
+
+    
 
 ### 动态路径参数
 
@@ -242,7 +272,11 @@ const router = new VueRouter({
 ```
 
 遇到所有 “/user/:xx” 的路由，都会在{{}}中渲染出 xx。
-也可以设置多个 动态路径参数，中间可以有任何间隔，甚至没有间隔，没有间隔的话除了最后一个 动态路径参数 以外其他 动态路径参数 都只取一个字符。
+
+- 可以设置多个 动态路径参数
+  - 中间可以有任何间隔
+  - 也可以没有间隔  
+    没有间隔的话除了最后一个 动态路径参数 以外其他 动态路径参数 都只取一个字符（？？？）
 
 
 
@@ -522,6 +556,7 @@ if (to.hash) {
     - 解决办法：  
       空白时间也就是beforeEach和afterEach之间的时间  
       可以通过这个特性加上加载效果
+
 
 
 
