@@ -1,3 +1,5 @@
+
+
 # 待研究
 
 - created里执行的函数的this是undefined
@@ -1020,9 +1022,17 @@ methods: {
      脚本语句里的data等不需要加`this.`  
      脚本语句里的`this`值为`null`，而使用`window`是会报错的  
      （不过放箭头函数里可以获取到`this`，而window不行）
+     
    - 写语句时获取事件对象  
      用`$event`  
      面对原生标签时也可以获得原生事件对象
+     
+   - 通过`$refs`去调方法的话括号不能省略  
+     否则模板无法编译  
+   
+     
+   
+   
 
 **[官网的用法列表](https://cn.vuejs.org/v2/api/#v-on)**
 
