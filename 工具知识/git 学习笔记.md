@@ -139,6 +139,7 @@
     `git pull origin master`里的origin就是仓库名
   
 - `.git/config`里的
+  
   ```
   [remote "origin"]
   	url = ssh://git@192.168.1.220:10022/credit/cmp-big-screen.git
@@ -274,6 +275,11 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
   - 提示：↖这个博客里说的“~/.ssh 目录”就是类似`C:\Users\Administrator\.ssh`这样的路径
   - hrtGitlab可以添加多个私钥
   - 提示：公钥是以`ssh-rsa `开头的
+  - 一次成功的经验  
+    按着[这个博客](https://www.cnblogs.com/lz0925/p/10725010.html)做  
+    然后下hrtGitlab成功了  
+    （提示：git bash里输密码时光标都没反应的）  
+    不过每次和远程仓库交互都要输密码
 - hrt gitlab有次下下来用`git branch`命令只能看到master分支  
   不过checkout到其他分支也会有其他分支的代码
 
