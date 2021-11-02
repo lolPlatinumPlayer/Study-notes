@@ -448,7 +448,7 @@ git checkout 分支名 // 切换分支
 
 
 
-### 提交分支代码到服务端
+### 提交分支代码到远程仓库
 
 - `git push`  
   应该是整体提交
@@ -699,15 +699,11 @@ bbbb
 
 
 
-# 在不同commit间切换
+# 整体回退
 
 
 
-### 整体回退
-
-
-
-##### 未commit的情况
+### 未commit的情况
 
 [这篇文章](https://www.jb51.net/article/200202.htm)有进行描述
 
@@ -716,13 +712,13 @@ bbbb
 
 
 
-##### 已commit的情况
+### 已commit的情况
 
 [思否文章](https://segmentfault.com/a/1190000020863861)有详细描述
 
 
 
-**用`checkout`**
+##### 查看某个commit
 
 `checkout 版本号`（版本号就是指commit id）  
 会新建一个未命名分支  
@@ -745,7 +741,9 @@ bbbb
 
 
 
-**用`reset --hard`**
+##### 真正的回退
+
+用`reset --hard`
 
 【】--hard 似乎很有问题？？
 
@@ -765,9 +763,18 @@ bbbb
 
 
 
-### 局部回退
+##### 撤销掉某个commit
 
-##### 还原某个文件到上一次commit
+使用[`git revert`](https://blog.csdn.net/yxlshk/article/details/79944535)来达到目的  
+会生成一个新的commit，新commit里不包含要撤销commit的内容
+
+
+
+# 局部回退
+
+### 文件
+
+（也就是还原某个文件到上一次commit）
 
 `git checkout -- 文件名`  
 `--`可以省略  
@@ -776,7 +783,9 @@ bbbb
 **文件在已追踪未add状态下可以**  
 未追踪或已add都不行
 
-##### 还原某个文件夹到上一次commit
+### 文件夹
+
+（也就是还原某个文件夹到上一次commit）
 
 用上一段的方法不行，可以用webstorm实现，操作方法如下：
 
@@ -898,6 +907,12 @@ git commit -m 'xxx'
 - 报错`error: invalid path`  
   这是因为git仓库里部分文件用了windows下不可用的文件名  
   - 部分不可用的文件名：aux、com1、com2、com3
+- 检测不到文件名大小写变化  
+  这是git比较坑的一个地方，因为默认设置就是检测不到的  
+  - 查看项目是否大小写<b style="color:red">不</b>敏感  
+    `git config core.ignorecase`
+  - 设置项目是否大小写<b style="color:red">不</b>敏感  
+    `git config core.ignorecase 布尔值`
 
 
 

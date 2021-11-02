@@ -405,7 +405,7 @@ App.vue代表应用
 
 ###### [滚动区域](https://uniapp.dcloud.net.cn/component/scroll-view)
 
-- 滚动到指定元素出现  
+- 滚动到能展示指定元素的位置  
   用`scroll-into-view`prop  
   - 指定元素是后代就行了，并不是像官网说的要是子元素
   - 滚动到的位置  
@@ -487,6 +487,7 @@ bug
 - `uni.navigateTo({url:一个地址})`  
   - 可以写相对地址也可以写绝对地址  
     - 写相对路径一定要以`/`开头  
+      （相对路径可以是url的『路径』部分）
   - <span style='color:red'>写错地址不会报错也没有任何反应</span>
   - 可以导航到同路径不同query的页面  
     和导航到其他页面效果一致（已测浏览器端）
@@ -545,12 +546,19 @@ bug
       [css变量](https://uniapp.dcloud.net.cn/frame?id=css%e5%8f%98%e9%87%8f)  
       [自定义导航栏使用注意](https://uniapp.dcloud.net.cn/collocation/pages?id=customnav)
 
-- 设置导航栏与状态栏的背景色
-  - pages.json的navigationBarBackgroundColor配置  
+- 设置导航栏与状态栏的样式
+  - 背景色  
+    pages.json的navigationBarBackgroundColor配置  
     （寿宁项目小程序里设置什么值最后都是透明，不知道是不是因为用了"navigationStyle":"custom"）
-    - 要求必须是HexColor  
+    
+  - 要求必须是HexColor  
       "#00000000"可以通过编译（但是没看过效果）
-
+    
+  - 文本颜色  
+    `navigationBarTextStyle`配置项  
+  
+    > 仅支持 black/white
+  
 - 胶囊按钮附近的样式问题  
 
   - 解决方案：获得胶囊按钮的尺寸信息  
