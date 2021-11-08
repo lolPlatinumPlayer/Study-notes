@@ -7,8 +7,7 @@
 - 似乎样式会强制加上scope
 - 自定义组件在小程序里都会变成web component  
   已验证了全局组件
-
-  - 并且无法改变组件内样式
+- 并且无法改变组件内样式
   - 组件根元素也和web不一样  
     - web是组件内根元素就是组件标签代表的元素
     - 小程序是如下的  
@@ -58,29 +57,17 @@
 
 **获得进一步调试能力的方法**
 
-听杭兴说安卓上就是有问题的，苹果可以
+（听杭兴说安卓上就是有问题的，苹果可以）
 
 - 点HBuilder控制台的调试按钮（甲壳虫图标）
 
-  - 使用条件
-
-    - 电脑通过usb使用手机流量 可用
-
-    - 电脑通过手机热点使用流量 不可用  
-      会有如下提示信息  
-
-      ```
-      无法连接到调试服务，可能原因：
-      1. 手机与PC不处于同一局域网
-      2. 手机使用移动网络
-      3. 手机使用VPN等代理设置
-      4. PC设置了防火墙
-      ```
-
-      
-
+  - 使用条件  
+    电脑和手机处于同一局域网  
+    （电脑通过usb使用手机流量是可以的，电脑通过手机热点使用流量是不行的）
   - 对程序结果有影响
     寿宁app进“系统设置”页面就会报错白屏
+  - 能力
+    - 可以打断点
 
 - webview调试  
 
@@ -126,9 +113,11 @@
 ##### iOS
 
 - 苹果手机也不一定可以真机调试  
-  焰荣的iphone就不行
-- iOS12.5.3的iPhone6不需要iTunes就能用HBuilder X 3.2.3进行真机调试
-- iOS15可以连接
+  （焰荣的iphone就不行）
+- iOS12.5.3的iPhone6
+  - 不需要iTunes就能用HBuilder X 3.2.3进行真机调试
+  - 曾完美连上hrtPC的iTunes
+- iOS15可以连接？？
 
 
 
@@ -317,6 +306,8 @@ App.vue代表应用
     root配置项加上pages子项的path构成一个路径  
     其中root的结尾和path的开头都不用加`/`
 
+- 应用首页  
+  pages.json的pages的第一项
 - 获取url  
 
   - 获取`?`后的部分  
@@ -414,6 +405,11 @@ App.vue代表应用
     纵向就是最上边
 - 垂直滚动时不一定要设置高度  
   （官网说要通过css设置height，这是错误的）  
+  - 不过如果用flex的话记得设一个height  
+    不然安卓8和iOS上滚动有问题
+- 内层元素的尺寸和`scroll-view`的尺寸是一致的  
+  （『内层元素』指的是`scroll-view`生成的类名为`uni-scroll-view-content`的元素）  
+
 
 
 
@@ -437,6 +433,9 @@ bug
   这个值到了小程序上就是48（起码微信开发者工具里看是48）
   - 如果把height设为44的话  
     `calc(var(--status-bar-height) + 44px`会比『该组件高度+状态栏高度』要高
+- [image](https://www.uviewui.com/components/image.html)  
+  width、height在小程序上设为100%是无效的  
+  解决办法：补充对应style
 
 
 
@@ -522,17 +521,21 @@ bug
       >navigationStyle: custom 对 web-view 组件无效 
       >—— [uniapp官网](https://uniapp.dcloud.net.cn/component/web-view)
 
-    - 小程序
-
   - 方法  
     在pages.json里配置  
     目前发现如下2种方法（目前没发现2种方法的差别）  
 
     - 将style属性的navigationStyle属性设为custom
+      - bug
+          - 安卓app端的普通页面失效，webview页面可以  
+              （同一个安装包也会出现有时有bug有时没bug的情况）  
+            普通页面设了navigationBarTitleText，而webview页面设为了空串  
+              之前打了一个包是可以的（之前用的hbuilder版本不记得了）  
+              hbuilderX版本号：3.2.12.20211029
     - 将style属性的app-plus属性的titleNView设为false
-
+    
     （已测试网页端和安卓app端，可以隐藏包含webview的页面）
-
+    
   - 解决去掉导航栏后顶部距离不好把握的问题  
 
     - 问题描述  
@@ -611,6 +614,19 @@ bug
 
 
 
+### 应用使用须知  
+
+##### 安卓
+
+[这里有个官方文章](https://ask.dcloud.net.cn/article/36937)
+
+- 官方文章里“HBuilderX3.2.1及以上版本配置方式”在覆盖安装时是无效的  
+  测试于3.2.12  
+  无配置version
+- 相对路径  
+  试过`pages/user/privacyPolicy`和`/pages/user/privacyPolicy`，都不行  
+  应该只有static里的行
+
 
 
 ### 获取dom信息
@@ -628,7 +644,7 @@ bug
 
 ### 原生api
 
-文件相关
+##### 文件相关
 
 - 下载文件  
   代码示例如下  
@@ -733,6 +749,15 @@ bug
     
   - 测试  
     安卓小程序端可以搜到下载的文件
+
+##### 媒体相关
+
+- 音频  
+  [`uni.createInnerAudioContext()`](https://uniapp.dcloud.io/api/media/audio-context?id=createinneraudiocontext)  
+  - bug
+    - 调用该方法后会立即触发onError  
+      而实际上没发现什么问题  
+      （已测试iOS14、iOS12）
 
 
 
@@ -1041,6 +1066,8 @@ bug
 - 性能差  
   sn项目中同一个时间轴功能，性能甚至不如webview
 - 小程序一堆不支持的语法
+- 要被收集数据  
+  在[这个文章](https://ask.dcloud.net.cn/article/36937)里搜索“DCloud数据采集说明”查看
 
 
 

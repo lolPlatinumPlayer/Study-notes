@@ -692,10 +692,17 @@ class HasSetGet {
 - 移除事件
   `元素.removeEventListener(字符串事件名, 函数名)`
 
-元素可以是`window`、dom和[XMLHttpRequest](https://developer.mozilla.org/zh-cn/DOM/XMLHttpRequest)  
-`window`的话可以省略`window.`
+**特性**
 
-后面还有几个选项
+- 元素可以是`window`、dom和[XMLHttpRequest](https://developer.mozilla.org/zh-cn/DOM/XMLHttpRequest)  
+  `window`的话可以省略`window.`
+- `addEventListener`后面还有几个选项
+- 用同一个函数多次监听一个事件的话  
+  在事件触发时函数只会执行一次
+
+
+
+
 
 **增加自定义事件**
 
