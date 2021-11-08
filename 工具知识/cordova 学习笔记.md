@@ -1,3 +1,9 @@
+# 综合介绍
+
+- > cordova最初被称作PhoneGap —— 《JavaScript移动设备应用程序开发》
+
+
+
 
 
 
@@ -88,6 +94,8 @@
 
 - `cordova run android`后产生的apk  
   - `assets/www`就是`www`文件夹里的东西复制来后加了一些cordova的js
+  
+- > run android后会部署在设备上，可在设备上测试 —— 《JavaScript移动设备应用程序开发》
 
 ##### 操作
 
@@ -162,13 +170,24 @@
 
 ### ios平台  
 
-- > 要求
-  >
-  > - 基于 Intel 的 Mac 上的 OS X 操作系统
-  > - Xcode® 11.0（最低要求版本）仅在 OS X 版本 10.14.4 (Mojave) 或更高版本上运行，并包含 iOS 13 SDK（软件开发工具包）
-  > - 要将应用程序提交到 Apple App Store℠，需要最新版本的 Apple 工具
-  >
-  > —— [官网](https://cordova.apache.org/docs/en/10.x/guide/platforms/ios/index.html#requirements-and-support)
+##### 要求
+
+- > 基于 Intel 的 Mac 上的 OS X 操作系统 —— [官网](https://cordova.apache.org/docs/en/10.x/guide/platforms/ios/index.html#requirements-and-support)
+
+- > 用cordova开发iOS应用要安装iOS sdk —— 《JavaScript移动设备应用程序开发》
+
+  - > Xcode® 11.0（最低要求版本）仅在 OS X 版本 10.14.4 (Mojave) 或更高版本上运行，并包含 iOS 13 SDK（软件开发工具包） —— [官网](https://cordova.apache.org/docs/en/10.x/guide/platforms/ios/index.html#requirements-and-support)
+
+- > 要运行OS x mountain lion —— 《JavaScript移动设备应用程序开发》
+
+- > 要将应用程序提交到 Apple App Store℠，需要最新版本的 Apple 工具 —— [官网](https://cordova.apache.org/docs/en/10.x/guide/platforms/ios/index.html#requirements-and-support)
+
+##### 操作
+
+- > 把程序导入Xcode。build后在Xcode里单击open other，然后选择platform/ios下的xxx.xcodeproj文件。这样就打开了。要运行的话要在iPhone模拟器上运行后点击三角形按钮  也就是build and run按钮  
+  > —— 《iOS14开发指南》
+
+
 
 
 
