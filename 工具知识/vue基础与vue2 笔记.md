@@ -1119,19 +1119,26 @@ methods: {
 按目前的理解，组件就是“实例的类”的一种形式，注册后就可以直接在模板里使用
 
 - 生成 “类”  
-  [`Vue.extend`](https://cn.vuejs.org/v2/api/#Vue-extend)  
-  其实例的`$mount`方法应该是用来生成dom的，可以传入类似`'#id'`这样的方法来挂在到其他dom下，也可以不传  
-  生成的dom可以手动加入其他dom，具体看[博客](https://www.jianshu.com/p/b931abe383e3)
   
-  - vue的“仅运行时”版本无法使用其实例的`$mount`方法  
-    如果像普通组件一样注册之后在模板里用的话，是没问题的（这句话感觉不对啊，字符串模板还是编译不了。如果是用.vue文件写的字符串模板应该是没问题）
-  - 提醒：
-    - 这个“类”的配置时机和正常类不一样  
-      这个类是`Vue.extend(配置)`时配置（生成类时配置）  
-      而不是实例化时配置
-  - 【】有空测一下new "类"生成的是不是vue组件的实例
-  - `Vue.extend(配置)`生成的实例的name  
-    是`'VueComponent'`
+  - [`Vue.extend`](https://cn.vuejs.org/v2/api/#Vue-extend)方式  
+    其实例的`$mount`方法应该是用来生成dom的，可以传入类似`'#id'`这样的方法来挂在到其他dom下，也可以不传  
+    生成的dom可以手动加入其他dom，具体看[博客](https://www.jianshu.com/p/b931abe383e3)
+  
+    - vue的“仅运行时”版本无法使用其实例的`$mount`方法  
+      如果像普通组件一样注册之后在模板里用的话，是没问题的（【】这句话感觉不对啊，字符串模板还是编译不了。如果是用.vue文件写的字符串模板应该是没问题）
+      - 提醒：
+        - 这个“类”的配置时机和正常类不一样  
+          这个类是`Vue.extend(配置)`时配置（生成类时配置）  
+          而不是实例化时配置
+    - “仅运行时”版本应该无法使用（uniapp环境下，模板使用该组件就会报错`You are using the runtime-only build of Vue where the template compiler is not available`）
+  
+    - 【】有空测一下new "类"生成的是不是vue组件的实例
+  
+    - `Vue.extend(配置)`生成的实例的name  
+      是`'VueComponent'`
+  
+  - [写对象字面量的方式](https://cn.vuejs.org/v2/guide/components-registration.html#%E5%B1%80%E9%83%A8%E6%B3%A8%E5%86%8C)  
+    “仅运行时”版本应该无法使用（uniapp里会报错`You are using the runtime-only build of Vue where the template compiler is not available`）
   
 - 生成 实例  
   
@@ -1397,15 +1404,11 @@ mounted: function () {
 
   
 
-
-
-### 组件通信
-
-##### 组件的入参
+### 组件的入参
 
 有2种方法：`props`选项、其他属性（组件标签上的其他属性）   
-这一部分只介绍`props`选项  
-关于其他属性的介绍在本笔记内搜索“其他属性”进行查看
+
+##### [props](https://cn.vuejs.org/v2/guide/components-props.html)概述
 
 - 把一个对象的所有属性都作为prop传入组件  
   `<组件名 v-bind="承载对象的变量"></组件名>`  
@@ -1426,19 +1429,20 @@ mounted: function () {
 
 - 不能在声明的时候赋值。  
   一次测试中在mounted里是可以获取到的（环境：无人机项目一个后期路由到的页面的子组件，如果一开始就跳到这个路由，结果也还是可以的）  
-  
+
 - 每次父组件变化都会更新子组件的props中的属性，如果想要 继承数据 在继承后不随着 父组件数据 更新，可使用如下方法使用SON_A：  
-  
+
   ```js
   data: function () {
     return { SON_A: this.a }
   }  
   ```
+
   （这种方法修改子组件数据可以规避控制台警告，目前建议使用这种方式）
   让 继承数据 经过处理后再显示有三种方法：
 
 1. 直接在{{}}里写表达式，效果与第二点相同
-  
+
   2. ```js
      computed: {
           counter: function () {
@@ -1446,9 +1450,9 @@ mounted: function () {
           }
       }
      ```
-  
+
   3. 要 继承数据 不随 父组件数据 更新的话只能用如下方法
-  
+
      ```js
      data: function () {
        return { sona: this.myMessage+10 }
@@ -1490,8 +1494,8 @@ mounted: function () {
 > 对象或数组默认值必须由一个函数返回 —— [官网](https://cn.vuejs.org/v2/guide/components-props.html#Prop-%E9%AA%8C%E8%AF%81)
 
 - props的相关函数没有`this`   
-（已在 `validator`中验证）
-  
+  （已在 `validator`中验证）
+
   > prop 会在一个组件实例创建**之前**进行验证，所以实例的 property (如 `data`、`computed` 等) 在 `default` 或 `validator` 函数中是不可用的。 —— [官网](https://cn.vuejs.org/v2/guide/components-props.html#Prop-%E9%AA%8C%E8%AF%81)
 
 - 类型
@@ -1528,6 +1532,26 @@ mounted: function () {
     > `null` 和 `undefined` 会通过任何类型验证 —— [官网](https://cn.vuejs.org/v2/guide/components-props.html#Prop-%E9%AA%8C%E8%AF%81)
 
 
+
+
+
+##### 其他属性
+
+也就是组件标签上既不是prop也不是class、style的属性
+
+- 组件内获得其他属性  
+  [`this.$attrs`](https://cn.vuejs.org/v2/api/#vm-attrs)  
+- 其他属性一样可以在模板中使用  
+  但是需要通过`$attrs.属性名`这种形式调用
+- 响应式  
+  其他属性一样可以是响应式的   
+  这意味着：如果传入的其他属性是动态的，那就可以被watch，值更改后也会更新视图
+- 其他属性默认会渲染在html上  
+  关闭这个特性的方法：把[inheritAttrs](https://cn.vuejs.org/v2/api/#inheritAttrs)选项设为false
+
+
+
+### 组件的其他通信方式
 
 
 
@@ -1694,22 +1718,6 @@ mounted: function () {
 1. 写好`name`
 2. 在模板里直接用自身  
    组件名就是`name`
-
-
-
-### 其他属性
-
-也就是组件标签上既不是prop也不是class、style的属性
-
-- 组件内获得其他属性  
-  [`this.$attrs`](https://cn.vuejs.org/v2/api/#vm-attrs)  
-- 其他属性一样可以在模板中使用  
-  但是需要通过`$attrs.属性名`这种形式调用
-- 响应式  
-  其他属性一样可以是响应式的   
-  这意味着：如果传入的其他属性是动态的，那就可以被watch，值更改后也会更新视图
-- 其他属性默认会渲染在html上  
-  关闭这个特性的方法：把[inheritAttrs](https://cn.vuejs.org/v2/api/#inheritAttrs)选项设为false
 
 
 
