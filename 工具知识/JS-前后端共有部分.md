@@ -258,7 +258,7 @@ console.log('a[3]',a[3]) // undefined
    谁调用就是谁  
    比如`a.b()`调用者就是`a`  
    `c=a.b;c()`如果在最外层的话调用者就是`window`  
-<span style='color:red'>要注意有些js方法是挂在`window`下面的，如：`setTimeout`、`setInterval`  </span>  
+   <span style='color:red'>要注意有些js方法是挂在`window`下面的，如：`setTimeout`、`setInterval`  </span>  
    <span style='opacity:.5'>在对象字面量的方法里，setTimeout处写箭头函数，那this就会指向这个对象 </span>  
 1. 使用`new`的构造函数中  
    `this`代表这个构造函数创建的对象，初始值是`{} ` 
@@ -374,7 +374,7 @@ console.log('a[3]',a[3]) // undefined
     
   - chrome控制台中对于可枚举属性与不可枚举属性标有不同颜色  
     ![盗用知乎的图片](https://pic1.zhimg.com/80/v2-5f2c0313978e69c464019904328cf340_720w.png)  
-  深色为可枚举、浅色为不可枚举
+    深色为可枚举、浅色为不可枚举
     
   - js设置不可枚举的意义  
     有的东西希望在字典里存在又不希望在列表里存在，那这些东西就可以设为不可枚举  
@@ -580,7 +580,8 @@ Foo.bar() // hello
   https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes#%E5%AD%97%E6%AE%B5%E5%A3%B0%E6%98%8E
 
   - 井号（#）不能加在方法前面  
-    会导致方法完全不能访问
+    曾经会导致方法完全不能访问  
+    2021.11.19时可以在内部调用
 
 
 ### 类的继承
@@ -698,7 +699,8 @@ class HasSetGet {
   `window`的话可以省略`window.`
 - `addEventListener`后面还有几个选项
 - 用同一个函数多次监听一个事件的话  
-  在事件触发时函数只会执行一次
+  在事件触发时函数只会执行一次  
+  （这个特点在leaflet实现的事件里也是一样的）
 
 
 
@@ -709,13 +711,15 @@ class HasSetGet {
 <span style='opacity:.5'>这里用代码来说明</span>
 
 ```javascript
-元素.addEventListener("自定义事件名", (事件对象)=>{}); // 增加事件。具体用法看上面
-var event = new CustomEvent("自定义事件名", 事件对象); // 第二个参数可不传
+元素.addEventListener("自定义事件名", (customEvent实例)=>{}); // 增加事件。具体用法看上面
+var event = new CustomEvent("自定义事件名", 配置对象); // 第二个参数可不传
 元素.dispatchEvent(event); // 触发事件
 ```
 
-如果重复给一个事件绑定一个函数，那触发事件的时候这个函数也只会执行一次。  
-（这个特点在leaflet实现的事件里也是一样的）
+- 传递数据  
+  传递的数据放在“配置对象”的`detail`属性里
+
+
 
 **焦点相关**
 
@@ -1982,7 +1986,7 @@ Symbol是第七种数据类型
 - **生成Symbol值的方法**  
   - `let 变量=Symbol(描述字符串)`  
     描述字符串是可选的  
-  这种方法创建的symbol不会放入全局的symbol注册表
+    这种方法创建的symbol不会放入全局的symbol注册表
     
   - `Symbol.for(字符串的键)`  
   - 功能
@@ -2396,7 +2400,7 @@ setTimeout(() => foo = 'baz', 500);
       必需。`resolve`就是执行这个函数
     - onRejected
       可选。`reject`就是执行这个函数
-    【】测试加载图片的异步功能能不能用高阶函数代替promise实现
+      【】测试加载图片的异步功能能不能用高阶函数代替promise实现
 
 - catch  
 
@@ -2469,7 +2473,7 @@ setTimeout(() => foo = 'baz', 500);
       console.log(result); // done
       return result;
     }
-
+   
     const aa = drawBuilding() // 倒二行
     console.log(aa); // 倒一行
    ```
@@ -2887,7 +2891,7 @@ function a(p0,p1='p1'){
 - 运用于字符串
     1. 将字符串转为数组
     `[...'hello']` // [ "h", "e", "l", "l", "o" ]
-（更多内容见http://es6.ruanyifeng.com/#docs/array#扩展运算符）
+    （更多内容见http://es6.ruanyifeng.com/#docs/array#扩展运算符）
     
 - 可运用于`undefined`
 

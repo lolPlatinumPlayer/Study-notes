@@ -38,7 +38,7 @@
 
 
 
-# 程序
+# 源码解读
 
 ### 编码规范
 
@@ -153,7 +153,8 @@ Path -> Layer -> Evented -> Class
 
 区别：
 
-- CircleMarker的radius单位是屏幕像素，Circle的是米
+- Circle的radius单位是米  
+  CircleMarker的是屏幕像素
 - Circle传参有三传参的方式（功能相同）
 - Circle多了getBounds方法
 
@@ -191,9 +192,16 @@ Path -> Layer -> Evented -> Class
 
 
 
+# 实操
 
+<span style='opacity:.5'>不含api</span>
 
+### 安装
 
+- 注意要引用css  
+  - 用node_modules安装的话引用css的方法如下  
+    `import 'leaflet/dist/leaflet.css'`  
+    这种方法默认marker图片出不来
 
 
 
@@ -204,7 +212,19 @@ Path -> Layer -> Evented -> Class
 
 ### 初始化
 
-`const map = L.map(div的id)`
+`const map = L.map(id或元素)`
+
+注意
+
+- 禁用缩放的话至少要设置如下3个配置  
+
+  ```js
+  boxZoom:false,
+  doubleClickZoom:false,
+  scrollWheelZoom:false,
+  ```
+
+  
 
 ### 增加底图
 
@@ -218,11 +238,25 @@ L.tileLayer(url模板, {
 
 第二个参数可能叫options（本笔记中就这么叫）
 
+
+
+经验
+
+- 有很多底图都可以用  
+  甚至用高德底图还不需要账号  
+  [这个插件](https://github.com/htoooth/Leaflet.ChineseTmsProviders)里就列了不少可用的底图
 - url模板还是少改好，按照leaflet官网改mapbox的url会导致底图无法加载
+
+
+
+特性
+
 - url模板中`{字符串}`字样似乎会被options中同名属性替换  
   比如`{accessToken}`就可以被`accessToken`属性值替换
-- 第二个参数的renderer属性指定绘制矢量图层的默认方法  
+- 第二个参数的renderer属性用来指定绘制矢量图层的默认方法【】表示存疑  
   有两个选值：`L.canvas()`和`L.svg()`
+
+
 
 ### 一些添加物
 
@@ -266,6 +300,8 @@ L.tileLayer(url模板, {
   用html实现的
 
   - 点击指定物体进行弹窗：`其他添加物.bindPopup("弹窗文本")`
+  
+- [图片图层](https://leafletjs.com/reference.html#imageoverlay)  
 
 
 
@@ -293,4 +329,13 @@ L.tileLayer(url模板, {
   向量相加
 - subtract方法  
   向量相减
+
+### 事件
+
+- 不会冒泡到祖先  
+  （起码marker的不会冒泡到map上）
+
+
+
+
 

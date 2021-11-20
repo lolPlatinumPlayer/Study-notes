@@ -15,8 +15,10 @@
 
 - 图表内容是否靠两边  
   由[boundaryGap](https://echarts.apache.org/zh/option.html#xAxis.boundaryGap)控制
-
 - [扩展插件列表](https://echarts.apache.org/zh/download-extension.html)
+- resize方法会删除全部生成的dom  
+  然后再依据容器高度添加dom  
+  <span style='opacity:.5'>（得出该结论的实验：给容器上flex-grow，然后多次resize）</span>
 
 
 
@@ -228,7 +230,11 @@ rich:{
   'click'与'selectchanged'  
   这2个事件在折线图上表现一致
 
+##### bug
 
+- 用js显示多线图的tooltip有时会失败  
+  具体会失败的情况为：所有数据都为字符串0（数字0没试过）  
+  [这个代码](https://www.makeapie.com/editor.html?c=x-1Jo8Z1tg&v=2)可以用来测试
 
 
 
@@ -526,7 +532,9 @@ demo1更合理
 
 
 
-### 说明
+### 说明框
+
+鼠标划过后出现的说明框
 
 [`tooltip`](https://echarts.apache.org/zh/option.html#tooltip)
 

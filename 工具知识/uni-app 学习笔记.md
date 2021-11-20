@@ -216,6 +216,8 @@
 - HBuilder开微信开发者工具白屏  
   [微信开放社区](https://developers.weixin.qq.com/community/develop/doc/0002665789c9983b5ab9365ab55c00)里就提到了这个问题  
   一个可用的解决方案是：关掉后台所有微信开发者工具的进程，然后再去HBuilder里重开
+- 如果左侧开了多个项目，有可能操作串的  
+  （比如你点了项目A的manifest.json，可能开的是项目B的）
 
 
 
@@ -436,6 +438,12 @@ bug
 - [image](https://www.uviewui.com/components/image.html)  
   width、height在小程序上设为100%是无效的  
   解决办法：补充对应style
+- [u-sticky](https://www.uviewui.com/components/sticky.html)到达吸顶距离后元素消失  
+  - bug出现条件
+    - 有问题的例子：`<页面根标签><u-sticky>自定义组件</u-sticky></页面根标签>`
+    - 没问题的例子：`<页面根标签><view><u-sticky>u-tabs组件</u-sticky></view></页面根标签>`
+  - 解决办法：给offset-top（prop）传一个不合法的数值  
+    起码可以让元素不消失
 
 
 
@@ -542,7 +550,7 @@ bug
       - 各个手机顶部距离是不一样的，因此给定值不行  
       - 部分手机（比如iOS）在系统顶部条出现的区域无法操作app
     - 解决办法  
-      - 非webview页面可以用`--status-bar-height`css变量
+      - 非webview页面可以用`--status-bar-height`css变量（注意：官网说了`--status-bar-height`在小程序中不代表状态栏高度）
       - webview由于会占满全屏且无法使用外部css变量  
         因此只能把`uni.getSystemInfoSync().statusBarHeight`传到webview里
     - 参考资料  
@@ -952,6 +960,14 @@ uni.requestPayment
 
 
 
+
+
+- `position: sticky`iOS小程序下不生效  
+  在外面套上[u-sticky组件](https://www.uviewui.com/components/sticky.html)也不一定好使，更多内容在本笔记里搜索“u-sticky”查看  
+  <span style='opacity:.5'>（想要脱离该组件的话可以看看这个[这个问题](https://developers.weixin.qq.com/community/develop/doc/00086c29bdcba816bf2968f7d5fc00?_at=1566630830developers.weixin.qq.com)，可能有帮助）</span>
+
+
+
 ### 各端差异
 
 
@@ -969,7 +985,7 @@ uni.requestPayment
   - `:style="{/*xxx*/}"`  这种写法小程序不可用  
     直接无法编译（报错只会告诉你哪个文件错了，不会告诉你更多信息）
 
-  - 模板中多行js的话不能用单行注释，要用内联注释
+  - 模板中多行js的话不能用单行注释，要用内联注释<span style='opacity:.5'>（对象中是个例外，对象中可以用单行）</span>
 
     ```vue
     <div
@@ -1100,6 +1116,8 @@ uni.requestPayment
     把要加的样式传给组件，组件用style去上
 
 - 小程序端给view、text加了`box-sizing: border-box;`
+
+- `position:sticky;`似乎都不会生效
 
 
 
