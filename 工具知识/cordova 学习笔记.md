@@ -176,11 +176,10 @@
 
 - > 用cordova开发iOS应用要安装iOS sdk —— 《JavaScript移动设备应用程序开发》
 
-  - > Xcode® 11.0（最低要求版本）仅在 OS X 版本 10.14.4 (Mojave) 或更高版本上运行，并包含 iOS 13 SDK（软件开发工具包） —— [官网](https://cordova.apache.org/docs/en/10.x/guide/platforms/ios/index.html#requirements-and-support)
+  - > Xcode® 11.0（最低要求版本）仅在 OS X 版本 10.14.4 (Mojave) 或更高版本上运行，并包含 iOS 13 SDK（软件开发工具包） —— [cordova10的官网](https://cordova.apache.org/docs/en/10.x/guide/platforms/ios/index.html#requirements-and-support)
 
-- > 要运行OS x mountain lion —— 《JavaScript移动设备应用程序开发》
+  
 
-- > 要将应用程序提交到 Apple App Store℠，需要最新版本的 Apple 工具 —— [官网](https://cordova.apache.org/docs/en/10.x/guide/platforms/ios/index.html#requirements-and-support)
 
 ##### 操作
 
