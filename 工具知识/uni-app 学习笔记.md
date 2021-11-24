@@ -240,11 +240,14 @@
 
 - [`uni.getSystemInfoSync().platform`](https://uniapp.dcloud.net.cn/api/system/info?id=getsysteminfosync)  
   找出操作系统（无法分辨是web还是小程序）
-- [条件编译](https://uniapp.dcloud.net.cn/platform?id=%e6%9d%a1%e4%bb%b6%e7%bc%96%e8%af%91)  
+- [条件编译](https://uniapp.dcloud.net.cn/platform?id=preprocessor)  
   无法判断操作系统
   - 写法  
     可以写指定平台编译也可以写指定平台不编译  
     可以跟多个平台，多个平台用`||`连接
+  - 能力  
+    [pages.json](https://uniapp.dcloud.net.cn/collocation/pages)都可以用  
+    文件、目录也可以用
 
 
 
@@ -254,7 +257,7 @@ App.vue代表应用
 
 其他SFC代表页面或组件
 
-有在pages.json里配置的是页面，其他的是组件
+有在[pages.json](https://uniapp.dcloud.net.cn/collocation/pages)里配置的是页面，其他的是组件
 
 
 
@@ -293,7 +296,7 @@ App.vue代表应用
 ##### 页面
 
 - 配置方法  
-  在pages.json的pages或subPackages里配置  
+  在[pages.json](https://uniapp.dcloud.net.cn/collocation/pages)的pages或subPackages里配置  
   （pages和subPackages应该是主包和分包的区别）
   - 文件路径和url路径必须保持一致  
     都是通过子项的path配置指定的  
@@ -309,12 +312,13 @@ App.vue代表应用
     其中root的结尾和path的开头都不用加`/`
 
 - 应用首页  
-  pages.json的pages的第一项
+  [pages.json](https://uniapp.dcloud.net.cn/collocation/pages)的pages的第一项
 - 获取url  
 
   - 获取`?`后的部分  
     通过onLoad钩子的第一个参数即可获得  
     这个参数是一个对象，是由`?`后的内容转换来的
+    - 其中字符串布尔值会转为布尔类型
 
 
 
@@ -530,7 +534,7 @@ bug
       >—— [uniapp官网](https://uniapp.dcloud.net.cn/component/web-view)
 
   - 方法  
-    在pages.json里配置  
+    在[pages.json](https://uniapp.dcloud.net.cn/collocation/pages)里配置  
     目前发现如下2种方法（目前没发现2种方法的差别）  
 
     - 将style属性的navigationStyle属性设为custom
@@ -559,7 +563,7 @@ bug
 
 - 设置导航栏与状态栏的样式
   - 背景色  
-    pages.json的navigationBarBackgroundColor配置  
+    [pages.json](https://uniapp.dcloud.net.cn/collocation/pages)的navigationBarBackgroundColor配置  
     （寿宁项目小程序里设置什么值最后都是透明，不知道是不是因为用了"navigationStyle":"custom"）
     
   - 要求必须是HexColor  
@@ -618,7 +622,8 @@ bug
     </template>
     ```
 
-    
+
+
 
 
 
@@ -647,6 +652,22 @@ bug
 
 - 图片全屏  
   [`uni.previewImage`](https://uniapp.dcloud.net.cn/api/media/image?id=unipreviewimageobject)
+
+
+
+##### [下拉刷新](https://uniapp.dcloud.net.cn/api/README?id=%e4%b8%8b%e6%8b%89%e5%88%b7%e6%96%b0)
+
+- 使用方法  
+  在[pages.json](https://uniapp.dcloud.net.cn/collocation/pages)里开启enablePullDownRefresh后拥有下拉刷新界面功能  
+  在用户下拉刷新时会触发onPullDownRefresh[生命周期](https://uniapp.dcloud.net.cn/collocation/frame/lifecycle?id=%e9%a1%b5%e9%9d%a2%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f)  
+  刷新完成后调用[uni.stopPullDownRefresh](https://uniapp.dcloud.net.cn/api/ui/pulldown?id=stoppulldownrefresh)方法
+- 用js开启下拉刷新动画  
+  调用[uni.startPullDownRefresh](https://uniapp.dcloud.net.cn/api/ui/pulldown?id=startpulldownrefresh)即可  
+  注意：只有开启enablePullDownRefresh的页面可以用
+- 下拉后的背景色  
+  都是[pages.json](https://uniapp.dcloud.net.cn/collocation/pages)里配置的
+  - 安卓小程序：backgroundColor
+  - 微信开发者工具：backgroundColorTop（[uniapp官网](https://uniapp.dcloud.net.cn/collocation/pages?id=style)说这是iOS用的）
 
 
 
@@ -684,6 +705,9 @@ bug
     });
   },
   ```
+  
+  - 下载地址  
+    可以是文件流（安卓小程序可以，iOS小程序下载pdf成功但是打开会报错“格式不支持”。不用文件流pdf可以开）
   
 - 打开文件  
   示例代码如下  
@@ -776,6 +800,22 @@ uni.requestPayment
 - 小程序  
 
   > “下单账号与支付账号不一致”弹框是微信弹出的 —— 杭兴
+
+
+
+##### app更新
+
+uniapp专用
+
+- [小程序](https://uniapp.dcloud.net.cn/api/other/update?id=getupdatemanager)
+- [整包更新](https://ask.dcloud.net.cn/article/34972)
+- [资源文件热更新(wgt升级)](https://ask.dcloud.net.cn/article/35667)
+
+5+应用有3种方式
+
+- [整包升级](http://ask.dcloud.net.cn/article/431)
+- [应用资源升级](http://ask.dcloud.net.cn/article/182)
+- [应用资源差量升级](http://ask.dcloud.net.cn/article/199)
 
 
 
@@ -908,7 +948,7 @@ uni.requestPayment
 ### 配置
 
 - 配置小程序的[页面配置](https://developers.weixin.qq.com/miniprogram/dev/reference/configuration/page.html)  
-  在pages.json的如下位置加的内容会加到小程序的配置里  
+  在[pages.json](https://uniapp.dcloud.net.cn/collocation/pages)的如下位置加的内容会加到小程序的配置里  
 
   ```json
   {
@@ -985,8 +1025,13 @@ uni.requestPayment
   - `:style="{/*xxx*/}"`  这种写法小程序不可用  
     直接无法编译（报错只会告诉你哪个文件错了，不会告诉你更多信息）
 
+  - 模板里监听事件时不能加内联注释  
+    否则小程序里监听不上（可以通过编译，但是编译后代码里监听代码好像会变掉）  
+    甚至用这种写法都不行：`@change="onTabChange;/*注释*/"`  
+    （已测试u-tabs的chang事件）
+    
   - 模板中多行js的话不能用单行注释，要用内联注释<span style='opacity:.5'>（对象中是个例外，对象中可以用单行）</span>
-
+  
     ```vue
     <div
       v-if="
@@ -995,10 +1040,10 @@ uni.requestPayment
       "
     >
     ```
-
+  
     上面👆这种写法小程序无法编译  
     要改成👇下面的写法  
-
+  
     ```vue
     <div
       v-if="
@@ -1007,9 +1052,9 @@ uni.requestPayment
       "
     >
     ```
-
+  
     
-
+  
     
 
 

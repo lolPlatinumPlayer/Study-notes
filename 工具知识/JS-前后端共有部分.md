@@ -753,10 +753,11 @@ div上似乎没有聚焦、失焦事件
 - `console.warn()`  
   除了版本低于8的IE，其他浏览器都支持  
   和`console.error()`一样可以看到调用栈
-
 - `console.table(arr)`  
   输出表格，未看兼容性  
   子项是对象
+- `console.info`  
+  没发现和`console.log`的区别
 
 **报错**
 
