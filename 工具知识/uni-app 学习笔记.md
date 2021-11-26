@@ -334,7 +334,6 @@ App.vue代表应用
 
 - uni-app本身就内置了一些组件，不需要引入就可以使用  
   从组件名分辨不出来是否是内置组件，不过可以在[官网](https://uniapp.dcloud.io/component/view)查看所有内置组件
-- 以`u-`开头的组件是[uView](https://www.uviewui.com/components/intro.html)的组件，不需要在vue实例里注册
 
 
 
@@ -402,13 +401,12 @@ App.vue代表应用
 
 ###### [滚动区域](https://uniapp.dcloud.net.cn/component/scroll-view)
 
-- 滚动到能展示指定元素的位置  
-  用`scroll-into-view`prop  
-  - 指定元素是后代就行了，并不是像官网说的要是子元素
-  - 滚动到的位置  
-    会尽量把指定元素放到边缘  
-    横线就是最左边  
-    纵向就是最上边
+入门
+
+- 要设置`:scroll-x="true"`或`:scroll-y="true"`
+
+特性
+
 - 垂直滚动时不一定要设置高度  
   （官网说要通过css设置height，这是错误的）  
   - 不过如果用flex的话记得设一个height  
@@ -416,38 +414,15 @@ App.vue代表应用
 - 内层元素的尺寸和`scroll-view`的尺寸是一致的  
   （『内层元素』指的是`scroll-view`生成的类名为`uni-scroll-view-content`的元素）  
 
+操作
 
-
-
-
-##### [uView](https://www.uviewui.com/components/intro.html)
-
-- 可以复制代码到项目里用  
-  sn移动端就是这样做的，改代码也可以生效
-
-
-
-bug
-
-- [tabsSwiper](https://www.uviewui.com/components/tabsSwiper.html)滚动位置不正确
-  - 解决办法  
-    去源码里找到setScrollViewToCenter方法  
-    然后把tab = this.tabsInfo[this.animationFinishCurrent]的animationFinishCurrent改为current
-- [u-search](https://www.uviewui.com/components/search.html)组件为固定高度（高度无法用align-items: stretch撑开）
-- [Navbar](https://www.uviewui.com/components/navbar.html#props)  
-  height prop默认值其实不是44（官网说是44）  
-  这个值到了小程序上就是48（起码微信开发者工具里看是48）
-  - 如果把height设为44的话  
-    `calc(var(--status-bar-height) + 44px`会比『该组件高度+状态栏高度』要高
-- [image](https://www.uviewui.com/components/image.html)  
-  width、height在小程序上设为100%是无效的  
-  解决办法：补充对应style
-- [u-sticky](https://www.uviewui.com/components/sticky.html)到达吸顶距离后元素消失  
-  - bug出现条件
-    - 有问题的例子：`<页面根标签><u-sticky>自定义组件</u-sticky></页面根标签>`
-    - 没问题的例子：`<页面根标签><view><u-sticky>u-tabs组件</u-sticky></view></页面根标签>`
-  - 解决办法：给offset-top（prop）传一个不合法的数值  
-    起码可以让元素不消失
+- 滚动到能展示指定元素的位置  
+  用`scroll-into-view`prop  
+  - 指定元素是后代就行了，并不是像官网说的要是子元素
+  - 滚动到的位置  
+    会尽量把指定元素放到边缘  
+    横线就是最左边  
+    纵向就是最上边
 
 
 
@@ -644,7 +619,8 @@ bug
 
 ### 获取dom信息
 
-可以用[createSelectorQuery](https://uniapp.dcloud.net.cn/api/ui/nodes-info?id=createselectorquery)等方法获取dom，在用[boundingClientRect](https://uniapp.dcloud.net.cn/api/ui/nodes-info?id=nodesrefboundingclientrect)等方法获取dom信息
+可以用[createSelectorQuery](https://uniapp.dcloud.net.cn/api/ui/nodes-info?id=createselectorquery)等方法获取[NodesRef](https://uniapp.dcloud.net.cn/api/ui/nodes-info?id=nodesref)实例  
+调用该实例的方法即可获得对应元素的信息
 
 
 
@@ -1170,9 +1146,49 @@ uniapp专用
 
 - 性能差  
   sn项目中同一个时间轴功能，性能甚至不如webview
+  
 - 小程序一堆不支持的语法
+
 - 要被收集数据  
   在[这个文章](https://ask.dcloud.net.cn/article/36937)里搜索“DCloud数据采集说明”查看
+  
+  
 
 
+
+# 生态
+
+- [项目模板](https://github.com/zhouwei1994/uni-app-demo)
+
+
+
+### [uView](https://www.uviewui.com/components/intro.html)
+
+- 以`u-`开头的组件是[uView](https://www.uviewui.com/components/intro.html)的组件，不需要在vue实例里注册
+- 可以复制代码到项目里用  
+  sn移动端就是这样做的，改代码也可以生效
+
+
+
+bug
+
+- [tabsSwiper](https://www.uviewui.com/components/tabsSwiper.html)滚动位置不正确
+  - 解决办法  
+    去源码里找到setScrollViewToCenter方法  
+    然后把tab = this.tabsInfo[this.animationFinishCurrent]的animationFinishCurrent改为current
+- [u-search](https://www.uviewui.com/components/search.html)组件为固定高度（高度无法用align-items: stretch撑开）
+- [Navbar](https://www.uviewui.com/components/navbar.html#props)  
+  height prop默认值其实不是44（官网说是44）  
+  这个值到了小程序上就是48（起码微信开发者工具里看是48）
+  - 如果把height设为44的话  
+    `calc(var(--status-bar-height) + 44px`会比『该组件高度+状态栏高度』要高
+- [image](https://www.uviewui.com/components/image.html)  
+  width、height在小程序上设为100%是无效的  
+  解决办法：补充对应style
+- [u-sticky](https://www.uviewui.com/components/sticky.html)到达吸顶距离后元素消失  
+  - bug出现条件
+    - 有问题的例子：`<页面根标签><u-sticky>自定义组件</u-sticky></页面根标签>`
+    - 没问题的例子：`<页面根标签><view><u-sticky>u-tabs组件</u-sticky></view></页面根标签>`
+  - 解决办法：给offset-top（prop）传一个不合法的数值  
+    起码可以让元素不消失
 

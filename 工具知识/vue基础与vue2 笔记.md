@@ -1696,7 +1696,8 @@ mounted: function () {
 
 ##### 依赖注入
 
-祖先组件与后代组件通信的方式
+祖先组件与后代组件通信的方式  
+感觉可以用来做状态管理（没实践过）
 
 - [依赖注入说明](https://cn.vuejs.org/v2/guide/components-edge-cases.html#依赖注入)
 
