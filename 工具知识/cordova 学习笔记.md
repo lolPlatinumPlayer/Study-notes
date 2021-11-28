@@ -6,8 +6,15 @@
 
 
 
+# 入门
 
-# 创建项目
+**安装**
+
+npm install -g cordova
+
+
+
+**创建项目**
 
 - 不使用模板  
   `cordova create 路径`

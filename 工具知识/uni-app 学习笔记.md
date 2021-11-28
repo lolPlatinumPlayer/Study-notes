@@ -380,8 +380,7 @@ App.vue代表应用
     | success回调 | 触发                                                    | 触发                                                    | 无法点击 |
     | fail回调    |                                                         |                                                         | 无法点击 |
     | 返回对象    | {"cancel":false,"confirm":true,"errMsg":"showModal:ok"} | {"cancel":true,"confirm":false,"errMsg":"showModal:ok"} | 无法点击 |
-    
-
+  
 - 这个方法不能嵌套  
   嵌套的话第二个不会出来，加了setTimeout也不行
 
@@ -792,6 +791,13 @@ uniapp专用
 - [整包升级](http://ask.dcloud.net.cn/article/431)
 - [应用资源升级](http://ask.dcloud.net.cn/article/182)
 - [应用资源差量升级](http://ask.dcloud.net.cn/article/199)
+
+通用
+
+- wgt包内含版本号的  
+  如果版本号不对，uniapp会弹窗提示安装失败<span style='opacity:.5'>（这个弹窗是uniapp弹的而不是开发者弹的）</span>
+
+
 
 
 
