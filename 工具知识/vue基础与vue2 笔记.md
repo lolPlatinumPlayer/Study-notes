@@ -1595,6 +1595,7 @@ mounted: function () {
   - `<template v-slot:插槽名>xxx</template>`  
     2.6.0新增
   - `<template #插槽名>xxx</template>`
+  
 - 通过vue实例访问slot  
   方法：通过[`$slots`](https://cn.vuejs.org/v2/api/#vm-slots)或[`$scopedSlots`](https://cn.vuejs.org/v2/api/#vm-scopedSlots)  
   （模板里也可用）
@@ -1603,8 +1604,18 @@ mounted: function () {
   - [定义动态的插槽名](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%8A%A8%E6%80%81%E6%8F%92%E6%A7%BD%E5%90%8D)
   - 可以用for循环生成  
   - name可以用`:`（`v-bind`）
+  
 - 访问组件内数据  
-  官方名称为：[作用域插槽](https://cn.vuejs.org/v2/guide/components-slots.html#作用域插槽)
+  官方名称为：[作用域插槽](https://cn.vuejs.org/v2/guide/components-slots.html#作用域插槽)  
+  
+  - 用法  
+    插槽指令的『值』就是slot标签上的全部属性<span style="opacity:0.5">（官网有时称属性为attribute有时称为prop）</span>  
+    然后可以在插槽内的模板上用『值』<span style="opacity:0.5">（虽然『值』这个叫法感觉不专业，不过官网就是这么叫的）</span>
+  
+  - 简写  
+    官方称为：[解构插槽 Prop](https://cn.vuejs.org/v2/guide/components-slots.html#解构插槽-Prop)  
+    所谓简写，指的就是：『值』可以用结构赋值的写法  
+    比如`v-slot="{prop名:重命名成另一个名字}"`和`v-slot="{prop名=默认值}"`
 
 特性：
 

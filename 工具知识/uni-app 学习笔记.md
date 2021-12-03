@@ -1004,7 +1004,7 @@ uniapp专用
   
 - 注释类
 
-  - `:style="{/*xxx*/}"`  这种写法小程序不可用  
+  - `:style="{/*xxx*/}"`  这种写法小程序不可用（`:class`的可以）  
     直接无法编译（报错只会告诉你哪个文件错了，不会告诉你更多信息）
 
   - 模板里监听事件时不能加内联注释  
@@ -1035,9 +1035,14 @@ uniapp专用
     >
     ```
   
-    
-  
-    
+- class里不能执行method  
+  `:class="method"`可以  
+  `:class="method(1)"`不行
+- v-for里不能用解构赋值
+- :style应该只能赋值字符串  
+  试过用对象，不生效
+
+
 
 
 
@@ -1182,6 +1187,13 @@ bug
   - 解决办法  
     去源码里找到setScrollViewToCenter方法  
     然后把tab = this.tabsInfo[this.animationFinishCurrent]的animationFinishCurrent改为current
+- [u-swiper](https://v1.uviewui.com/components/swiper.html)在数据减少后轮播图有可能白屏  
+  - 具体说  
+    设减少前数据量为a、减少后数据量为b  
+    那么轮播到序号不小于b的图时进行减少数据量  
+    且减少数据量的方式是给data赋值（只测过用这种方式减少）  
+    那么就会白屏
+  - 这个[swiper问题](https://ask.dcloud.net.cn/question/81562)十分类似本笔记说的bug
 - [u-search](https://www.uviewui.com/components/search.html)组件为固定高度（高度无法用align-items: stretch撑开）
 - [Navbar](https://www.uviewui.com/components/navbar.html#props)  
   height prop默认值其实不是44（官网说是44）  

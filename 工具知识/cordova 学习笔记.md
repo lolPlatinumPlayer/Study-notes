@@ -185,7 +185,15 @@ npm install -g cordova
 
   - > Xcode® 11.0（最低要求版本）仅在 OS X 版本 10.14.4 (Mojave) 或更高版本上运行，并包含 iOS 13 SDK（软件开发工具包） —— [cordova10的官网](https://cordova.apache.org/docs/en/10.x/guide/platforms/ios/index.html#requirements-and-support)
 
-  
+
+
+
+##### 特性
+
+- 运行项目会自己打开模拟器  
+  <span style='opacity:.5'>（已测环境：cordova9、macOS10.14.0、iOS sdk是多少忘记了）</span>
+
+
 
 
 ##### 操作
