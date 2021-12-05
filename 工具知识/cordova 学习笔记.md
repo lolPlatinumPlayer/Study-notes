@@ -24,6 +24,10 @@ npm install -g cordova
 
 
 
+**打包**
+
+cordova build
+
 
 
 # 平台概念  
@@ -78,9 +82,9 @@ npm install -g cordova
 
 
 
-### android平台
+# android平台
 
-##### 特性
+### 特性
 
 - 前置条件  
   应该在[这个页面](https://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#installing-the-requirements)里都说了  
@@ -89,6 +93,7 @@ npm install -g cordova
 
   - 就代表到达执行`cordova platform add android`的条件了
   - 不代表cordova能跑项目（`cordova run android`）  
+  
 - 跑项目成功的一些细节  
   跑项目指的是`cordova run android`命令
   - 成功的标志  
@@ -102,9 +107,12 @@ npm install -g cordova
 - `cordova run android`后产生的apk  
   - `assets/www`就是`www`文件夹里的东西复制来后加了一些cordova的js
   
+- 打包生成的包  
+  和运行项目生成的一模一样
+
 - > run android后会部署在设备上，可在设备上测试 —— 《JavaScript移动设备应用程序开发》
 
-##### 操作
+### 操作
 
 - 使用模拟设备运行  
   1. 开启模拟的设备  
@@ -117,7 +125,6 @@ npm install -g cordova
   1. usb连好手机
   2. `cordova run android`  
      这时手机上就会提示有app可以安装了
-  
 - 更改应用名  
   更改xxxx文件里的xxxx配置
 
@@ -125,7 +132,7 @@ npm install -g cordova
 
 
 
-##### 问题排查
+### 问题排查
 
 - 执行`cordova run android`时  
   （这里没列出的问题可以查阅《android 学习笔记.md》）
@@ -168,18 +175,27 @@ npm install -g cordova
       并替换类似如下地址中的`gradle-6.5-all.zip`  
       `C:\Users\Administrator\.gradle\wrapper\dists\gradle-6.5-all\2oz4ud9k3tuxjg84bbf55q0tn`
 
-  
+移动目录  
+
+- 移动后无法执行命令  
+  会报错：`No Java files found that extend CordovaActivity`
+- 解决办法  
+  `cordova platform rm android`后`cordova platform add android`
 
 
 
 
 
 
-### ios平台  
+# ios平台  
 
-##### 要求
+### 要求
 
-- > 基于 Intel 的 Mac 上的 OS X 操作系统 —— [官网](https://cordova.apache.org/docs/en/10.x/guide/platforms/ios/index.html#requirements-and-support)
+- 关于Intel芯片  
+  虽然看过的权威资料里都说要Intel芯片  
+  不过issue里有人是用m1芯片的，不过用m1问题比较多
+
+  - > 基于 Intel 的 Mac 上的 OS X 操作系统 —— [官网](https://cordova.apache.org/docs/en/10.x/guide/platforms/ios/index.html#requirements-and-support)
 
 - > 用cordova开发iOS应用要安装iOS sdk —— 《JavaScript移动设备应用程序开发》
 
@@ -188,7 +204,7 @@ npm install -g cordova
 
 
 
-##### 特性
+### 特性
 
 - 运行项目会自己打开模拟器  
   <span style='opacity:.5'>（已测环境：cordova9、macOS10.14.0、iOS sdk是多少忘记了）</span>
@@ -196,30 +212,17 @@ npm install -g cordova
 
 
 
-##### 操作
+### 操作
 
-- > 把程序导入Xcode。build后在Xcode里单击open other，然后选择platform/ios下的xxx.xcodeproj文件。这样就打开了。要运行的话要在iPhone模拟器上运行后点击三角形按钮  也就是build and run按钮  
-  > —— 《iOS14开发指南》
-
-
-
-
-
-# 打包
-
-cordova build
-
-生成的包和运行项目时的一模一样
+- 打包  
+  打包后生成iOS项目  
+  项目位置为：`platform/ios`<span style='opacity:.5'>（这个叫ios的文件夹就是项目）</span>
+  - 前端代码存放位置  
+    访达里看是`ios/www`  
+    Xcode里看是`Staging/www`  
+    <span style='opacity:.5'>（Xcode里最外层的www文件夹不知道是干嘛的）</span>
 
 
-
-# 未归类
-
-- 移动目录  
-  - 移动后无法执行命令  
-    会报错：`No Java files found that extend CordovaActivity`
-  - 解决办法  
-    `cordova platform rm android`后`cordova platform add android`
 
 
 
