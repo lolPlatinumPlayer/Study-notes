@@ -837,7 +837,7 @@ try{
 - 这个方法可以跳出`forEach`
 - 等于then处理承诺被拒绝的功能
 
-# Date对象
+# [Date对象](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date)
 
 **api**
 

@@ -59,13 +59,25 @@
 ### 替换模板标签
 
 `is`属性  
-例子：`<原标签名 is="替换后标签名"></原标签名>`
+例子：`<原标签名 is="is的值"></原标签名>`
 
 - 可以让标签的位置超出HTML的限制  
   （[vue官网](https://cn.vuejs.org/v2/guide/components.html#%E8%A7%A3%E6%9E%90-DOM-%E6%A8%A1%E6%9D%BF%E6%97%B6%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9)举了一个例子）
+  
 - 支持`v-bind`动态更改  
   （[动态组件](https://cn.vuejs.org/v2/guide/components.html#%E5%8A%A8%E6%80%81%E7%BB%84%E4%BB%B6)大家都是用[component标签](https://cn.vuejs.org/v2/api/#component)，不过实际上不用也可以）
-- 这里说的标签名可以是html的标签名，也可以是vue的组件名
+  
+- 原标签名合法值  
+
+  - html的标签名
+  - vue的组件名
+
+- is的值的合法值
+
+  > - 已注册组件的名字
+  > - 一个组件的选项对象
+  >
+  > —— [《动态组件》](https://cn.vuejs.org/v2/guide/components.html#%E5%8A%A8%E6%80%81%E7%BB%84%E4%BB%B6)
 
 
 
@@ -1410,6 +1422,9 @@ mounted: function () {
 
 ##### [props](https://cn.vuejs.org/v2/guide/components-props.html)概述
 
+- 值可以是一个import的`.vue`文件  
+  <span style='opacity:.5'>（不过要注意：prop里获取不到components选项传入的东西）</span>
+
 - 把一个对象的所有属性都作为prop传入组件  
   `<组件名 v-bind="承载对象的变量"></组件名>`  
 
@@ -2471,8 +2486,9 @@ bug
     validator方法形参为：rule、 value、 callback、 source、 options  
     rule中有与validator同级的type、required、message等信息  
     value是要验证的值  
-    callback是验证方法（validate）的回调，不传参代表符合验证条件，有传参则代表不符合验证条件，会触发相关视图效果（传true也是一样的）  
+    callback是验证方法（validate）的回调，不传参或不调用代表符合验证条件，有传参则代表不符合验证条件，会触发相关视图效果（传true也是一样的）  
     callback是单参数的，这个传参是控制台提示信息，会在不符合验证时在控制台进行打印
+    - 没找到获得同级data的方法
   - 触发验证的时机  
     由rules属性的属性的子项的trigger属性控制  
     默认值似乎是change
@@ -2568,9 +2584,9 @@ lin
   - 空串：空白
   - null、undefined、false、数字：提示不出现且控制台阻塞报错
   - 对象：传入对象的表现与给this.$message()传入对象的表现基本一致，其中传空对象也会提示，但没有提示内容
-- 似乎直接引入就可以用  
-  `import {  Message } from 'element-ui'`  
-  起码在vue-cli项目里是这样
+- 直接引入就可以用<span style='opacity:.5'>（起码在vue-cli项目里是这样）</span>  
+  `import { Message } from 'element-ui'`  
+  这样引入后`Message `就等同于第一条的`this.$message`
 
 ##### 上传组件
 
@@ -2680,7 +2696,12 @@ el-table的不行，会报一个并不真实的错误，我觉得应该是依赖
 - 只有一张时隐藏指示器和箭头
 - 鼠标拖动翻页
 
+文档
 
+- [弹框组件](https://element.eleme.cn/#/zh-CN/component/message-box)  
+  明明可以用`import { MessageBox } from 'element-ui'`  
+  结果demo里全是`this.$alert`还没一点说明  
+  [提示组件](https://element.eleme.cn/#/zh-CN/component/message)也是一个DIO样
 
 
 

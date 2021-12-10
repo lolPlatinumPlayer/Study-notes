@@ -482,7 +482,7 @@ var pointEntity = viewer.entities.add({
         material: Cesium.Color.RED.withAlpha(不透明度),
       outline: true,
         outlineColor: Cesium.Color.BLACK,
-  }
+    }
       ```
 
       
@@ -509,11 +509,11 @@ var pointEntity = viewer.entities.add({
       1. 传统认知的海拔（和地形无关）  
          `Cesium.HeightReference.NONE`  
          这个是默认值  
-     立方体的锚点在中心
+          立方体的锚点在中心
       2. 让立方体固定在地形上  
          `Cesium.HeightReference.CLAMP_TO_GROUND`  
          这时第三个参数是失效的  
-     立方体的锚点在底面的中心
+          立方体的锚点在底面的中心
       3. 立方体高于地形的距离  
          `Cesium.HeightReference.RELATIVE_TO_GROUND`  
          立方体的锚点在底面的中心
@@ -902,7 +902,7 @@ viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEven
 
   - [ion页面](https://cesium.com/ion)  
     拖拽进网页就行  
-似乎在这页面的所有子页面都可以
+    似乎在这页面的所有子页面都可以
   
 - [addasset页面](https://cesium.com/ion/addasset)  
   
@@ -992,10 +992,10 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
   
 - **COLLADA**  
 
-  > “COLLADA FX支持OpenGL ES“”——[百度百科](https://baike.baidu.com/item/COLLADA/2359440?fr=aladdin)
+  > “COLLADA FX支持OpenGL ES” ——[百度百科](https://baike.baidu.com/item/COLLADA/2359440?fr=aladdin)
 
 - **CZML**  
-是“Cesium Language”的缩写
+  是“Cesium Language”的缩写
   
   > - Cesium与CZML的关系就如同Google Earth和KML的关系
   > - CZML用来描述随时间而变化场景的json格式

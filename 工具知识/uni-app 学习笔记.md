@@ -248,6 +248,9 @@
   - 能力  
     [pages.json](https://uniapp.dcloud.net.cn/collocation/pages)都可以用  
     文件、目录也可以用
+  - [增加自定义条件编译的方法](https://uniapp.dcloud.io/collocation/package?id=%e7%a4%ba%e4%be%8b%ef%bc%9a%e9%92%89%e9%92%89%e5%b0%8f%e7%a8%8b%e5%ba%8f)  
+    可以加任意数量的自定义条件编译  
+    添加后hbuilder里会多出对应按钮
 
 
 
