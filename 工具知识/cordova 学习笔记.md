@@ -222,7 +222,12 @@ cordova build
     Xcode里看是`Staging/www`  
     <span style='opacity:.5'>（Xcode里最外层的www文件夹不知道是干嘛的）</span>
 
+### 问题排查
 
+- 报错：这不是cordova项目  
+  完整的错误是`Current working directory is not a Cordova-based project`  
+  原因之前删了www和platform/ios  
+  解决方法：放弃这个目录再开一个（网上说建好www就行，试过不行）
 
 
 
