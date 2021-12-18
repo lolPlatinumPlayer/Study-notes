@@ -358,7 +358,7 @@ router.beforeEach((to, from, next) => {
     }//这个if在new VueRouter的scrollBehavior属性中同样适用
 }// requiresId 在路由的meta中存在、有值且值不为判断为‘非’的值，例子中if判断会返回true，其余情况返回false
 
-
+- meta的属性的值可以是对象
 
 
 
@@ -556,7 +556,6 @@ if (to.hash) {
     - 解决办法：  
       空白时间也就是beforeEach和afterEach之间的时间  
       可以通过这个特性加上加载效果
-
 
 
 

@@ -14,7 +14,8 @@
 
 
 - 图表内容是否靠两边  
-  由[boundaryGap](https://echarts.apache.org/zh/option.html#xAxis.boundaryGap)控制
+  由[boundaryGap](https://echarts.apache.org/zh/option.html#xAxis.boundaryGap)控制  
+  默认不靠边（false）
 - [扩展插件列表](https://echarts.apache.org/zh/download-extension.html)
 - resize方法会删除全部生成的dom  
   然后再依据容器高度添加dom  
@@ -693,13 +694,17 @@ demo1更合理
 
 
 
-饼图
+饼图（pie）
 
 - 标注连线  
   `series-pie.labelLine`  
   官方名称是：视觉引导线
-  - 一个没用的配置  
-    `labelLine.showAbove` echarts5
+  - 线长  
+    第一段：length  
+    第二段：length2
+  - echarts5中一个没用的配置  
+    `labelLine.showAbove`  
+  
 - 饼图中“饼”的文本标注  
   文本来源：系列的data属性的子项的name属性  
   【】可能其他类型的系列也是这样
