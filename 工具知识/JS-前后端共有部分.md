@@ -2115,8 +2115,14 @@ Symbol是第七种数据类型
 
 ##### `export default`
 
-与node的`module.exports`类似，不过不同的是`export default`可以与`export`共同使用，在引入时还有简写`import a, {b,c as d} from 'only_name'`  
-`export default`本质是输出一个叫default的变量，所以不能使用`export default var a = 1`这种写法，而可以使用`export default 1`这种写法
+与node的`module.exports`类似
+
+- 与`module.exports`的不同点  
+  `export default`可以与`export`共同使用，在引入时还有简写`import a, {b,c as d} from 'only_name'`  
+- `export default`本质  
+  本质是输出一个叫default的变量  
+  所以不能使用`export default var a = 1`这种写法  
+  而可以使用`export default 1`这种写法
 
 
 

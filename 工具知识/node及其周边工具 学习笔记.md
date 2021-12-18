@@ -117,15 +117,18 @@ server.listen(port, hostname, () => {
 `req`  【】搞req、res以及那几个示例，过到了这里
 可以通过这个参数获取到接收的请求的信息  
 
+- `req`  
+  一二级属性里只有url属性有关于get请求的路径和携带数据
+
 - `req.url`  
   一个字符串  
-应该只是[百度百科“URL格式”词条](https://baike.baidu.com/item/URL%E6%A0%BC%E5%BC%8F/10056474?fr=aladdin)里说的“路径”（而不是百科里说的“URL”的全部内容）
+  应该只是[百度百科“URL格式”词条](https://baike.baidu.com/item/URL%E6%A0%BC%E5%BC%8F/10056474?fr=aladdin)里说的“路径”（而不是百科里说的“URL”的全部内容）
   
   - [智能社教程](https://study.163.com/course/courseLearn.htm?courseId=1003664007#/learn/video?lessonId=1004194111&courseId=1003664007)里直接访问这个属性就ok了（16年10月31日）  
   教程说这是一个绝对路径，演示时`req.url`就是URL中的路径（端口号后面的所有内容）
   
   - node有提供方法来将url字符串解析为对象  
-  目前应该有2套方案来实现解析，其中`url`模块的`parse`方法会在未来被废弃
+    目前应该有2套方案来实现解析，其中`url`模块的`parse`方法会在未来被废弃
   
     - WHATWG API  
     还未深入研究，详细文档有：
@@ -137,6 +140,11 @@ server.listen(port, hostname, () => {
   
     - `url`模块的`parse`方法  
       部分详细内容可以看这个文档：[parse方法](https://nodejs.org/docs/latest-v10.x/api/url.html#url_url_parse_urlstring_parsequerystring_slashesdenotehost)
+      
+      - 获得路径  
+        结果的pathname属性  
+        （默认配置就是）  
+        会以斜杆（`/`）开头
       
     - `querystring`模块可以解析get请求`?`后的内容
 

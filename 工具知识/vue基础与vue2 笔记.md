@@ -2425,6 +2425,7 @@ bug
 - 让下拉框能转换没有显示的选项的方法
   v-for使用拥有所有能转换的数据
   v-show再过滤出需要显示的选项（这里用v-if的话就只能转换有显示的选项的数据）
+  
 - 下拉框不会触发blur事件  
   这点导致在写表单rule时，trigger要写change而不是blur  
   （在令彰4.1日系统的项目上好像是这样，不过自己测了发现并没有这回事(这里说的测试和4.22日不是同一次)）  
@@ -2457,6 +2458,9 @@ bug
   
 - 多选下拉框  
   多选下拉框会在初始化时把v-model绑定值改为数组
+  
+- [在页面滚动时不会跟着滚的问题](https://www.jb51.net/article/162258.htm)  
+  （自己是没遇到过这个问题）
 
 
 ##### 表单
@@ -2517,7 +2521,7 @@ bug
   
 - 重置表单
   `this.$refs.表单ref值.resetFields()`
-  会尽量把表单绑定data的各属性还原成默认值
+  会尽量把`el-form`组件绑定data的各属性还原成默认值（如果表单里用了其他data，其他data是不会受到影响的）
   
   - 属性值为对象或数组的话无法还原
   - 这里确定默认值的方法  
@@ -2555,6 +2559,13 @@ bug
   scope中还有一些其他数据
   template改成其他标签也可以
   el-table-column标签上无法加样式与类名
+
+- 超出隐藏  
+  `:show-overflow-tooltip="true"`可以达到目的  
+  但是目前只成功了单行且不带“...”的  
+  （在各级元素上加样式都进行了尝试，不过多行和带“...”的都没成功过）
+
+
 
 
 
@@ -2647,7 +2658,7 @@ lin
   比如`import qq from 'element-ui/packages/table-column/index.js'` 然后再去用qq这个组件  
   这个可能是因为源码中用了jsx而项目中不支持jsx
 
-可以复制到项目里用，比如el-table-column的  
+可以复制到项目里用，比如el-table-column的（el-table-column有用jsx）  
 el-table的不行，会报一个并不真实的错误，我觉得应该是依赖问题，因为element是用yarn装依赖，而我测试的项目是用npm，npm装好后本身就报了4个高危错误
 
 - 表格  
