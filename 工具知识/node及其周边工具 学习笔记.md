@@ -119,13 +119,13 @@ server.listen(port, hostname, () => {
 
 - `req.url`  
   一个字符串  
-应该只是[百度百科“URL格式”词条](https://baike.baidu.com/item/URL%E6%A0%BC%E5%BC%8F/10056474?fr=aladdin)里说的“路径”（而不是百科里说的“URL”的全部内容）
+  应该只是[百度百科“URL格式”词条](https://baike.baidu.com/item/URL%E6%A0%BC%E5%BC%8F/10056474?fr=aladdin)里说的“路径”（而不是百科里说的“URL”的全部内容）
   
   - [智能社教程](https://study.163.com/course/courseLearn.htm?courseId=1003664007#/learn/video?lessonId=1004194111&courseId=1003664007)里直接访问这个属性就ok了（16年10月31日）  
   教程说这是一个绝对路径，演示时`req.url`就是URL中的路径（端口号后面的所有内容）
   
   - node有提供方法来将url字符串解析为对象  
-  目前应该有2套方案来实现解析，其中`url`模块的`parse`方法会在未来被废弃
+    目前应该有2套方案来实现解析，其中`url`模块的`parse`方法会在未来被废弃
   
     - WHATWG API  
     还未深入研究，详细文档有：
@@ -136,9 +136,11 @@ server.listen(port, hostname, () => {
       还可以研究下w3c背后控制人是谁
   
     - `url`模块的`parse`方法  
-      部分详细内容可以看这个文档：[parse方法](https://nodejs.org/docs/latest-v10.x/api/url.html#url_url_parse_urlstring_parsequerystring_slashesdenotehost)
+      部分详细内容可以看这个文档：[parse方法](https://nodejs.org/docs/latest-v10.x/api/url.html#url_url_parse_urlstring_parsequerystring_slashesdenotehost)  
+      node12的话默认解析出的对象的query属性丢给querystring.parse即可获得前端请求json
       
-    - `querystring`模块可以解析get请求`?`后的内容
+    - `querystring`模块可以解析get请求`?`后的内容  
+      （2021.12.14VSCode提示该方法也会过期，建议使用URLSearchParams）
 
 
 
@@ -154,7 +156,7 @@ server.listen(port, hostname, () => {
 
 ###### 响应请求的方法
 
-响应内容直接写json字符串前端就能收到json（未验证）
+响应内容直接写json字符串前端就能收到json
 
 - 增加要响应的内容  
   `res.write(响应内容)`  
@@ -165,6 +167,10 @@ server.listen(port, hostname, () => {
   > `res.end(响应内容)` 是`res.write(响应内容);res.end();`的简写 —— [MiloPeng教程“http模块”篇](https://www.imooc.com/video/20560)
 
   （可能响应完了就结束了对前端关于这个请求的所有操作）
+
+- 返回json  
+  响应内容直接写json字符串前端就能收到json  
+  甚至`res.setHeader("Content-Type", "text/plain")`或者不设置`Content-Type`都能收到
 
 - 设置头部  
   下面是一个设置跨域头部的例子  
