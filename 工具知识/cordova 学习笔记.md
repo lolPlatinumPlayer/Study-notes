@@ -124,11 +124,12 @@ cordova build
   如果AS里不能运行的话说明还没达到可以在cordova里真机调试的条件
   1. usb连好手机
   2. `cordova run android`  
-     这时手机上就会提示有app可以安装了
-- 更改应用名  
-  更改xxxx文件里的xxxx配置
-
-
+     这时手机上就会提示有app可以安装了  
+     （畅享20plus5G只要连上手机执行这个命令就行了，不需要再运行华为手机助手之类的软件）
+- 调试  
+  chrome远程调试可以发现运行的app，但是目前点inspect后没成功调试过（背景：同时在调试node。[这个文章](https://www.cnblogs.com/cannel/p/11074387.html)的系列文章上说是要装一个东西才行）
+  
+  
 
 
 
@@ -175,12 +176,18 @@ cordova build
       并替换类似如下地址中的`gradle-6.5-all.zip`  
       `C:\Users\Administrator\.gradle\wrapper\dists\gradle-6.5-all\2oz4ud9k3tuxjg84bbf55q0tn`
 
-移动目录  
 
-- 移动后无法执行命令  
-  会报错：`No Java files found that extend CordovaActivity`
-- 解决办法  
-  `cordova platform rm android`后`cordova platform add android`
+
+
+
+
+
+- 执行命令失败并报错`No Java files found that extend CordovaActivity`
+  - 解决办法  
+    `cordova platform rm android`后`cordova platform add android`
+  - 出现原因  
+    有次移动目录后出现了  
+    有次可能是改到配置文件所以出现了
 
 
 
@@ -228,6 +235,40 @@ cordova build
   完整的错误是`Current working directory is not a Cordova-based project`  
   原因之前删了www和platform/ios  
   解决方法：放弃这个目录再开一个（网上说建好www就行，试过不行）
+
+
+
+# 插件
+
+### 定位
+
+- org.apache.cordova.geolocation  
+  `cordova plugin add org.apache.cordova.geolocation`后用`navigator.geolocation.getCurrentPosition`即可  
+  - 错误
+    - code是null，message空串  
+      原因：没给app授予定位权限
+
+
+
+# 其他
+
+### 配置
+
+config.xml
+
+- 设置app名  
+  name标签间的内容就会作为app的名称  
+  （已在安卓10上测试）
+- 设置id  
+  widget标签的id属性就是id  
+  同id的应用在一个设备上只能装一个  
+  （已在安卓10上测试）
+- 设置app的初始页面  
+  content标签的src属性
+
+
+
+
 
 
 
