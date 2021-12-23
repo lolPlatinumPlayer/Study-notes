@@ -89,7 +89,7 @@
 ##### `options.style`
 
 去[官网](https://www.mapbox.cn/mapbox-gl-js/api/#map)里搜索“options.style”查看  
-可以是一个json或url  
+可以是一个json或一个指向json的url
 
 - json  
   官方内容见[这里](https://docs.mapbox.com/mapbox-gl-js/style-spec/)（注意点点左侧的内容）
@@ -139,6 +139,8 @@
     - 普通亮色地图  
       mapbox://styles/mapbox/streets-v11
     - 更多内容见官网
+    
+    官方预定义的url里也都是用（用户可用）的source+layer的方式绘制的
 
 
 

@@ -433,7 +433,8 @@ trim:过滤用户输入的首尾空格
 ##### 其他
 
 - v-model可以传入v-for循环出来的东西
-- 小知识点：因为v-model是双向数据绑定，所以用v-for循环出来的内容直接写循环中的某一项就行，不用再从循环依赖的数据里一层一层点出来
+  - 小知识点：因为v-model是双向数据绑定，所以用v-for循环出来的内容直接写循环中的某一项就行，不用再从循环依赖的数据里一层一层点出来
+
 - 编写有v-model功能的组件
   - [初级教程](https://cn.vuejs.org/v2/guide/components.html#%E5%9C%A8%E7%BB%84%E4%BB%B6%E4%B8%8A%E4%BD%BF%E7%94%A8-v-model)
     - 注意：要设一个叫value的prop<span style='opacity:.5'>（虽然[官网](https://cn.vuejs.org/v2/guide/components.html#%E5%9C%A8%E7%BB%84%E4%BB%B6%E4%B8%8A%E4%BD%BF%E7%94%A8-v-model)有说，但是官网说得很拗口）</span>
