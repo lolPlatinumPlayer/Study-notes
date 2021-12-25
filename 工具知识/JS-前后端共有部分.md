@@ -2054,7 +2054,7 @@ Symbol是第七种数据类型
 
 - **让html支持es6模块**  
   *已在chrome进行过验证*  
-  script标签加入“ type="module"”就能使用es6的模块了  
+  script标签加入`type="module"`就能使用es6的模块了  
   不过这种方法不能省略.js，而且地址要以./或../开头  
   这种标签里的函数，html里的事件（比如onclik属性）访问不到
 - 变量导来导去都是同一份东西  
