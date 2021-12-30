@@ -433,7 +433,8 @@ trim:过滤用户输入的首尾空格
 ##### 其他
 
 - v-model可以传入v-for循环出来的东西
-- 小知识点：因为v-model是双向数据绑定，所以用v-for循环出来的内容直接写循环中的某一项就行，不用再从循环依赖的数据里一层一层点出来
+  - 小知识点：因为v-model是双向数据绑定，所以用v-for循环出来的内容直接写循环中的某一项就行，不用再从循环依赖的数据里一层一层点出来
+
 - 编写有v-model功能的组件
   - [初级教程](https://cn.vuejs.org/v2/guide/components.html#%E5%9C%A8%E7%BB%84%E4%BB%B6%E4%B8%8A%E4%BD%BF%E7%94%A8-v-model)
     - 注意：要设一个叫value的prop<span style='opacity:.5'>（虽然[官网](https://cn.vuejs.org/v2/guide/components.html#%E5%9C%A8%E7%BB%84%E4%BB%B6%E4%B8%8A%E4%BD%BF%E7%94%A8-v-model)有说，但是官网说得很拗口）</span>
@@ -2406,9 +2407,16 @@ bug
 
 **按需导入**
 
-官方例子让你配`babel-preset-es2015`实际上这样是不好的  
-（没装`babel-preset-es2015`的话会遇到问题，而`babel-preset-es2015`早就被babel放弃了）  
-跟上潮流把`babel-preset-es2015`改成`@babel/preset-env`才能让一切顺利
+- babel配置  
+  不做babel配置的话会遇到css不生效的问题  
+
+  - [官方例子](https://element.eleme.cn/#/zh-CN/component/quickstart#an-xu-yin-ru)里配的是`babel-preset-es2015`，实际上这样是不好的  
+    （没装`babel-preset-es2015`的话会遇到问题，而`babel-preset-es2015`早就被babel放弃了）  
+
+    - 跟上潮流把`babel-preset-es2015`改成`@babel/preset-env`才能让一切顺利
+
+    - 余榕在`.babelrc`里将presets设为[]，而在`babel.config.js`里写`module.exports = {presets: ['@vue/cli-plugin-babel/preset']}`  
+      这样也是可以的
 
 
 
@@ -2758,6 +2766,8 @@ el-table的不行，会报一个并不真实的错误，我觉得应该是依赖
       - `div.el-scrollbar__wrap`这个元素上有`margin-bottom: -5px; margin-right: -5px;`  
         这个至少导致了子元素下方5px的消失  
         （右侧5px有没消失没研究）
+  
+- bug：el-image组件会请求2次图片
 
 
 

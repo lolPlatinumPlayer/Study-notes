@@ -619,10 +619,27 @@ App.vue代表应用
 
 
 
-### 获取dom信息
+### dom
 
-可以用[createSelectorQuery](https://uniapp.dcloud.net.cn/api/ui/nodes-info?id=createselectorquery)等方法获取[NodesRef](https://uniapp.dcloud.net.cn/api/ui/nodes-info?id=nodesref)实例  
-调用该实例的方法即可获得对应元素的信息
+- 执行dom操作  
+  - 不用renderjs只有web端可以进行dom操作
+  - 用renderjs可以在app端进行dom操作
+
+- 获取dom信息  
+  可以用[createSelectorQuery](https://uniapp.dcloud.net.cn/api/ui/nodes-info?id=createselectorquery)等方法获取[NodesRef](https://uniapp.dcloud.net.cn/api/ui/nodes-info?id=nodesref)实例  
+  调用该实例的方法即可获得对应元素的信息
+
+
+
+##### [renderjs](https://uniapp.dcloud.io/frame?id=renderjs)
+
+- 使用步骤
+  1. 要建立2个script标签  
+     一个普通的script标签和一个有指定属性的script标签  
+     指定属性有2个：module和lang  
+     module似乎可以是任意值（没找到module的更多资料）  
+     lang值必须为`"renderjs"`
+  2. 这时在有指定属性的script标签里就可以进行dom操作了
 
 
 
@@ -954,6 +971,9 @@ uniapp专用
 - 解析html建议用[uview的u-parse组件](https://www.uviewui.com/components/parse.html)  
   不然样式上不上去（因为小程序会把v-html转为rich-text组件）  
   而且uview点图片后有全屏图片的功能
+- canvas  
+  要使用[uniapp的组件](https://uniapp.dcloud.io/component/canvas)  
+  这个组件虽然也叫canvas，但实际上和web的canvas不是一个东西
 
 
 

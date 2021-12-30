@@ -395,13 +395,19 @@ router.beforeEach((to, from, next) => {
 
 
 
-### 导航钩子
+### [导航钩子](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html)
 
 （[2018年的文档](https://github.com/vuejs/vue-router/blob/ca2561f79345c136eccb146caaefe75d78f5855e/docs/zh/advanced/navigation-guards.md)就已经称为导航守卫了）
 
 相当于路由的生命周期钩子
 
 注册分三种情况：全局、路由独享、组件独享  
+
+- 全局  
+  - router.beforeEach((to, from, next)=>{})
+    - 一定要执行next才会完成路由跳转  
+    - 如果给next的配置的name属性和`to.name`一致  
+      那会导致无限跳转，最终页面报错`Maximum call stack size exceeded`
 
 - [组件独享（组件内的守卫）](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E7%BB%84%E4%BB%B6%E5%86%85%E7%9A%84%E5%AE%88%E5%8D%AB)  
   这里说的组件就是普通的vue组件  

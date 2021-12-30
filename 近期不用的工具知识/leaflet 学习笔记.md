@@ -205,6 +205,17 @@ Path -> Layer -> Evented -> Class
 
 
 
+### 去掉杂物
+
+- 右下角文字说明  
+  - attribution  
+    L.tileLayer第二个入参的attribution属性会成为文字说明的一部分
+- 左上角缩放按钮  
+  L.map方法第二个入参的zoomControl属性  
+  设为false即可隐藏
+
+
+
 # API
 
 文档里说的上下左右方向和屏幕呈现的一致，坐标似乎与canvas一致
@@ -258,6 +269,37 @@ L.tileLayer(url模板, {
 
 
 
+### 地图
+
+- [`crs`配置](https://leafletjs.com/reference.html#map-crs)  
+
+  - 不同底图需要的crs可能不同  
+    - mapbox用默认值就行<span style='opacity:.5'>（url是`'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}'`，crs默认值是`L.CRS.EPSG3857`）</span>  
+    - 天地图要用`L.CRS.EPSG4326`<span style='opacity:.5'>（url是`"http://t1.tianditu.com/vec_c/wmts?layer=vec&style=default&tilematrixset=c&Service=WMTS&Request=GetTile&Version=1.0.0&Format=tiles&TileMatrix={z}&TileCol={x}&TileRow={y}&tk={accessToken}"`和`"http://t1.tianditu.com/cva_c/wmts?layer=cva&style=default&tilematrixset=c&Service=WMTS&Request=GetTile&Version=1.0.0&Format=tiles&TileMatrix={z}&TileCol={x}&TileRow={y}&tk={accessToken}"`）</span>  
+      - [连接天地图的demo](https://www.cnblogs.com/zhuyugang/p/13825613.html)
+
+  - 不能传入undefined  
+    传undefined的话`map.setView`会阻塞报错`Cannot read properties of undefined`
+
+- `containerPointToLayerPoint`  
+  输入containerPoint返回layerPoint
+
+
+
+##### 镜头
+
+- 设置  
+  直接看[官网](https://leafletjs.com/reference.html#map-setview)就行，没什么好记录的
+
+- 获取  
+  大部分内容看[官网](https://leafletjs.com/reference.html#map-getcenter)就行，需要记录的不多
+  - [`getSize`](https://leafletjs.com/reference.html#map-getsize)  
+    返回地图像素单位的宽高，用`L.Point`实例表示
+
+
+
+
+
 ### 一些添加物
 
 - 标记：`var marker = L.marker([51.5, -0.09]).addTo(map)`  
@@ -304,13 +346,6 @@ L.tileLayer(url模板, {
 - [图片图层](https://leafletjs.com/reference.html#imageoverlay)  
 
 
-
-### 地图
-
-- `getSize`  
-  返回地图像素单位的宽高，用`L.Point`实例表示
-- `containerPointToLayerPoint`  
-  输入containerPoint返回layerPoint
 
 ### `bounds`
 

@@ -2054,8 +2054,8 @@ Symbol是第七种数据类型
 
 - **让html支持es6模块**  
   *已在chrome进行过验证*  
-  script标签加入“ type="module"”就能使用es6的模块了  
-  不过这种方法不能省略.js，而且地址要以./或../开头（../未验证）  
+  script标签加入`type="module"`就能使用es6的模块了  
+  不过这种方法不能省略.js，而且地址要以./或../开头  
   这种标签里的函数，html里的事件（比如onclik属性）访问不到
 - 变量导来导去都是同一份东西  
   不过感觉导出后就都是“模块”了，和原有的东西有一些细微差异  
@@ -2065,6 +2065,10 @@ Symbol是第七种数据类型
 - es6还有一些其他的模块语法  
   详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/import)
 - `export`和`import`可以位于模块顶层任何位置（即不能放在块级作用域内）
+- “属于模块”的js会形成作用域  
+  - 举个例子  
+    用传统方式引用js，js里的作用域和全局一致  
+    而用模块的方式引用js，js里未导出内容在外部是不可访问的
 
 可以在[《阮一峰ES6》](https://es6.ruanyifeng.com/#docs/module)上查看更多关于模块的内容
 
@@ -2108,7 +2112,7 @@ Symbol是第七种数据类型
   - `export {Vec2,getLen,LineFn,} from './math'`
   - `export * from './math'`
 
-  上面这2中简写的测试环境：`math.js`里都是用`export`导出的
+  上面这2种简写的测试环境：`math.js`里都是用`export`导出的
 
 
 
@@ -2164,7 +2168,8 @@ Symbol是第七种数据类型
 
   > 如果想在一条`import`语句中，同时输入默认方法和其他接口则可以这样写 —— [《ES6 入门教程》](https://es6.ruanyifeng.com/#docs/module#export-default-%E5%91%BD%E4%BB%A4)
 
-import from的地址可以省略.js，（慕课react实战里说是脚手架的功能）  
+
+
 import在静态解析阶段执行，所以它是一个模块之中最早执行的。  
 由于import是静态执行，所以不能使用 表达式、变量 这种只有在运行时才能得到结果的语法结构。  
 而export可以用export var i = k这种语句  
@@ -2249,6 +2254,78 @@ setTimeout(() => foo = 'baz', 500);
 
 
 
+# [对象展开运算符](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
+
+（或称扩展运算符）（Object rest spread）
+
+<span style='background:#eef5f4;padding:0 10px'>es7</span>
+
+`...`后的内容可用变量代理
+
+- 使用条件：
+
+  1. cnpm install --save-dev babel-plugin-transform-object-rest-spread
+  2. .babelrc中加"plugins": ["transform-object-rest-spread"]
+
+- 运用于对象 
+
+  - 仅拷贝可枚举的属性
+
+  1. 代码：（序号后不写点东西就变成行内代码了）
+
+     ```javascript
+     let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
+     console.log(x); // 1
+     console.log(y); // 2
+     console.log(z); // { a: 3, b: 4 }
+     ```
+
+  2. 代码：
+
+     ```javascript
+     let n = { x, y, ...z };
+     console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
+     ```
+
+  3. vuex的辅助函数
+
+- 运用于数组
+  ...array可以把数组的各子项变成各参数，console.log、运行函数时传入参数中都可用，array与[...array]相等
+
+    1. 在document.write中，加不加...输出都是用英文逗号隔开
+
+    2. 定义函数传入参数前加上...，如function a(...x)
+       则函数中x代表所有传入参数组成的数组
+       ...x代表所有传入参数，可以再传入其他函数，直接document.write会将参数连着打出，console.log则会在参数间加入空格打出
+
+    3. 函数编写时形参中的运用，可在最后一个参数前加上...
+       意思是把最后几个实参合成一个数组，例子：
+
+       ```javascript
+          function a(first,...aaa){
+            console.log('first',first); // 11
+            console.log('aaa',aaa); // [22,33]
+            console.log('...aaa',...aaa); // 22,33
+          }
+          a(11,22,33)
+       ```
+
+       用这种方法可以跳过前面或者中间的参数，函数普通写法的话必须输入前面的参数才能输入后面的参数
+
+    4. 可以使用三元运算符，如...(x > 0 ? ['a'] : [])
+
+    5. arr1.push(...arr2)意为把arr2每个子项都加到arr1数组后面（前面有push的介绍）
+
+- 运用于字符串
+
+  1. 将字符串转为数组
+     `[...'hello']` // [ "h", "e", "l", "l", "o" ]
+     （更多内容见http://es6.ruanyifeng.com/#docs/array#扩展运算符）
+
+- 可运用于`undefined`
+
+
+
 # 解构赋值
 
 <span style='background:#eef5f4;padding:0 10px'>es6</span>
@@ -2300,23 +2377,46 @@ setTimeout(() => foo = 'baz', 500);
 
   对象中若有属性值为undefined，就会使用默认值
 
-- 函数（对象式、有默认值）传参
-  ```javascript
-  function move({x = 1, y = 1} = {}) {
+  - 函数（对象式、有默认值）传参
+    ```javascript
+    function move({x = 1, y = 1} = {}) {
       console.log('x:',x);
       console.log('y:',y);
-  }//用这个语法就可以跳出按顺序传参的限制，可以只传想要的参数
-  ```
-  使用时函数参数应为对象形式，如下：  
-  - `move({ y: 8})`  
+    }//用这个语法就可以跳出按顺序传参的限制，可以只传想要的参数
+    ```
+    使用时函数参数应为对象形式，如下：  
+    - `move({ y: 8})`  
+    
+    若无传参，或传参格式不正确，都会使用默认值，会使用默认值的情况如下：  
+    - `move({})`  
+    - `move()`  
+    - `move(11,22)`  
+    - `move(11)`  
+    - `move([11,22])`  
+    - `move([11])`  
+    
+  - 不能解构默认值  
+    下面是一个解构默认值的错误例子  
   
-  若无传参，或传参格式不正确，都会使用默认值，会使用默认值的情况如下：  
-  - `move({})`  
-  - `move()`  
-  - `move(11,22)`  
-  - `move(11)`  
-  - `move([11,22])`  
-  - `move([11])`  
+    ```js
+    const {
+      code={a=-2},
+      color=-1,
+      opacity=1,
+    } = {}
+    ```
+  
+    如果希望解构属性，或者给属性的属性加默认值的话应该这样写  
+  
+    ```js
+    const {
+      code:{a=-2}={},
+      color=-1,
+      opacity=1,
+    } = {}
+    ```
+  
+    
   
 - 解构实参（以下是自己测试的结果，在《ECMAScript6入门-阮一峰》里没找到相关内容）
   `function Fn({x}){函数内容}`
@@ -2338,6 +2438,32 @@ setTimeout(() => foo = 'baz', 500);
 - **用新的变量名来接收值**  
   `const{对象中属性名:想要的变量名}=对象`  
   
+
+# 参数默认值语法
+
+（default parameter）
+
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
+
+```javascript
+function a(p0,p1='p1'){
+    // 按顺序给参数赋予默认值（目前js用原生api给真正的函数参数默认值的话也只能按顺序给）
+}
+```
+
+
+
+# Object.assign
+
+`Object.assign(object1,object2,object3等等)`
+
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
+
+参数要求是对象或数组
+把除第一个参数外的参数的属性添加到第一个参数上,同时返回处理后的第一个参数的值
+遇到同名的属性后面的会覆盖前面的
+要把数组加到对象里的话，数组就会化为属性名为其序号的对象参与到assign中 
+第一个参数写空对象或空数组可以实现浅拷贝
 
 
 
@@ -2729,32 +2855,6 @@ fetch(myRequest) // 返回一个Promise对象
 
 
 
-# Object.assign
-
-`Object.assign(object1,object2,object3等等)`
-
-<span style='background:#eef5f4;padding:0 10px'>es6</span>
-
-参数要求是对象或数组
-把除第一个参数外的参数的属性添加到第一个参数上,同时返回处理后的第一个参数的值
-遇到同名的属性后面的会覆盖前面的
-要把数组加到对象里的话，数组就会化为属性名为其序号的对象参与到assign中 
-第一个参数写空对象或空数组可以实现浅拷贝
-
-# 参数默认值语法
-
-（default parameter）
-
-<span style='background:#eef5f4;padding:0 10px'>es6</span>
-
-```javascript
-function a(p0,p1='p1'){
-    // 按顺序给参数赋予默认值（目前js用原生api给真正的函数参数默认值的话也只能按顺序给）
-}
-```
-
-
-
 # Set对象
 
 <span style='background:#eef5f4;padding:0 10px'>es6</span>
@@ -2839,68 +2939,6 @@ function a(p0,p1='p1'){
 子项最大值为255，给子项赋值超过255的话会变成255且不报错
 
 
-
-# [对象展开运算符](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
-
-（或称扩展运算符）（Object rest spread）
-
-<span style='background:#eef5f4;padding:0 10px'>es7</span>
-
-`...`后的内容可用变量代理
-
-- 使用条件：
-  1. cnpm install --save-dev babel-plugin-transform-object-rest-spread
-  2. .babelrc中加"plugins": ["transform-object-rest-spread"]
-  
-- 运用于对象 
-  
-  - 仅拷贝可枚举的属性
-  
-  1. 代码：（序号后不写点东西就变成行内代码了）
-     ```javascript
-     let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
-     console.log(x); // 1
-     console.log(y); // 2
-     console.log(z); // { a: 3, b: 4 }
-     ```
-  2. 代码：
-     ```javascript
-     let n = { x, y, ...z };
-     console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
-     ```
-  3. vuex的辅助函数
-  
-- 运用于数组
-  ...array可以把数组的各子项变成各参数，console.log、运行函数时传入参数中都可用，array与[...array]相等
-    1. 在document.write中，加不加...输出都是用英文逗号隔开
-  
-    2. 定义函数传入参数前加上...，如function a(...x)
-       则函数中x代表所有传入参数组成的数组
-       ...x代表所有传入参数，可以再传入其他函数，直接document.write会将参数连着打出，console.log则会在参数间加入空格打出
-       
-    3. 函数编写时形参中的运用，可在最后一个参数前加上...
-       意思是把最后几个实参合成一个数组，例子：
-       ```javascript
-          function a(first,...aaa){
-            console.log('first',first); // 11
-            console.log('aaa',aaa); // [22,33]
-            console.log('...aaa',...aaa); // 22,33
-          }
-          a(11,22,33)
-       ```
-       
-       用这种方法可以跳过前面或者中间的参数，函数普通写法的话必须输入前面的参数才能输入后面的参数
-       
-    4. 可以使用三元运算符，如...(x > 0 ? ['a'] : [])
-  
-    5. arr1.push(...arr2)意为把arr2每个子项都加到arr1数组后面（前面有push的介绍）
-  
-- 运用于字符串
-    1. 将字符串转为数组
-    `[...'hello']` // [ "h", "e", "l", "l", "o" ]
-    （更多内容见http://es6.ruanyifeng.com/#docs/array#扩展运算符）
-    
-- 可运用于`undefined`
 
 # 装饰器
 
