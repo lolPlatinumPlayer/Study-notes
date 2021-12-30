@@ -5,7 +5,6 @@
   - 如果没有的话  
     了解项目中用了ts写出的库后，编译项目阶段，输入该库的内容能否拥有类型检查（应该是有的）
 - [ts与资源](https://v4.webpack.docschina.org/guides/typescript/#%E5%AF%BC%E5%85%A5%E5%85%B6%E4%BB%96%E8%B5%84%E6%BA%90)  
-- js文件可以引用ts文件吗
 
 不着急了解的功能
 
@@ -30,6 +29,7 @@
 - 编译阶段就会给出错误提示  
   并且webpack4默认拒绝编译有错误的生产环境包  
   不过`typescript`npm包是允许编译有错误的文件的
+- js文件可以引用ts文件（测试背景：vue-cli建的hrt大屏）
 
 
 
@@ -108,7 +108,7 @@ function greeter(person: string) {
 
 - [enum](https://www.typescriptlang.org/docs/handbook/basic-types.html#enum)  
   赋予一组数字意义  
-（vue3里似乎赋予了字符串？）
+  （vue3里似乎赋予了字符串？）
   
   - 例子  
     
@@ -380,7 +380,23 @@ const bird3: BirdInterface = bird1;
 
 
 
-### 使用第三方库
+### 引用js文件
+
+
+
+##### 使用自己编写的js文件
+
+这里记录一个实战中的例子
+
+1. 在src下新建`shims-vue.d.ts`文件
+2. 对于每个要引用的js文件  
+   都在`shims-vue.d.ts`中加入如下对应代码  
+   `declare module '@/js文件位置'`（不要加`.js`）
+3. 引用js文件  
+   用如下写法  
+   `import {beFlexible} from "@/js文件位置"`（不要加`.js`）
+
+
 
 ##### 使用js库
 
@@ -407,6 +423,8 @@ const bird3: BirdInterface = bird1;
     > ```
     >
     > —— [某个网站](http://definitelytyped.org/)
+
+
 
 
 
@@ -489,5 +507,4 @@ const bird3: BirdInterface = bird1;
 使用方法：在类的构造函数的形参前加`public`（普通的构造函数不能用`public`）
 
 效果：可以让加了`public`的形参作为实例的属性
-
 
