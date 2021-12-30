@@ -2,6 +2,8 @@
 
 - > cordova最初被称作PhoneGap —— 《JavaScript移动设备应用程序开发》
 
+- >adobe将PhoneGap的核心抽离出来，命名为cordova —— [黑马视频07:12](https://www.bilibili.com/video/BV1N4411A77d?p=1)
+
 
 
 
@@ -178,6 +180,16 @@ cordova build
 
 
 
+- 缓存  
+  这里说的内容可能是[Gradle Daemon](https://docs.gradle.org/current/userguide/gradle_daemon.html)的特性
+
+  - > `项目根目录\platforms\android\app\src\main\res`下不能有不能有预料外的文件 —— qq用户2178551572
+
+    例子：一次将图标指定为png后`cordova run android`读的还是`res\mipmap-mdpi`下的ico，要将ico删除才会读png
+
+  - `cordova run android`之后会在res文件夹下产生文件  
+    再次run并不会删除之前run产生的文件
+
 
 
 
@@ -206,15 +218,17 @@ cordova build
 
 - > 用cordova开发iOS应用要安装iOS sdk —— 《JavaScript移动设备应用程序开发》
 
-  - > Xcode® 11.0（最低要求版本）仅在 OS X 版本 10.14.4 (Mojave) 或更高版本上运行，并包含 iOS 13 SDK（软件开发工具包） —— [cordova10的官网](https://cordova.apache.org/docs/en/10.x/guide/platforms/ios/index.html#requirements-and-support)
+  - 一般不需要单独安装  
+    通过xcode就可以搞定（具体是自带还是在xcode里下载忘记了）
+
+  
 
 
 
 
 ### 特性
 
-- 运行项目会自己打开模拟器  
-  <span style='opacity:.5'>（已测环境：cordova9、macOS10.14.0、iOS sdk是多少忘记了）</span>
+- 运行项目会自己打开模拟器
 
 
 
@@ -254,7 +268,7 @@ cordova build
 
 ### 配置
 
-config.xml
+[`config.xml`](https://cordova.apache.org/docs/en/latest/config_ref/)
 
 - 设置app名  
   name标签间的内容就会作为app的名称  
@@ -265,6 +279,18 @@ config.xml
   （已在安卓10上测试）
 - 设置app的初始页面  
   content标签的src属性
+  - 错误  
+    - www文件夹不存在的话运行命令会报错
+    - 如果www在而指定文件不存在就不会报错（起码目前没发现报错文本）  
+      可以进行打包  
+      在iphone13ios15模拟器上app打开会是白屏
+- [图标](https://cordova.apache.org/docs/en/10.x/config_ref/images.html)  
+  - 图标地址  
+    就和官网说的一样是从项目根目录算起的（项目根目录不是指www）  
+    如果写错，在用run命令运行项目时会提示你路径不存在（`Source path does not exist: 图标文件名.后缀名`）
+  - 图片格式  
+    安卓只支持xml和png（2021.12.18测试结果）  
+    如果用其他格式则无法通过编译并报错`项目根目录\platforms\android\app\src\main\res\mipmap-mdpi\ic_launcher.后缀名: Resource and asset merger: The file name must end with .xml or .png`
 
 
 
