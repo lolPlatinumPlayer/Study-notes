@@ -1361,12 +1361,15 @@ Object.defineProperties(对象, {
 ### 冻结对象  
 
 `Object.freeze(对象)`  
-冻结后对象不能被修改，不过对象的属性可以  
 
-- `对象.属性=1`这种写法不生效  
-  不过`对象.属性.属性=1`可以生效
+- 冻结后对象不能被修改
+  - `对象.属性=1`将不会生效
+  - `delete 对象.属性`将不会生效
 
-似乎原型链也会被冻结，详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze)
+- 对象的属性可以被修改  
+  （`对象.属性.属性=1`可以生效）
+
+- 似乎原型链也会被冻结，详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze)
 
 
 
@@ -2173,6 +2176,9 @@ Symbol是第七种数据类型
 import在静态解析阶段执行，所以它是一个模块之中最早执行的。  
 由于import是静态执行，所以不能使用 表达式、变量 这种只有在运行时才能得到结果的语法结构。  
 而export可以用export var i = k这种语句  
+
+- 导入内容会占用变量名  
+  如果`import {a} from '某个地址'`后`const a =JSON.parse(JSON.stringify(a))`会导致程序无法运行
 
 
 
