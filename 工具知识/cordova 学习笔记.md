@@ -4,11 +4,23 @@
 
 - >adobe将PhoneGap的核心抽离出来，命名为cordova —— [黑马视频07:12](https://www.bilibili.com/video/BV1N4411A77d?p=1)
 
+- >PhoneGap1.4版本发布后，名字再次变更为Cordova —— 《PhoneGap从入门到精通》
+
+- > 我们宣布 PhoneGap 和 PhoneGap Build 的开发结束 —— [Adobe](https://blog.phonegap.com/update-for-customers-using-phonegap-and-phonegap-build-cc701c77502c)
+
 
 
 
 
 # 入门
+
+
+
+- 在终端查看某个命令的说明  
+  比如要查看`cordova create xx`的说明  
+  就用`cordova help create`
+
+
 
 **安装**
 
@@ -237,7 +249,7 @@ cordova build
 
 - 打包  
   打包后生成iOS项目  
-  项目位置为：`platform/ios`<span style='opacity:.5'>（这个叫ios的文件夹就是项目）</span>
+  项目位置为：`platform/ios`<span style='opacity:.5'>（这个叫ios的文件夹就是ios项目）</span>
   - 前端代码存放位置  
     访达里看是`ios/www`  
     Xcode里看是`Staging/www`  
@@ -256,11 +268,15 @@ cordova build
 
 ### 定位
 
-- org.apache.cordova.geolocation  
-  `cordova plugin add org.apache.cordova.geolocation`后用`navigator.geolocation.getCurrentPosition`即可  
-  - 错误
-    - code是null，message空串  
-      原因：没给app授予定位权限
+- [安装](https://cordova.apache.org/docs/en/10.x/reference/cordova-plugin-geolocation/index.html#installation)  
+  （之前都是用过时的id方式安装）
+- iOS  
+  <span style='opacity:.5'>（[官网](https://cordova.apache.org/docs/en/10.x/reference/cordova-plugin-geolocation/index.html#ios-quirks)说要在Info.plist里做配置，但是发现iOS项目里并没有Info.plist，2022.01.03全网搜索都没找到什么资料，包括苹果官网，[唯一的资料](https://www.jianshu.com/p/c66cccdbbce0)说Info.plist在xcode13里改位置了，但是新位置里也没发现定位权限的配置）</span>  
+  要把[官网](https://cordova.apache.org/docs/en/10.x/reference/cordova-plugin-geolocation/index.html#ios-quirks)的三条xml塞到config.xml里，不然无法获得权限  
+  一次塞到widget标签下后调试app时就会提示授予权限了
+- 错误
+  - code是null，message空串  
+    原因：没给app授予定位权限
 
 
 
