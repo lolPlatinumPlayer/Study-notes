@@ -1,4 +1,14 @@
-目前对mapbox的理解就是：一个致力于拓扑分析的地图，并拥有一些拓扑分析以外的功能
+# 对mapbox的理解
+
+- 产品定位  
+  一个致力于拓扑分析的地图，并拥有一些拓扑分析以外的功能
+- api理解  
+  所有内容都由一个称为『style』的配置对象控制  
+  各种api就是用来更改style（或其中的一部分）的
+
+
+
+
 
 # 初始化
 
@@ -11,7 +21,7 @@
     var map = new mapboxgl.Map({
       container: "map",
       zoom: 4,
-      center: [117.210215, 39.1],
+      center: [117.2102, 39.1],
       style: {
         "version": 8,
         "name": "Mapbox Streets",
@@ -203,7 +213,7 @@ var map = new mapboxgl.Map({
 
   - 先设置后使用
 
-    - 设置数据源  
+    - [设置数据源](https://www.mapbox.cn/mapbox-gl-js/api/#map#addsource)  
 
       ```js
       map.addSource(数据源名称, {
@@ -214,8 +224,10 @@ var map = new mapboxgl.Map({
 
       要在map的load事件后使用
 
-    - 使用数据源  
+      - 数据源名称可以是任意值（官网写着是字符串，但是实际上可以是任意值）
 
+    - 使用数据源  
+  
       ```js
       map.addLayer({
         "id": "power-line",
@@ -225,10 +237,12 @@ var map = new mapboxgl.Map({
         "paint": {}
       })
       ```
-
+  
   - 用字面量写  
     （这里就不赘述了）
-
+  
+- [删除数据源](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#removesource)
+  
 - **瓦片**  
 
   - raster数据源可以用瓦片  
@@ -315,6 +329,8 @@ var map = new mapboxgl.Map({
 - 找到地图用的所有数据源  
   `map.style.sourceCaches.map(x=>x._source)`  
   <span style='opacity: 0.5'>官网对此并没有描述，暂时也没找到其他方法</span>
+  
+  
 
 
 
@@ -358,10 +374,16 @@ var map = new mapboxgl.Map({
 [官网](https://docs.mapbox.com/mapbox-gl-js/api/events/)没有提到图层的事件列表，图层的事件可能和Map是一致的
 
 - [`Map`](https://docs.mapbox.com/mapbox-gl-js/api/map/#map-events)  
+  
+  - [load事件](https://docs.mapbox.com/mapbox-gl-js/api/map/#map.event:load)  
+  
+    > 只会触发一次 —— 官网
+  
   - style.load事件  
-    官网没找到相关信息，不过可以使用  
-    早于load事件触发  
-    为鑫说这是样式加载的事件
+    官方文档没有说明，不过[官方demo](https://docs.mapbox.com/mapbox-gl-js/example/add-3d-model/)有使用  
+    
+    - 早于load事件触发  
+    - 为鑫说这是样式加载的事件
 - [`Marker`](https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker-events)
 - [`Popup`](https://docs.mapbox.com/mapbox-gl-js/api/markers/#popup-events)
 - [`GeolocationControl`](https://docs.mapbox.com/mapbox-gl-js/api/markers/#geolocatecontrol-events)
@@ -370,6 +392,8 @@ var map = new mapboxgl.Map({
 
 # [图层](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/)
 
+- [必须有一个字符串id](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#id)
+  
 - 无法调整高度（垂直方向的位置）  
   （起码目前没找着调整的方法）
 
@@ -387,7 +411,7 @@ var map = new mapboxgl.Map({
   }
   ```
 
-  
+- [删除图层](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#removelayer)
 
 
 
@@ -424,7 +448,8 @@ mapboxgl.MercatorCoordinate.fromLngLat({
 
 - 模糊  
   - 在拐点过于密集时会出现锯齿  
-    ![mapbox线模糊出现锯齿](https://img.wenhairu.com/images/2021/08/02/9h9Lp.png)
+    ![mapbox线模糊出现锯齿](https://img.wenhairu.com/images/2021/08/02/9h9Lp.png)  
+    不知道调整[a](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#layout-line-line-round-limit)或[b](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#layout-line-line-miter-limit)或[c](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#layout-line-line-join)或[d](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#layout-line-line-cap)之后能不能解决
 
 
 
@@ -433,6 +458,10 @@ mapboxgl.MercatorCoordinate.fromLngLat({
 - 背景图  
   背景图会依据缩放自适应大小  
   目前还没找到固定背景图的方法
+- 使用不符合规范的数据源  
+  - 多边形的geojson如果首尾不重合的话也可以渲染  
+    但是镜头拉近时可能会少一小块
+- 面对复杂形状时，绘制表现并不好
 
 
 
@@ -453,7 +482,7 @@ mapboxgl.MercatorCoordinate.fromLngLat({
   'text-radial-offset':0.8,//文本要远离中心点多远进行展示（不带图标时还没用过该配置）（不加text-variable-anchor的话是没效果的）
   'text-variable-anchor': ['top', 'bottom', 'left', 'right'], // 允许展示文本的方向
   "text-ignore-placement": false, // 设置为 true 时，其他注记即使碰撞到此文本标注也会显示。
-  'text-field': '{name}', // name处写的是数据源properties的一个属性名，也可以直接写一个字符串或表达式。值可以包含中文却不能包含数字，含数字的话整个图层不会显示并且会红色报错“GET https://api.mapbox.com/fonts/v1/mapbox/arial/0-255.pbf?access_token=pk.eyJ1IjoiaWRvbnRkcml2ZSIsImEiOiJjazAyM3RhbGUwOW1hM21tZXMxYjhpbndnIn0.YyfL9JQcV11Y3Kv-KvTD6Q 404 (Not Found)”，为鑫说是字体原因，可是换了arial也还是不行。不过sjdt是可以包含数字的。官方对这个属性并没有进行什么说明，官方对`'{name}'`这种写法也没有什么说明
+  'text-field': '{name}', // name处写的是数据源properties的一个属性名，也可以直接写一个字符串或表达式。值可以包含中文却不能包含数字，含数字的话整个图层不会显示并且会红色报错“GET https://api.mapbox.com/fonts/v1/mapbox/arial/0-255.pbf?access_token=你mapbox的token 404 (Not Found)”，为鑫说是字体原因，可是换了arial也还是不行。不过sjdt是可以包含数字的。官方对这个属性并没有进行什么说明，官方对`'{name}'`这种写法也没有什么说明
   'text-size': 18, // 可以用表达式，返回结果是数字就行，单位是像素
   'text-anchor': 'center', // 文本锚点位置
   'text-allow-overlap': false, // 设置为 true 时，文本标注即使碰撞到其他绘制的注记也会显示。
@@ -543,12 +572,6 @@ map.addLayer({
   - 加的话  
     在数组中 把第一个图层移动到第二个图层的前面  
     在视图中 把第一个图层移动到第二个图层的后面  
-
-
-
-###  其他
-
-- 多边形图层在面对复杂形状时，绘制表现并不好
 
 
 
@@ -717,8 +740,6 @@ map.addLayer({
 - **显隐图层**  
   `map.setLayoutProperty(图层id, 'visibility', 是否显示?'visible':'none');`
   
-- 数据源可以用任意值作为id，图层只能用字符串作id
-
 - **编译**  
 
   - `yarn run build-prod-min`生成`mapbox-gl.js`及其map文件

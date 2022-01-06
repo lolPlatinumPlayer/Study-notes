@@ -302,9 +302,16 @@ L.tileLayer(url模板, {
 
 ### 一些添加物
 
-- 标记：`var marker = L.marker([51.5, -0.09]).addTo(map)`  
-  用img标签实现的
+- 标记点  
+  `const marker = L.marker([51.5, -0.09]).addTo(map)`  
 
+  - [图标](https://leafletjs.com/reference.html#icon)  
+    - 锚点  
+      `iconAnchor`选项  
+      值为`[x,y]`  
+      最终dom上的效果为`` `margin-left: -${x}px;margin-top: -${y}px;` ``
+  - 用img标签实现的
+  
 - 圆  
 
   ```javascript
@@ -316,9 +323,9 @@ L.tileLayer(url模板, {
   }).addTo(map)
   ```
 
-  用svg实现的
+  - 用svg实现的
 
-- 多边形  
+- [多边形](https://leafletjs.com/reference.html#polygon)  
 
   ```javascript
   var polygon = L.polygon([
@@ -328,7 +335,8 @@ L.tileLayer(url模板, {
   ]).addTo(map)
   ```
 
-  用svg实现的
+  - 有多种支持数据（不支持geojson）
+  - 用svg实现的
 
 - 弹窗  
 
@@ -339,11 +347,18 @@ L.tileLayer(url模板, {
       .openOn(map)
   ```
 
-  用html实现的
+  - 用html实现的
 
   - 点击指定物体进行弹窗：`其他添加物.bindPopup("弹窗文本")`
   
 - [图片图层](https://leafletjs.com/reference.html#imageoverlay)  
+
+- 依据geojson生成对应添加物  
+  [`L.geoJSON`方法](https://leafletjs.com/reference.html#geojson)
+
+  - 样式：style选项  
+    文档说要用函数，但是直接写一个对象也是可以的
+
 
 
 
@@ -372,5 +387,37 @@ L.tileLayer(url模板, {
 
 
 
+# 问题排查
 
+- [默认图片地址不正确的问题](https://segmentfault.com/q/1010000017168720/)  
+
+  - 测试环境  
+    leaflet1.7.1  
+    webpack^4.46.0
+
+  - 猜测原因  
+    webpack把图片名转为哈希值，而leaflet还是用非哈希值去取，最终地址就不对了  
+    <span style='opacity:.5'>（src/layer/marker/Icon.Default.js的_detectIconPath方法在初次获得path时就是哈希值，但是后面转换时用的又是非哈希值。这个方法用于生成marker的默认图标，判断依据是`L.Marker.prototype.options.icon instanceof L.Icon.Default`结果为true）</span>
+
+  - 解决办法
+
+    - 完美解决的方法  
+      手动引入图标  
+
+      ```js
+      import icon from "leaflet/dist/images/marker-icon.png";
+      import iconShadow from "leaflet/dist/images/marker-shadow.png";
+      
+      let DefaultIcon = L.icon({
+        iconUrl: icon,
+        shadowUrl: iconShadow,
+        iconAnchor:[12,41],
+      });
+      L.Marker.prototype.options.icon = DefaultIcon;
+      ```
+      
+    - 不完美解决的方法  
+      按[webpack官网](https://v4.webpack.js.org/loaders/file-loader/#options)设置为不转为哈希值  
+      就是将options设为`{name: '[path][name].[ext]'}`  
+      这样的话marker的默认图片会出来，但是marker的默认阴影不会出来
 
