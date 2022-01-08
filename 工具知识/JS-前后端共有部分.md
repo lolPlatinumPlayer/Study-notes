@@ -712,12 +712,18 @@ class HasSetGet {
 
 ```javascript
 元素.addEventListener("自定义事件名", (customEvent实例)=>{}); // 增加事件。具体用法看上面
-var event = new CustomEvent("自定义事件名", 配置对象); // 第二个参数可不传
+const event = new CustomEvent("自定义事件名", 配置对象); // 第二个参数可不传
 元素.dispatchEvent(event); // 触发事件
 ```
 
 - 传递数据  
-  传递的数据放在“配置对象”的`detail`属性里
+  传递的数据只能放在“配置对象”的`detail`属性里
+- 监听事件的回调的参数  
+  是customEvent实例，拥有一个detail属性，里边有传递的数据
+
+- 缺点  
+  - 无法继承事件
+  - 传输数据必须从`detail`属性里取
 
 
 

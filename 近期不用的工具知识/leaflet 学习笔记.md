@@ -51,14 +51,17 @@
 详细内容看[官网](https://leafletjs.com/reference-1.6.0.html#class)  
 实例的`__proto__`上可以看到类创建的内容，父类创建的内容则在`__proto__.__proto__`上
 
+- 继承  
+  比如A要继承B，那就写`const A=B.extend(一个对象)`
 - **initialize**方法  
   构造函数  
-  和es6不同的是，它不调用父类构造函数也是允许的
+  和es6不同的是，initialize中可以不调用父类的构造函数
 - **options**属性  
-  是一个对象，会与父类的`options`进行合并（父类的`options`会作为子类`options`的`__proto__`）  
-  - `setOptions(this, options)`  
-    将`options`参数与`this.options`进行上文说到的『合并』  
-    可以通过`L`或者`L.Util`调用  
+  是一个对象，都会调用与父类`options`合并的方法（父类的`options`会作为子类`options`的`__proto__`）  
+  - 与父类`options`合并的方法  
+    `setOptions(this, options)`  
+    将`options`参数与`this.options`进行合并  
+    - 可以通过`L`或者`L.Util`调用  
   - 语义：  
     用户实例化时的配置项  
     leaflet内部都不会去修改`options`的属性
@@ -125,7 +128,7 @@ pane的dom结构应该都如下
 
 - egis.layer.GraphicsLayer -> L.LayerGroup-> L.Layer
 - egis.Graphic -> L.Path -> L.Layer
-- L.TileLaye -> L.GridLayer -> L.Layer
+- L.TileLayer -> L.GridLayer -> L.Layer
 - leaflet的Marker、Polygon、Popup等
 
 ##### 阅读
@@ -384,6 +387,10 @@ L.tileLayer(url模板, {
 
 - 不会冒泡到祖先  
   （起码marker的不会冒泡到map上）
+
+
+
+
 
 
 
