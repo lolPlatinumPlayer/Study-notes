@@ -2,6 +2,7 @@
 
 **学习进度**
 
+- 【】整整classificationType的笔记，面也有的
 - 水面  
   [demo](https://sandcastle.cesium.com/?src=Lighting.html&label=All)
 - 镜头锁定住一点进行环绕  
@@ -264,69 +265,68 @@ viewer.scene.skyBox = new Cesium.SkyBox({
 有2种方法加入模型  
 返回的物体是由不同构造函数构造的
 
-- 方法一：加载模型文件
+- 加载czml【】去天津北斗项目中找找坐标、大小怎么设置
 
-  - `viewer.dataSources.add`简易版  
-    
-    ```js
-    var 物体 = Cesium.CzmlDataSource.load(czml)
-    viewer.dataSources.add(物体)
-    ```
-    该方法在[官方例子](https://sandcastle.cesium.com/index.html?src=CZML.html)及二开中使用
-    
-  - `viewer.dataSources.add`详细版  
-    
-    ```js
-    a = Cesium.CzmlDataSource
-      .load("./resources/data/beidouⅢ.czml")
-    b = a.then(function (data) {
-      c = data
+  ```js
+  Cesium.CzmlDataSource
+    .load("./resources/data/beidouⅢ.czml")
+    .then(function (data) {
       viewer.dataSources.add(data)
     })
-    d = b.otherwise(function (data) {
+    .otherwise(function (data) { // 失败的回调
       console.log(data)
     })
+  ```
+
+  - 简写  
+    由于[`viewer.dataSources.add`](https://cesium.com/learn/cesiumjs/ref-doc/DataSourceCollection.html#add)可以接收返回“data source”的promise，所以也可以用下面的简写方法【】去[官方例子](https://sandcastle.cesium.com/index.html?src=CZML.html)及二开中找找坐标、大小怎么设置  
+
+    ```js
+    const promise=Cesium.CzmlDataSource.load(czml)
+    viewer.dataSources.add(promise)
     ```
-    天津北斗项目用的是该方法
-    - czml加载成功会调用`then`方法的回调  
-      失败会调用`otherwise`方法的回调
-    - c是`Cesium.CzmlDataSource`实例
-    - a、b、d都是`cz的Promise$1`实例  
+
+  - [`Cesium.CzmlDataSource.load`](https://cesium.com/learn/cesiumjs/ref-doc/CzmlDataSource.html#load)可接收url也可接收czml对象
+
+  - 非重点细节  
+
+    - then回调的data参数是`Cesium.CzmlDataSource`实例
+    - load、then、otherwise返回的都是`cz的Promise$1`实例  
       但是彼此间是不相等的
 
-  - [`Cesium.Model`](https://cesium.com/docs/cesiumjs-ref-doc/Model.html)方法  
+- [`Cesium.Model`](https://cesium.com/docs/cesiumjs-ref-doc/Model.html)方法  
+
+  ```js
+  // 模型坐标
+  var origin = Cesium.Cartesian3.fromDegrees(经度,纬度,海拔)
+  var modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(origin)
   
-    ```js
-    // 模型坐标
-    var origin = Cesium.Cartesian3.fromDegrees(经度,纬度,海拔)
-    var modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(origin)
+  const model = scene.primitives.add(Cesium.Model.fromGltf({
+    url : 地址,
+    show : true,
+    modelMatrix : modelMatrix,
+    scale : 2000.0, // 模型默认放大比例
+    color: Cesium.Color.ROYALBLUE,
     
-    const model = scene.primitives.add(Cesium.Model.fromGltf({
-      url : /*地址*/,
-      show : true,
-      modelMatrix : modelMatrix,
-      scale : 2000.0, // 模型默认放大比例
-      color: Cesium.Color.ROYALBLUE,
-      
-      /*给模型设置最小的像素值
-      （当模型按scale配置项放大不能满足需求时会自动放大）*/
-      minimumPixelSize : 128,
-      
-      /* 模型放大值的上限
-      （可以管住scale与minimumPixelSize配置项）*/
-      maximumScale: 200,
-      
-    }))
-    model.readyPromise
-      .then(function(model) { // 这个model和外层的model是全等的
-        // 当模型加载完毕时触发回调
-        // 具体时机为：渲染模型的第1帧前
-      })
-    ```
-  
+    /*给模型设置最小的像素值
+    （当模型按scale配置项放大不能满足需求时会自动放大）*/
+    minimumPixelSize : 128,
     
+    /* 模型放大值的上限
+    （可以管住scale与minimumPixelSize配置项）*/
+    maximumScale: 200,
+    
+  }))
+  model.readyPromise
+    .then(function(model) { // 这个model和外层的model是全等的
+      // 当模型加载完毕时触发回调
+      // 具体时机为：渲染模型的第1帧前
+    })
+  ```
+
   
-- 方法二：流形式
+  
+- 流形式加载
 
   ```js
   var 物体=new Cesium.Cesium3DTileset({
@@ -339,7 +339,20 @@ viewer.scene.skyBox = new Cesium.SkyBox({
   viewer.scene.primitives.add(物体) // 这个方法会返回物体（和传进该方法的物体是全等的）
   ```
 
-  
+  - 叠加类型  
+    [`classificationType`选项](https://cesium.com/learn/cesiumjs/ref-doc/Cesium3DTileset.html#classificationType)  
+    - 效果  
+      若产生叠加，那该模型的形状会消失  
+      而被叠加物体的表面会变成该模型的颜色  
+      变色区域为：不叠加时该模型遮挡被叠加物体的区域
+    
+    - [可选值](https://cesium.com/learn/cesiumjs/ref-doc/global.html#ClassificationType)  
+      - undefined不产生叠加
+      - TERRAIN：应该是和地形叠加
+      - CESIUM_3D_TILE：和3dtile叠加
+      - BOTH：应该是同时和地形和3dtile叠加
+
+
 
 ### “物体”
 
@@ -374,46 +387,40 @@ viewer.scene.skyBox = new Cesium.SkyBox({
 
 这是cesium里的一个概念
 
+- 一个demo  
+  进行如下操作可以添加一个固定尺寸的圆。  
+  点击点时镜头会锁定在该圆，并在圆周围出现锁定图案、展示出描述信息  
 
+  ```js
+  // 圆
+  var pointEntity = viewer.entities.add({
+    // 点击点后弹出的描述信息 (sn大屏项目测试发现点击后不会弹出，甚至把默认控件都放出来也没看见)
+    description: `行数不定的字符串`,
+    position: Cesium.Cartesian3.fromDegrees(经度,纬度,高度),
+    point: { pixelSize: 10, color: Cesium.Color.ORANGE }
+  })
+  ```
 
-**示例**
+- 一个添加图形的方式
 
-进行如下操作可以添加一个固定尺寸的圆。  
-点击点时镜头会锁定在该圆，并在圆周围出现锁定图案、展示出描述信息
-
-```js
-// 圆
-var pointEntity = viewer.entities.add({
-  // 点击点后弹出的描述信息 (sn大屏项目测试发现点击后不会弹出，甚至把默认控件都放出来也没看见)
-  description: `行数不定的字符串`,
-  position: Cesium.Cartesian3.fromDegrees(经度,纬度,高度),
-  point: { pixelSize: 10, color: Cesium.Color.ORANGE }
-})
-```
-
-
-
-**目前已知的添加图形方式**
-
-- 第一步：`Entity`通过配置项携带图形
-
-- 第二步：把`Entity`传入`viewer.entities.add` 方法
+  - 第一步：`Entity`通过配置项携带图形
+  - 第二步：把`Entity`传入`viewer.entities.add` 方法
 
 
 
-**`viewer.entities.add`**  
+###### `viewer.entities.add`  
 
 - 入参：可以是[Entity](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html)实例也可以是[Entity的配置项](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html#.ConstructorOptions)
   - 配置项
     - 配置对象的属性都会被添加到实例里  
-      甚至实例里还会有配置对象加下划线版本的属性（比如原属性名是a，加下划线后就是_a）
+      甚至实例里还会有配置对象加下划线版本的属性<span style='opacity:.5'>（比如原属性名是a，加下划线后就是_a）</span>
 - 返回值：[Entity](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html)实例
 
 
 
 
 
-**Entity关键配置项**
+###### Entity关键配置项
 
 - 坐标  
   `position`  
@@ -424,7 +431,7 @@ var pointEntity = viewer.entities.add({
 
 
 
-**操作**
+###### 操作
 
 - 直接赋值就可以更新视图  
   已试过`point`  
@@ -435,7 +442,7 @@ var pointEntity = viewer.entities.add({
 
 
 
-**已学习过的图形如下**
+###### 具体图形
 
 图形的`show`配置项都是用来设置是否显示的，`material`配置项都是用来设置材质的。  
 下面就不重复说明了
@@ -663,7 +670,7 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
 
 ##### 鼠标事件
 
-[ScreenSpaceEventHandler](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html)上有增、[减](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)监听函数等方法
+[ScreenSpaceEventHandler](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html)上有[增](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceEventHandler.html#setInputAction)、[减](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)监听函数等方法
 
 - 在这里可以找到一个事件处理器实例：  
   `viewer.cesiumWidget.screenSpaceEventHandler`
@@ -1015,6 +1022,10 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
   
   
   关于czml的了解，这3个页面还没看完：[第1个](https://www.cnblogs.com/mazhenyu/p/8315840.html)、[第2个](https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/CZML-Structure)、[第3个](https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/Packet)
+
+- [b3dm](https://github.com/CesiumGS/3d-tiles/blob/main/specification/TileFormats/Batched3DModel/README.md)  
+  批量3d模型（Batched 3D Model）  
+  使用『core 3D Tiles spec language』
 
 
 
