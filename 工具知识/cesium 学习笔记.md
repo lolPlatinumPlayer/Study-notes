@@ -412,7 +412,7 @@ viewer.scene.skyBox = new Cesium.SkyBox({
 
 - 入参：可以是[Entity](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html)实例也可以是[Entity的配置项](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html#.ConstructorOptions)
   - 配置项
-    - 配置对象的属性都会被添加到实例里  
+    - 配置对象的属性都会被添加到实例里<span style='opacity:.5'>（自己写文档里没有的属性也行）</span>  
       甚至实例里还会有配置对象加下划线版本的属性<span style='opacity:.5'>（比如原属性名是a，加下划线后就是_a）</span>
 - 返回值：[Entity](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html)实例
 
@@ -592,8 +592,12 @@ viewer.scene.skyBox = new Cesium.SkyBox({
       `pixelOffset`配置项
 
 - [多边形](https://cesium.com/learn/cesiumjs/ref-doc/PolygonGraphics.html)  
-  可以增加厚度成多面体  
-  厚度可以不等的（就是说可以做出各个地方厚度不一样的多面体）
+  
+  - 可以增加厚度成多面体  
+    厚度可以不等的（就是说可以做出各个地方厚度不一样的多面体）
+  - 有“叠加类型”选项  
+    和模型一样，具体内容见模型的“叠加类型”部分
+  - 坐标么有顺时针逆时针都可以
 - 模型  
   [demo](https://sandcastle.cesium.com/index.html?src=3D%2520Models.html)
 - [墙](https://cesium.com/learn/cesiumjs/ref-doc/WallGraphics.html)
@@ -704,7 +708,7 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
 
 ```js
 viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEvent) {
-  var pickedFeature = viewer.scene.pick(czMouseEvent.position);
+  const pickedFeature = viewer.scene.pick(czMouseEvent.position);
   console.log(pickedFeature)
 }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 ```
@@ -713,8 +717,8 @@ viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEven
 
 没看到对返回对象的说明
 
-- 看[这篇文章](https://blog.csdn.net/zhangqun23/article/details/83056315)里的说明似乎只会返回第一个点击的物体
-- 返回对象的id属性似乎是用`viewer.entities.add`添加的实例
+- 只会返回第一个点到的物体（[这篇文章](https://blog.csdn.net/zhangqun23/article/details/83056315)也认同这个观点）
+- 返回对象的id属性就是用`viewer.entities.add`添加的实例
 - 没点到东西（点地球不算）的话返回undefined  
   （经验之谈）
 
