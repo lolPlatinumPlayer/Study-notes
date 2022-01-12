@@ -2,7 +2,6 @@
 
 **学习进度**
 
-- 【】整整classificationType的笔记，面也有的
 - 水面  
   [demo](https://sandcastle.cesium.com/?src=Lighting.html&label=All)
 - 镜头锁定住一点进行环绕  
@@ -265,7 +264,7 @@ viewer.scene.skyBox = new Cesium.SkyBox({
 有2种方法加入模型  
 返回的物体是由不同构造函数构造的
 
-- 加载czml【】去天津北斗项目中找找坐标、大小怎么设置
+- 加载czml
 
   ```js
   Cesium.CzmlDataSource
@@ -279,14 +278,14 @@ viewer.scene.skyBox = new Cesium.SkyBox({
   ```
 
   - 简写  
-    由于[`viewer.dataSources.add`](https://cesium.com/learn/cesiumjs/ref-doc/DataSourceCollection.html#add)可以接收返回“data source”的promise，所以也可以用下面的简写方法【】去[官方例子](https://sandcastle.cesium.com/index.html?src=CZML.html)及二开中找找坐标、大小怎么设置  
+    由于[`viewer.dataSources.add`](https://cesium.com/learn/cesiumjs/ref-doc/DataSourceCollection.html#add)可以接收返回“data source”的promise，所以也可以用下面的简写方法
 
     ```js
     const promise=Cesium.CzmlDataSource.load(czml)
     viewer.dataSources.add(promise)
     ```
 
-  - [`Cesium.CzmlDataSource.load`](https://cesium.com/learn/cesiumjs/ref-doc/CzmlDataSource.html#load)可接收url也可接收czml对象
+  - [`Cesium.CzmlDataSource.load`](https://cesium.com/learn/cesiumjs/ref-doc/CzmlDataSource.html#load)可接收url也可接收czml字面量
 
   - 非重点细节  
 
@@ -645,7 +644,18 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
 
 
 
+### 加载geojson
 
+- 一个加载geojson并直接画出来的方法  
+
+  ```js
+  Cesium.GeoJsonDataSource.load(geojson或geojson的地址)
+    .then(function (dataSource) {
+      viewer.dataSources.add(dataSource);
+    })
+  ```
+
+  
 
 
 
@@ -1021,11 +1031,11 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
   
   甚至可以包含快速衰减的精灵文字和投影（投影是指在其他物体上上色）
   
-  - 似乎用json就可以代表CZML了  
-    看[这个例子](http://zgeo.work/cesiumTx/examples/editor.html#czml_box)
-  
+  - [一个用JSON代表czml的例子](http://zgeo.work/cesiumTx/examples/editor.html#czml_box)
   
   关于czml的了解，这3个页面还没看完：[第1个](https://www.cnblogs.com/mazhenyu/p/8315840.html)、[第2个](https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/CZML-Structure)、[第3个](https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/Packet)
+  
+  - czml里就已经包含了坐标等信息（看了各来源的例子后得出的结论）
 
 - [b3dm](https://github.com/CesiumGS/3d-tiles/blob/main/specification/TileFormats/Batched3DModel/README.md)  
   批量3d模型（Batched 3D Model）  
