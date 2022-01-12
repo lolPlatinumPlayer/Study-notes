@@ -688,12 +688,12 @@ bbbb
 
 
 
-**查看单项目里的命令历史**
+**查看单项目里的命令历史与对应commit号**
 
-`git reflog`
+[`git reflog`](https://git-scm.com/docs/git-reflog)
 
-- 显示记录的每次命令（上次关机前的命令都会保存。不过有一次（电气符号库项目中）输入这个命令显示了内容中包含了十几条关机前的内容），每条命令前都会有这条命令所在的版本号
-- add、status等命令是不会被记录的
+- 不会显示add、status这种命令
+- 从[这及其下方](https://git-scm.com/docs/git-reflog#Documentation/git-reflog.txt---expirelttimegt)看似乎默认只会显示近期的命令，要给`git reflog`加点东西才会显示更多命令
 
 
 
@@ -751,8 +751,6 @@ bbbb
 ##### 真正的回退
 
 用`reset --hard`
-
-【】--hard 似乎很有问题？？
 
 - 退到指定commit  
   `git reset --hard commit的id`
@@ -991,6 +989,9 @@ git commit -m 'xxx'
 - 可以使用非git命令
 - 即使窗口关闭过，也能查看之前的命令记录  
   且能查看其他目录下的命令
+- 有的命令会因目录不同而产生变化，有的不会<span style='opacity:.5'>（当然这里说的都是同仓库下的）</span>  
+  比如git status在哪个目录下执行效果都一样  
+  而git add .只会对当前目录及当前目录的后代生效
 
 
 
@@ -998,7 +999,9 @@ git commit -m 'xxx'
 
 ### Sourcetree
 
-除了webstorm外，唯一一个可以查看历史commit更改的工具
+- 除了webstorm外，唯一一个可以查看历史commit更改的工具 —— 2021
+- 如果开着Sourcetree去git bash里敲命令  
+  Sourcetree是无法检测到你敲的命令的
 
 
 

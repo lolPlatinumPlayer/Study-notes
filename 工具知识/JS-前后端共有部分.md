@@ -207,8 +207,7 @@ console.log('a[3]',a[3]) // undefined
 3. 立即执行函数
    立即执行函数不会给window的原型增加方法
     1. `(function(){... }())`
-    2. `(function(){... })()`
-		
+     2. `(function(){... })()`
 ### 高阶函数
 
 - **定义**  
@@ -2023,7 +2022,6 @@ Symbol是第七种数据类型
 - **读取描述**  
   除了转字符串读取外还可以通过调用`description`属性来读取  
   *`description`是ES2019提出来的*
-  
 
 # 模块
 
@@ -2456,7 +2454,6 @@ setTimeout(() => foo = 'baz', 500);
   
 - **用新的变量名来接收值**  
   `const{对象中属性名:想要的变量名}=对象`  
-  
 
 # 参数默认值语法
 
@@ -2927,6 +2924,19 @@ fetch(myRequest) // 返回一个Promise对象
 - 与`for of`结合使用  
   `for (var arr of map)`  
   arr的第一项是key，第二项是值
+
+
+
+# [`Proxy`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+
+> 用于创建一个对象的代理 —— MDN
+
+- 取值  
+  从代理上取值就等同于从目标对象上取值
+- [`set`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/set)  
+  监听目标对象第一级属性所有的变更
+  - 参数  
+    - `target`：目标对象
 
 
 
