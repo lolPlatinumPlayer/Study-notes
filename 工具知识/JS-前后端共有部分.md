@@ -1604,6 +1604,7 @@ a.unshift('a','b','c')
     如果没有元素符合条件，则返回`-1`
   - 查找与输入值全等的元素  
     下面这2个方法在没查找到元素时都是返回`-1`
+    
     - 查找第一个全等的元素的序号  
       `arr.indexOf(值)`  
       
@@ -1663,6 +1664,12 @@ a.unshift('a','b','c')
   不会改变原字符串
 
 
+
+### indexOf
+
+- 数组  
+  数组的笔记搜索“indexOf”查看
+- [字符串](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/indexOf)
 
 
 
