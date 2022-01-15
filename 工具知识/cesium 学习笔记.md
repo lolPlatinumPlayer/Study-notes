@@ -292,6 +292,8 @@ viewer.scene.skyBox = new Cesium.SkyBox({
     - then回调的data参数是`Cesium.CzmlDataSource`实例
     - load、then、otherwise返回的都是`cz的Promise$1`实例  
       但是彼此间是不相等的
+    - viewer.dataSources.add(data source)的话会返回一个promise  
+      这个promise的then回调的参数返回的是传给add的data source
 
 - [`Cesium.Model`](https://cesium.com/docs/cesiumjs-ref-doc/Model.html)方法  
 
