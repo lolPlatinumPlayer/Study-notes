@@ -101,7 +101,7 @@
 
 
 
-**解读**
+**通过观察得到的结论**
 
 - xxx的webpack配置的mode选项默认都是development  
   不过可以通过在`.env.模式名`文件里写`NODE_ENV='production'`来改为production
@@ -111,7 +111,7 @@
 - 默认`process.env.NODE_ENV`  
   （在`.env.模式名`文件里写`NODE_ENV=任意字符串`可以修改`process.env.NODE_ENV`）
   - xxx为test时`process.env.NODE_ENV`是`'test'`  
-    这可能说明了test命令用的就是[模式文档](https://cli.vuejs.org/zh/guide/mode-and-env.html#%E6%A8%A1%E5%BC%8F)里test模式
+    这可能说明了test命令用的就是[模式](https://cli.vuejs.org/zh/guide/mode-and-env.html#%E6%A8%A1%E5%BC%8F)里的test模式
   - xxx为其他时`process.env.NODE_ENV`是`'development'`
 - xxx的总体积比build稍小  
   但是build去掉map文件的话就比xxx小很多
@@ -300,7 +300,7 @@ vue-cli含有模板：https://github.com/vuejs-templates
     
   - 打印configureWebpack函数里的形参  
     （不推荐）  
-  默认情况下深层级的内容不可见  
+    默认情况下深层级的内容不可见  
     也没找到使用node调试的方法
   
     
@@ -315,7 +315,9 @@ vue-cli含有模板：https://github.com/vuejs-templates
 
 在代码里都能获取到，但并没有挂在`window`下
 
-`process.env`默认有2个属性：`NODE_ENV`和`BASE_URL`（二开里有`BASE_URL`，不确定是不是所有vue项目都有）
+`process.env`默认有2个属性：`NODE_ENV`和`BASE_URL`（[cli文档的环境变量部分](https://cli.vuejs.org/zh/guide/mode-and-env.html#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F)提到了这点）
+
+
 
 
 
@@ -348,6 +350,8 @@ vue-cli含有模板：https://github.com/vuejs-templates
    `NODE_ENV=想要的NODE_ENV值`（`想要的NODE_ENV值`不需要加引号）
 3. 在`vue-cli-service serve xxx`或者`vue-cli-service build xxx`命令后加上` --mode 模式名`
 4. 执行命令
+
+vue-cli实现这个方法的技术应该是[dotenv](https://github.com/motdotla/dotenv)（[官网](https://cli.vuejs.org/zh/guide/mode-and-env.html#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F)有提到）
 
 
 

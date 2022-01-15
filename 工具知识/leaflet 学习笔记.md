@@ -408,7 +408,7 @@ L.tileLayer(url模板, {
 
   - 解决办法
 
-    - 完美解决的方法  
+    - 办法A  
       手动引入图标  
 
       ```js
@@ -423,7 +423,13 @@ L.tileLayer(url模板, {
       L.Marker.prototype.options.icon = DefaultIcon;
       ```
       
-    - 不完美解决的方法  
+      - 同时要配合使用url-loader  
+        如果是file-loader的话，如下情况就会出现问题  
+        如果是基于leaflet的库，打包好库之后
+        - html用script标签引用这个库的话，图片还是出不来（引用路径是相对于库的，而真正引用图标的时候是相对于html的）
+        - 在vue-cli里import不显示甚至不报错
+      
+    - 办法B  
       按[webpack官网](https://v4.webpack.js.org/loaders/file-loader/#options)设置为不转为哈希值  
       就是将options设为`{name: '[path][name].[ext]'}`  
       这样的话marker的默认图片会出来，但是marker的默认阴影不会出来
