@@ -444,3 +444,12 @@ bug
     先看这个博文：https://blog.csdn.net/weixin_43254676/article/details/95469937  
     不行的话再搜索
 - > express 的`res.send`可以响应各种格式的数据，而`res.json`只能响应 json 格式数据 —— 林先
+
+- [执行命令行命令](https://www.cnblogs.com/dch0/p/11975267.html)  
+  也就是`require('child_process').exec`  
+
+  - 如果命令失败  
+    回调的第一个参数将有值（第一个参数就是error参数）
+  - 在终端中不会显示被执行命令（被`exec`执行命令）的输出  
+    （hrtmap是这样）
+

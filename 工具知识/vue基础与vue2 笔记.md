@@ -1135,8 +1135,9 @@ methods: {
   
   - [`Vue.extend`](https://cn.vuejs.org/v2/api/#Vue-extend)方式  
     其实例的`$mount`方法应该是用来生成dom的，可以传入类似`'#id'`这样的方法来挂在到其他dom下，也可以不传  
-    生成的dom可以手动加入其他dom，具体看[博客](https://www.jianshu.com/p/b931abe383e3)
-  
+    
+    - 生成的dom可以手动加入其他dom，具体看[博客](https://www.jianshu.com/p/b931abe383e3)
+    
     - vue的“仅运行时”版本无法使用其实例的`$mount`方法  
       如果像普通组件一样注册之后在模板里用的话，是没问题的（【】这句话感觉不对啊，字符串模板还是编译不了。如果是用.vue文件写的字符串模板应该是没问题）
       - 提醒：
@@ -1144,12 +1145,12 @@ methods: {
           这个类是`Vue.extend(配置)`时配置（生成类时配置）  
           而不是实例化时配置
     - “仅运行时”版本应该无法使用（uniapp环境下，模板使用该组件就会报错`You are using the runtime-only build of Vue where the template compiler is not available`）
-  
+    
     - 【】有空测一下new "类"生成的是不是vue组件的实例
-  
+    
     - `Vue.extend(配置)`生成的实例的name  
       是`'VueComponent'`
-  
+    
   - [写对象字面量的方式](https://cn.vuejs.org/v2/guide/components-registration.html#%E5%B1%80%E9%83%A8%E6%B3%A8%E5%86%8C)  
     “仅运行时”版本应该无法使用（uniapp里会报错`You are using the runtime-only build of Vue where the template compiler is not available`）
   
@@ -1172,7 +1173,8 @@ methods: {
       }).$children[0]
       ```
   
-      
+    - `$mount`方法  
+      会取代掉指定的dom
   
 - vue 基础组件走完才会生成 总体的Vue实例那个变量  
   不过实例通过this去调，是能调到的（这个不知道是不是因为钩子执行时组件整体已经走完了）

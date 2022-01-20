@@ -1,3 +1,7 @@
+- [某个中文教程](https://ts.xcatliu.com/introduction/index.html)
+
+
+
 ### 学习目标
 
 - 了解用ts写出的程序是否能在运行时有类型检查  
@@ -14,8 +18,6 @@
 - `&`  
   例子：`type Owl = { nocturnal: true } & BirdType`
 - `namespace`
-- [用jsDoc来指明类型](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html)
-- [用jsDoc生成.d.ts](https://www.typescriptlang.org/docs/handbook/declaration-files/dts-from-js.html)
 - [source map](https://v4.webpack.js.org/guides/typescript/#source-maps)
 
 
@@ -26,18 +28,34 @@
   - 不同文件也会被视为处于相同作用域  
     比如说不能在不同文件中用`let`声明同样的变量、比如不同文件的同名接口也会进行合并  
     默认情况是这样的，[这里](https://www.jianshu.com/p/78268bd9af0a?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation)略微有提到修改默认配置以取消这个特性的方法
+  
+- ide可以获得悬停提示（比如某个变量有哪些成员）
+  
+  - 如果是jsdoc的话还可以获得额外说明
+  
 - 编译阶段就会给出错误提示  
   并且webpack4默认拒绝编译有错误的生产环境包  
   不过`typescript`npm包是允许编译有错误的文件的
-- js文件可以引用ts文件（测试背景：vue-cli建的hrt大屏）
+
+  
 
 
 
-非重点特性
+##### 特性
 
-- 使用全局变量  
-  是会报错的（不过引用jq的时候在全局下加`$`不会报错）  
-  百度了几个方法，都不好使（可能之前好使，到了ts4.1.3就不好使了）
+- ts文件可以从普通js文件中获得类型
+
+  
+
+##### 严格等级
+
+一个看https://www.typescriptlang.org/docs/handbook/intro-to-js-ts.html一个看https://article.itxueyuan.com/2dBmKl
+
+- 忽略下一行的校验  
+  `// @ts-ignore`
+- [让js拥有ts的校验](https://www.typescriptlang.org/docs/handbook/intro-to-js-ts.html#ts-check)  
+  在第一行加上`// @ts-check`  
+  <span style='opacity:.5'>（ts文件除了类型校验外还会要求大部分能声明类型的地方都做上声明）</span>
 
 
 
@@ -85,17 +103,43 @@ function greeter(person: string) {
   }
   ```
 
-  
+
+- 在解构赋值时使用类型注解  
+
+  ```ts
+  function 函数名({
+    属性名,
+  }:{属性名?: Boolean} = {}) {
+  }
+  ```
+
+  也就是说注解要写在参数后面而不能写在属性后面  
+  （写属性后面的话和解构赋值重命名语法相同，因此会被识别为重命名）
+
+
+
+
 
 ### 基本类型
 
 [官网](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html#defining-types)称为“primitive types”
 
+
+
 **js也有的类型**
+
+列表
 
 - string
 - number
 - 其他
+
+特性
+
+- 首字母小写  
+  除了函数外首字母都可以小写，函数必须大写
+
+
 
 **ts比js多的基本类型**
 
@@ -242,6 +286,55 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
 
 
 
+### 自动推断
+
+这是一个自己起的名词  
+意思是不需要手动添加任何类型，ts也会自动加上类型
+
+- 比如`let a=1`就会自动给`a`加上number类型
+
+- 比如  
+
+  ```ts
+  let a={
+    a:1,
+    b:{
+      a:1,
+    }
+  }
+  ```
+
+  会自动给a加上一个类型（具体是type还是接口不清楚）  
+  每个属性也会加上对应类型
+
+
+
+**面对for in**
+
+- 默认情况下for in中取数据会报错  
+  （原因可能是因为不会将对象的键自动识别为字符串类型）
+
+  - 解决方法  
+
+    ```ts
+    const obj = {
+      a: {
+        b:1,
+        c:2,
+      },
+    } as { [index:string] : /*这里有个类型就行了*/{
+      b:number;
+      c:number;
+    }; }
+    for (const key in obj) {
+      obj[key]
+    }
+    ```
+
+    
+
+
+
 ### 组合类型
 
 即用`|`连接多种类型或值（[字面量类型](https://www.typescriptlang.org/docs/handbook/literal-types.html)）  
@@ -277,6 +370,8 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
   可以写同名接口  
   最终发挥作用的接口是多个同名接口的合并  
   不允许在同名接口中把不同属性定义为不同类型
+- [将属性标记为可选的](https://www.typescriptlang.org/docs/handbook/2/objects.html#optional-properties)  
+  只要在属性名后加上`?`即可
 
 
 
@@ -356,7 +451,24 @@ const bird3: BirdInterface = bird1;
   backpack.add('23');
   ```
 
-  
+
+
+
+### 函数
+
+- 参数默认全部必填，除非后面加问号
+
+
+
+### 类
+
+- 非方法成员必须声明
+
+- 指定一些形参作为实例的属性  
+  - 使用方法：在类的构造函数的形参前加`public`（普通的构造函数不能用`public`）
+  - 效果：可以让加了`public`的形参作为实例的属性
+
+
 
 ### 模块化
 
@@ -380,11 +492,108 @@ const bird3: BirdInterface = bird1;
 
 
 
-### 引用js文件
+### JSDoc
+
+- 可以从jsdoc中获得悬停提示（jsdoc写在js、ts中都可以）
+
+- ts文件可以从js文件的jsdoc中获得类型  
+  [能给ts提供类型的jsdoc的语法清单](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html)
+
+  - jsdoc定义类型的优先级高于js定义的
+  - 无法从ts文件的jsdoc中获得类型  
+    虽然[文档](https://www.typescriptlang.org/docs/handbook/intro-to-js-ts.html#ts-check)中说可以，并给出了一个demo，但是实际上是不行的  
+    测试环境：webpack4、ts-loader^8.3.0、typescript^4.5.4
+  - 获得的类型不能用作类型注解
+
+- [用jsDoc生成.d.ts](https://www.typescriptlang.org/docs/handbook/declaration-files/dts-from-js.html)
+
+  - 用👆列出的命令可以  
+    （具体命令为：`npx -p typescript tsc 入口的ts或js文件 --declaration --allowJs --emitDeclarationOnly --outDir 输出到的目录`）
+
+    - 可以包含ts文件
+
+  - 配合webpack4使用的话没效果
+
+    - 没ts文件的话不会生成.d.ts
+    - 有ts文件的话ts文件会生成.d.ts  
+      但是命令会报错：`Error: TypeScript emitted no output for D:\work\project\地图库\code\hrtmap_内网gitlab\src\index.ts`
+
+  - [这个可能是介绍生成规则的文档](https://www.typescriptlang.org/docs/handbook/type-checking-javascript-files.html#in-jsdoc-references)
+
+  - 对于ts文件中和js语法一致的部分，规则也和js一致
+
+  - 有的时候居然不加jsdoc生成的更好  
+    下面是2个例子
+
+    - 加了会变成any类型  
+
+      ```js
+      /**
+       * @constant 
+       * @type {Object}
+       * @property {Object} Mapbox1
+       * @property {null} Mapbox1.Mapbox_vector_streetLight `serviceCode`
+       * @property {null} Mapbox1.tianditu_raster_streetLight `serviceCode`
+       */
+      const BASIC_IMG_SERVICE_CODE_DICT={
+        Mapbox1: {
+          Mapbox_vector_streetLight:null,
+          tianditu_raster_streetLight:null,
+        },
+      }
+      export default BASIC_IMG_SERVICE_CODE_DICT
+      ```
+
+    - 后代由函数生成  
+
+      ```js
+      import getMapClass from './getMapClass/getMapClass.js'
+      import BASIC_IMG_SERVICE_CODE_DICT from './const/BASIC_IMG_SERVICE_CODE_DICT'
+      /** 
+       * 获得api的入口
+       * @function getEntrance 
+       * @param {Object} 配置对象
+       * @param {String} [配置对象.basicMapTechCode='Mapbox1'] 基础地图技术
+       * @returns {{
+       *   Map:Map,
+       * }}
+       * */
+      export default function getEntrance({
+        basicMapTechCode = 'Mapbox1',
+      } = {}) {
+        if (basicMapTechCode in BASIC_IMG_SERVICE_CODE_DICT) {
+          return {
+            Map: getMapClass(basicMapTechCode),
+          }
+        }
+      }
+      ```
+
+      JSDoc中有声明Map  
+      没声明getMapClass（感觉声明getMapClass也没用的，毕竟这里直接指向的就是Map）
+
+  - 如果是ts文件的话，生成的类型似乎和jsdoc无关
+
+  - 注意
+
+    - 基于js生成的.d.ts没那么智能  
+      - 只会获得类型（理所当然没什么毛病）
+      - 对于获得类型的部分会要求是必填
+      - 比如变量的.d.ts是依据声明时赋的值来的  
+        - 若声明时未赋值，那将会是any类型
+    - 要注意入口是否是any类型
 
 
 
-##### 使用自己编写的js文件
+
+
+### 引用与给别人引用
+
+- js文件可以引用ts文件（测试背景：vue-cli建的hrt大屏）
+
+
+
+##### 引用自己编写的js文件
 
 这里记录一个实战中的例子
 
@@ -398,31 +607,76 @@ const bird3: BirdInterface = bird1;
 
 
 
-##### 使用js库
+##### 引用第三方库
 
-使用js库最好要下载它的.d.ts文件（不然vs会有波浪线）  
-下载地址：在[这个网站](https://www.typescriptlang.org/dt/search?search=)里可以搜出来  
 
-- 使用构建工具  
-  下载完.d.ts就可以用了，编辑器和编译过程就都有提示了
+
+工程化引入
+
+- 大部分库需要单独下载.d.ts  
+  - 可以在[这个网站](https://www.typescriptlang.org/dt/search?search=)里搜索下载地址  
+  - 不下的话vscode会有波浪线
+- 少量库会自己携带.d.ts  
+  比如[Editor.js](https://github.com/codex-team/editor.js)和[L7](https://gitee.com/antv/L7)（都是纯ts编写的项目，node_modules里都是js+.d.ts，都是找不到.ts文件的）
+
+- 下载完.d.ts就可以用了  
+  编辑器和编译过程就都有提示了
 
   - npm下载的.d.ts文件也是有“全局作用域”的（起码"@types/jquery": "^1.10.36"是这样）  
     具体来说就是.d.ts里的接口或type在项目代码里也可以用（只测过接口的）
+    
+  - vscode类型提示  
+  
+    | 文件类型 | 引用js包 | 引用带.d.ts的包        |
+    | -------- | -------- | ---------------------- |
+    | js       | 都没     | 有悬停说明、没类型校验 |
+    | ts       | 都没     | 有悬停说明、有类型校验 |
 
-- 用静态文件的js库  
-  看下面2句话感觉好像也可以
 
-  - > or if you’re not using modules, you can just use the global variable `_` if you have a `tsconfig.json` around. —— [博客](https://devblogs.microsoft.com/typescript/the-future-of-declaration-files-2/)
 
-  - > **Triple-Slash Directives**
-    >
-    > Download a declaration file from [the repository](https://github.com/DefinitelyTyped/DefinitelyTyped) and include a line like this:
-    >
-    > ```
-    > /// <reference path="jquery/jquery.d.ts" />
-    > ```
-    >
-    > —— [某个网站](http://definitelytyped.org/)
+引用静态文件
+
+- > or if you’re not using modules, you can just use the global variable `_` if you have a `tsconfig.json` around. —— [博客](https://devblogs.microsoft.com/typescript/the-future-of-declaration-files-2/)
+
+- > **Triple-Slash Directives**
+  >
+  > Download a declaration file from [the repository](https://github.com/DefinitelyTyped/DefinitelyTyped) and include a line like this:
+  >
+  > ```
+  > /// <reference path="jquery/jquery.d.ts" />
+  > ```
+  >
+  > —— [某个网站](http://definitelytyped.org/)
+
+
+
+##### 给别人引用
+
+- [指定`.d.ts`的入口](https://www.typescriptlang.org/docs/handbook/declaration-files/dts-from-js.html#editing-the-packagejson)  
+  翻译过来就是有如下确认步骤
+  1. 查看package.json是否有types属性  
+     有的话就以此为入口
+     - 若写的是一个.d.ts的地址  
+       那就会用这个.d.ts
+     - 若写的是一个js文件的地址  
+       比如写的是“./dist/main.js”那就会以“./dist/main.d.ts”作为入口
+  2. package.json没有types属性的话会查找main属性  
+     若main值为“./dist/main.js”那就会以“./dist/main.d.ts”作为入口
+  3. main属性也没有的话  
+     会以`index.d.ts`作为入口
+
+
+
+非重点提醒
+
+- 如果要改package.json查看入口有没变更的话  
+  需要重启vscode才能生效（vscode1.63.2 win10）
+
+
+
+
+
+
 
 
 
@@ -437,7 +691,7 @@ const bird3: BirdInterface = bird1;
 
 
 
-依据目前的了解，我认为.d.ts的作用就是让js拥有ts的功能  
+依据目前的了解，我认为.d.ts的作用就是给js加上类型  
 
 要在.d.ts里把js文件导出的内容都声明好后，才能导入ts
 
@@ -496,15 +750,16 @@ const bird3: BirdInterface = bird1;
 
 - 猜测的作用：脱离主体程序来增加类型  
   比如说[官方在线运行环境](https://www.typescriptlang.org/play)里可以把ts拆成js和d.ts  
+  
 - vue3中`declare`大部分放在d.ts里，小部分放在ts里
 
+- > 在 “.d.ts” 的每一个段落中，除了最外层为 interface 外，其他的都需要 declare 关键词 —— [一篇教学.d.ts的博客](https://www.jianshu.com/p/2100cc9bccf8)
+
+操作
+
+- 声明全局变量（目前说的是就是全局变量，而不是挂在window、process下的属性）
+  - 非对象  
+    `declare const或let LIB_CONTAIN_TYPE: string`
 
 
-
-
-### 指定一些形参作为实例的属性
-
-使用方法：在类的构造函数的形参前加`public`（普通的构造函数不能用`public`）
-
-效果：可以让加了`public`的形参作为实例的属性
 

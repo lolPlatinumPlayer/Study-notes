@@ -5,8 +5,10 @@
 # 未整理内容
 
 - 似乎样式会强制加上scope
+
 - 自定义组件在小程序里都会变成web component  
   已验证了全局组件
+  
 - 并且无法改变组件内样式
   - 组件根元素也和web不一样  
     - web是组件内根元素就是组件标签代表的元素
@@ -14,11 +16,19 @@
       第一层：组件标签代表的元素  
       第二层：`#shadow-root`  
       第三层：组件内根元素
+  
 - [请求代理](https://blog.csdn.net/zhoumengshun/article/details/108779325)  
   manifest.json源码里的`h5.devServer.proxy`配置就是  
   （似乎和vue-cli4是一致的）
 
 - url的query中可以携带中文
+
+- [原理与优化建议](https://uniapp.dcloud.io/performance)
+
+  - > 逻辑层不依赖webview，没有兼容问题（可在Android4.4上运行es6）
+
+- 网页端有window、navigator等内容  
+  其他端没有
 
 
 

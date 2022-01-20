@@ -210,8 +210,9 @@ cordova build
   - 解决办法  
     `cordova platform rm android`后`cordova platform add android`
   - 出现原因  
-    有次移动目录后出现了  
-    有次可能是改到配置文件所以出现了
+    - 有次移动目录后出现了  
+    - 有次可能是改到配置文件所以出现了
+    - 有次改了生成的app的文件名和配置文件的id和name就出现了
 
 
 
