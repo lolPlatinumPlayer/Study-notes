@@ -1,3 +1,5 @@
+
+
 # 待研究
 
 - created里执行的函数的this是undefined
@@ -10,6 +12,10 @@
 - 实例中的`$options`等成员
 - 测试不加mixin钩子是不是还是数组
 - [动态组件 & 异步组件](https://cn.vuejs.org/v2/guide/components-dynamic-async.html)
+- 不足
+  - 模板里报错难以调试
+- 组件教程更新未看内容  
+  [这](https://cn.vuejs.org/v2/guide/components-edge-cases.html#%E7%A8%8B%E5%BA%8F%E5%8C%96%E7%9A%84%E4%BA%8B%E4%BB%B6%E4%BE%A6%E5%90%AC%E5%99%A8)及之后
 
 
 
@@ -48,58 +54,30 @@
 
 
 
-# 未归类
-
-### [keep-alive](https://cn.vuejs.org/v2/api/#keep-alive)
-
-用来缓存的
-
-特性
-
-- keep-alive直接对组件的显隐效果感觉和v-show一样
-
-  - 显隐后data不会丢失
-  - 显隐组件中有echarts容器，图表不会丢失
-
-- 如果显隐dom，dom后代上有组件  
-  那显隐后会丢失组件里的echarts画面
-
-- keep-alive有时会导致后代的非组件内容丢失  
-  例子：slot上加v-if
-
-- keep-alive中的组件用v-if===false后在devtools里有特别的显示方式  
-  会变成半透明，且背后带个“inactive”标签
-  
-- keep-alive中对于同一个组件  
-  一个时间里只会显示1个，加key也不好使
-  
-- 可以写规则筛选哪些组件缓存哪些不缓存  
-  规则可以用数组（字符串形式也可以）或正则来写
-  
-- 从[博客A](https://blog.csdn.net/fu983531588/article/details/90321827)看来  
-  （以下内容并未实践）
-  - keep-alive中的组件比其他组件多一些生命周期钩子  
-    比如[activated](https://cn.vuejs.org/v2/api/#activated)和[deactivated](https://cn.vuejs.org/v2/api/#deactivated)
-  - 可以配合vue-router使用
-  
-
-和v-show区别
-
-- v-show不能配合`is`使用
-- v-show没有显隐的生命周期
-
 
 
 ### 替换模板标签
 
 `is`属性  
-例子：`<原标签名 is="替换后标签名"></原标签名>`
+例子：`<原标签名 is="is的值"></原标签名>`
 
 - 可以让标签的位置超出HTML的限制  
   （[vue官网](https://cn.vuejs.org/v2/guide/components.html#%E8%A7%A3%E6%9E%90-DOM-%E6%A8%A1%E6%9D%BF%E6%97%B6%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9)举了一个例子）
+  
 - 支持`v-bind`动态更改  
   （[动态组件](https://cn.vuejs.org/v2/guide/components.html#%E5%8A%A8%E6%80%81%E7%BB%84%E4%BB%B6)大家都是用[component标签](https://cn.vuejs.org/v2/api/#component)，不过实际上不用也可以）
-- 这里说的标签名可以是html的标签名，也可以是vue的组件名
+  
+- 原标签名合法值  
+
+  - html的标签名
+  - vue的组件名
+
+- is的值的合法值
+
+  > - 已注册组件的名字
+  > - 一个组件的选项对象
+  >
+  > —— [《动态组件》](https://cn.vuejs.org/v2/guide/components.html#%E5%8A%A8%E6%80%81%E7%BB%84%E4%BB%B6)
 
 
 
@@ -114,7 +92,8 @@
 **术语**
 
 - 编译器  
-  将模板字符串编译成为js渲染函数的代码
+  将字符串的template选项编译成为js渲染函数的代码  
+  （因此只要template选项用字符串就需要编译器，也就是完整版的vue）
   
 - 选项  
   组件配置对象的第一级属性
@@ -160,7 +139,7 @@
 ##### 使用完整版的方法
 
 将webpack`配置对象.resolve.alias`的`vue$`属性设为`'vue/dist/vue.esm.js'`  
-调整配置对象的方法在《vue-cli 学习笔记》里有记录
+调整配置对象的方法在《vue-cli 学习笔记》里搜索“调整webpack配置”查看
 
 
 
@@ -394,11 +373,21 @@ directives: {
 
 # 数据驱动视图
 
+- 强制更新视图  
+  [`vm.$forceUpdate`](https://cn.vuejs.org/v2/api/#vm-forceUpdate)  
+  改data不触发更新时可以手动更新一下（只要有更新，不管是不是强制更新，都是按照data来的）
+- 更新的最小单位应该是组件  
+  因为有过一个经历：一个响应式data数据更新视图后，非响应式data也会更新到视图上
+
+
+
 
 ### “Mustache” 语法
-双大括号，如“<span v-once>This will never change: {{ msg }}</span>”
-可包含单个JS表达式，如“{{ message.split('').reverse().join('') }}”
+双大括号，如“<span v-once>This will never change: {{ msg }}</span>”  
+可包含单个JS表达式，如“{{ message.split('').reverse().join('') }}”  
 当中语法与JS一致，可包含限定作用域内变量，限定作用域为：用new Vue(){}新建对象中data的属性值。可用逗号“,”隔开多个内容。
+
+> 会将数据解释为普通文本，而非 HTML 代码 —— [官网](https://cn.vuejs.org/v2/guide/syntax.html#%E6%96%87%E6%9C%AC)
 
 - 有些内容不会被渲染  
   已知的如下：
@@ -419,14 +408,39 @@ v-html中似乎不能对变量进行运算
 
 
 ### v-model
+##### 自然输入控件
+
 input、textarea等自然输入控件中属性加上v-model="xxx"，可实现input中输入数据与Vue对象data属性中的xxx属性的双向绑定，即输入数据===xxx属性，显示也同步。该点在单多选下拉input中同样适用。
-多选按钮：在xxx声明为数组时可以获取选中框的value（使用vue的标签中应用v-bind），声明为空时将以true、false反映选中状态。
-单选按钮：只要有声明xxx，xxx值都为选中按钮的value。（相同v-model的单选按钮会自动绑定到一起）
-select下拉列表：只要有声明xxx，xxx值都为选中选项option中的内容。
-勾选框：true或false。绑定数值方法：v-bind:true-value="'a'"
-（因为v-model是双向数据绑定，所以用v-for循环出来的内容直接写循环中的某一项就行，不用再从循环依赖的数据里一层一层点出来）
+
+- 多选按钮  
+  在xxx声明为数组时可以获取选中框的value（使用vue的标签中应用v-bind），声明为空时将以true、false反映选中状态。
+- 单选按钮  
+  只要有声明xxx，xxx值都为选中按钮的value。（相同v-model的单选按钮会自动绑定到一起）
+- select下拉列表  
+  只要有声明xxx，xxx值都为选中选项option中的内容。
+- 勾选框  
+  true或false。绑定数值方法：v-bind:true-value="'a'"
+
+##### v-model的修饰符
+
+添加在v-model.后
+lazy:使v-model不会在输入未完成时就同步
+number:将输入数值变为Number类型（如果原值的转换结果为 NaN 则返回原值，如果输入第一位为数字，那后续也只能输入数字）
+trim:过滤用户输入的首尾空格
+
+
+
+##### 其他
 
 - v-model可以传入v-for循环出来的东西
+  - 小知识点：因为v-model是双向数据绑定，所以用v-for循环出来的内容直接写循环中的某一项就行，不用再从循环依赖的数据里一层一层点出来
+
+- 编写有v-model功能的组件
+  - [初级教程](https://cn.vuejs.org/v2/guide/components.html#%E5%9C%A8%E7%BB%84%E4%BB%B6%E4%B8%8A%E4%BD%BF%E7%94%A8-v-model)
+    - 注意：要设一个叫value的prop<span style='opacity:.5'>（虽然[官网](https://cn.vuejs.org/v2/guide/components.html#%E5%9C%A8%E7%BB%84%E4%BB%B6%E4%B8%8A%E4%BD%BF%E7%94%A8-v-model)有说，但是官网说得很拗口）</span>
+  - 更改prop名与事件名  
+    - [教程](https://cn.vuejs.org/v2/guide/components-custom-events.html?#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E7%9A%84-v-model)
+    - [api文档](https://cn.vuejs.org/v2/api/#model)
 
 坑：
 
@@ -436,12 +450,7 @@ select下拉列表：只要有声明xxx，xxx值都为选中选项option中的�
     要放computed里  
     如果v-model输入非法值的话编译会阻塞报错：`'Assigning to rvalue'`
 
-
-##### v-model的修饰符
-添加在v-model.后
-lazy:使v-model不会在输入未完成时就同步
-number:将输入数值变为Number类型（如果原值的转换结果为 NaN 则返回原值，如果输入第一位为数字，那后续也只能输入数字）
-trim:过滤用户输入的首尾空格
+还有一部分内容记录在了本笔记的“双向数据绑定”部分
 
 
 
@@ -463,6 +472,23 @@ trim:过滤用户输入的首尾空格
 - 对象直接赋值的话不会触发视图更新【】有空再确认下  
   键名应该可以是中文
   
+  - 通过赋值undefined来增加属性不会触发更新  
+    测试于uni-app 2021.09.14 sn项目
+  
+- 响应式
+
+  - 判断是否响应式的方法  
+    目前没找到确定就是响应式的方法  
+    不过有确定不是响应式的方法：把data打印出来，对象或数组上没有`__ob__: Observer`的就不是响应式
+  - 响应式的内容变更后会触发视图更新  
+    （改没有`__ob__: Observer`的对象的属性不会触发视图更新）
+  - 制造非响应式数据的例子  
+    1. 对于一个值为数组长度为1的data
+    2. 使用语句：`vm.数组data[1]=对象`  
+       其实用`vm.数组data[序号]=任意内容`都是不会触发视图更新的  
+       但是`vm.数组data[1]=对象`可以看到对象上没有`__ob__: Observer`
+    3. 该data的第二项将是非响应式的
+
 - 重置data
   
   - 重置指定data  
@@ -520,19 +546,24 @@ trim:过滤用户输入的首尾空格
 getter作用：依赖几个数据生成另一个数据，并赋值给计算属性。
 getter的简写方法：在计算属性中直接写入无参数匿名函数，return一个值。
 在Mustache中写入计算属性，会直接运行getter中的函数。
-使用计算属性会进行缓存，函数只有当其依赖数据（使用的变量）改变时才会重新运行，多次调用只会调用计算结果而不会运行函数。
 
-可以让路由参与运算，并且一开始计算结果就是正确的
+- 使用计算属性会进行缓存，函数只有当其依赖数据（使用的变量）改变时才会重新运行，多次调用只会调用计算结果而不会运行函数。
+
+- 可以让路由参与运算，并且一开始计算结果就是正确的
 
 - 用getter来做相关操作可能会出现问题  
   （可能setter可以）  
   （引导记下这条笔记的例子也有点问题，组件内没把value绑到再下级的组件上）  
-  getter感觉只是保证了值的正确，然而其中的代码似乎不一定每次都执行
-  - 例子  
-    写了个组件，内外用v-model通信  
-    外部一开始传入null，内部输出都是对象  
-    写了个计算属性为输出结果，并在getter中emit、console.log  
-    然而经常是不打印的，而且vue devtools（2.6.10）里数据也不一定及时更新
+  - getter感觉只是保证了值的正确，然而其中的代码似乎不一定每次都执行
+    - 例子A  
+      写了个组件，内外用v-model通信  
+      外部一开始传入null，内部输出都是对象  
+      写了个计算属性为输出结果，并在getter中emit、console.log  
+      然而经常是不打印的，而且vue devtools（2.6.10）里数据也不一定及时更新
+    - 例子B  
+      2021.09.29版的SandVideo  
+      改变videoPlayerOption.sources[0].src并不会让finalVideoPlayerOption执行  
+      不过finalVideoPlayerOption.sources[0].src是会跟着变的
 
 
 ##### 计算属性的setter（set属性）
@@ -566,7 +597,8 @@ watch: {
 }
 ```
 - watcher中的匿名函数为单参数时，被监听变量一旦改变就执行函数内容，单参数代表监听变量变化后的值
-- 匿名函数为双参数时，前一个参数代表变化后的监听变量，后一个代表变化前的。
+- 匿名函数为双参数时，参数1代表变化后的监听变量，参数2代表变化前的  
+  （第一次触发时参数2会是undefined）
 
 - 这种格式的watch无法发现数组、对象的后代内容变化，也无法输出后代内容。  
 
@@ -589,7 +621,10 @@ watch: {
 
 **监听子项**
 
-监听变量处用字符串写法，子项前只能用点，数组的话在点后写序号
+监听变量处用字符串写法，子项前只能用点
+
+- 数组的话在点后写序号  
+  如果数组用中括号形式写会报错`Watcher only accepts simple dot-delimited paths`
 
 - 监听对象属性的话，该属性消失后也会触发回调。  
 
@@ -858,6 +893,14 @@ out-in: 离开过渡完成后开始进入过渡
 
 可以用在`template`标签上
 
+- 这种方法切换模板后dom不一定全部更改  
+  有可能只是更改部分dom的属性
+
+- 用这种方法从a模板到b模板，再切回a模板  
+  并不一定会用原本的dom
+
+
+
 
 ### v-show
 通过css选择显示隐藏
@@ -992,9 +1035,17 @@ methods: {
      脚本语句里的data等不需要加`this.`  
      脚本语句里的`this`值为`null`，而使用`window`是会报错的  
      （不过放箭头函数里可以获取到`this`，而window不行）
+     
    - 写语句时获取事件对象  
      用`$event`  
      面对原生标签时也可以获得原生事件对象
+     
+   - 通过`$refs`去调方法的话括号不能省略  
+     否则模板无法编译  
+   
+     
+   
+   
 
 **[官网的用法列表](https://cn.vuejs.org/v2/api/#v-on)**
 
@@ -1055,11 +1106,24 @@ methods: {
       - 在mounted之前的钩子声明不会报错  
         （完整的钩子列表为：data、beforeCreate、created、beforeMount）
 
-
+- 模板不支持使用`?.`  
+  否则无法通过编译  
+  （为深入了解是不是babel问题，应该不是）
 
 
 
 # 组件
+
+- 让组件在超出html标签嵌套规则的情况下正常使用  
+  在需要组件的地方先写一个符合 标签嵌套规则 的标签，加上is属性，如：  
+
+  ```vue
+  <table>
+      <tbody is="little"></tbody>
+  </table>
+  ```
+
+  这样组件就能在table标签中显示了  
 
 
 
@@ -1068,19 +1132,27 @@ methods: {
 按目前的理解，组件就是“实例的类”的一种形式，注册后就可以直接在模板里使用
 
 - 生成 “类”  
-  [`Vue.extend`](https://cn.vuejs.org/v2/api/#Vue-extend)  
-  其实例的`$mount`方法应该是用来生成dom的，可以传入类似`'#id'`这样的方法来挂在到其他dom下，也可以不传  
-  生成的dom可以手动加入其他dom，具体看[博客](https://www.jianshu.com/p/b931abe383e3)
   
-  - vue的“仅运行时”版本无法使用其实例的`$mount`方法  
-    如果像普通组件一样注册之后在模板里用的话，是没问题的（这句话感觉不对啊，字符串模板还是编译不了。如果是用.vue文件写的字符串模板应该是没问题）
-  - 提醒：
-    - 这个“类”的配置时机和正常类不一样  
-      这个类是`Vue.extend(配置)`时配置（生成类时配置）  
-      而不是实例化时配置
-  - 【】有空测一下new "类"生成的是不是vue组件的实例
-  - `Vue.extend(配置)`生成的实例的name  
-    是`'VueComponent'`
+  - [`Vue.extend`](https://cn.vuejs.org/v2/api/#Vue-extend)方式  
+    其实例的`$mount`方法应该是用来生成dom的，可以传入类似`'#id'`这样的方法来挂在到其他dom下，也可以不传  
+    
+    - 生成的dom可以手动加入其他dom，具体看[博客](https://www.jianshu.com/p/b931abe383e3)
+    
+    - vue的“仅运行时”版本无法使用其实例的`$mount`方法  
+      如果像普通组件一样注册之后在模板里用的话，是没问题的（【】这句话感觉不对啊，字符串模板还是编译不了。如果是用.vue文件写的字符串模板应该是没问题）
+      - 提醒：
+        - 这个“类”的配置时机和正常类不一样  
+          这个类是`Vue.extend(配置)`时配置（生成类时配置）  
+          而不是实例化时配置
+    - “仅运行时”版本应该无法使用（uniapp环境下，模板使用该组件就会报错`You are using the runtime-only build of Vue where the template compiler is not available`）
+    
+    - 【】有空测一下new "类"生成的是不是vue组件的实例
+    
+    - `Vue.extend(配置)`生成的实例的name  
+      是`'VueComponent'`
+    
+  - [写对象字面量的方式](https://cn.vuejs.org/v2/guide/components-registration.html#%E5%B1%80%E9%83%A8%E6%B3%A8%E5%86%8C)  
+    “仅运行时”版本应该无法使用（uniapp里会报错`You are using the runtime-only build of Vue where the template compiler is not available`）
   
 - 生成 实例  
   
@@ -1101,7 +1173,8 @@ methods: {
       }).$children[0]
       ```
   
-      
+    - `$mount`方法  
+      会取代掉指定的dom
   
 - vue 基础组件走完才会生成 总体的Vue实例那个变量  
   不过实例通过this去调，是能调到的（这个不知道是不是因为钩子执行时组件整体已经走完了）
@@ -1139,7 +1212,7 @@ methods: {
 ### 组件注册
 用类的方式使用组件：[这个内容可能有助于“用类的方式使用组件”](https://cn.vuejs.org/v2/guide/typescript.html#%E5%9F%BA%E4%BA%8E%E7%B1%BB%E7%9A%84-Vue-%E7%BB%84%E4%BB%B6)
 
-- 全局注册：要在父实例前注册才有效
+- [全局注册](https://cn.vuejs.org/v2/api/#Vue-component)  
   
   ```js
   Vue.component('my-component', {
@@ -1152,9 +1225,10 @@ methods: {
       就像例子一样
     - 可以传实例  
       测试过用`Vue.extend(配置)`生成的实例
+  - 要在父实例前注册才有效
 - 局部注册  
   也就是直接写一个配置对象  
-  可用 `<div is='components'></div>` 动态更换组件，可用对象动态加载内容，全局注册不能动态加载
+  可用 `<div is='components'></div>` 动态更换组件，可用对象动态加载内容，全局注册不能动态加载？？
   
   ```js
   new Vue({
@@ -1165,9 +1239,9 @@ methods: {
   })
   ```
 
-字符串模版（js中的名称）可用大小驼峰或者kebab-case (短横线隔开式) 命名，在非字符串模板（html中的名称）中用kebab-case都能捕获到。  
-（就算在html中使用模板语法，也只有引号内可以分辨大小写，引号外依旧不分别）  
-（template在实例中也可用，会把捕获到的dom内容替换为template中内容）  
+- 字符串模版（js中的名称）可用大小驼峰或者kebab-case (短横线隔开式) 命名，在非字符串模板（html中的名称）中用kebab-case都能捕获到。？？  
+  （就算在html中使用模板语法，也只有引号内可以分辨大小写，引号外依旧不分别）  
+  （template在实例中也可用，会把捕获到的dom内容替换为template中内容） ？？
 
 - name属性不可以是中文名  
   官方提示是：要符合html标签命名规则，同时又不能是html已有标签名
@@ -1179,18 +1253,6 @@ methods: {
 ### [函数式组件](https://cn.vuejs.org/v2/guide/render-function.html#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6)
 
 [这个文章](https://www.jianshu.com/p/3e22abebc97b)也可以看一看
-
-
-
-
-### 让组件在超出html标签嵌套规则的情况下正常使用
-在需要组件的地方先写一个符合 标签嵌套规则 的标签，加上is属性，如：  
-```
-<table>
-    <tbody is="little"></tbody>
-</table>
-```
-这样组件就能在table标签中显示了  
 
 
 
@@ -1324,7 +1386,8 @@ mounted: function () {
 
 ### 组件的事件
 
-- vue组件上@click不会触发事件，@click.native才行
+- 组件上用`@click`这种写法不会触发原生事件  
+  要用`@click.native`这种写法才行
 
 **js操作**
 
@@ -1356,15 +1419,14 @@ mounted: function () {
 
   
 
-
-
-### 组件通信
-
-##### 组件的入参
+### 组件的入参
 
 有2种方法：`props`选项、其他属性（组件标签上的其他属性）   
-这一部分只介绍`props`选项  
-关于其他属性的介绍在本笔记内搜索“其他属性”进行查看
+
+##### [props](https://cn.vuejs.org/v2/guide/components-props.html)概述
+
+- 值可以是一个import的`.vue`文件  
+  <span style='opacity:.5'>（不过要注意：prop里获取不到components选项传入的东西）</span>
 
 - 把一个对象的所有属性都作为prop传入组件  
   `<组件名 v-bind="承载对象的变量"></组件名>`  
@@ -1374,7 +1436,7 @@ mounted: function () {
       默认不绑定，加上[sync](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)修饰符与对应事件后可以绑定  
       （[《sync教程》](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)有提到这种用法）  
     - 第二级属性  
-      都会默认绑定，且不需要再写其他代码
+      默认绑定
 
 - prop必须存在于props选项，不然无法使用
 
@@ -1385,19 +1447,20 @@ mounted: function () {
 
 - 不能在声明的时候赋值。  
   一次测试中在mounted里是可以获取到的（环境：无人机项目一个后期路由到的页面的子组件，如果一开始就跳到这个路由，结果也还是可以的）  
-  
+
 - 每次父组件变化都会更新子组件的props中的属性，如果想要 继承数据 在继承后不随着 父组件数据 更新，可使用如下方法使用SON_A：  
-  
+
   ```js
   data: function () {
     return { SON_A: this.a }
   }  
   ```
+
   （这种方法修改子组件数据可以规避控制台警告，目前建议使用这种方式）
   让 继承数据 经过处理后再显示有三种方法：
 
 1. 直接在{{}}里写表达式，效果与第二点相同
-  
+
   2. ```js
      computed: {
           counter: function () {
@@ -1405,9 +1468,9 @@ mounted: function () {
           }
       }
      ```
-  
+
   3. 要 继承数据 不随 父组件数据 更新的话只能用如下方法
-  
+
      ```js
      data: function () {
        return { sona: this.myMessage+10 }
@@ -1449,8 +1512,8 @@ mounted: function () {
 > 对象或数组默认值必须由一个函数返回 —— [官网](https://cn.vuejs.org/v2/guide/components-props.html#Prop-%E9%AA%8C%E8%AF%81)
 
 - props的相关函数没有`this`   
-（已在 `validator`中验证）
-  
+  （已在 `validator`中验证）
+
   > prop 会在一个组件实例创建**之前**进行验证，所以实例的 property (如 `data`、`computed` 等) 在 `default` 或 `validator` 函数中是不可用的。 —— [官网](https://cn.vuejs.org/v2/guide/components-props.html#Prop-%E9%AA%8C%E8%AF%81)
 
 - 类型
@@ -1490,13 +1553,34 @@ mounted: function () {
 
 
 
+##### 其他属性
+
+也就是组件标签上既不是prop也不是class、style的属性
+
+- 组件内获得其他属性  
+  [`this.$attrs`](https://cn.vuejs.org/v2/api/#vm-attrs)  
+- 其他属性一样可以在模板中使用  
+  但是需要通过`$attrs.属性名`这种形式调用
+- 响应式  
+  其他属性一样可以是响应式的   
+  这意味着：如果传入的其他属性是动态的，那就可以被watch，值更改后也会更新视图
+- 其他属性默认会渲染在html上  
+  关闭这个特性的方法：把[inheritAttrs](https://cn.vuejs.org/v2/api/#inheritAttrs)选项设为false
+
+
+
+### 组件的其他通信方式
+
+
+
 ##### 双向数据绑定
 
 对于组件来说有v-model和[.sync](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)两种方式
 
 - v-model只能绑定一个传参，而.sync绑定传参的数量没有限制
-- 自己编写v-model时可以利用model选项来在组件内部做重命名  
-  详见[官方文档](https://cn.vuejs.org/v2/guide/components-custom-events.html?#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E7%9A%84-v-model)
+
+- > .sync无法用在v-for中 —— VSCode提示
+
 
 
 
@@ -1517,9 +1601,9 @@ mounted: function () {
 - 不定数量不定层级的标签
 - 文本
 
-特性：
+操作：
 
-- 一个组件可以接收多份模板代码（`slot`）  
+- 一个组件接收多份模板代码（`slot`）  
   这情况官方名称是：[具名插槽](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%85%B7%E5%90%8D%E6%8F%92%E6%A7%BD)  
   写法有4种  
   - `<普通标签 slot="插槽名">xxx</普通标签>`  
@@ -1529,15 +1613,46 @@ mounted: function () {
   - `<template v-slot:插槽名>xxx</template>`  
     2.6.0新增
   - `<template #插槽名>xxx</template>`
+  
+- 通过vue实例访问slot  
+  方法：通过[`$slots`](https://cn.vuejs.org/v2/api/#vm-slots)或[`$scopedSlots`](https://cn.vuejs.org/v2/api/#vm-scopedSlots)  
+  （模板里也可用）
+
+- 动态  
+  - [定义动态的插槽名](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%8A%A8%E6%80%81%E6%8F%92%E6%A7%BD%E5%90%8D)
+  - 可以用for循环生成  
+  - name可以用`:`（`v-bind`）
+  
+- 访问组件内数据  
+  官方名称为：[作用域插槽](https://cn.vuejs.org/v2/guide/components-slots.html#作用域插槽)  
+  
+  - 用法  
+    插槽指令的『值』就是slot标签上的全部属性<span style="opacity:0.5">（官网有时称属性为attribute有时称为prop）</span>  
+    然后可以在插槽内的模板上用『值』<span style="opacity:0.5">（虽然『值』这个叫法感觉不专业，不过官网就是这么叫的）</span>
+  
+  - 简写  
+    官方称为：[解构插槽 Prop](https://cn.vuejs.org/v2/guide/components-slots.html#解构插槽-Prop)  
+    所谓简写，指的就是：『值』可以用结构赋值的写法  
+    比如`v-slot="{prop名:重命名成另一个名字}"`和`v-slot="{prop名=默认值}"`
+
+特性：
+
 - 不能使用v-show  
   [慕课网](https://www.imooc.com/article/details/id/25193)上有人说尤雨溪已经回复过这个问题  
   - 替代方案  
     `keep-alive`加`v-if`
 - slot上的style不会传递下去  
-  class似乎也不会
-- 通过vue实例访问slot  
-  方法：通过[`$slots`](https://cn.vuejs.org/v2/api/#vm-slots)或[`$scopedSlots`](https://cn.vuejs.org/v2/api/#vm-scopedSlots)  
-  （模板里也可用）
+  class应该也不会（class在uniapp上是不会的）
+- 默认值  
+  直接写slot标签中就行  
+  官网的说法叫[后备内容](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%90%8E%E5%A4%87%E5%86%85%E5%AE%B9)
+  - 如果外部写了插槽但是插槽里没东西或者是空串，那也会用默认值  
+    已在uniapp里测试
+    - 会用默认值的例子  
+      `<template v-slot:noMore></template>`  
+      `<template v-slot:noMore>      </template>`
+    - 不会用默认值的例子  
+      `<template v-slot:noMore>{{''}}</template>`
 
 疑似bug：
 
@@ -1607,18 +1722,15 @@ mounted: function () {
 用这种方法向组件外传值是可以发生引用传递的，因引用传递导致组件外数据变化时甚至能用watch监听到（未做详细测试）
 
 
-##### 在子组件上触发methods中的函数（在html子组件上用本地事件触发method中的函数）
-在子组件标签中写好“@click.native="b"”就会在点击后触发b函数
-
-
 
 ##### 依赖注入
 
-祖先组件与后代组件通信的方式
+祖先组件与后代组件通信的方式  
+感觉可以用来做状态管理（没实践过）
 
-- ### [依赖注入](https://cn.vuejs.org/v2/guide/components-edge-cases.html#依赖注入)
+- [依赖注入说明](https://cn.vuejs.org/v2/guide/components-edge-cases.html#依赖注入)
 
-- [api](https://cn.vuejs.org/v2/api/#provide-inject)
+- [api说明](https://cn.vuejs.org/v2/api/#provide-inject)
 
 - 可以注入方法
 
@@ -1639,19 +1751,19 @@ mounted: function () {
 
 
 
-### 其他属性
+### 其他配置
 
-也就是组件标签上既不是prop也不是class、style的属性
+就是官方没有给出的配置（像data、computed、methods都是官方给出的配置）
 
-- 组件内获得其他属性  
-  [`this.$attrs`](https://cn.vuejs.org/v2/api/#vm-attrs)  
-- 其他属性一样可以在模板中使用  
-  但是需要通过`$attrs.属性名`这种形式调用
-- 响应式  
-  其他属性一样可以是响应式的   
-  这意味着：如果传入的其他属性是动态的，那就可以被watch，值更改后也会更新视图
-- 其他属性默认会渲染在html上  
-  关闭这个特性的方法：把[inheritAttrs](https://cn.vuejs.org/v2/api/#inheritAttrs)选项设为false
+（以下内容已在uniapp vue2上测试）
+
+- 获取  
+  通过`vm.$options.配置`访问
+- 在模板里也可用`$options.配置`访问  
+  如果配置是方法的话  
+  模板里执行方法的this是undefined
+- 在method里通过`this.$options.配置`调用方法的话  
+  方法里的this是一个类似method所处vm的对象
 
 
 
@@ -1663,10 +1775,6 @@ mounted: function () {
 - 这个属性不会返回用`组件实例.$on`监听的监听器
 
 
-
-### 组件教程更新未看内容
-
-[这](https://cn.vuejs.org/v2/guide/components-edge-cases.html#%E7%A8%8B%E5%BA%8F%E5%8C%96%E7%9A%84%E4%BA%8B%E4%BB%B6%E4%BE%A6%E5%90%AC%E5%99%A8)及之后
 
 
 
@@ -2054,6 +2162,191 @@ sxy项目做MyTableCol组件时依据观察得来的结论
 
     
 
+# 性能优化
+
+
+
+### [keep-alive](https://cn.vuejs.org/v2/api/#keep-alive)
+
+用来缓存的
+
+特性
+
+- keep-alive直接对组件的显隐效果感觉和v-show一样
+
+  - 显隐后data不会丢失
+  - 显隐组件中有echarts容器，图表不会丢失
+
+- 如果显隐dom，dom后代上有组件  
+  那显隐后会丢失组件里的echarts画面
+
+- keep-alive有时会导致后代的非组件内容丢失  
+  例子：slot上加v-if
+
+- keep-alive中的组件用v-if===false后在devtools里有特别的显示方式  
+  会变成半透明，且背后带个“inactive”标签
+
+- keep-alive中对于同一个组件  
+  一个时间里只会显示1个，加key也不好使
+
+- 可以写规则筛选哪些组件缓存哪些不缓存  
+  规则可以用数组（字符串形式也可以）或正则来写
+
+- 从[博客A](https://blog.csdn.net/fu983531588/article/details/90321827)看来  
+  （以下内容并未实践）
+  - keep-alive中的组件比其他组件多一些生命周期钩子  
+    比如[activated](https://cn.vuejs.org/v2/api/#activated)和[deactivated](https://cn.vuejs.org/v2/api/#deactivated)
+  - 可以配合vue-router使用
+
+和v-show区别
+
+- v-show不能配合`is`使用
+- v-show没有显隐的生命周期
+
+
+
+
+
+### [异步组件](https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6)
+
+vue2的异步组件是一种组织普通组件的方法
+
+使用方法
+
+- 在普通组件设置配置的地方放置一个函数  
+  函数有3种返回配置的方法（SFC最终也是一个配置，因此在配置处放置一个SFC也是可以的）  
+  3种方法如下：
+
+  - `resolve(配置)`  
+    （`resolve`是第一个参数）  
+    比如:
+
+    ```js
+    components: {
+      UiRule: (resolve) => require(["./choice-rule"], resolve),
+    },
+    ```
+
+  - 返回promise
+
+  - [返回对象](https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%A4%84%E7%90%86%E5%8A%A0%E8%BD%BD%E7%8A%B6%E6%80%81)  
+    下面放上官网的demo  
+
+    ```js
+    const AsyncComponent = () => ({
+      // 需要加载的组件 (应该是一个 `Promise` 对象)
+      component: import('./MyComponent.vue'),
+      // 异步组件加载时使用的组件
+      loading: LoadingComponent,
+      // 加载失败时使用的组件
+      error: ErrorComponent,
+      // 展示加载时组件的延时时间。默认值是 200 (毫秒)
+      delay: 200,
+      // 如果提供了超时时间且组件加载也超时了，
+      // 则使用加载失败时使用的组件。默认值是：`Infinity`
+      timeout: 3000
+    })
+    ```
+
+    
+
+特性
+
+- 异步组件没有异步加载的功能  
+
+  > 只在需要的时候才从服务器加载
+
+  官网的这句话说的不是异步组件的特性
+
+- 这个异步只会异步一次（这应该就是官网说的“把结果缓存起来”）  
+  而且是各实例间共享的  
+  也就是说不同时间里用v-if显示了同一个异步组件（不同实例），那这个异步的时间将都是一致的  
+
+  - 测试代码如下  
+
+    ```vue
+    <template>
+      <div id="app">
+        1{{isShow1}} 2{{isShow2}} 3{{isShow3}} 4{{isShow4}}
+        <button @click="isShow1=!isShow1">button</button>
+        <async1 v-if="isShow1" style="color:red" />
+        <async1 v-if="isShow2" style="color:green" />
+        <async1 v-if="isShow3" style="color:blue" />
+        <async1 v-if="isShow4" style="color:orange" />
+      </div>
+    </template>
+    
+    <script>
+    import Vue from 'vue'
+    Vue.component('async1',function (resolve, reject) {
+      console.log('time start')
+      setTimeout(function () {
+        console.log('time end')
+        // 向 `resolve` 回调传递组件定义
+        resolve({
+          template: '<div>I am async!</div>'
+        })
+      },2000)
+    })
+    
+    export default {
+      name: 'App',
+      components: {
+        /* async1: function (resolve, reject) {
+          console.log('time start')
+          setTimeout(function () {
+            console.log('time end')
+            // 向 `resolve` 回调传递组件定义
+            resolve({
+              template: '<div>I am async!</div>'
+            })
+          },2000)
+        }, */
+      },
+      data(){
+        return{
+          isShow1:false,
+          isShow2:false,
+          isShow3:false,
+          isShow4:false,
+        }
+      },
+      watch:{
+        isShow1(isShow1){
+          setTimeout(()=>{
+            this.isShow2=isShow1
+          },1000)
+          setTimeout(()=>{
+            this.isShow3=isShow1
+          },2000)
+          setTimeout(()=>{
+            this.isShow4=isShow1
+          },3000)
+        }
+      }
+    }
+    </script>
+    ```
+
+- 并不会像keep-alive那样缓存data
+
+- reject  
+  那异步组件就不会出现  
+  并且会报一个臃肿的错误
+
+- 同步组件插入后才会在vue devtools里显示
+
+- 异步加载
+
+  - `require(['./my-async-component'], resolve)`  
+    可行  
+    按[官网](https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6)的意思这个语法是来自webpack的
+  - 返回`import('./components/ComA.vue')`  
+    可行  
+    这个语法应该源自[webpack](https://workingforvh.gitbook.io/study-notes/gong-ju-zhi-shi/gou-jian-gong-ju-xue-xi-bi-ji#yi-bu-jia-zai-mo-kuai)
+  - `import ComA from './components/ComA.vue'`  
+    这种写法是不会异步加载的
+
 
 
 # 错误定位
@@ -2089,6 +2382,9 @@ sxy项目做MyTableCol组件时依据观察得来的结论
 
 ### Vue Devtools
 
+- [是否允许项目使用devtools](https://cn.vuejs.org/v2/api/#devtools)  
+  注意：要在生产环境开启的话一定要把`Vue.config.devtools = true`放在第一行（import语句外的第一行）
+
 xml里组件名来源
 
 - 优先找组件的name属性
@@ -2113,9 +2409,16 @@ bug
 
 **按需导入**
 
-官方例子让你配`babel-preset-es2015`实际上这样是不好的  
-（没装`babel-preset-es2015`的话会遇到问题，而`babel-preset-es2015`早就被babel放弃了）  
-跟上潮流把`babel-preset-es2015`改成`@babel/preset-env`才能让一切顺利
+- babel配置  
+  不做babel配置的话会遇到css不生效的问题  
+
+  - [官方例子](https://element.eleme.cn/#/zh-CN/component/quickstart#an-xu-yin-ru)里配的是`babel-preset-es2015`，实际上这样是不好的  
+    （没装`babel-preset-es2015`的话会遇到问题，而`babel-preset-es2015`早就被babel放弃了）  
+
+    - 跟上潮流把`babel-preset-es2015`改成`@babel/preset-env`才能让一切顺利
+
+    - 余榕在`.babelrc`里将presets设为[]，而在`babel.config.js`里写`module.exports = {presets: ['@vue/cli-plugin-babel/preset']}`  
+      这样也是可以的
 
 
 
@@ -2132,6 +2435,7 @@ bug
 - 让下拉框能转换没有显示的选项的方法
   v-for使用拥有所有能转换的数据
   v-show再过滤出需要显示的选项（这里用v-if的话就只能转换有显示的选项的数据）
+  
 - 下拉框不会触发blur事件  
   这点导致在写表单rule时，trigger要写change而不是blur  
   （在令彰4.1日系统的项目上好像是这样，不过自己测了发现并没有这回事(这里说的测试和4.22日不是同一次)）  
@@ -2164,6 +2468,9 @@ bug
   
 - 多选下拉框  
   多选下拉框会在初始化时把v-model绑定值改为数组
+  
+- [在页面滚动时不会跟着滚的问题](https://www.jb51.net/article/162258.htm)  
+  （自己是没遇到过这个问题）
 
 
 ##### 表单
@@ -2193,8 +2500,9 @@ bug
     validator方法形参为：rule、 value、 callback、 source、 options  
     rule中有与validator同级的type、required、message等信息  
     value是要验证的值  
-    callback是验证方法（validate）的回调，不传参代表符合验证条件，有传参则代表不符合验证条件，会触发相关视图效果（传true也是一样的）  
+    callback是验证方法（validate）的回调，不传参或不调用代表符合验证条件，有传参则代表不符合验证条件，会触发相关视图效果（传true也是一样的）  
     callback是单参数的，这个传参是控制台提示信息，会在不符合验证时在控制台进行打印
+    - 没找到获得同级data的方法
   - 触发验证的时机  
     由rules属性的属性的子项的trigger属性控制  
     默认值似乎是change
@@ -2223,7 +2531,7 @@ bug
   
 - 重置表单
   `this.$refs.表单ref值.resetFields()`
-  会尽量把表单绑定data的各属性还原成默认值
+  会尽量把`el-form`组件绑定data的各属性还原成默认值（如果表单里用了其他data，其他data是不会受到影响的）
   
   - 属性值为对象或数组的话无法还原
   - 这里确定默认值的方法  
@@ -2262,6 +2570,13 @@ bug
   template改成其他标签也可以
   el-table-column标签上无法加样式与类名
 
+- 超出隐藏  
+  `:show-overflow-tooltip="true"`可以达到目的  
+  但是目前只成功了单行且不带“...”的  
+  （在各级元素上加样式都进行了尝试，不过多行和带“...”的都没成功过）
+
+
+
 
 
 怀疑有的bug
@@ -2290,9 +2605,9 @@ lin
   - 空串：空白
   - null、undefined、false、数字：提示不出现且控制台阻塞报错
   - 对象：传入对象的表现与给this.$message()传入对象的表现基本一致，其中传空对象也会提示，但没有提示内容
-- 似乎直接引入就可以用  
-  `import {  Message } from 'element-ui'`  
-  起码在vue-cli项目里是这样
+- 直接引入就可以用<span style='opacity:.5'>（起码在vue-cli项目里是这样）</span>  
+  `import { Message } from 'element-ui'`  
+  这样引入后`Message `就等同于第一条的`this.$message`
 
 ##### 上传组件
 
@@ -2353,7 +2668,7 @@ lin
   比如`import qq from 'element-ui/packages/table-column/index.js'` 然后再去用qq这个组件  
   这个可能是因为源码中用了jsx而项目中不支持jsx
 
-可以复制到项目里用，比如el-table-column的  
+可以复制到项目里用，比如el-table-column的（el-table-column有用jsx）  
 el-table的不行，会报一个并不真实的错误，我觉得应该是依赖问题，因为element是用yarn装依赖，而我测试的项目是用npm，npm装好后本身就报了4个高危错误
 
 - 表格  
@@ -2402,7 +2717,12 @@ el-table的不行，会报一个并不真实的错误，我觉得应该是依赖
 - 只有一张时隐藏指示器和箭头
 - 鼠标拖动翻页
 
+文档
 
+- [弹框组件](https://element.eleme.cn/#/zh-CN/component/message-box)  
+  明明可以用`import { MessageBox } from 'element-ui'`  
+  结果demo里全是`this.$alert`还没一点说明  
+  [提示组件](https://element.eleme.cn/#/zh-CN/component/message)也是一个DIO样
 
 
 
@@ -2448,6 +2768,8 @@ el-table的不行，会报一个并不真实的错误，我觉得应该是依赖
       - `div.el-scrollbar__wrap`这个元素上有`margin-bottom: -5px; margin-right: -5px;`  
         这个至少导致了子元素下方5px的消失  
         （右侧5px有没消失没研究）
+  
+- bug：el-image组件会请求2次图片
 
 
 
@@ -2539,7 +2861,7 @@ iview3组件的事件名真的和文档写的医院，都带`on-`
 **[第二版](https://vant-contrib.gitee.io/vant/#/zh-CN/)**
 
 - [导入](https://vant-contrib.gitee.io/vant/#/zh-CN/quickstart)  
-  按👆这里配了babel按需导入的话真的写个`import { Button } from 'vant'`就完事了  
+  按👆这里配了babel<span style="color:red">按需导入</span>的话真的写个`import { Button } from 'vant'`就完事了  
   不需要写`Vue.use(Button)`
 
 - Picker组件的setValues对于树结构的columns也可以正常生效
@@ -2547,7 +2869,7 @@ iview3组件的事件名真的和文档写的医院，都带`on-`
 - popup组件的close、before-leave、leave事件都不好使
 
 - [输入框组件](https://vant-contrib.gitee.io/vant/#/zh-CN/field)在van-cell-group组件中的效果和van-cell一致  
-（[文档](https://vant-contrib.gitee.io/vant/#/zh-CN/field)里只有组合用的demo但并没有说这一点）
+  （[文档](https://vant-contrib.gitee.io/vant/#/zh-CN/field)里只有组合用的demo但并没有说这一点）
   
 - [标签页组件](https://vant-contrib.gitee.io/vant/#/zh-CN/tab)的转场动画有bug  
 

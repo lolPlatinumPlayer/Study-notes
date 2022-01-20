@@ -1,28 +1,21 @@
 
 
-# 未归类
 
-- hrtGitLab会自动删除空文件夹  
-  这个删除操作甚至在git记录里看不到
-  
-- hrtGiltLab无法修改文件或目录的大小写  
-  （无法检测到这个修改）  
-  本地记录里显示的也是更名前的名字
-  
-  - 在真真win10联想笔记本上可以检测到大小写变更
+
+# 基础知识
+
+- 输路径时如果路径中有空格的话  
+  路径要用单引号包起来  
   
 - 升级git  
-
+  
   > - 2.13及之前版本中不存在更新命令
   > - 2.14.2和2.16.1之间的命令是git update
   > - 2.16.1之后是git update-git-for-windows
   >
   > —— [stackoverflow](https://stackoverflow.com/questions/13790592/how-to-upgrade-git-on-windows-to-the-latest-version/48924212#48924212)
 
-# 基础知识
 
-- 输路径时如果路径中有空格的话  
-  路径要用单引号包起来  
 
 ### 英文专有名词
 
@@ -78,7 +71,7 @@
 
 1. 如工作区有文件未提交到版本库且未被添加到暂存区里，则会打印“Untracked files:”  
    并在后面列出文件名（文件名的中文部分会以8进制形式显示）  
-   如果希望中文正确显示的话要先输入一行命令：`git config --global core.quotepath false`（win10下输入这个命令后中文会以乱码方块字显示）
+   如果希望中文正确显示的话要先输入一行命令：`git config --global core.quotepath false`（win10下输入这个命令后git bash中，中文会以乱码方块字显示，用vscode的话即可正常显示）
 2. 如工作区有文件与分支不一致则会打印“Changes not staged for commit”  
    并在后面列出文件名  
    （文件名前会出现说明型前缀）
@@ -146,6 +139,7 @@
     `git pull origin master`里的origin就是仓库名
   
 - `.git/config`里的
+  
   ```
   [remote "origin"]
   	url = ssh://git@192.168.1.220:10022/credit/cmp-big-screen.git
@@ -182,6 +176,9 @@ git config --global user.email "417783514@qq.com"
 ### 连接远程仓库
 
 - 一个远程仓库可以下载到一个电脑的不同路径上
+- 更改连接的远程仓库  
+  `git remote set-url origin 远程仓库地址`  
+  <span style='opacity:.5'>远程仓库地址是指以`.git`结尾的那个地址</span>
 
 
 
@@ -278,6 +275,11 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
   - 提示：↖这个博客里说的“~/.ssh 目录”就是类似`C:\Users\Administrator\.ssh`这样的路径
   - hrtGitlab可以添加多个私钥
   - 提示：公钥是以`ssh-rsa `开头的
+  - 一次成功的经验  
+    按着[这个博客](https://www.cnblogs.com/lz0925/p/10725010.html)做  
+    然后下hrtGitlab成功了  
+    （提示：git bash里输密码时光标都没反应的）  
+    不过每次和远程仓库交互都要输密码
 - hrt gitlab有次下下来用`git branch`命令只能看到master分支  
   不过checkout到其他分支也会有其他分支的代码
 
@@ -302,15 +304,15 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
 
 [这个页面](https://git-scm.com/book/zh/v2)有搭建git服务的说明
 
-有2种方式初始化远程仓库：git --bare ini和git init  
+有2种方式初始化远程仓库：`git --bare ini`和`git init`  
 2种方式在『不把实体文件放远程仓库』的情况下，效果是一致的  
 （不过git init可以通过命令展示出实体文件）
 
-- 用git --bare ini初始化远程仓库
+- 用`git --bare ini`初始化远程仓库
   - [博客A](https://www.cnblogs.com/cosiray/archive/2012/06/01/2530967.html)里似乎说应该用这种方式
   - 这种方式初始化的远程仓库里似乎找不到实体文件
 
-- 用git init初始化远程仓库
+- 用`git init`初始化远程仓库
   - 直接push会失败  
     报错如下
 
@@ -367,11 +369,6 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
 
 
 
-# 更改本地仓库连接的远程仓库
-
-`git remote set-url origin 远程仓库地址`  
-<span style='opacity:.5'>远程仓库地址是指以`.git`结尾的那个地址</span>
-
 
 
 # 分支
@@ -395,9 +392,8 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
 
 ### 把文件提交到分支
 
-（使用下面两个命令前先要确保这个文件存在）
-
-先`add`后`commit`
+方法一：先`add`后`commit`   
+（使用这2个命令前先要确保这个文件存在）？？？
 
 - **`add`**
   `git add readme.txt`
@@ -411,6 +407,12 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
   （测试提交未更改的文件，似乎失败了）  
   （已add文件被更改后还是会允许commit的，当然，add后的变化是不会被commit上去）
 
+方法二：[`git commit -a`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt--a)
+
+- 提交曾经add过的文件  
+  （普通的commit命令面对add后commit的文件，是需要再add一遍的）  
+  （没试过）
+
 
 
 ### 切换分支
@@ -422,7 +424,8 @@ bug：
 
 - `checkout`切换分支时如果分支名的大小写打错的话也会切换成功  
   会切换到大小写错误的那个分支  
-  这时用`git branch`命令查看不到当前所在的分支
+  这时用`git branch`命令查看不到当前所在的分支  
+  （可能是`core.ignorecase`配置的问题）
 
 
 
@@ -452,7 +455,7 @@ git checkout 分支名 // 切换分支
 
 
 
-### 提交分支代码到服务端
+### 提交分支代码到远程仓库
 
 - `git push`  
   应该是整体提交
@@ -570,6 +573,30 @@ bbbb
 
 
 
+### 规则
+
+冲突规则
+
+- 不太聪明
+  - 例子A（[合并](https://github.com/lolPlatinumPlayer/Study-notes/commit/3c91721f1f4ba6357adad9a678888da82f337265)[hrtPC](https://github.com/lolPlatinumPlayer/Study-notes/commit/a38bef5cfcd6848a4fd8b206c388abd0008c33c0)）  
+    2个独立修改中本地的重构了一个区块、远程的在这个区块中的一行背后加了几个字  
+    - 结果冲突显示的却是  
+      本地加了一行代码（不是远程改的那行）  
+      而远程加了重构的那个区块  
+      同时重构的区块是还在的，甚至是不冲突的
+    - 我认为更好的方案：  
+      直接显示远程改的那行冲突（怎么想都应该是这样啊）
+
+合并commit
+
+- 合并commit下显示的内容  
+  就是合并这个操作添加的内容  
+  （比如说合并了一个commit，如果不冲突的话合并的commit下的内容和被合并的commit是完全一致的）
+  - 冲突中完全删除要合并内容的部分  
+    （比如说合并一个commit和当前的commit冲突了，然后要合并commit一点内容都没被选择留下）  
+    那么合并commit里也不会存在要合并内容提交的部分  
+    （像例子A（[合并](https://github.com/lolPlatinumPlayer/Study-notes/commit/3c91721f1f4ba6357adad9a678888da82f337265)[hrtPC](https://github.com/lolPlatinumPlayer/Study-notes/commit/a38bef5cfcd6848a4fd8b206c388abd0008c33c0)）中，[hrtPC](https://github.com/lolPlatinumPlayer/Study-notes/commit/a38bef5cfcd6848a4fd8b206c388abd0008c33c0)对cordova笔记的更改在[合并](https://github.com/lolPlatinumPlayer/Study-notes/commit/3c91721f1f4ba6357adad9a678888da82f337265)里就找不到）
+
 
 
 **当本地库的代码跟远程库有冲突时**
@@ -661,12 +688,12 @@ bbbb
 
 
 
-**查看单项目里的命令历史**
+**查看单项目里的命令历史与对应commit号**
 
-`git reflog`
+[`git reflog`](https://git-scm.com/docs/git-reflog)
 
-- 显示记录的每次命令（上次关机前的命令都会保存。不过有一次（电气符号库项目中）输入这个命令显示了内容中包含了十几条关机前的内容），每条命令前都会有这条命令所在的版本号
-- add、status等命令是不会被记录的
+- 不会显示add、status这种命令
+- 从[这及其下方](https://git-scm.com/docs/git-reflog#Documentation/git-reflog.txt---expirelttimegt)看似乎默认只会显示近期的命令，要给`git reflog`加点东西才会显示更多命令
 
 
 
@@ -679,15 +706,11 @@ bbbb
 
 
 
-# 在不同commit间切换
+# 整体回退
 
 
 
-### 整体回退
-
-
-
-##### 未commit的情况
+### 未commit的情况
 
 [这篇文章](https://www.jb51.net/article/200202.htm)有进行描述
 
@@ -696,13 +719,13 @@ bbbb
 
 
 
-##### 已commit的情况
+### 已commit的情况
 
 [思否文章](https://segmentfault.com/a/1190000020863861)有详细描述
 
 
 
-**用`checkout`**
+##### 查看某个commit
 
 `checkout 版本号`（版本号就是指commit id）  
 会新建一个未命名分支  
@@ -725,28 +748,38 @@ bbbb
 
 
 
-**用`reset --hard`**
+##### 真正的回退
+
+用`reset --hard`
 
 - 退到指定commit  
   `git reset --hard commit的id`
-
-· 回退到上个版本
-`git reset --hard HEAD^`
-
-【】--hard 似乎很有问题？？
-
-如果commit后有做修改，那执行这个命令就会回到这个commit
-HEAD后面`^`的数量代表回退2的`^`数量次方步（廖雪峰中说多少个`^`代表回退多少步），可以用~199这种简写
-
-· 变成未来某个版本
-$ git reset --hard 2b595d5eac
-hard后面是未来版本的版本号的头几位，输入后git会自动检索
-
+-  回退到上个版本
+  `git reset --hard HEAD^`  
+  如果commit后有做修改，那执行这个命令就会回到这个commit  
+  HEAD后面`^`的数量代表回退2的`^`数量次方步（廖雪峰中说多少个`^`代表回退多少步），可以用~199这种简写
+  - 与远程仓库互动  
+    reset --hard只会回退本地仓库
+    - 本地回退后让远程仓库也会退的方法  
+      目前只找到一个：`git push --force`（这命令应该是强推）
+- 变成未来某个版本
+  $ git reset --hard 2b595d5eac
+  hard后面是未来版本的版本号的头几位，输入后git会自动检索
 
 
-### 局部回退
 
-##### 还原某个文件到上一次commit
+##### 撤销掉某个commit
+
+使用[`git revert`](https://blog.csdn.net/yxlshk/article/details/79944535)来达到目的  
+会生成一个新的commit，新commit里不包含要撤销commit的内容
+
+
+
+# 局部回退
+
+### 文件
+
+（也就是还原某个文件到上一次commit）
 
 `git checkout -- 文件名`  
 `--`可以省略  
@@ -755,7 +788,9 @@ hard后面是未来版本的版本号的头几位，输入后git会自动检索
 **文件在已追踪未add状态下可以**  
 未追踪或已add都不行
 
-##### 还原某个文件夹到上一次commit
+### 文件夹
+
+（也就是还原某个文件夹到上一次commit）
 
 用上一段的方法不行，可以用webstorm实现，操作方法如下：
 
@@ -877,10 +912,16 @@ git commit -m 'xxx'
 - 报错`error: invalid path`  
   这是因为git仓库里部分文件用了windows下不可用的文件名  
   - 部分不可用的文件名：aux、com1、com2、com3
+- 检测不到文件名大小写变化  
+  这是git比较坑的一个地方，因为默认设置就是检测不到的  
+  - 查看项目是否大小写<b style="color:red">不</b>敏感  
+    `git config core.ignorecase`
+  - 设置项目是否大小写<b style="color:red">不</b>敏感  
+    `git config core.ignorecase 布尔值`
 
 
 
-# git相关的内容
+# git相关工具
 
 - 不要使用windows自带记事本编辑文件  
   （可能是因为会把编码改为GBK）
@@ -929,10 +970,38 @@ git commit -m 'xxx'
 
 
 
+### github desktop
+
+- 在github上改了仓库名后都可以用desktop推送  
+  甚至.git/config里的`[remote "origin"]`都还是旧的名字
+
+
+
+### gitlab
+
+- hrtGitLab会自动删除空文件夹  
+  这个删除操作甚至在git记录里看不到
+
+  
+
 ### git bash
 
+- 可以使用非git命令
 - 即使窗口关闭过，也能查看之前的命令记录  
   且能查看其他目录下的命令
+- 有的命令会因目录不同而产生变化，有的不会<span style='opacity:.5'>（当然这里说的都是同仓库下的）</span>  
+  比如git status在哪个目录下执行效果都一样  
+  而git add .只会对当前目录及当前目录的后代生效
+
+
+
+
+
+### Sourcetree
+
+- 除了webstorm外，唯一一个可以查看历史commit更改的工具 —— 2021
+- 如果开着Sourcetree去git bash里敲命令  
+  Sourcetree是无法检测到你敲的命令的
 
 
 

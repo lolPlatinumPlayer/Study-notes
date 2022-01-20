@@ -19,7 +19,7 @@
 
 ### 上下文对象
 
-`const ctx =canvas.getContext("2d")`
+`const ctx =canvasDom.getContext("2d")`
 
 所有的实际性内容都要从上下文对象里调用
 

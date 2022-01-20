@@ -172,6 +172,17 @@ console.log('a[3]',a[3]) // undefined
 
   - `数组+''`
   - `数组.toString()`
+  
+- 可通过修改`length`属性来删除尾部元素  
+  例子如下  
+
+  ```js
+  const arr = [11, 22, 33, 44, 55, 66]
+  arr.length = 3
+  console.log(arr)
+  ```
+
+  
 
 # 函数
 
@@ -196,8 +207,7 @@ console.log('a[3]',a[3]) // undefined
 3. 立即执行函数
    立即执行函数不会给window的原型增加方法
     1. `(function(){... }())`
-    2. `(function(){... })()`
-		
+     2. `(function(){... })()`
 ### 高阶函数
 
 - **定义**  
@@ -247,7 +257,7 @@ console.log('a[3]',a[3]) // undefined
    谁调用就是谁  
    比如`a.b()`调用者就是`a`  
    `c=a.b;c()`如果在最外层的话调用者就是`window`  
-<span style='color:red'>要注意有些js方法是挂在`window`下面的，如：`setTimeout`、`setInterval`  </span>  
+   <span style='color:red'>要注意有些js方法是挂在`window`下面的，如：`setTimeout`、`setInterval`  </span>  
    <span style='opacity:.5'>在对象字面量的方法里，setTimeout处写箭头函数，那this就会指向这个对象 </span>  
 1. 使用`new`的构造函数中  
    `this`代表这个构造函数创建的对象，初始值是`{} ` 
@@ -363,7 +373,7 @@ console.log('a[3]',a[3]) // undefined
     
   - chrome控制台中对于可枚举属性与不可枚举属性标有不同颜色  
     ![盗用知乎的图片](https://pic1.zhimg.com/80/v2-5f2c0313978e69c464019904328cf340_720w.png)  
-  深色为可枚举、浅色为不可枚举
+    深色为可枚举、浅色为不可枚举
     
   - js设置不可枚举的意义  
     有的东西希望在字典里存在又不希望在列表里存在，那这些东西就可以设为不可枚举  
@@ -500,7 +510,7 @@ class 类名 {
   - 属性会直接作为this的属性显示（两种方法赋值的属性都一样）  
   - 方法则会加在this的原型链上  
 - 类中非静态的内容都是给实例调用的，而静态的内容都是给类调用的  
-- 类构造函数也可以`return`一个对象，这样的话实例就会是这个对象  
+- 类构造函数也可以`return`一个对象，这样的话实例就会是这个对象（return对象不如直接用函数）
 - 类的方法名可以用表达式，属性名不确定可不可以
 - 类主体中的内容都在严格模式下执行——mdn
 - 类可以匿名可以赋值给变量可以被返回，这三个特性结合着函数使用可以拥有更灵活的操作
@@ -569,7 +579,8 @@ Foo.bar() // hello
   https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes#%E5%AD%97%E6%AE%B5%E5%A3%B0%E6%98%8E
 
   - 井号（#）不能加在方法前面  
-    会导致方法完全不能访问
+    曾经会导致方法完全不能访问  
+    2021.11.19时可以在内部调用
 
 
 ### 类的继承
@@ -681,23 +692,39 @@ class HasSetGet {
 - 移除事件
   `元素.removeEventListener(字符串事件名, 函数名)`
 
-元素可以是`window`、dom和[XMLHttpRequest](https://developer.mozilla.org/zh-cn/DOM/XMLHttpRequest)  
-`window`的话可以省略`window.`
+**特性**
 
-后面还有几个选项
+- 元素可以是`window`、dom和[XMLHttpRequest](https://developer.mozilla.org/zh-cn/DOM/XMLHttpRequest)  
+  `window`的话可以省略`window.`
+- `addEventListener`后面还有几个选项
+- 用同一个函数多次监听一个事件的话  
+  在事件触发时函数只会执行一次  
+  （这个特点在leaflet实现的事件里也是一样的）
+
+
+
+
 
 **增加自定义事件**
 
 <span style='opacity:.5'>这里用代码来说明</span>
 
 ```javascript
-元素.addEventListener("自定义事件名", (事件对象)=>{}); // 增加事件。具体用法看上面
-var event = new CustomEvent("自定义事件名", 事件对象); // 第二个参数可不传
+元素.addEventListener("自定义事件名", (customEvent实例)=>{}); // 增加事件。具体用法看上面
+const event = new CustomEvent("自定义事件名", 配置对象); // 第二个参数可不传
 元素.dispatchEvent(event); // 触发事件
 ```
 
-如果重复给一个事件绑定一个函数，那触发事件的时候这个函数也只会执行一次。  
-（这个特点在leaflet实现的事件里也是一样的）
+- 传递数据  
+  传递的数据只能放在“配置对象”的`detail`属性里
+- 监听事件的回调的参数  
+  是customEvent实例，拥有一个detail属性，里边有传递的数据
+
+- 缺点  
+  - 无法继承事件
+  - 传输数据必须从`detail`属性里取
+
+
 
 **焦点相关**
 
@@ -721,16 +748,21 @@ div上似乎没有聚焦、失焦事件
   但是交互性就不强  
   比如打印dom，是无法通过点击跳转到dom的  
   打印错误对象，里边的连接也是无法点击的
+- 分组打印  
+  [`console.group`](https://developer.mozilla.org/en-US/docs/Web/API/console/group)与[`console.groupEnd`](https://developer.mozilla.org/en-US/docs/Web/API/console/groupEnd)  
+  `group`传入分组名，`groupEnd`无入参  
+  - 可以嵌套
 
 **其他非错误打印**
 
 - `console.warn()`  
   除了版本低于8的IE，其他浏览器都支持  
   和`console.error()`一样可以看到调用栈
-
 - `console.table(arr)`  
   输出表格，未看兼容性  
   子项是对象
+- `console.info`  
+  没发现和`console.log`的区别
 
 **报错**
 
@@ -810,7 +842,7 @@ try{
 - 这个方法可以跳出`forEach`
 - 等于then处理承诺被拒绝的功能
 
-# Date对象
+# [Date对象](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Date)
 
 **api**
 
@@ -877,7 +909,27 @@ let/const属于es6
 1. let/const在声明语句前使用会直接报错“is not defined”，而var会返回undefined，因为var的声明会提升至作用域顶部，而赋值不会提升
 2. var可以重复声明，而let/const会报错“has already been declared”
 3. var不会在在花括号形成独立作用域，而let/const会（这个花括号包括条件语句、循环语句中的花括号以及直接写的花括号）
-4. var声明变量会给window的原型加属性，而let、const不会
+4. 在最外层用var声明变量会给window的原型加属性，而let、const不会  
+
+   - 一个用var不会加到window上的例子  
+
+     ```js
+     function getPromise(pass=true){
+       var b=pass
+       return new Promise((resolve,reject)=>{
+         setTimeout(()=>{
+           if(pass){
+             resolve(new Date())
+           }else{
+             reject(new Date())
+           }
+         },1000)
+       })
+     }
+     var a=getPromise(true)
+     ```
+
+     
 
 let与var仅有以上区别
 
@@ -963,7 +1015,9 @@ a<<b在数学中相当于a=a*2^b，反之类似
 
 
 
-### 可选链接运算符
+### [可选链接运算符](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Optional_chaining)
+
+MDN称为“可选链操作符”
 
 <span style='background:#eef5f4;padding:0 10px'>es2020</span>
 
@@ -996,7 +1050,7 @@ a<<b在数学中相当于a=a*2^b，反之类似
 
 ### `||`与`??`
 
-`||`是判断`==false`，`??`是判断是否为`null`或`undefined`
+`||`是判断`==false`，[`??`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator)是判断是否为`null`或`undefined`
 
 > 佐证材料：[博客A](https://blog.csdn.net/qq_28387069/article/details/78526037)、[博客B](https://blog.csdn.net/weixin_41650390/article/details/113739845?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control)
 
@@ -1071,6 +1125,13 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/type
 
 
 # 语句
+
+
+
+### 普通for循环
+
+- `for(let i=任意值;任意语句;任意语句)`  
+  第一次循环就会判断是否符合条件，不符合条件就不会走循环体里的代码
 
 
 
@@ -1305,12 +1366,15 @@ Object.defineProperties(对象, {
 ### 冻结对象  
 
 `Object.freeze(对象)`  
-冻结后对象不能被修改，不过对象的属性可以  
 
-- `对象.属性=1`这种写法不生效  
-  不过`对象.属性.属性=1`可以生效
+- 冻结后对象不能被修改
+  - `对象.属性=1`将不会生效
+  - `delete 对象.属性`将不会生效
 
-似乎原型链也会被冻结，详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze)
+- 对象的属性可以被修改  
+  （`对象.属性.属性=1`可以生效）
+
+- 似乎原型链也会被冻结，详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze)
 
 
 
@@ -1539,8 +1603,11 @@ a.unshift('a','b','c')
     如果没有元素符合条件，则返回`-1`
   - 查找与输入值全等的元素  
     下面这2个方法在没查找到元素时都是返回`-1`
+    
     - 查找第一个全等的元素的序号  
-      `arr.indexOf(值)`
+      `arr.indexOf(值)`  
+      
+      > 如果不存在，则返回-1 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf)
     - 查找最后一个全等的元素的序号  
       `arr.lastIndexOf(值)`
 
@@ -1564,7 +1631,7 @@ a.unshift('a','b','c')
 只有字符串或数组能调用这个方法
 
 - 数组调用的话  
-  `数组1.concat(数组2,数组3,任意数量的数组,数组n)`
+  `数组1.concat(数组2,数组3,...  数组n)`
   该方法返回一个数组  
   新数组的元素是调用该方法的数组及参数中所有数组的元素  
   元素的顺序与调用该方法中各数组的顺序一致  
@@ -1597,15 +1664,33 @@ a.unshift('a','b','c')
 
 
 
+### indexOf
+
+- 数组  
+  数组的笔记搜索“indexOf”查看
+- [字符串](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/indexOf)
 
 
-# 分割字符串
+
+# 字符串转数组
 
 返回一个数组，这个数组是输入字符串按`separator`分割后组成的
 格式：`字符串.split(separator,howmany)`
       `separator`是用来分割的字符串（结果不会包含`separator`）
       `howmany`指定分割出来的数组长度的最大值
 若 用来分割的字符 在头或者在尾，则头或者尾一侧的子项为空字符串
+
+- 若字符串中没有`separator`  
+  则返回长度为1的数组，子项就是调用split的字符串
+
+
+
+# `toString`
+
+多种数据类型都可以执行这个方法来返回字符串
+
+- **用于数字类型时**  
+  可以传一个参数来进行进制转换，可以把十进制转为指定进制的字符串  
 
 
 
@@ -1655,24 +1740,15 @@ function(key, value) {
 - 对象属性值为`undefined`的属性不会打印
 - 对象属性值为`NaN`的会转为`null`
 
-# `toString`
-
-多种数据类型都可以执行这个方法来返回字符串
-
-- **用于数字类型时**  
-  可以传一个参数来进行进制转换，可以把十进制转为指定进制的字符串  
-
 
 
 
 
 # [js中的正则](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions)
 
-### js的正则api
 
 
-
-##### 表达正则
+### 表达正则
 
 js中的正则表达式就是`RegExp`对象  
 有2种方法创建`RegExp`对象
@@ -1687,9 +1763,7 @@ js中的正则表达式就是`RegExp`对象
 
 
 
-
-
-##### 方法
+### 方法
 
 `test`方法与其他方法的区别
 
@@ -1715,10 +1789,11 @@ js中的正则表达式就是`RegExp`对象
 - 返回匹配内容
   `字符串.match(正则)`
   
+  - 匹配不到返回null
   - `/表达式/`与`/表达式/g`的对比
-    - 不加g只会匹配一次，匹配不到返回null，匹配到则返回一个数组，匹配内容在数组的第一项  
+    - 不加g只会匹配一次，匹配到则返回一个有一个子项的数组，以及一些属性。匹配内容在数组的第一项  
       （好像单行结果数组只有1项，多行的就会有2项）
-    - 加g的话会匹配多次，匹配不到返回null，匹配到则返回数组，没有相关数据
+    - 加g的话会匹配多次，匹配到则返回数组，没有相关数据
       （这里记录的方法中只有replace和match可以用）
   
 - 将字符串部分替换  
@@ -1765,20 +1840,35 @@ js中的正则表达式就是`RegExp`对象
 - 匹配中文  
   php和js的匹配方法不一致，php不能用js的方法的原因是：PHP正则表达式中不支持下列 Perl 转义序列：\L, \l, \N, \P, \p, \U, \u, or \X  
   js不能用php的方法的原因未知  
-  js方法：`\u4e00-\u9fa5`（代码示例：`/[\u4e00-\u9fa5]/.test('dsac上次ds')`）  
-  php方法：`\x80-\xff`  
   
-- 匹配次数  
+  - js方法：`\u4e00-\u9fa5`（代码示例：`/[\u4e00-\u9fa5]/.test('dsac上次ds')`）  
+  - php方法：`\x80-\xff`  
+  
+
+- 数量  
+   `*`匹配重复任意次(可能是0次)，而 `+`则匹配重复1次或更多次  
+   而问号(?)表示零次或一次  
+   {n}	重复n次  
+   {n,}	重复n次或更多次  
+   {n,m}	重复n到m次  
+   —— [微信公众号](https://mp.weixin.qq.com/s/nTXcPdrqW4H-g8baKlWXrw)  
+   除了?以外其他数量都是加载后面的
    
-   > - `*`匹配重复任意次(可能是0次)
-   > - `+`匹配重复1次或更多次
-   >
-   > ——https://mp.weixin.qq.com/s/nTXcPdrqW4H-g8baKlWXrw
+- 与  
+   `/(?=条件A)(?=条件B)(?=条件C)/`  
+   参考[该博客](https://blog.csdn.net/noingw96/article/details/107325072/)
+   
+   - 例子  
+      匹配既不是A也不是B的字符`/(?=[^A])(?=[^B])/` 
    
 - 或  
   `|`  
   [微信公众号](https://mp.weixin.qq.com/s/nTXcPdrqW4H-g8baKlWXrw)里搜索“分枝条件”查看更多内容
   
+- 非（[微信公众号](https://mp.weixin.qq.com/s/nTXcPdrqW4H-g8baKlWXrw)上叫『反义』）  
+  
+  > `[^aeiou]`匹配除了aeiou这几个字母以外的任意字符
+
 - 匹配  
   下面只列出部分匹配
   
@@ -1788,6 +1878,12 @@ js中的正则表达式就是`RegExp`对象
     `\n`  
   - 回车  
     `\r`
+
+
+例子
+
+- 两个单词中可以有任意内容  
+  `单词A.*单词B`
 
 
 # 定时器
@@ -1934,7 +2030,7 @@ Symbol是第七种数据类型
 - **生成Symbol值的方法**  
   - `let 变量=Symbol(描述字符串)`  
     描述字符串是可选的  
-  这种方法创建的symbol不会放入全局的symbol注册表
+    这种方法创建的symbol不会放入全局的symbol注册表
     
   - `Symbol.for(字符串的键)`  
   - 功能
@@ -1954,7 +2050,6 @@ Symbol是第七种数据类型
 - **读取描述**  
   除了转字符串读取外还可以通过调用`description`属性来读取  
   *`description`是ES2019提出来的*
-  
 
 # 模块
 
@@ -2001,8 +2096,8 @@ Symbol是第七种数据类型
 
 - **让html支持es6模块**  
   *已在chrome进行过验证*  
-  script标签加入“ type="module"”就能使用es6的模块了  
-  不过这种方法不能省略.js，而且地址要以./或../开头（../未验证）  
+  script标签加入`type="module"`就能使用es6的模块了  
+  不过这种方法不能省略.js，而且地址要以./或../开头  
   这种标签里的函数，html里的事件（比如onclik属性）访问不到
 - 变量导来导去都是同一份东西  
   不过感觉导出后就都是“模块”了，和原有的东西有一些细微差异  
@@ -2012,6 +2107,10 @@ Symbol是第七种数据类型
 - es6还有一些其他的模块语法  
   详见[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/import)
 - `export`和`import`可以位于模块顶层任何位置（即不能放在块级作用域内）
+- “属于模块”的js会形成作用域  
+  - 举个例子  
+    用传统方式引用js，js里的作用域和全局一致  
+    而用模块的方式引用js，js里未导出内容在外部是不可访问的
 
 可以在[《阮一峰ES6》](https://es6.ruanyifeng.com/#docs/module)上查看更多关于模块的内容
 
@@ -2055,15 +2154,21 @@ Symbol是第七种数据类型
   - `export {Vec2,getLen,LineFn,} from './math'`
   - `export * from './math'`
 
-  上面这2中简写的测试环境：`math.js`里都是用`export`导出的
+  上面这2种简写的测试环境：`math.js`里都是用`export`导出的
 
 
 
 
 ##### `export default`
 
-与node的`module.exports`类似，不过不同的是`export default`可以与`export`共同使用，在引入时还有简写`import a, {b,c as d} from 'only_name'`  
-`export default`本质是输出一个叫default的变量，所以不能使用`export default var a = 1`这种写法，而可以使用`export default 1`这种写法
+与node的`module.exports`类似
+
+- 与`module.exports`的不同点  
+  `export default`可以与`export`共同使用，在引入时还有简写`import a, {b,c as d} from 'only_name'`  
+- `export default`本质  
+  本质是输出一个叫default的变量  
+  所以不能使用`export default var a = 1`这种写法  
+  而可以使用`export default 1`这种写法
 
 
 
@@ -2105,10 +2210,14 @@ Symbol是第七种数据类型
 
   > 如果想在一条`import`语句中，同时输入默认方法和其他接口则可以这样写 —— [《ES6 入门教程》](https://es6.ruanyifeng.com/#docs/module#export-default-%E5%91%BD%E4%BB%A4)
 
-import from的地址可以省略.js，（慕课react实战里说是脚手架的功能）  
+
+
 import在静态解析阶段执行，所以它是一个模块之中最早执行的。  
 由于import是静态执行，所以不能使用 表达式、变量 这种只有在运行时才能得到结果的语法结构。  
 而export可以用export var i = k这种语句  
+
+- 导入内容会占用变量名  
+  如果`import {a} from '某个地址'`后`const a =JSON.parse(JSON.stringify(a))`会导致程序无法运行
 
 
 
@@ -2190,6 +2299,78 @@ setTimeout(() => foo = 'baz', 500);
 
 
 
+# [对象展开运算符](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
+
+（或称扩展运算符）（Object rest spread）
+
+<span style='background:#eef5f4;padding:0 10px'>es7</span>
+
+`...`后的内容可用变量代理
+
+- 使用条件：
+
+  1. cnpm install --save-dev babel-plugin-transform-object-rest-spread
+  2. .babelrc中加"plugins": ["transform-object-rest-spread"]
+
+- 运用于对象 
+
+  - 仅拷贝可枚举的属性
+
+  1. 代码：（序号后不写点东西就变成行内代码了）
+
+     ```javascript
+     let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
+     console.log(x); // 1
+     console.log(y); // 2
+     console.log(z); // { a: 3, b: 4 }
+     ```
+
+  2. 代码：
+
+     ```javascript
+     let n = { x, y, ...z };
+     console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
+     ```
+
+  3. vuex的辅助函数
+
+- 运用于数组
+  ...array可以把数组的各子项变成各参数，console.log、运行函数时传入参数中都可用，array与[...array]相等
+
+    1. 在document.write中，加不加...输出都是用英文逗号隔开
+
+    2. 定义函数传入参数前加上...，如function a(...x)
+       则函数中x代表所有传入参数组成的数组
+       ...x代表所有传入参数，可以再传入其他函数，直接document.write会将参数连着打出，console.log则会在参数间加入空格打出
+
+    3. 函数编写时形参中的运用，可在最后一个参数前加上...
+       意思是把最后几个实参合成一个数组，例子：
+
+       ```javascript
+          function a(first,...aaa){
+            console.log('first',first); // 11
+            console.log('aaa',aaa); // [22,33]
+            console.log('...aaa',...aaa); // 22,33
+          }
+          a(11,22,33)
+       ```
+
+       用这种方法可以跳过前面或者中间的参数，函数普通写法的话必须输入前面的参数才能输入后面的参数
+
+    4. 可以使用三元运算符，如...(x > 0 ? ['a'] : [])
+
+    5. arr1.push(...arr2)意为把arr2每个子项都加到arr1数组后面（前面有push的介绍）
+
+- 运用于字符串
+
+  1. 将字符串转为数组
+     `[...'hello']` // [ "h", "e", "l", "l", "o" ]
+     （更多内容见http://es6.ruanyifeng.com/#docs/array#扩展运算符）
+
+- 可运用于`undefined`
+
+
+
 # 解构赋值
 
 <span style='background:#eef5f4;padding:0 10px'>es6</span>
@@ -2209,6 +2390,12 @@ setTimeout(() => foo = 'baz', 500);
   console.log(rest); // [30, 40, 50]
   ```
   
+- ```js
+  const aa =['1997', 'John Doe', 'US', 'john@doe.com', 'New York']
+  const { 2: country, 4: state } = aa
+  console.log({ country, state }) // {country: 'US', state: 'New York'}
+  ```
+
 - ```javascript
   ({ a, b } = { b: 10, c:111,a: 20 }); //这个语法等号前不能用数组形式
   console.log(a); // 20
@@ -2235,23 +2422,46 @@ setTimeout(() => foo = 'baz', 500);
 
   对象中若有属性值为undefined，就会使用默认值
 
-- 函数（对象式、有默认值）传参
-  ```javascript
-  function move({x = 1, y = 1} = {}) {
+  - 函数（对象式、有默认值）传参
+    ```javascript
+    function move({x = 1, y = 1} = {}) {
       console.log('x:',x);
       console.log('y:',y);
-  }//用这个语法就可以跳出按顺序传参的限制，可以只传想要的参数
-  ```
-  使用时函数参数应为对象形式，如下：  
-  - `move({ y: 8})`  
+    }//用这个语法就可以跳出按顺序传参的限制，可以只传想要的参数
+    ```
+    使用时函数参数应为对象形式，如下：  
+    - `move({ y: 8})`  
+    
+    若无传参，或传参格式不正确，都会使用默认值，会使用默认值的情况如下：  
+    - `move({})`  
+    - `move()`  
+    - `move(11,22)`  
+    - `move(11)`  
+    - `move([11,22])`  
+    - `move([11])`  
+    
+  - 不能解构默认值  
+    下面是一个解构默认值的错误例子  
   
-  若无传参，或传参格式不正确，都会使用默认值，会使用默认值的情况如下：  
-  - `move({})`  
-  - `move()`  
-  - `move(11,22)`  
-  - `move(11)`  
-  - `move([11,22])`  
-  - `move([11])`  
+    ```js
+    const {
+      code={a=-2},
+      color=-1,
+      opacity=1,
+    } = {}
+    ```
+  
+    如果希望解构属性，或者给属性的属性加默认值的话应该这样写  
+  
+    ```js
+    const {
+      code:{a=-2}={},
+      color=-1,
+      opacity=1,
+    } = {}
+    ```
+  
+    
   
 - 解构实参（以下是自己测试的结果，在《ECMAScript6入门-阮一峰》里没找到相关内容）
   `function Fn({x}){函数内容}`
@@ -2272,7 +2482,32 @@ setTimeout(() => foo = 'baz', 500);
   
 - **用新的变量名来接收值**  
   `const{对象中属性名:想要的变量名}=对象`  
-  
+
+# 参数默认值语法
+
+（default parameter）
+
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
+
+```javascript
+function a(p0,p1='p1'){
+    // 按顺序给参数赋予默认值（目前js用原生api给真正的函数参数默认值的话也只能按顺序给）
+}
+```
+
+
+
+# Object.assign
+
+`Object.assign(object1,object2,object3等等)`
+
+<span style='background:#eef5f4;padding:0 10px'>es6</span>
+
+参数要求是对象或数组
+把除第一个参数外的参数的属性添加到第一个参数上,同时返回处理后的第一个参数的值
+遇到同名的属性后面的会覆盖前面的
+要把数组加到对象里的话，数组就会化为属性名为其序号的对象参与到assign中 
+第一个参数写空对象或空数组可以实现浅拷贝
 
 
 
@@ -2315,7 +2550,17 @@ setTimeout(() => foo = 'baz', 500);
     
     - 如果fn里return了一个值  
       那被返回的promise的then的参数就是return值
+    - 新的promise也是能catch的
     
+  - `promise.catch(fn)`也会返回一个promise  
+
+    - 如果进了catch的话要让返回promise失败只能使用throw（throw什么都可以）
+      - 返回promise成功的话  
+        返回promise的then的参数也是catch回调的return值
+      - 返回promise失败的话  
+        返回promise的catch的参数是throw的内容
+    - 没进catch的话那结果和没有catch是一样的
+
   - 【】测测多个then之间是否是同步执行的
 
   
@@ -2332,7 +2577,7 @@ setTimeout(() => foo = 'baz', 500);
       必需。`resolve`就是执行这个函数
     - onRejected
       可选。`reject`就是执行这个函数
-    【】测试加载图片的异步功能能不能用高阶函数代替promise实现
+      【】测试加载图片的异步功能能不能用高阶函数代替promise实现
 
 - catch  
 
@@ -2405,7 +2650,7 @@ setTimeout(() => foo = 'baz', 500);
       console.log(result); // done
       return result;
     }
-
+   
     const aa = drawBuilding() // 倒二行
     console.log(aa); // 倒一行
    ```
@@ -2535,20 +2780,20 @@ setTimeout(() => foo = 'baz', 500);
 
 - 目前未找到捕获跨域错误的方法
 
-### fetch
+### [fetch](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch)
 
 <span style='background:#eef5f4;padding:0 10px'>es6</span>
 
+demo
+
 ```javascript
-    fetch(这里可以放请求、php文件或其他文件,{ // 加第二个参数可以规避在跨域时的报错，但并没有解决跨域获取不到东西的问题
-        method: "GET",
-        mode: "no-cors",
-        //body:xxx
-    }).then((请求返回的内容)=>{
-        return 请求返回的内容.对于这个内容的方法()//这里可选的方法详见https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#Body
-    }).then((上一个then return出来的东西)=>{
-        //一些操作
-    })
+fetch(某个请求地址,{ // 加第二个参数可以规避在跨域时的报错，但并没有解决跨域获取不到东西的问题
+    method: "GET",
+    mode: "no-cors",
+    //body:xxx
+}).then((请求返回的内容)=>{
+    return 请求返回的内容.对于这个内容的方法()//这里可选的方法详见https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#Body
+})
 ```
 - **普通post请求**  
   各参数放进一个对象转为字符串后放进`body`属性  
@@ -2556,25 +2801,50 @@ setTimeout(() => foo = 'baz', 500);
 - **form的post请求**  
   `body`里放`FormData`实例  
   每个参数用实例的`append`方法加
-- get方法不能拥有body属性，传参只能写在请求地址里（这点网上资料都没提到）  
+
+基本介绍
+
+- fetch方法返回一个promise实例
 - fetch据说可以全面替代xhr（js请求除了xhr就是fetch），完整见[mdn](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch)
+
+入参
+
+- 第一个参数  
+  - 可以是字符串  
+    代表请求地址（比如普通接口地址、php文件地址、其他文件地址）
+  - 可以是[`Request`](https://developer.mozilla.org/zh-CN/docs/Web/API/Request)对象  
+    demo见[这里](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AF%B7%E6%B1%82%E5%AF%B9%E8%B1%A1)
+- 第二个参数  
+  一个配置对象
+  - 请求头  
+    `headers`配置项  
+    可以是[`Headers`](https://developer.mozilla.org/zh-CN/docs/Web/API/Headers)也可以是对象字面量（[中文MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/fetch#%E8%AF%AD%E6%B3%95)里说是“包含 [`ByteString`](https://developer.mozilla.org/zh-CN/docs/conflicting/Web/JavaScript/Reference/Global_Objects/String)值的对象字面量”）
+    - 对于[禁改的头部](https://developer.mozilla.org/zh-CN/docs/Glossary/Forbidden_header_name)  
+      不会报错，但也无法修改成功  
+      测试于对象字面量的Referer
+    - 可以传任意的头部（自己写什么头部都可以）
+
+其他特性
+
+- get方法不能拥有body属性，传参只能写在请求地址里（这点网上资料都没提到）  
+- 
 
 ### new request
 
 （未测试不用new request是否能成功）
 
 ```javascript
-    let myImage = document.querySelector('img');
-    var myRequest = new Request('flowers.gif');
-    fetch(myRequest) // 返回一个Promise对象
-        .then((res)=>{
-            console.log('res:',res);
-            return res.blob() // res.text()是一个Promise对象，但是个人测试发现是php echo出来的文本
-        })//return的东西会给下一个then用
-        .then((res)=>{
-            var objectURL = URL.createObjectURL(res);
-            myImage.src = objectURL;
-        })
+let myImage = document.querySelector('img');
+var myRequest = new Request('flowers.gif');
+fetch(myRequest) // 返回一个Promise对象
+    .then((res)=>{
+        console.log('res:',res);
+        return res.blob() // res.text()是一个Promise对象，但是个人测试发现是php echo出来的文本
+    })//return的东西会给下一个then用
+    .then((res)=>{
+        var objectURL = URL.createObjectURL(res);
+        myImage.src = objectURL;
+    })
 ```
 
 
@@ -2629,32 +2899,6 @@ setTimeout(() => foo = 'baz', 500);
 
 
 
-# Object.assign
-
-`Object.assign(object1,object2,object3等等)`
-
-<span style='background:#eef5f4;padding:0 10px'>es6</span>
-
-参数要求是对象或数组
-把除第一个参数外的参数的属性添加到第一个参数上,同时返回处理后的第一个参数的值
-遇到同名的属性后面的会覆盖前面的
-要把数组加到对象里的话，数组就会化为属性名为其序号的对象参与到assign中 
-第一个参数写空对象或空数组可以实现浅拷贝
-
-# 参数默认值语法
-
-（default parameter）
-
-<span style='background:#eef5f4;padding:0 10px'>es6</span>
-
-```javascript
-function a(p0,p1='p1'){
-    // 按顺序给参数赋予默认值（目前js用原生api给真正的函数参数默认值的话也只能按顺序给）
-}
-```
-
-
-
 # Set对象
 
 <span style='background:#eef5f4;padding:0 10px'>es6</span>
@@ -2693,11 +2937,11 @@ function a(p0,p1='p1'){
   在遇到键名相同时只会保留最后一个键值对
 
 - **常用方法**
-
-| `set(键名，键值)` | `get(键名)` | `has(键名)`  | `delete(键名)` | `clear()`                                                    |
-| ----------------- | ----------- | ------------ | -------------- | ------------------------------------------------------------ |
-| 存与改            | 取          | 判断是否存在 | 删单项         | 删全部。<br />clear后依然是一个Map对象<br />可以使用Map对象的方法 |
-
+  
+  | `set(键名，键值)` | `get(键名)` | `has(键名)`  | `delete(键名)` | `clear()`                                                    |
+  | ----------------- | ----------- | ------------ | -------------- | ------------------------------------------------------------ |
+  | 存与改            | 取          | 判断是否存在 | 删单项         | 删全部。<br />clear后依然是一个Map对象<br />可以使用Map对象的方法 |
+  
 - **`forEach`**  
   回调第一个参数是值，第二个是键
 - **查看键的数量**  
@@ -2708,6 +2952,19 @@ function a(p0,p1='p1'){
 - 与`for of`结合使用  
   `for (var arr of map)`  
   arr的第一项是key，第二项是值
+
+
+
+# [`Proxy`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+
+> 用于创建一个对象的代理 —— MDN
+
+- 取值  
+  从代理上取值就等同于从目标对象上取值
+- [`set`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/set)  
+  监听目标对象第一级属性所有的变更
+  - 参数  
+    - `target`：目标对象
 
 
 
@@ -2739,68 +2996,6 @@ function a(p0,p1='p1'){
 子项最大值为255，给子项赋值超过255的话会变成255且不报错
 
 
-
-# [对象展开运算符](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
-
-（或称扩展运算符）（Object rest spread）
-
-<span style='background:#eef5f4;padding:0 10px'>es7</span>
-
-`...`后的内容可用变量代理
-
-- 使用条件：
-  1. cnpm install --save-dev babel-plugin-transform-object-rest-spread
-  2. .babelrc中加"plugins": ["transform-object-rest-spread"]
-  
-- 运用于对象 
-  
-  - 仅拷贝可枚举的属性
-  
-  1. 代码：（序号后不写点东西就变成行内代码了）
-     ```javascript
-     let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
-     console.log(x); // 1
-     console.log(y); // 2
-     console.log(z); // { a: 3, b: 4 }
-     ```
-  2. 代码：
-     ```javascript
-     let n = { x, y, ...z };
-     console.log(n); // { x: 1, y: 2, a: 3, b: 4 }
-     ```
-  3. vuex的辅助函数
-  
-- 运用于数组
-  ...array可以把数组的各子项变成各参数，console.log、运行函数时传入参数中都可用，array与[...array]相等
-    1. 在document.write中，加不加...输出都是用英文逗号隔开
-  
-    2. 定义函数传入参数前加上...，如function a(...x)
-       则函数中x代表所有传入参数组成的数组
-       ...x代表所有传入参数，可以再传入其他函数，直接document.write会将参数连着打出，console.log则会在参数间加入空格打出
-       
-    3. 函数编写时形参中的运用，可在最后一个参数前加上...
-       意思是把最后几个实参合成一个数组，例子：
-       ```javascript
-          function a(first,...aaa){
-            console.log('first',first); // 11
-            console.log('aaa',aaa); // [22,33]
-            console.log('...aaa',...aaa); // 22,33
-          }
-          a(11,22,33)
-       ```
-       
-       用这种方法可以跳过前面或者中间的参数，函数普通写法的话必须输入前面的参数才能输入后面的参数
-       
-    4. 可以使用三元运算符，如...(x > 0 ? ['a'] : [])
-  
-    5. arr1.push(...arr2)意为把arr2每个子项都加到arr1数组后面（前面有push的介绍）
-  
-- 运用于字符串
-    1. 将字符串转为数组
-    `[...'hello']` // [ "h", "e", "l", "l", "o" ]
-（更多内容见http://es6.ruanyifeng.com/#docs/array#扩展运算符）
-    
-- 可运用于`undefined`
 
 # 装饰器
 

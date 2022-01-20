@@ -1,31 +1,36 @@
-目前对mapbox的理解就是：一个致力于拓扑分析的地图，并拥有一些拓扑分析以外的功能
+# 对mapbox的理解
 
-# 初始化
+- 产品定位  
+  一个致力于拓扑分析的地图，并拥有一些拓扑分析以外的功能
+- api理解  
+  几乎所有内容都由一个称为『style』的配置对象控制  
+  各种api就是用来更改style（或其中的一部分）的
+  - 不由style控制的东西  
+    - marker  
+      删除图层只能调用map的方法删除，而删除marker只能通过调用marker的方法删除
+  
 
-- 离线  
 
-  - 示例代码  
 
-    ```js
-    mapboxgl.accessToken = "必须要有"
-    var map = new mapboxgl.Map({
-      container: "map",
-      zoom: 4,
-      center: [117.210215, 39.1],
-      style: {
-        "version": 8,
-        "name": "Mapbox Streets",
-        "sprite": "mapbox://sprites/mapbox/streets-v8",
-        "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
-        "sources": {},
-        "layers": []
-      }
-    })
-    ```
+# 收费
 
-    - 画面出来还算快  
-    - 除了自建图层外，其他内容都是透明的
-    - 控制台会红色报错
+- [一个价格表页面](https://www.mapbox.com/pricing)  
+  基本都有免费额度
+
+  - [使用Mapbox GL JS本身的收费依据](https://docs.mapbox.com/mapbox-gl-js/guides/pricing/?utm_source=mapboxcom&utm_medium=pricing)  
+    Mapbox GL JS v1.xx：实例化`Map`并请求mapbox的地图切片  
+    Mapbox GL JS v2.xx：实例化`Map`
+
+  - Mapbox GL JS似乎可以免除地图服务的收费  
+    依据是[管理Static Tiles API费用](https://docs.mapbox.com/api/maps/static-tiles/#manage-static-tiles-api-costs)中说的“建议过渡到 Mapbox GL JS，它按地图加载而不是API请求计费”
+
+    
+
+
+
+# [服务](https://docs.mapbox.com/api/overview/)
+
+
 
 
 
@@ -42,7 +47,7 @@
 
 **移动镜头**
 
-- **jumpTo**  
+- [`jumpTo`](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#jumpto)  
   瞬间将镜头参数瞬间改成输入值
 - **easeTo**  
   直线缓动成输入值
@@ -66,10 +71,23 @@
 - zoom  
   地图放大的等级  
   （zoom越大，地图也越大）
-- 限制倾斜  
+- 禁止倾斜  
   pitchWithRotate设为false
-- 限制缩放  
+- 禁止缩放  
   scrollZoom设为false
+- 禁止通过鼠标拖拽来倾斜或旋转  
+  dragRotate设为false  
+  （用双指操作还是可以的）
+- 禁止双指缩放和旋转  
+  touchZoomRotate设为false  
+  （可以倾斜）
+- 禁止倾斜  
+  maxPitch设为0
+- 禁止旋转  
+  [`map.touchZoomRotate.disable()`](https://docs.mapbox.com/mapbox-gl-js/api/handlers/#touchzoomrotatehandler#disable)  
+  （没有配置可以单独禁止旋转）
+- 没有设置zoom步长的地方  
+  （解释什么是步长：比如限制zoom只能是整数就要把步长设为1）
 
 
 
@@ -82,6 +100,24 @@
 
 
 
+**判断镜头状态**
+
+- 判断是否正在缩放  
+  [`map.isZooming()`](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#iszooming)
+- 判断是否正在移动  
+  [`map.isMoving()`](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#ismoving)  
+  - mapbox认为缩放、旋转也是移动
+- 判断是否正在旋转  
+  [`map.isRotating()`](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#isrotating)
+- 判断是否在用框选来缩放  
+  [`map.boxZoom.isActive()`](https://docs.mapbox.com/mapbox-gl-js/api/handlers/#boxzoomhandler#isactive)  
+  （未测试）
+- 还有其他方法暂未记录，不过可以看↖页面了解一部分
+
+
+
+
+
 ### 设置地图样式
 
 
@@ -89,22 +125,19 @@
 ##### `options.style`
 
 去[官网](https://www.mapbox.cn/mapbox-gl-js/api/#map)里搜索“options.style”查看  
-可以是一个json或url  
+可以是一个json或一个指向json的url
 
 - json  
   官方内容见[这里](https://docs.mapbox.com/mapbox-gl-js/style-spec/)（注意点点左侧的内容）
 
   - 例子  
-
+    （lat:42,lng: -76,zoom:5.5的一个图片）
+    
     ```js
     const mapStyle = {
       'version': 8,
       'name': 'Dark',
       'sources': {
-        'mapbox': {
-          'type': 'vector',
-          'url': 'mapbox://mapbox.mapbox-streets-v8'
-        },
         'overlay': {
           'type': 'image',
           'url': 'https://docs.mapbox.com/mapbox-gl-js/assets/radar.gif',
@@ -128,10 +161,23 @@
       ]
     }
     ```
-
+    
+    - [`sprite`配置](https://docs.mapbox.com/mapbox-gl-js/style-spec/sprite/)  
+    
+      > 这个url模板将用来加载图标所需的2个sprite文件
+    
+      2个sprite文件指是一个[雪碧图](https://docs.mapbox.com/mapbox-gl-js/style-spec/sprite/#image-file)和一个[携带各图标信息<span style='opacity:.5'>（尺寸坐标缩放）</span>的json](https://docs.mapbox.com/mapbox-gl-js/style-spec/sprite/#index-file)  
+      图层没用雪碧图的话可以不配
+    
+    - [`glyphs`配置](https://docs.mapbox.com/mapbox-gl-js/style-spec/glyphs/)  
+      文字相关的  
+      如果没用到文字图层的话可以不配
+  
 - url
 
-  - 官方预定义的url
+  - 官方预定义的url  
+    <span style='opacity:.5'>（这里只列出一部分）</span>
+    
     - 卫星图  
       mapbox://styles/mapbox/satellite-v9
     - 卫星图+路网  
@@ -139,6 +185,8 @@
     - 普通亮色地图  
       mapbox://styles/mapbox/streets-v11
     - 更多内容见官网
+    
+    官方预定义的url里也都是用（用户可用）的source+layer的方式绘制的
 
 
 
@@ -174,16 +222,63 @@ var map = new mapboxgl.Map({
 
 
 
-**一些mapbox底图的实现方式**
+##### 底图
 
-用[图层](#图层)实现的  
-这些图层的数据源要么是`undefined`要么是同一个`vector`[数据源](#数据源)  
-数据源背后使用的数据：
+- 不使用底图的方法  
 
-- mapbox应该是pbf文件
-- epgis应该是sg文件
+  - 一个可行的方法  
+    把style配置项设为如下值  
 
-目前还没有找到在web中把这些数据转成geojson等可读性数据的方法
+    ```js
+    style:{
+      sources:{},
+      layers:[],
+      version:8,
+    },
+    ```
+
+    （不用底图就不需要`accessToken`了）
+
+- 从`style: 'mapbox://styles/mapbox/streets-v11'`里扒出来的一个不用url的例子（只加了4个图层，所以是不完整的）  
+
+  ```js
+  style:{
+    glyphs: "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+    sprite: "mapbox://sprites/mapbox/streets-v11",
+    layers:[
+      {"id":"landcover","type":"fill","source":"composite","source-layer":"landcover","metadata":{},"maxzoom":7,"paint":{"fill-color":["match",["get","class"],"snow","hsl(0, 0%, 100%)","hsl(75, 62%, 81%)"],"fill-opacity":["interpolate",["exponential",1.5],["zoom"],2,0.3,7,0],"fill-antialias":false}},
+      {"id":"national-park","type":"fill","source":"composite","source-layer":"landuse_overlay","metadata":{},"minzoom":5,"filter":["==",["get","class"],"national_park"],"paint":{"fill-color":"hsl(100, 58%, 76%)","fill-opacity":["interpolate",["linear"],["zoom"],5,0,6,0.5,10,0.5]}},
+      {"id":"road-street","type":"line","source":"composite","source-layer":"road","metadata":{"mapbox:group":"1444855786460.0557"},"minzoom":11,"filter":["all",["match",["get","class"],["street","street_limited","primary_link"],true,false],["match",["get","structure"],["none","ford"],true,false],["==",["geometry-type"],"LineString"]],"layout":{"line-cap":"round","line-join":"round"},"paint":{"line-width":["interpolate",["exponential",1.5],["zoom"],12,0.5,14,2,18,18],"line-color":["match",["get","class"],"street_limited","hsl(35, 14%, 93%)","hsl(0, 0%, 100%)"],"line-opacity":["step",["zoom"],0,14,1]}},
+      {"id":"road-label","type":"symbol","source":"composite","source-layer":"road","metadata":{},"minzoom":10,"filter":["step",["zoom"],["match",["get","class"],["motorway","trunk","primary","secondary","tertiary"],true,false],12,["match",["get","class"],["motorway","trunk","primary","secondary","tertiary","pedestrian","street","street_limited"],true,false],15,["match",["get","class"],"golf",false,true]],"layout":{"text-size":["interpolate",["linear"],["zoom"],10,["match",["get","class"],["motorway","trunk","primary","secondary","tertiary"],10,["motorway_link","trunk_link","primary_link","secondary_link","tertiary_link","pedestrian","street","street_limited"],9,6.5],18,["match",["get","class"],["motorway","trunk","primary","secondary","tertiary"],16,["motorway_link","trunk_link","primary_link","secondary_link","tertiary_link","pedestrian","street","street_limited"],14,13]],"text-max-angle":30,"text-font":["DIN Offc Pro Regular","Arial Unicode MS Regular"],"symbol-placement":"line","text-padding":1,"text-rotation-alignment":"map","text-pitch-alignment":"viewport","text-field":["coalesce",["get","name_en"],["get","name"]],"text-letter-spacing":0.01},"paint":{"text-color":["match",["get","class"],"ferry","hsl(230, 48%, 44%)","hsl(0, 0%, 0%)"],"text-halo-color":["match",["get","class"],["motorway","trunk"],"hsla(0, 0%, 100%, 0.75)","ferry","hsl(196, 80%, 70%)","hsl(0, 0%, 100%)"],"text-halo-width":1,"text-halo-blur":1}},
+    ],
+    sources:{
+      "composite":{
+        "type":"vector",
+        // "url":"mapbox://mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2", // 这个demo里url和tiles可以互相替代
+        tiles: [
+          "https://a.tiles.mapbox.com/v4/mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2/{z}/{x}/{y}.vector.pbf?access_token=pk.eyJ1IjoiZmpocnQiLCJhIjoiY2twNjludGJ4MXdndjJxcHF6OG4xNG8wNSJ9.uQgEAC3O1SEzfGCG4LCtRg",
+          "https://b.tiles.mapbox.com/v4/mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2/{z}/{x}/{y}.vector.pbf?access_token=pk.eyJ1IjoiZmpocnQiLCJhIjoiY2twNjludGJ4MXdndjJxcHF6OG4xNG8wNSJ9.uQgEAC3O1SEzfGCG4LCtRg"
+        ],
+      },
+    },
+    version: 8,
+  },
+  ```
+
+- 语言  
+  默认英语  
+  目前发现了2个更改语言的资料入口：[官网](https://docs.mapbox.com/help/troubleshooting/change-language/)、[官方插件](https://github.com/mapbox/mapbox-gl-language)
+
+- 一些mapbox底图的实现方式  
+  用[图层](#图层)实现的  
+  这些图层的数据源要么是`undefined`要么是同一个`vector`[数据源](#数据源)  
+  数据源背后使用的数据：
+
+  - mapbox应该是pbf文件
+
+  - epgis应该是sg文件
+
+  目前还没有找到在web中把这些数据转成geojson等可读性数据的方法
 
 
 
@@ -192,7 +287,7 @@ var map = new mapboxgl.Map({
 
 有很多内容，这里只写一部分，详细信息查阅[样式规范](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/)及[api文档](https://www.mapbox.cn/mapbox-gl-js/api/#sources)  
 可以用于图层，也可以用于地图  
-有7种类型： vector、raster、 raster-dem、GeoJSON、图片、视频（[样式规范](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/)写了前6种，实际上还有第七种：canvas）  
+有7种类型： vector、raster、 raster-dem、GeoJSON、图片、视频（[样式规范](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/)写了前6种，实际上还有第七种：[canvas](https://docs.mapbox.com/mapbox-gl-js/api/sources/#canvassource)）  
 使用方式有很多种
 
 - 设置与使用数据源  
@@ -201,7 +296,7 @@ var map = new mapboxgl.Map({
 
   - 先设置后使用
 
-    - 设置数据源  
+    - [设置数据源](https://www.mapbox.cn/mapbox-gl-js/api/#map#addsource)  
 
       ```js
       map.addSource(数据源名称, {
@@ -212,8 +307,10 @@ var map = new mapboxgl.Map({
 
       要在map的load事件后使用
 
-    - 使用数据源  
+      - 数据源名称可以是任意值（官网写着是字符串，但是实际上可以是任意值）
 
+    - 使用数据源  
+  
       ```js
       map.addLayer({
         "id": "power-line",
@@ -223,23 +320,90 @@ var map = new mapboxgl.Map({
         "paint": {}
       })
       ```
-
+  
   - 用字面量写  
     （这里就不赘述了）
-
+  
+- [删除数据源](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#removesource)
+  
 - **瓦片**  
 
+  - [使用瓦片的方法](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#tiled-sources)  
+    👆说是3种，其实感觉就是2种：1️⃣使用TileJSON的配置2️⃣写一个TileJSON配置文件的地址  
+  
+    - [TileJSON规范](https://github.com/mapbox/tilejson-spec)（里边会给出具体说每个配置的页面，比如[3.0.0](https://github.com/mapbox/tilejson-spec/tree/master/3.0.0)）
+  
   - raster数据源可以用瓦片  
-    下方是一个`source`属性值示例  
-
-    ```js
-    {
-      type: "raster",
-      url: "aegis://aegis.HillShade",//这个url是sjdt的，换成mapbox应该也一样
-      tileSize: 512
-    }
-    ```
-
+  
+    - 一个`source`属性值示例  
+  
+      ```js
+      {
+        type: "raster",
+        url: "aegis://aegis.HillShade",//这个url是sjdt的，换成mapbox应该也一样
+        tileSize: 512
+      }
+      ```
+  
+    - 天地图的示例（移动端会模糊）   
+  
+      ```js
+        style: {
+          "sources": {
+            "baseImg": {
+              "type": "raster",
+              'tiles': [
+                "http://t0.tianditu.com/vec_w/wmts?tk=" + mapImgServerAccessToken + "&SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=tiles"
+              ],
+              'tileSize': 256,
+            },
+            "baseMark": {
+              "type": "raster",
+              'tiles': [
+                "http://t0.tianditu.com/cva_w/wmts?tk=" + mapImgServerAccessToken + "&SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=w&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=tiles"
+              ],
+              'tileSize': 256,
+            }
+          },
+          "layers": [
+            {
+              "id": "baseImg",
+              "type": "raster",
+              "source": "baseImg",
+              "minzoom": 0,
+              "maxzoom": 17
+            },
+            {
+              "id": "baseMark",
+              "type": "raster",
+              "source": "baseMark",
+              "minzoom": 0,
+              "maxzoom": 17
+            },
+          ],
+          version: 8,
+        },
+        maxZoom: 16.7, // 再大就算请求了天地图，也是返回空白图片
+        pitchWithRotate:false,
+        dragRotate:false,
+        maxPitch:0,
+      ```
+      
+    - 默认情况下在移动端会模糊  
+  
+      - 一个改善的方法  
+        缩小数据源的[`tileSize`](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#raster-tileSize)配置  
+        （缩小后不能增加指定面积的瓦片像素密度，但是可以缩小瓦片，最终缓解模糊问题）
+  
+  - [矢量瓦片](https://docs.mapbox.com/mapbox-gl-js/api/sources/#vectortilesource)  
+    若要进一步学习，最好以『获取“更多类型”的矢量瓦片数据源』为目标（虽然官网有很多矢量瓦片相关的页面，但是很多都看不懂，因此没收集进笔记。可以通过使用mapbox工具定义数据源或使用其他厂家的数据源为入口学习，使用过程中深入各种配置应该就能了解到背后的相关知识）
+  
+    - [mapbox官网](https://docs.mapbox.com/vector-tiles/reference/#open-standard)提到的[矢量瓦片提供商列表](https://github.com/mapbox/awesome-vector-tiles)
+    - [mapbox官网](https://docs.mapbox.com/vector-tiles/reference/#open-standard)提到的[矢量瓦片规范](https://github.com/mapbox/vector-tile-spec)
+    - [矢量瓦片服务](https://docs.mapbox.com/api/maps/vector-tiles/)
+    - mvt文件  
+      估计是mapbox vector tile
+  
   - ？？？  
     目前看到都是出现在`"mapbox-xxxx"`对象中，但是并不知道该对象是什么  
     api文档中并没有出现对瓦片数据源的操作方法  
@@ -267,45 +431,45 @@ var map = new mapboxgl.Map({
     - 比普通geojson多的东西  
       feature可以有`id`属性
     - `feature`的位置写了几何体的话不会报错，但是地图上也不会出现东西  
-  
+
 - **聚类**  
   应该只能用于GeoJSON数据源  
   可以通过数据源的配置项和数据源的方法来控制  
   配置项查阅[样式规范](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#geojson-cluster)、方法查阅api文档
-  
-- mapbox提供的数据源，用户自建图层也可以用  
+
+- 用户自建图层也可以用底图的数据源  
   例子如下：  
-  
+
   ```js
-  mapboxgl.accessToken = token
   window.map = new mapboxgl.Map({
-      container: 'map',
-      center: [119.2861, 26.0709],
-      zoom: 18, 
-      style: 'mapbox://styles/mapbox/satellite-v9', // 只有卫星图 
+    accessToken : "必须要有",
+    container: 'map',
+    center: [119.2861, 26.0709],
+    zoom: 18, 
+    style: 'mapbox://styles/mapbox/satellite-v9', // 只有卫星图 
   }); 
   map.on("load", function (e) {
-      mapLoadComplete()
+    mapLoadComplete()
   })
   
   function mapLoadComplete() {
-      window.satelliteLayer=map.getLayer('satellite')
-      map.setLayoutProperty("satellite", 'visibility', false?'visible':'none') 
-      map.on('click',function(){
-          console.log('click')
-          drawRasterLayer_useMapboxSource(map)
-      })
+    window.satelliteLayer=map.getLayer('satellite')
+    map.setLayoutProperty("satellite", 'visibility', false?'visible':'none') 
+    map.on('click',function(){
+      console.log('click')
+      drawRasterLayer_useMapboxSource(map)
+    })
   }
   
   function drawRasterLayer_useMapboxSource(map){
-      map.addLayer({
-          'id': 'drawRasterLayer_useMapboxSource',
-          'type': 'raster',
-          source: "mapbox", 
-      })
+    map.addLayer({
+      'id': 'drawRasterLayer_useMapboxSource',
+      'type': 'raster',
+      source: "mapbox", 
+    })
   }
   ```
-  
+
   
 
 非重点内容
@@ -313,6 +477,8 @@ var map = new mapboxgl.Map({
 - 找到地图用的所有数据源  
   `map.style.sourceCaches.map(x=>x._source)`  
   <span style='opacity: 0.5'>官网对此并没有描述，暂时也没找到其他方法</span>
+  
+  
 
 
 
@@ -343,11 +509,13 @@ var map = new mapboxgl.Map({
 - api里的回调  
   - 回调的`this`会变成map（只测试了地图事件）
   - 回调的形参  
-    也就是事件对象（代码里通常命名为`e`）
+    也就是事件对象（代码里通常命名为`e`）  
+    不同事件的形参不一样的，比如zoom的就是返回map本身
     - `features`  
       包含鼠标触碰到的所有`feature`  
       这个属性会在回调同步执行完毕后被移除  
-      （[官网](https://www.mapbox.cn/mapbox-gl-js/api/#mapmouseevent)没有提到这个属性，不过在多个例子里使用了）
+      （[官网](https://www.mapbox.cn/mapbox-gl-js/api/#mapmouseevent)没有提到这个属性，不过在多个例子里使用了）  
+      （2022.01.11实验好像没效果）
 
 
 
@@ -356,18 +524,34 @@ var map = new mapboxgl.Map({
 [官网](https://docs.mapbox.com/mapbox-gl-js/api/events/)没有提到图层的事件列表，图层的事件可能和Map是一致的
 
 - [`Map`](https://docs.mapbox.com/mapbox-gl-js/api/map/#map-events)  
+  
+  - [load事件](https://docs.mapbox.com/mapbox-gl-js/api/map/#map.event:load)  
+  
+    > 只会触发一次 —— 官网
+  
   - style.load事件  
-    官网没找到相关信息，不过可以使用  
-    早于load事件触发  
-    为鑫说这是样式加载的事件
+    官方文档没有说明，不过[官方demo](https://docs.mapbox.com/mapbox-gl-js/example/add-3d-model/)有使用  
+    
+    - 早于load事件触发  
+    - 为鑫说这是样式加载的事件
+    
+  - 镜头
+  
+    - move类事件包含zoom类事件
+    - 用jumpTo这种瞬移方法也会触发zoomstart和zoomend
+  
 - [`Marker`](https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker-events)
+
 - [`Popup`](https://docs.mapbox.com/mapbox-gl-js/api/markers/#popup-events)
+
 - [`GeolocationControl`](https://docs.mapbox.com/mapbox-gl-js/api/markers/#geolocatecontrol-events)
 
 
 
 # [图层](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/)
 
+- [必须有一个字符串id](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#id)
+  
 - 无法调整高度（垂直方向的位置）  
   （起码目前没找着调整的方法）
 
@@ -385,7 +569,7 @@ var map = new mapboxgl.Map({
   }
   ```
 
-  
+- [删除图层](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#removelayer)
 
 
 
@@ -422,7 +606,8 @@ mapboxgl.MercatorCoordinate.fromLngLat({
 
 - 模糊  
   - 在拐点过于密集时会出现锯齿  
-    ![mapbox线模糊出现锯齿](https://img.wenhairu.com/images/2021/08/02/9h9Lp.png)
+    ![mapbox线模糊出现锯齿](https://img.wenhairu.com/images/2021/08/02/9h9Lp.png)  
+    不知道调整[a](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#layout-line-line-round-limit)或[b](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#layout-line-line-miter-limit)或[c](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#layout-line-line-join)或[d](https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#layout-line-line-cap)之后能不能解决
 
 
 
@@ -431,6 +616,10 @@ mapboxgl.MercatorCoordinate.fromLngLat({
 - 背景图  
   背景图会依据缩放自适应大小  
   目前还没找到固定背景图的方法
+- 使用不符合规范的数据源  
+  - 多边形的geojson如果首尾不重合的话也可以渲染  
+    但是镜头拉近时可能会少一小块
+- 面对复杂形状时，绘制表现并不好
 
 
 
@@ -451,7 +640,7 @@ mapboxgl.MercatorCoordinate.fromLngLat({
   'text-radial-offset':0.8,//文本要远离中心点多远进行展示（不带图标时还没用过该配置）（不加text-variable-anchor的话是没效果的）
   'text-variable-anchor': ['top', 'bottom', 'left', 'right'], // 允许展示文本的方向
   "text-ignore-placement": false, // 设置为 true 时，其他注记即使碰撞到此文本标注也会显示。
-  'text-field': '{name}', // name处写的是数据源properties的一个属性名，也可以直接写一个字符串或表达式。值可以包含中文却不能包含数字，含数字的话整个图层不会显示并且会红色报错“GET https://api.mapbox.com/fonts/v1/mapbox/arial/0-255.pbf?access_token=pk.eyJ1IjoiaWRvbnRkcml2ZSIsImEiOiJjazAyM3RhbGUwOW1hM21tZXMxYjhpbndnIn0.YyfL9JQcV11Y3Kv-KvTD6Q 404 (Not Found)”，为鑫说是字体原因，可是换了arial也还是不行。不过sjdt是可以包含数字的。官方对这个属性并没有进行什么说明，官方对`'{name}'`这种写法也没有什么说明
+  'text-field': '{name}', // name处写的是数据源properties的一个属性名，也可以直接写一个字符串或表达式。值可以包含中文却不能包含数字，含数字的话整个图层不会显示并且会红色报错“GET https://api.mapbox.com/fonts/v1/mapbox/arial/0-255.pbf?access_token=你mapbox的token 404 (Not Found)”，为鑫说是字体原因，可是换了arial也还是不行。不过sjdt是可以包含数字的。官方对这个属性并没有进行什么说明，官方对`'{name}'`这种写法也没有什么说明
   'text-size': 18, // 可以用表达式，返回结果是数字就行，单位是像素
   'text-anchor': 'center', // 文本锚点位置
   'text-allow-overlap': false, // 设置为 true 时，文本标注即使碰撞到其他绘制的注记也会显示。
@@ -541,12 +730,6 @@ map.addLayer({
   - 加的话  
     在数组中 把第一个图层移动到第二个图层的前面  
     在视图中 把第一个图层移动到第二个图层的后面  
-
-
-
-###  其他
-
-- 多边形图层在面对复杂形状时，绘制表现并不好
 
 
 
@@ -686,36 +869,30 @@ map.addLayer({
 
 # 未归类
 
-- 核心在图层，图层还待详细了解
-
 - 似乎可以在一个页面开启多个mapbox的canvas（开图多次）  
   想法基于[博客](https://www.cnblogs.com/lilei2blog/p/8961564.html)
-  
+
 - `queryRenderedFeatures`  
   查询范围内可见要素，返回它们的一些信息  
   可以查单点也可以查矩形，可以加其他的限定条件  
   对raster图层无效
-  
-- 地图里的画面，画在墨卡托上都是等边梯形
 
-- 可以用json文件配置地图样式
+- 地图里的画面，画在墨卡托上都是等边梯形
 
 - **绑定元素位置方法**  
 
   ```javascript
   var popup = new mapboxgl.Popup({ closeOnClick: false })
-  .setLngLat([-96, 37.8])
-  .setHTML('<h1>Hello World!</h1>')
-  .addTo(map);
+    .setLngLat([-96, 37.8])
+    .setHTML('<h1>Hello World!</h1>')
+    .addTo(map);
   ```
 
 - 倾斜是以穿过画面中心点的水平线为基准进行的  
   就是说这条“基准线”的墨卡托长度不会因为倾斜地图而变化（测试代码得到的结果在小数点后第六位开始有变化，mapbox原生经纬度最后几位也有偏差）
-  
+
 - **显隐图层**  
   `map.setLayoutProperty(图层id, 'visibility', 是否显示?'visible':'none');`
-  
-- 数据源可以用任意值作为id，图层只能用字符串作id
 
 - **编译**  
 
@@ -725,10 +902,10 @@ map.addLayer({
 - 找到所有图层  
   `map.getStyle().layer`  
   （2021.5.17 测试结果是`map.getStyle().layers`）
-  
+
 - 找到所有数据源  
   `map.getStyle().sources`
-  
+
 - 使用栅格图  
   应该是要先`map.addImage`才能使用canvas以外的栅格图
 
@@ -743,15 +920,14 @@ map.addLayer({
 
   `map.addImage`还可以接收其他格式的图像，比如ImageData，[这是一个ImageData的例子](https://docs.mapbox.com/mapbox-gl-js/example/add-image-generated/)
 
-
-
-
-
-
-
-
-
-
+- 去除版权信息  
+  （[官方](https://docs.mapbox.com/help/getting-started/attribution/)有提到大部分情况要保留版权信息）
+  - 右下角文本  
+    把数据源的[`attribution`](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#vector-attribution)配置设为空串  
+    （即使使用url也可以去掉）
+  - 左下角的logo  
+    把数据源的`mapbox_logo`配置设为`false`  
+    （即使使用url也可以去掉）
 
 
 

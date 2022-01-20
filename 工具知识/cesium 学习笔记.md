@@ -81,6 +81,12 @@
 
 
 
+- 似乎没有设置初始镜头的功能
+
+
+
+
+
 ### 代码项目
 
 
@@ -114,11 +120,6 @@
   目前做法的测试结果：多次『退出进入』后一切正常，cpu也不会多用，但内存可能会稍微多占一些
 
 
-
-### `viewer`
-
-- [`viewer.entities`](https://cesium.com/docs/cesiumjs-ref-doc/EntityCollection.html)
-- 似乎没有设置初始镜头的功能
 
 
 
@@ -188,6 +189,27 @@ viewer.scene.skyBox = new Cesium.SkyBox({
   },
 })
 ```
+
+
+
+### Promise
+
+（没找到可靠文档，以下内容都是猜测）
+
+拥有then方法和otherwise方法（otherwise在失败时触发）
+
+- then和otherwise会返回`Promise$1`实例  
+  但是彼此间是不相等的（用`===`判断结果为`false`）
+- `Promise$1`实例应该都是`Cesium.when()`生成的
+- [github源码](https://github.com/CesiumGS/cesium/blob/1.89/Source/DataSources/DataSourceCollection.js)里引用'when.js'的地址不存在  
+  但是在[官网](https://cesium.com/downloads/)上下的源码里`when.js`是存在的  
+  关于这个疑惑，已经在cesium社区里提了[问题](https://community.cesium.com/t/why-code-download-from-website-is-different-to-github/16906)
+
+
+
+资料
+
+- [这个可能过时的官方页面](https://cesium.com/downloads/cesiumjs/releases/b21/Documentation/Promise.html)有提到Promise和when.js的关系
 
 
 
@@ -264,69 +286,42 @@ viewer.scene.skyBox = new Cesium.SkyBox({
 有2种方法加入模型  
 返回的物体是由不同构造函数构造的
 
-- 方法一：加载模型文件
+- 加载czml  
+  具体在本笔记内搜索“CzmlDataSource”查看
 
-  - `viewer.dataSources.add`简易版  
-    
-    ```js
-    var 物体 = Cesium.CzmlDataSource.load(czml)
-    viewer.dataSources.add(物体)
-    ```
-    该方法在[官方例子](https://sandcastle.cesium.com/index.html?src=CZML.html)及二开中使用
-    
-  - `viewer.dataSources.add`详细版  
-    
-    ```js
-    a = Cesium.CzmlDataSource
-      .load("./resources/data/beidouⅢ.czml")
-    b = a.then(function (data) {
-      c = data
-      viewer.dataSources.add(data)
-    })
-    d = b.otherwise(function (data) {
-      console.log(data)
-    })
-    ```
-    天津北斗项目用的是该方法
-    - czml加载成功会调用`then`方法的回调  
-      失败会调用`otherwise`方法的回调
-    - c是`Cesium.CzmlDataSource`实例
-    - a、b、d都是`cz的Promise$1`实例  
-      但是彼此间是不相等的
+- [`Cesium.Model`](https://cesium.com/docs/cesiumjs-ref-doc/Model.html)方法  
 
-  - [`Cesium.Model`](https://cesium.com/docs/cesiumjs-ref-doc/Model.html)方法  
+  ```js
+  // 模型坐标
+  var origin = Cesium.Cartesian3.fromDegrees(经度,纬度,海拔)
+  var modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(origin)
   
-    ```js
-    // 模型坐标
-    var origin = Cesium.Cartesian3.fromDegrees(经度,纬度,海拔)
-    var modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(origin)
+  const model = scene.primitives.add(Cesium.Model.fromGltf({
+    url : 地址,
+    show : true,
+    modelMatrix : modelMatrix,
+    scale : 2000.0, // 模型默认放大比例
+    color: Cesium.Color.ROYALBLUE,
     
-    const model = scene.primitives.add(Cesium.Model.fromGltf({
-      url : /*地址*/,
-      show : true,
-      modelMatrix : modelMatrix,
-      scale : 2000.0, // 模型默认放大比例
-      color: Cesium.Color.ROYALBLUE,
-      
-      /*给模型设置最小的像素值
-      （当模型按scale配置项放大不能满足需求时会自动放大）*/
-      minimumPixelSize : 128,
-      
-      /* 模型放大值的上限
-      （可以管住scale与minimumPixelSize配置项）*/
-      maximumScale: 200,
-      
-    }))
-    model.readyPromise
-      .then(function(model) { // 这个model和外层的model是全等的
-        // 当模型加载完毕时触发回调
-        // 具体时机为：渲染模型的第1帧前
-      })
-    ```
-  
+    /*给模型设置最小的像素值
+    （当模型按scale配置项放大不能满足需求时会自动放大）*/
+    minimumPixelSize : 128,
     
+    /* 模型放大值的上限
+    （可以管住scale与minimumPixelSize配置项）*/
+    maximumScale: 200,
+    
+  }))
+  model.readyPromise
+    .then(function(model) { // 这个model和外层的model是全等的
+      // 当模型加载完毕时触发回调
+      // 具体时机为：渲染模型的第1帧前
+    })
+  ```
+
   
-- 方法二：流形式
+  
+- 流形式加载
 
   ```js
   var 物体=new Cesium.Cesium3DTileset({
@@ -339,18 +334,42 @@ viewer.scene.skyBox = new Cesium.SkyBox({
   viewer.scene.primitives.add(物体) // 这个方法会返回物体（和传进该方法的物体是全等的）
   ```
 
-  
+  - 叠加类型  
+    [`classificationType`选项](https://cesium.com/learn/cesiumjs/ref-doc/Cesium3DTileset.html#classificationType)  
+    - 效果  
+      若产生叠加，那该模型的形状会消失  
+      而被叠加物体的表面会变成该模型的颜色  
+      变色区域为：不叠加时该模型遮挡被叠加物体的区域
+    
+    - [可选值](https://cesium.com/learn/cesiumjs/ref-doc/global.html#ClassificationType)  
+      - undefined不产生叠加
+      - TERRAIN：应该是和地形叠加
+      - CESIUM_3D_TILE：和3dtile叠加
+      - BOTH：应该是同时和地形和3dtile叠加
+
+
 
 ### “物体”
 
-目前属于自己定义的一个概念，包括以下2种添加方法
-
-- `viewer.entities.add`
-- `viewer.scene.primitives.add`
+目前属于自己定义的一个概念
 
 
 
-特性
+**添加方法分类**
+
+有2种添加方法：entity和primitive
+
+entity和primitive对比
+
+- entity简单，primitive复杂
+
+- primitive更底层，性能更好
+
+- > Entity底层调用的仍然是Primitive —— [知乎文章](https://zhuanlan.zhihu.com/p/348807058)
+
+
+
+**特性**
 
 - 双击物体会选中  
   - 取消方法  
@@ -358,28 +377,26 @@ viewer.scene.skyBox = new Cesium.SkyBox({
 
 
 
+**其他**
 
-
-**Entity 和primitive 对比**
-
-- entity简单，primitive复杂
-
-- primitive更底层，性能更好
-
-
-
-
-
-##### 图形
-
-这是cesium里的一个概念
+- 贴地  
+  由`clampToGround`配置和`classificationType`共同影响  
+  - `clampToGround`决定是否贴地  
+    目前只看到[GeoJsonDataSource类](https://cesium.com/learn/cesiumjs/ref-doc/GeoJsonDataSource.html)和[KmlDataSource类](https://cesium.com/learn/cesiumjs/ref-doc/KmlDataSource.html)里有，但是默认值是false  
+    entity和图形里没发现有的，不过默认就是贴地的（已测试多边形）  
+  - [`classificationType`](https://cesium.com/learn/cesiumjs/ref-doc/global.html#ClassificationType)决定贴哪种地  
+    多边形里默认就是都贴
 
 
 
-**示例**
+### [entity](https://cesium.com/learn/cesiumjs/ref-doc/Entity.html)
+
+
+
+**demo**
 
 进行如下操作可以添加一个固定尺寸的圆。  
-点击点时镜头会锁定在该圆，并在圆周围出现锁定图案、展示出描述信息
+点击点时镜头会锁定在该圆，并在圆周围出现锁定图案、展示出描述信息  
 
 ```js
 // 圆
@@ -393,211 +410,234 @@ var pointEntity = viewer.entities.add({
 
 
 
-**目前已知的添加图形方式**
+##### 添加方法
 
-- 第一步：`Entity`通过配置项携带图形
+有2种
 
-- 第二步：把`Entity`传入`viewer.entities.add` 方法
+- 第一种：`viewer.entities.add`
 
+  - 入参：可以是[Entity](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html)实例也可以是[Entity的配置项](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html#.ConstructorOptions)
+    - 配置项
+      - 配置对象的属性都会被添加到实例里<span style='opacity:.5'>（自己写文档里没有的属性也行）</span>  
+        甚至实例里还会有配置对象加下划线版本的属性<span style='opacity:.5'>（比如原属性名是a，加下划线后就是_a）</span>
+  - 返回值：[Entity](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html)实例
 
+- 第二种  
 
-**`viewer.entities.add`**  
-
-- 入参：可以是[Entity](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html)实例也可以是[Entity的配置项](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html#.ConstructorOptions)
-  - 配置项
-    - 配置对象的属性都会被添加到实例里  
-      甚至实例里还会有配置对象加下划线版本的属性（比如原属性名是a，加下划线后就是_a）
-- 返回值：[Entity](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html)实例
-
-
+  > 由 [`CzmlDataSource`](https://cesium.com/learn/cesiumjs/ref-doc/CzmlDataSource.html)、[`GeoJsonDataSource`](https://cesium.com/learn/cesiumjs/ref-doc/GeoJsonDataSource.html)这样的数据源生成 —— [Entity文档](https://cesium.com/learn/cesiumjs/ref-doc/Entity.html)
 
 
 
-**Entity关键配置项**
+##### 操作
 
-- 坐标  
-  `position`  
+- 设置坐标  
+  `position`配置项  
   操作方法去[Entity的配置项](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html#.ConstructorOptions)里找
-- 负责携带图形的配置项  
-  - 可以通过不同配置项同时携带多种图形  
-  - 这些配置项可以传这个图形的实例也可以传这个图形的配置项
+  
+  
+
+##### 图形
+
+图形是cesium里的一个概念  
+像[立方体](https://cesium.com/docs/cesiumjs-ref-doc/BoxGraphics.html#.ConstructorOptions)、[椭球体](https://cesium.com/docs/cesiumjs-ref-doc/EllipsoidGraphics.html#.ConstructorOptions)这种东西就是图形  
+<span style='opacity:.5'>（图形在Entity文档里叫visualization，而对应的类名基本都是以Graphics结尾的）</span>
+
+- 按目前了解，一般图形的载体都是entity  
+  entity有一部分的配置就是图形
+- 图形的配置项<span style='opacity:.5'>（注意是图形的不是entity的）</span>  
+  - `show`用来设置是否显示
+  - `material`用来设置材质
 
 
 
-**操作**
+entity中的图形配置项
 
-- 直接赋值就可以更新视图  
+- 可通过给属性赋值来更新视图  
   已试过`point`  
   point的颜色、大小直接赋值，视图就能更新  
   甚至直接给point赋值一个对象都可以
+- 可以通过不同配置项同时携带多种图形  
+- 这些配置项可以传这个图形的实例也可以传这个图形的配置项
 
 
 
+###### [圆](https://cesium.com/docs/cesiumjs-ref-doc/PointGraphics.html#.ConstructorOptions)  
 
+- 在Entity里对应的配置项是：`point`
+- 这个圆在地面下时并不一定会被地面挡住  
+  镜头要距离地面足够近时才会开始有一部分被挡住
+- 圆图形的配置项  
+  可以设颜色、描边等内容（描边只能是外扩的）  
+  （这里只有1个配置项没记录，就是随镜头距离禁用`depth test`的配置项）
 
-**已学习过的图形如下**
+  - 让尺寸随着『相机与物体间的距离』而变化  
+    配置项：`scaleByDistance`  
+    配置项的值：[`Cesium.NearFarScalar`](https://cesium.com/docs/cesiumjs-ref-doc/NearFarScalar.html)实例（关于该实例更多内容可在本笔记内查看）  
 
-图形的`show`配置项都是用来设置是否显示的，`material`配置项都是用来设置材质的。  
-下面就不重复说明了
+  - 让透明度随着『相机与物体间的距离』而变化  
+    配置项：`translucencyByDistance`  
+    配置项的值：[`Cesium.NearFarScalar`](https://cesium.com/docs/cesiumjs-ref-doc/NearFarScalar.html)实例（关于该实例更多内容可在本笔记内查看）
 
-- [圆](https://cesium.com/docs/cesiumjs-ref-doc/PointGraphics.html#.ConstructorOptions)  
+  - 让圆只在『相机与物体间的距离』在指定区间内时才显示  
+    配置项：`distanceDisplayCondition`  
+    配置项的值：`new Cesium.DistanceDisplayCondition (会显示的最小距离,会显示的最大距离)`
 
-  - 在Entity里对应的配置项是：`point`
-  - 这个圆在地面下时并不一定会被地面挡住  
-    镜头要距离地面足够近时才会开始有一部分被挡住
-  - 圆图形的配置项  
-    可以设颜色、描边等内容（描边只能是外扩的）  
-    （这里只有1个配置项没记录，就是随镜头距离禁用`depth test`的配置项）
-
-    - 让尺寸随着『相机与物体间的距离』而变化  
-      配置项：`scaleByDistance`  
-      配置项的值：[`Cesium.NearFarScalar`](https://cesium.com/docs/cesiumjs-ref-doc/NearFarScalar.html)实例（关于该实例更多内容可在本笔记内查看）  
-
-    - 让透明度随着『相机与物体间的距离』而变化  
-      配置项：`translucencyByDistance`  
-      配置项的值：[`Cesium.NearFarScalar`](https://cesium.com/docs/cesiumjs-ref-doc/NearFarScalar.html)实例（关于该实例更多内容可在本笔记内查看）
-
-    - 让圆只在『相机与物体间的距离』在指定区间内时才显示  
-      配置项：`distanceDisplayCondition`  
-      配置项的值：`new Cesium.DistanceDisplayCondition (会显示的最小距离,会显示的最大距离)`
-
-      
-
-- [立方体](https://cesium.com/docs/cesiumjs-ref-doc/BoxGraphics.html#.ConstructorOptions)  
-
-  - 在Entity里对应的配置项是：`box`
-
-  - 立方体图形的配置项  
-    （这里记录了所有配置项）
-
-    - 既有边框又有表面的示例  
-
-      ```js
-      {
-        dimensions: new Cesium.Cartesian3(
-          纬线方向的厚度,
-          经线方向的厚度,
-          高度
-        ),
-        material: Cesium.Color.RED.withAlpha(不透明度),
-      outline: true,
-        outlineColor: Cesium.Color.BLACK,
-  }
-      ```
-
-      
     
-    - 只有边框没有表面的示例  
-    
-      ```js
-      {
-        dimensions: new Cesium.Cartesian3(
-          纬线方向的厚度,
-      经线方向的厚度,
-          高度
-        ),
-        fill: false,
+
+###### [立方体](https://cesium.com/docs/cesiumjs-ref-doc/BoxGraphics.html#.ConstructorOptions)  
+
+- 在Entity里对应的配置项是：`box`
+
+- 立方体图形的配置项  
+  （这里记录了所有配置项）
+
+  - 既有边框又有表面的示例  
+
+    ```js
+    {
+      dimensions: new Cesium.Cartesian3(
+        纬线方向的厚度,
+        经线方向的厚度,
+        高度
+      ),
+      material: Cesium.Color.RED.withAlpha(不透明度),
     outline: true,
-        outlineColor: Cesium.Color.YELLOW.withAlpha(不透明度),
-      }
-      ```
+      outlineColor: Cesium.Color.BLACK,
+  }
+    ```
+
     
-    - 定义“高度”的意义<span style='opacity:.5'>（这里“高度”指的是Entity的`position`配置项的`Cesium.Cartesian3.fromDegrees`方法的第三个参数）</span>  
-      定义方法：给`heightReference`配置项赋值  
-      `heightReference`配置项可选值：
-    
-      1. 传统认知的海拔（和地形无关）  
-         `Cesium.HeightReference.NONE`  
-         这个是默认值  
-     立方体的锚点在中心
-      2. 让立方体固定在地形上  
-         `Cesium.HeightReference.CLAMP_TO_GROUND`  
-         这时第三个参数是失效的  
-     立方体的锚点在底面的中心
-      3. 立方体高于地形的距离  
-         `Cesium.HeightReference.RELATIVE_TO_GROUND`  
-         立方体的锚点在底面的中心
-    
-    - 投影  
-      目前的尝试都是失败的  
-      已经尝试过的方案：给`shadows`配置项设置了所有枚举值、半透明的、不透明的、边框的各种情况、加地形与不加的、实例化`viewer`时`shadows`与`terrainShadows`配置项的设与不设
-    
-    - 允许显示物体时的镜头距物体的区间  
-      配置项为`distanceDisplayCondition`，值为[DistanceDisplayCondition](https://cesium.com/docs/cesiumjs-ref-doc/DistanceDisplayCondition.html)实例
-
-- [椭球体](https://cesium.com/docs/cesiumjs-ref-doc/EllipsoidGraphics.html#.ConstructorOptions)
-
-  - 在Entity里对应的配置项是：`ellipsoid`
-
-  - 椭球体图形的配置项  
-    （这里记录的配置项并不全）
-
-    - 设置大小  
-      给`radii`配置项赋如下值：  
-
-      ```js
-      new Cesium.Cartesian3(
-        纬线方向上的半径, 
-        经线方向上的半径, 
-        垂直方向上的半径
-      )
-      ```
-
-    - 表面与边框  
-
-      - 操作方法  
-        和立方体的一致  
-        可以在本笔记内搜索 “既有边框又有表面的示例” 与 “只有边框没有表面的示例” 进行查看
-      - 边框线  
-        也就是“纬线”分段线与“经线”分段线
-
-    - 分段  
-      分段是依据“纬线”分段线与“经线”分段线进行分段的
-
-      - 控制“纬线”分段线数量  
-        控制方法：给`stackPartitions`配置项赋值  
-        最终数量=`stackPartitions`值-1
-      - 控制“经线”分段线数量  
-        控制方法：给`slicePartitions`配置项赋值  
-        最终数量=`slicePartitions`值  
-        注意：2条“经线”才会形成1个圆
-
-- 矩形  
-  有2个东西可以画矩形
-
-  - [plane](https://cesium.com/learn/cesiumjs/ref-doc/PlaneGraphics.html)
-  - [rectangle](https://cesium.com/learn/cesiumjs/ref-doc/RectangleGraphics.html)
-
-  2者的区别
-
-  - rectangle可以增加厚度成多面体
-  - 设置宽高的方式
-    - plane直接设置宽高
-    - rectangle设置2个坐标，然后cz算出宽高
-
-- [文本](https://cesium.com/docs/cesiumjs-ref-doc/Label.html)  
-  [demo](https://sandcastle.cesium.com/index.html?src=Labels.html)
   
-  - 偏移
-    - 以米为单位的偏移  
-      `eyeOffset`配置项
-    - 以屏幕像素为单位的偏移  
-      `pixelOffset`配置项
+  - 只有边框没有表面的示例  
+  
+    ```js
+    {
+      dimensions: new Cesium.Cartesian3(
+        纬线方向的厚度,
+    经线方向的厚度,
+        高度
+      ),
+      fill: false,
+  outline: true,
+      outlineColor: Cesium.Color.YELLOW.withAlpha(不透明度),
+    }
+    ```
+  
+  - 定义“高度”的意义<span style='opacity:.5'>（这里“高度”指的是Entity的`position`配置项的`Cesium.Cartesian3.fromDegrees`方法的第三个参数）</span>  
+    定义方法：给`heightReference`配置项赋值  
+    `heightReference`配置项可选值：
+  
+    1. 传统认知的海拔（和地形无关）  
+       `Cesium.HeightReference.NONE`  
+       这个是默认值  
+        立方体的锚点在中心
+    2. 让立方体固定在地形上  
+       `Cesium.HeightReference.CLAMP_TO_GROUND`  
+       这时第三个参数是失效的  
+        立方体的锚点在底面的中心
+    3. 立方体高于地形的距离  
+       `Cesium.HeightReference.RELATIVE_TO_GROUND`  
+       立方体的锚点在底面的中心
+  
+  - 投影  
+    目前的尝试都是失败的  
+    已经尝试过的方案：给`shadows`配置项设置了所有枚举值、半透明的、不透明的、边框的各种情况、加地形与不加的、实例化`viewer`时`shadows`与`terrainShadows`配置项的设与不设
+  
+  - 允许显示物体时的镜头距物体的区间  
+    配置项为`distanceDisplayCondition`，值为[DistanceDisplayCondition](https://cesium.com/docs/cesiumjs-ref-doc/DistanceDisplayCondition.html)实例
+
+
+
+###### [椭球体](https://cesium.com/docs/cesiumjs-ref-doc/EllipsoidGraphics.html#.ConstructorOptions)
+
+- 在Entity里对应的配置项是：`ellipsoid`
+
+- 椭球体图形的配置项  
+  （这里记录的配置项并不全）
+
+  - 设置大小  
+    给`radii`配置项赋如下值：  
+
+    ```js
+    new Cesium.Cartesian3(
+      纬线方向上的半径, 
+      经线方向上的半径, 
+      垂直方向上的半径
+    )
+    ```
+
+  - 表面与边框  
+
+    - 操作方法  
+      和立方体的一致  
+      可以在本笔记内搜索 “既有边框又有表面的示例” 与 “只有边框没有表面的示例” 进行查看
+    - 边框线  
+      也就是“纬线”分段线与“经线”分段线
+
+  - 分段  
+    分段是依据“纬线”分段线与“经线”分段线进行分段的
+
+    - 控制“纬线”分段线数量  
+      控制方法：给`stackPartitions`配置项赋值  
+      最终数量=`stackPartitions`值-1
+    - 控制“经线”分段线数量  
+      控制方法：给`slicePartitions`配置项赋值  
+      最终数量=`slicePartitions`值  
+      注意：2条“经线”才会形成1个圆
+
+
+
+###### 矩形  
+
+有2个东西可以画矩形
+
+- [plane](https://cesium.com/learn/cesiumjs/ref-doc/PlaneGraphics.html)
+- [rectangle](https://cesium.com/learn/cesiumjs/ref-doc/RectangleGraphics.html)
+
+2者的区别
+
+- rectangle可以增加厚度成多面体
+- 设置宽高的方式
+  - plane直接设置宽高
+  - rectangle设置2个坐标，然后cz算出宽高
+
+
+
+###### [文本](https://cesium.com/docs/cesiumjs-ref-doc/Label.html)  
+
+[demo](https://sandcastle.cesium.com/index.html?src=Labels.html)
+
+- 偏移
+  - 以米为单位的偏移  
+    `eyeOffset`配置项
+  - 以屏幕像素为单位的偏移  
+    `pixelOffset`配置项
+
+
+
+###### 其他
 
 - [多边形](https://cesium.com/learn/cesiumjs/ref-doc/PolygonGraphics.html)  
-  可以增加厚度成多面体  
-  厚度可以不等的（就是说可以做出各个地方厚度不一样的多面体）
+  - 可以增加厚度成多面体  
+    厚度可以不等的（就是说可以做出各个地方厚度不一样的多面体）
+  - 控制离地高度  
+    `height`配置项
+  - 有“叠加类型”选项  
+    和模型一样，具体内容见模型的“叠加类型”部分
+  - 坐标么有顺时针逆时针都可以
 - 模型  
   [demo](https://sandcastle.cesium.com/index.html?src=3D%2520Models.html)
 - [墙](https://cesium.com/learn/cesiumjs/ref-doc/WallGraphics.html)
 
 
 
-##### primitive
+### primitive
 
 [api文档](https://cesium.com/docs/cesiumjs-ref-doc/Primitive.html)里的例子修改后就可以跑，修改为：把`scene`改成`viewer.scene`
 
 更多内容可以参考[博客A](https://www.jianshu.com/p/5a74c607a591)和[博客B](https://blog.csdn.net/happyduoduo1/article/details/51868042)（这2篇博客是差不多的，A是参考B写的）
+
+- 用`viewer.scene.primitives.add`添加
 
 
 
@@ -613,13 +653,13 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
 
 
 
-诞生意义
+**诞生意义**
 
 在图形数量大的时候提升性能
 
 
 
-操作方式
+**操作方式**
 
 1. 创建collection  
    `var billboards = new Cesium.BillboardCollection()`
@@ -633,6 +673,72 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
   比如[BillboardCollection#add](https://cesium.com/docs/cesiumjs-ref-doc/BillboardCollection.html#add)
 
 
+
+### 数据源
+
+也就是[DataSource](https://cesium.com/learn/cesiumjs/ref-doc/DataSource.html)
+
+
+
+**术语说明**
+
+>`DataSource`只是书写文档用的，并不是给开发者编程时用的 —— 官方文档
+
+文档里的DataSource实际指的都是GeoJsonDataSource、CzmlDataSource这种类，但是实际上这些类并没有继承DataSource类，本笔记里也是用DataSource指代这些类
+
+
+
+**DataSource的功能**
+
+用来将数据源转为物体的（目前看到都是转为entity）
+
+- 支持数据源  
+  <span style='opacity:.5'>（截止至cz1.89为止）</span>共支持3种数据源
+  - geojson：对应[GeoJsonDataSource类](https://cesium.com/learn/cesiumjs/ref-doc/GeoJsonDataSource.html)
+  - czml：对应[CzmlDataSource类](https://cesium.com/learn/cesiumjs/ref-doc/CzmlDataSource.html)
+  - kml：对应[KmlDataSource类](https://cesium.com/learn/cesiumjs/ref-doc/KmlDataSource.html)
+- 获取entity的方法  
+  dataSource的entities属性是一个[EntityCollection](https://cesium.com/learn/cesiumjs/ref-doc/EntityCollection.html)实例，里边放着entity
+
+
+
+**最简demo**
+
+添加一个czml模型
+
+```js
+viewer.dataSources.add(
+  Cesium.CzmlDataSource.load('czml文件地址')
+)
+```
+
+
+
+**编程流程**
+
+1. 创建一个DataSource实例  
+   基本都是用DataSource类的load方法创建  
+   这个方法会返回一个`Promise$1`实例，`Promise$1`实例的then方法会返回DataSource实例
+   - 入参  
+     1. 第一个入参  
+        可以是一个数据源的url也可以是一个内存里的数据源
+     2. 第二个入参  
+        一个配置（像[GeoJsonDataSource](https://cesium.com/learn/cesiumjs/ref-doc/GeoJsonDataSource.html#.LoadOptions)的话就有一部分对entity的设置）
+   - 返回值：一个`Promise$1`实例  
+     `Promise$1`实例的then方法会返回DataSource实例
+2. 把实例添加进场景  
+   `viewer.dataSources.add(入参)`  
+   这个方法接受2种入参
+   1. DataSource实例
+   2. 返回DataSource实例的Promise$1实例
+
+
+
+**非重点细节**  
+
+- `viewer.dataSources.add`  
+  viewer.dataSources.add(DataSource实例)的话会返回一个`Promise$1`实例  
+  这个实例的then回调的参数返回的是传给add的DataSource实例
 
 
 
@@ -663,7 +769,7 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
 
 ##### 鼠标事件
 
-[ScreenSpaceEventHandler](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html)上有增、[减](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)监听函数等方法
+[ScreenSpaceEventHandler](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html)上有[增](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceEventHandler.html#setInputAction)、[减](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)监听函数等方法
 
 - 在这里可以找到一个事件处理器实例：  
   `viewer.cesiumWidget.screenSpaceEventHandler`
@@ -697,7 +803,7 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
 
 ```js
 viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEvent) {
-  var pickedFeature = viewer.scene.pick(czMouseEvent.position);
+  const pickedFeature = viewer.scene.pick(czMouseEvent.position);
   console.log(pickedFeature)
 }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 ```
@@ -706,8 +812,8 @@ viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEven
 
 没看到对返回对象的说明
 
-- 看[这篇文章](https://blog.csdn.net/zhangqun23/article/details/83056315)里的说明似乎只会返回第一个点击的物体
-- 返回对象的id属性似乎是用`viewer.entities.add`添加的实例
+- 只会返回第一个点到的物体（[这篇文章](https://blog.csdn.net/zhangqun23/article/details/83056315)也认同这个观点）
+- 返回对象的id属性就是用`viewer.entities.add`添加的实例
 - 没点到东西（点地球不算）的话返回undefined  
   （经验之谈）
 
@@ -902,7 +1008,7 @@ viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEven
 
   - [ion页面](https://cesium.com/ion)  
     拖拽进网页就行  
-似乎在这页面的所有子页面都可以
+    似乎在这页面的所有子页面都可以
   
 - [addasset页面](https://cesium.com/ion/addasset)  
   
@@ -992,10 +1098,10 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
   
 - **COLLADA**  
 
-  > “COLLADA FX支持OpenGL ES“”——[百度百科](https://baike.baidu.com/item/COLLADA/2359440?fr=aladdin)
+  > “COLLADA FX支持OpenGL ES” ——[百度百科](https://baike.baidu.com/item/COLLADA/2359440?fr=aladdin)
 
 - **CZML**  
-是“Cesium Language”的缩写
+  是“Cesium Language”的缩写
   
   > - Cesium与CZML的关系就如同Google Earth和KML的关系
   > - CZML用来描述随时间而变化场景的json格式
@@ -1010,11 +1116,15 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
   
   甚至可以包含快速衰减的精灵文字和投影（投影是指在其他物体上上色）
   
-  - 似乎用json就可以代表CZML了  
-    看[这个例子](http://zgeo.work/cesiumTx/examples/editor.html#czml_box)
-  
+  - [一个用JSON代表czml的例子](http://zgeo.work/cesiumTx/examples/editor.html#czml_box)
   
   关于czml的了解，这3个页面还没看完：[第1个](https://www.cnblogs.com/mazhenyu/p/8315840.html)、[第2个](https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/CZML-Structure)、[第3个](https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/Packet)
+  
+  - czml里就已经包含了坐标等信息（看了各来源的例子后得出的结论）
+
+- [b3dm](https://github.com/CesiumGS/3d-tiles/blob/main/specification/TileFormats/Batched3DModel/README.md)  
+  批量3d模型（Batched 3D Model）  
+  使用『core 3D Tiles spec language』
 
 
 

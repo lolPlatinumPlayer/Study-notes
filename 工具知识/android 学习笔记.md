@@ -17,20 +17,24 @@
 - 查看jdk与Android SDK的安装位置  
 
   - jdk  
-    - AS203版本  
+    - AS Arctic Fox Patch 1（203）版本  
       要去Gradle的设置里找  
-      （打开Gradle设置的方法在本笔记搜索“打开Gradle设置”即可查看）
+      （打开Gradle设置的方法在本笔记搜索“打开Gradle设置”即可查看）  
+      （不过里面写的是一个jre的地址）
     - AS202版本  
       点左上角File按钮，然后点Project Structure按钮
   - Android SDK  
-    点左上角File按钮，然后点Project Structure按钮
+    点左上角File按钮，然后点Project Structure按钮  
+    （怀疑这里装的也不是Android SDK，起码运行不了`android -h`）
 
 - jdk  
+  旧版AS应该都是有jdk的，202开始应该只有jre  
+  （一次装202升级Arctic Fox Patch 1（203）后发现没有jdk）
 
   - > OpenJDK（Java 开发工具包）与 Android Studio 捆绑在一起 —— [官方推荐的教程](https://developer.android.com/codelabs/android-training-hello-world?index=..%2F..%2Fandroid-training#2)
 
   - > 安装android studio时就要配上jdk —— 冯怡茹
-
+  
   - > java -version没输出成功不代表没有jdk，AS是只要电脑硬盘里有jdk选位置就行了 —— 冯怡茹
 - Android SDK  
   [官网](https://developer.android.google.cn/studio/install?hl=zh-cn#windows)的安装视频里有下载Android SDK的选项  
@@ -38,7 +42,7 @@
 
   - AS启动时如果没在默认位置检测到Android SDK  
     会弹窗提示`Unable to access Android SDK add-on list`  
-    ![`Unable to access Android SDK add-on list`](https://img-blog.csdn.net/20180809133741180?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTAzNTgxNjg=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)（不知道是不是只有第一次打开时才有，2021.7.9下载的版本在日常使用中是没看见这个弹窗的)  
+    ![`Unable to access Android SDK add-on list`](https://img-blog.csdn.net/20180809133741180?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTAzNTgxNjg=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)（不知道是不是只有第一次打开时才有，Arctic Fox Beta5（2021.7.9下载）在日常使用中是没看见这个弹窗的)  
     可以百度到不少相关资料【】搞这个
     
   - >android studio需要android sdk，一般是软件下载完之后可以再配置的 —— 冯怡茹
@@ -56,7 +60,7 @@
       6. 开启AS
       7. 剩下的AS会处理好，也会把压缩文件解压出来
   - 打开Gradle设置方法  
-    AS203版本
+    AS Arctic Fox Patch 1（203）版本
     - 方法一：在右侧打开  
       按下图顺序点击  
       ![在AS右侧打开gradle设置的方法](..\图片\在AS右侧打开gradle设置的方法.png)
@@ -67,6 +71,21 @@
       ![在file按钮里打开gradle设置的方法](..\图片\在file按钮里打开gradle设置的方法.png)
 
 
+
+### 打包
+
+1. 点上方工具栏的Build
+2. 点下拉列表里的Make Project
+3. 等待
+4. 然后在`项目路径\app\build\outputs\apk\debug`下就可以找到apk文件了
+
+
+
+### 版本
+
+- [版本说明（含大版本介绍）](https://developer.android.google.cn/studio/releases)
+- [版本大全（及下载地址）](https://developer.android.google.cn/studio/archive)  
+  （语言选择中文的话更新有延迟）
 
 
 
@@ -257,6 +276,29 @@ android virtual devices（安卓虚拟设备）
   > Android 调试桥 (adb) 是一种功能多样的命令行工具，可让您与设备进行通信 —— [android调试桥(adb)](https://developer.android.google.cn/studio/command-line/adb?hl=zh_cn)
 
   - > `adb` 包含在 Android SDK 平台工具软件包 —— [android调试桥(adb)](https://developer.android.google.cn/studio/command-line/adb?hl=zh_cn)
+
+
+
+### gradle
+
+##### 配置环境变量
+
+- 方法A  
+  参考[腾讯云](https://cloud.tencent.com/developer/article/1719340)  
+  可用，步骤如下  
+  1. 增加系统变量GRADLE_HOME  
+     之前设的值为`C:\Users\Administrator\.gradle\wrapper\dists\gradle-7.0.2-bin\857tjihv64xamwrf0h14cai3r\gradle-7.0.2`  
+     这应该是AS下的一个地址
+  2. 在系统变量Path前加上`%GRADLE_HOME%\bin;`
+- 方法B   
+  [这个博客](https://blog.csdn.net/shilei_comeon/article/details/111152149)说可以直接去Path添加，但是不友好  
+  （没实践过）
+
+
+
+### apk
+
+其实就是zip文件改了个后缀
 
 
 

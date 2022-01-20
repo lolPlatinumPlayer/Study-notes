@@ -38,7 +38,7 @@
 
 
 
-# 程序
+# 源码解读
 
 ### 编码规范
 
@@ -51,14 +51,17 @@
 详细内容看[官网](https://leafletjs.com/reference-1.6.0.html#class)  
 实例的`__proto__`上可以看到类创建的内容，父类创建的内容则在`__proto__.__proto__`上
 
+- 继承  
+  比如A要继承B，那就写`const A=B.extend(一个对象)`
 - **initialize**方法  
   构造函数  
-  和es6不同的是，它不调用父类构造函数也是允许的
+  和es6不同的是，initialize中可以不调用父类的构造函数
 - **options**属性  
-  是一个对象，会与父类的`options`进行合并（父类的`options`会作为子类`options`的`__proto__`）  
-  - `setOptions(this, options)`  
-    将`options`参数与`this.options`进行上文说到的『合并』  
-    可以通过`L`或者`L.Util`调用  
+  是一个对象，都会调用与父类`options`合并的方法（父类的`options`会作为子类`options`的`__proto__`）  
+  - 与父类`options`合并的方法  
+    `setOptions(this, options)`  
+    将`options`参数与`this.options`进行合并  
+    - 可以通过`L`或者`L.Util`调用  
   - 语义：  
     用户实例化时的配置项  
     leaflet内部都不会去修改`options`的属性
@@ -125,7 +128,7 @@ pane的dom结构应该都如下
 
 - egis.layer.GraphicsLayer -> L.LayerGroup-> L.Layer
 - egis.Graphic -> L.Path -> L.Layer
-- L.TileLaye -> L.GridLayer -> L.Layer
+- L.TileLayer -> L.GridLayer -> L.Layer
 - leaflet的Marker、Polygon、Popup等
 
 ##### 阅读
@@ -153,7 +156,8 @@ Path -> Layer -> Evented -> Class
 
 区别：
 
-- CircleMarker的radius单位是屏幕像素，Circle的是米
+- Circle的radius单位是米  
+  CircleMarker的是屏幕像素
 - Circle传参有三传参的方式（功能相同）
 - Circle多了getBounds方法
 
@@ -191,9 +195,27 @@ Path -> Layer -> Evented -> Class
 
 
 
+# 实操
+
+<span style='opacity:.5'>不含api</span>
+
+### 安装
+
+- 注意要引用css  
+  - 用node_modules安装的话引用css的方法如下  
+    `import 'leaflet/dist/leaflet.css'`  
+    这种方法默认marker图片出不来
 
 
 
+### 去掉杂物
+
+- 右下角文字说明  
+  - attribution  
+    L.tileLayer第二个入参的attribution属性会成为文字说明的一部分
+- 左上角缩放按钮  
+  L.map方法第二个入参的zoomControl属性  
+  设为false即可隐藏
 
 
 
@@ -204,7 +226,19 @@ Path -> Layer -> Evented -> Class
 
 ### 初始化
 
-`const map = L.map(div的id)`
+`const map = L.map(id或元素)`
+
+注意
+
+- 禁用缩放的话至少要设置如下3个配置  
+
+  ```js
+  boxZoom:false,
+  doubleClickZoom:false,
+  scrollWheelZoom:false,
+  ```
+
+  
 
 ### 增加底图
 
@@ -218,17 +252,69 @@ L.tileLayer(url模板, {
 
 第二个参数可能叫options（本笔记中就这么叫）
 
+
+
+经验
+
+- 有很多底图都可以用  
+  甚至用高德底图还不需要账号  
+  [这个插件](https://github.com/htoooth/Leaflet.ChineseTmsProviders)里就列了不少可用的底图
 - url模板还是少改好，按照leaflet官网改mapbox的url会导致底图无法加载
+
+
+
+特性
+
 - url模板中`{字符串}`字样似乎会被options中同名属性替换  
   比如`{accessToken}`就可以被`accessToken`属性值替换
-- 第二个参数的renderer属性指定绘制矢量图层的默认方法  
+- 第二个参数的renderer属性用来指定绘制矢量图层的默认方法【】表示存疑  
   有两个选值：`L.canvas()`和`L.svg()`
+
+
+
+### 地图
+
+- [`crs`配置](https://leafletjs.com/reference.html#map-crs)  
+
+  - 不同底图需要的crs可能不同  
+    - mapbox用默认值就行<span style='opacity:.5'>（url是`'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}'`，crs默认值是`L.CRS.EPSG3857`）</span>  
+    - 天地图要用`L.CRS.EPSG4326`<span style='opacity:.5'>（url是`"http://t1.tianditu.com/vec_c/wmts?layer=vec&style=default&tilematrixset=c&Service=WMTS&Request=GetTile&Version=1.0.0&Format=tiles&TileMatrix={z}&TileCol={x}&TileRow={y}&tk={accessToken}"`和`"http://t1.tianditu.com/cva_c/wmts?layer=cva&style=default&tilematrixset=c&Service=WMTS&Request=GetTile&Version=1.0.0&Format=tiles&TileMatrix={z}&TileCol={x}&TileRow={y}&tk={accessToken}"`）</span>  
+      - [连接天地图的demo](https://www.cnblogs.com/zhuyugang/p/13825613.html)
+
+  - 不能传入undefined  
+    传undefined的话`map.setView`会阻塞报错`Cannot read properties of undefined`
+
+- `containerPointToLayerPoint`  
+  输入containerPoint返回layerPoint
+
+
+
+##### 镜头
+
+- 设置  
+  直接看[官网](https://leafletjs.com/reference.html#map-setview)就行，没什么好记录的
+
+- 获取  
+  大部分内容看[官网](https://leafletjs.com/reference.html#map-getcenter)就行，需要记录的不多
+  - [`getSize`](https://leafletjs.com/reference.html#map-getsize)  
+    返回地图像素单位的宽高，用`L.Point`实例表示
+
+
+
+
 
 ### 一些添加物
 
-- 标记：`var marker = L.marker([51.5, -0.09]).addTo(map)`  
-  用img标签实现的
+- 标记点  
+  `const marker = L.marker([51.5, -0.09]).addTo(map)`  
 
+  - [图标](https://leafletjs.com/reference.html#icon)  
+    - 锚点  
+      `iconAnchor`选项  
+      值为`[x,y]`  
+      最终dom上的效果为`` `margin-left: -${x}px;margin-top: -${y}px;` ``
+  - 用img标签实现的
+  
 - 圆  
 
   ```javascript
@@ -240,9 +326,9 @@ L.tileLayer(url模板, {
   }).addTo(map)
   ```
 
-  用svg实现的
+  - 用svg实现的
 
-- 多边形  
+- [多边形](https://leafletjs.com/reference.html#polygon)  
 
   ```javascript
   var polygon = L.polygon([
@@ -252,7 +338,8 @@ L.tileLayer(url模板, {
   ]).addTo(map)
   ```
 
-  用svg实现的
+  - 有多种支持数据（不支持geojson）
+  - 用svg实现的
 
 - 弹窗  
 
@@ -263,18 +350,20 @@ L.tileLayer(url模板, {
       .openOn(map)
   ```
 
-  用html实现的
+  - 用html实现的
 
   - 点击指定物体进行弹窗：`其他添加物.bindPopup("弹窗文本")`
+  
+- [图片图层](https://leafletjs.com/reference.html#imageoverlay)  
+
+- 依据geojson生成对应添加物  
+  [`L.geoJSON`方法](https://leafletjs.com/reference.html#geojson)
+
+  - 样式：style选项  
+    文档说要用函数，但是直接写一个对象也是可以的
 
 
 
-### 地图
-
-- `getSize`  
-  返回地图像素单位的宽高，用`L.Point`实例表示
-- `containerPointToLayerPoint`  
-  输入containerPoint返回layerPoint
 
 ### `bounds`
 
@@ -293,4 +382,55 @@ L.tileLayer(url模板, {
   向量相加
 - subtract方法  
   向量相减
+
+### 事件
+
+- 不会冒泡到祖先  
+  （起码marker的不会冒泡到map上）
+
+
+
+
+
+
+
+# 问题排查
+
+- [默认图片地址不正确的问题](https://segmentfault.com/q/1010000017168720/)  
+
+  - 测试环境  
+    leaflet1.7.1  
+    webpack^4.46.0
+
+  - 猜测原因  
+    webpack把图片名转为哈希值，而leaflet还是用非哈希值去取，最终地址就不对了  
+    <span style='opacity:.5'>（src/layer/marker/Icon.Default.js的_detectIconPath方法在初次获得path时就是哈希值，但是后面转换时用的又是非哈希值。这个方法用于生成marker的默认图标，判断依据是`L.Marker.prototype.options.icon instanceof L.Icon.Default`结果为true）</span>
+
+  - 解决办法
+
+    - 办法A  
+      手动引入图标  
+
+      ```js
+      import icon from "leaflet/dist/images/marker-icon.png";
+      import iconShadow from "leaflet/dist/images/marker-shadow.png";
+      
+      let DefaultIcon = L.icon({
+        iconUrl: icon,
+        shadowUrl: iconShadow,
+        iconAnchor:[12,41],
+      });
+      L.Marker.prototype.options.icon = DefaultIcon;
+      ```
+      
+      - 同时要配合使用url-loader  
+        如果是file-loader的话，如下情况就会出现问题  
+        如果是基于leaflet的库，打包好库之后
+        - html用script标签引用这个库的话，图片还是出不来（引用路径是相对于库的，而真正引用图标的时候是相对于html的）
+        - 在vue-cli里import不显示甚至不报错
+      
+    - 办法B  
+      按[webpack官网](https://v4.webpack.js.org/loaders/file-loader/#options)设置为不转为哈希值  
+      就是将options设为`{name: '[path][name].[ext]'}`  
+      这样的话marker的默认图片会出来，但是marker的默认阴影不会出来
 

@@ -222,12 +222,42 @@ history模式的网页只能在http服务器上运行，直接双击html文件�
 
 query与params不同的地方
 
-- query会反映在url里，而params不会
 - query是在路由中输入名值对中的名，而params只能在routes中输入名？？？
 
 
 
+### param  
 
+如果一个path是这样的`'xxx/:id/:type'`，那id和type就是param
+
+- 可以通过`this.$route.params.id`、`this.$route.params.type`访问
+
+- $router.push的2种写法
+
+  - path直接完整地拼出来  
+    比如：
+
+    ```js
+    this.$router.push({
+      path: `/xxx/123/edit`
+    })
+    ```
+
+  - name+对象形式的params
+
+  - 下面这种写法是不行的  
+
+    ```js
+    this.$router.push({
+      path: `/xxx/:id/:type`,
+      params: {
+        id:123,
+        type:'edit',
+      },
+    })
+    ```
+
+    
 
 ### 动态路径参数
 
@@ -242,7 +272,11 @@ const router = new VueRouter({
 ```
 
 遇到所有 “/user/:xx” 的路由，都会在{{}}中渲染出 xx。
-也可以设置多个 动态路径参数，中间可以有任何间隔，甚至没有间隔，没有间隔的话除了最后一个 动态路径参数 以外其他 动态路径参数 都只取一个字符。
+
+- 可以设置多个 动态路径参数
+  - 中间可以有任何间隔
+  - 也可以没有间隔  
+    没有间隔的话除了最后一个 动态路径参数 以外其他 动态路径参数 都只取一个字符（？？？）
 
 
 
@@ -324,7 +358,7 @@ router.beforeEach((to, from, next) => {
     }//这个if在new VueRouter的scrollBehavior属性中同样适用
 }// requiresId 在路由的meta中存在、有值且值不为判断为‘非’的值，例子中if判断会返回true，其余情况返回false
 
-
+- meta的属性的值可以是对象
 
 
 
@@ -361,7 +395,7 @@ router.beforeEach((to, from, next) => {
 
 
 
-### 导航钩子
+### [导航钩子](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html)
 
 （[2018年的文档](https://github.com/vuejs/vue-router/blob/ca2561f79345c136eccb146caaefe75d78f5855e/docs/zh/advanced/navigation-guards.md)就已经称为导航守卫了）
 
@@ -369,13 +403,26 @@ router.beforeEach((to, from, next) => {
 
 注册分三种情况：全局、路由独享、组件独享  
 
+- 全局  
+  - router.beforeEach((to, from, next)=>{})
+    - 一定要执行next才会完成路由跳转  
+    - 如果给next的配置的name属性和`to.name`一致  
+      那会导致无限跳转，最终页面报错`Maximum call stack size exceeded`
+
 - [组件独享（组件内的守卫）](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E7%BB%84%E4%BB%B6%E5%86%85%E7%9A%84%E5%AE%88%E5%8D%AB)  
-  【】2021.08.30测试在SFC里不可用  
-这里说的组件就是普通的vue组件  
+  这里说的组件就是普通的vue组件  
+
+  - 触发时机
+    - beforeRouteEnter、beforeRouteLeave  
+      组件因路由而被创建、销毁时会触发
+    - beforeRouteUpdate  
+      网说是“路由改变，但是组件复用”时触发，不过个人未测过  
+    - 如果组件不是router-view中出来的  
+      那3个钩子都不会触发
+
+- 有三个钩子：beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave ？？？ 
   
-- 有三个钩子：beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave  
-  
-- beforeRouteEnter例子：  
+- beforeRouteEnter例子：  ？？？
   
     ```js
     mounted() {},
@@ -398,6 +445,46 @@ router.beforeEach((to, from, next) => {
 
 
 
+
+
+
+
+
+- 在$router.go(-1)无法回退时  
+  全局守卫都不会触发（已测过[前置](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E5%85%A8%E5%B1%80%E5%89%8D%E7%BD%AE%E5%AE%88%E5%8D%AB)、[解析](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E5%85%A8%E5%B1%80%E8%A7%A3%E6%9E%90%E5%AE%88%E5%8D%AB)、[后置](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E5%85%A8%E5%B1%80%E5%90%8E%E7%BD%AE%E9%92%A9%E5%AD%90)）
+
+
+
+##### 判断是否无法回退  
+
+换句话说就是：判断是否回退到初始页面
+
+- 目前的判断方法  
+
+  ```js
+  mounted(){
+    this.$router.beforeEach ((to, from, next) => {
+      this.isGoingBack=false
+      next()
+    })
+  },
+  methods:{
+    goBack(){
+      this.$router.go(-1)
+      this.isGoingBack=true
+      requestAnimationFrame(()=>{ // 经过测试：2个requestAnimationFrame会比2个setTimoute0或者2个$nextTicket更靠谱
+        requestAnimationFrame(()=>{
+          if(this.isGoingBack){
+            // 到这就说明无法回退了
+            debugger
+          }
+        })
+      })
+    },
+  },
+  ```
+
+  
 
 
 
