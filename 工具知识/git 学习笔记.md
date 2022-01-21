@@ -157,6 +157,11 @@ git config --global user.name "王佳星"
 git config --global user.email "417783514@qq.com"
 ```
 
+查看
+
+- `git config --global user.name`
+- `git config --global user.email`
+
 
 
 # 初始化
@@ -952,7 +957,7 @@ git commit -m 'xxx'
   >
   >  —— [github blog](https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/)
 
-- PAT  
+- PAT（personal access token）  
 
   - [PAT使用方式](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
     

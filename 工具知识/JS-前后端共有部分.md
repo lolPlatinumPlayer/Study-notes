@@ -1469,6 +1469,9 @@ array.forEach(function(currentValue, index, arr) {
 
 - this处可以传入一个值，最好用对象或数组，数字或字符串不好处理
 
+- 没那么智能  
+  比如说迭代中用splice删除了当前项后将不会迭代下一项（由此可以看出迭代的序号只会增加而不会停留或倒退）
+
 
 ### map
 
@@ -2791,8 +2794,7 @@ fetch(某个请求地址,{ // 加第二个参数可以规避在跨域时的报�
     method: "GET",
     mode: "no-cors",
     //body:xxx
-}).then((请求返回的内容)=>{
-    return 请求返回的内容.对于这个内容的方法()//这里可选的方法详见https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#Body
+}).then((Response实例)=>{
 })
 ```
 - **普通post请求**  
@@ -2824,10 +2826,27 @@ fetch(某个请求地址,{ // 加第二个参数可以规避在跨域时的报�
       测试于对象字面量的Referer
     - 可以传任意的头部（自己写什么头部都可以）
 
+
+
+响应
+
+就是[Response实例](https://developer.mozilla.org/zh-CN/docs/Web/API/Response)
+
+- 获取可读性数据   
+  - 已使用过的都是只能使用一次的，并且返回的都是promise
+  - 转字符串  
+    [`text()`](https://developer.mozilla.org/en-US/docs/Web/API/Response/text) 
+  - 转json  
+    [`json()`](https://developer.mozilla.org/en-US/docs/Web/API/Response/json)  
+    感觉就是[`text()`](https://developer.mozilla.org/en-US/docs/Web/API/Response/text)+JSON.parse
+
+
+
 其他特性
 
 - get方法不能拥有body属性，传参只能写在请求地址里（这点网上资料都没提到）  
-- 
+
+  
 
 ### new request
 
@@ -2905,13 +2924,16 @@ fetch(myRequest) // 返回一个Promise对象
 
 > `Set`对象是值的集合，你可以按照插入的顺序迭代它的元素。 Set中的元素只会**出现一次**，即 Set 中的元素是唯一的。—— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Set)
 
+有一些显而易见的API，具体看[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Set)
+
 - 构造函数  
   可以传入可迭代对象或者`null`  
   传`null`或者不传入内容时，新的set为空
-
 - set认为`NaN`间是相等的
+- 转数组  
+  `[...实例]`
 
-有一些显而易见的API，具体看[MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Set)
+
 
 
 
