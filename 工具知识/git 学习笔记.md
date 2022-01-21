@@ -957,6 +957,8 @@ git commit -m 'xxx'
   >
   >  —— [github blog](https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/)
 
+  - github禁用密码后PC死活push不了，2022.1.21用vscode连github才能push上
+  
 - PAT（personal access token）  
 
   - [PAT使用方式](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
