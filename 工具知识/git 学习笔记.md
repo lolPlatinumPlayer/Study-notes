@@ -957,8 +957,15 @@ git commit -m 'xxx'
   >
   >  —— [github blog](https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/)
 
-  - github禁用密码后PC用git bash死活push不了
-    - 2022.1.21用vscode连github才能push上（连接过程很简单，只点了两三下按钮）
+  - github禁用密码后PC用git bash死活push不了  
+    显示错误如下  
+    
+    ```cmd
+    remote: No anonymous write access.
+    fatal: Authentication failed for 'https://github.com/lolPlatinumPlayer/Study-notes.git/'
+    ```
+    
+    - 2022.1.21用vscode连接github后能用vscode push上（连接过程很简单，只点了两三下按钮，没输入任何东西）
     - 2022.1.21后面用Sourcetree推送也是可以的
   
 - PAT（personal access token）  
