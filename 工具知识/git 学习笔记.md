@@ -966,7 +966,7 @@ git commit -m 'xxx'
     ```
     
     - 2022.1.21用vscode连接github后能用vscode push上（连接过程很简单，只点了两三下按钮，没输入任何东西）
-    - 2022.1.21后面用Sourcetree推送也是可以的
+    - 2022.1.21后面用Sourcetree推送也是可以的（要输PAT）
   
 - PAT（personal access token）  
 
