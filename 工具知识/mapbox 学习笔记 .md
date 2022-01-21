@@ -97,6 +97,7 @@
 - map.getZoom()
 - map.getPitch()
 - map.getBearing()
+- [`map.getBounds()`](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#getbounds)
 
 
 
@@ -113,6 +114,17 @@
   [`map.boxZoom.isActive()`](https://docs.mapbox.com/mapbox-gl-js/api/handlers/#boxzoomhandler#isactive)  
   （未测试）
 - 还有其他方法暂未记录，不过可以看↖页面了解一部分
+
+
+
+
+
+**其他**
+
+- 设置镜头可移动区域  
+  [`map.setMaxBounds()`](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#setmaxbounds)
+- 获得镜头可移动区域  
+  [`map.getMaxBounds()`](https://docs.mapbox.com/mapbox-gl-js/api/map/#map#getmaxbounds)
 
 
 

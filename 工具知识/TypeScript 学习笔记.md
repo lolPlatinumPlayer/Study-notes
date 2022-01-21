@@ -286,7 +286,7 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
 
 
 
-### 自动推断
+### 自动推导
 
 这是一个自己起的名词  
 意思是不需要手动添加任何类型，ts也会自动加上类型
@@ -297,15 +297,18 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
 
   ```ts
   let a={
-    a:1,
-    b:{
-      a:1,
+    b:1,
+    c:{
+      d:1,
     }
   }
   ```
 
   会自动给a加上一个类型（具体是type还是接口不清楚）  
   每个属性也会加上对应类型
+  
+  - 如果这里给a上了个object类型反而会破坏自动推导  
+    项目里和生成的.d.ts都会变成一个单纯的object类型（没有属性说明）
 
 
 
@@ -355,7 +358,15 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
 
 
 
-### [接口](https://www.typescriptlang.org/docs/handbook/typescript-tooling-in-5-minutes.html#interfaces)
+### 对象
+
+- [`type`定义对象结构时和接口的区别](https://stackoverflow.com/questions/37233735/typescript-interfaces-vs-types/52682220#52682220)  
+  接口可以重复声明，而`type`不行  
+  官网[这个例子](https://www.typescriptlang.org/play?#code/PTAEBUAsFMCdtAQ3qALgdwPagLaIJYB2ammANgM4mgAm0AxmcgqjKBZIgA4KYBmSQgFgAUCFCYARgCsGqAFygiqOH0T1oVRIRpoAnjyRl8iCpoB0okFbBRoepCgBucBxXw58TWABpBuvkxYNDYcTApUUHpMHDDielNNGyR6SNYECkQcaEsRUVQDBAAhfFgacELQAF5QAG9RUFB0IgBzCkUAJgBuUQBfHryRZVV1YtKaAElCFVg1DTqGptb20G6+0VFowgjQSXGARkUSsorDGtqlwjbO0H7NzG3IvbKOo-GpmbmEc8vr1duBskigxEABXMwQQoAZXosHwXEi+C07FQsFBqVBsEQZH0hgoegi0BwPmS+FQAHIqFxwu5JGQWNhhrBPAAPELQUqgcEMzC5e6PXbjADMbzKHxG8xqzxo+0BYlsMAckkwrHYoK41NgkWgLJUOlaEnSwSZXy0OlxFmSpwQ2JMZioNGwrCRoCcJiU0zgZlS+AeFoofnQkC80FJntmoyonBcSFAAGt7FgynyRAVDAB5dA4n6ETAY2CEbGKVGghC9UAAMlAx3KhQGaYQACUpERqnVQLn84WyIo1JQy5Xq+9w185SbRqAAArQdR5uOgHV6mhUGvWhYiRrRMiYTF8UE9tBo6ADRp8YyaXvYswDXqicfzADCwfoCeIi+gOhXw8+E-qG6i5A7rM+6Xv2J6gGe+AXhBV7Husgz0pEmBZoombZu2zRXCsHR+J2qCYt2xZHgCoiIVEz6vooT74C+H5thcmF-DhAHbruIEwf2fiQdBfYQncgziFAiCRJk+A0IGCDwNEsQfroeg7lyEL3poEguMEDbJLaiQUOYoBQjw9D4HwNHYmQeh+JIILcqA8mgksZA4i00BPM5MwLrAsBBMk2QUJkTk6aAEwCLZoCQJgamqXA7IQeQ26Me5nmwAGNkKQkwjyuw0AIGF6CQjwMJwgiUTaKAXCeW6dBoF6UXaLoYQoIE9DcjQ3maH5KlBnRSZxgazSqspVDGAmoDUbRhApsh6H0BRH4DNNNGvm2k1yuI6aEAgeDSEEtBGXwcAfvMlkYFlxANkYdoqU4VADZpKCsMJHo-hoWgoJgPDELVFrndpjgIIw4TQDQuSCcGVDZNoVAhWlC66rJgiPRKCCSA4dCMMgBpkppmVbLoqAeDkGxDCOE4ANJknq66NFwmJJYoyrkDOhA3oTymgGTqAU3+m6AZiigRHCVzMwJYBTNFKowMECQQogX1pbmLnkdoTm6DuqDuJV-CkhSDoMN4wm+uNhNnZO6pcA45yLFuQR86irQ3nKxum+blMkASiiEKCOCWbA9uE+IAAi0DvTQBp+rZwQtJgV5+M6Dq7fthDzNE+66JZSDJNS7h4zG20y+tLT6y4ukABLIdAEWBME1N0jRZkw5ngPJA2yVkpSsZHW5CQOdQeDDekODw8pKaretEgCOkuyaJE8AUEBz0xcEZgclcRg4vw0WA05yRSypyA7uazeutdxPPTHoMouo87haocVN5A8CILoLoy5HmC6FwTDzKg2ARMgCh+2ASAHMuDtBAL-F819ZhxXMNJYAABHUsEQDYUGAEKAA7B0IU6ChQAFZgDN1hPCVAABaAaxCrrEObsAHBHQABsAAODoTCAAMABiGhDCmEdGYaIIAA)里也提到了这一点
+
+
+
+##### [接口](https://www.typescriptlang.org/docs/handbook/typescript-tooling-in-5-minutes.html#interfaces)
 
 也就是对对象结构的定义
 
@@ -375,7 +386,41 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
 
 
 
-### `type`
+###### 接口生成器
+
+（自己起的名字）
+
+- 例子  
+  下面这个例子中`Backpack`就是接口生成器  
+  `Backpack<类型>`就会生成一个接口
+
+  ```ts
+  interface Backpack<Type> {
+      add: (obj: Type) => void;
+      get: () => Type;
+  }
+  
+  const backpack: Backpack<string> = {
+      add(val) {
+          this._val=val
+      },
+      get() {
+          return this._val
+      },
+  }
+  
+  backpack.add('23');
+  
+  const object = backpack.get();
+  ```
+
+
+
+
+
+
+
+##### `type`
 
 大家都把`type`关键字的语法称为“type alias”
 
@@ -406,13 +451,18 @@ const bird1: BirdType = { wings: 2 };
 const bird3: BirdInterface = bird1;
 ```
 
-- [`type`定义对象结构时和接口的区别](https://stackoverflow.com/questions/37233735/typescript-interfaces-vs-types/52682220#52682220)  
-  接口可以重复声明，而`type`不行  
-  官网[这个例子](https://www.typescriptlang.org/play?#code/PTAEBUAsFMCdtAQ3qALgdwPagLaIJYB2ammANgM4mgAm0AxmcgqjKBZIgA4KYBmSQgFgAUCFCYARgCsGqAFygiqOH0T1oVRIRpoAnjyRl8iCpoB0okFbBRoepCgBucBxXw58TWABpBuvkxYNDYcTApUUHpMHDDielNNGyR6SNYECkQcaEsRUVQDBAAhfFgacELQAF5QAG9RUFB0IgBzCkUAJgBuUQBfHryRZVV1YtKaAElCFVg1DTqGptb20G6+0VFowgjQSXGARkUSsorDGtqlwjbO0H7NzG3IvbKOo-GpmbmEc8vr1duBskigxEABXMwQQoAZXosHwXEi+C07FQsFBqVBsEQZH0hgoegi0BwPmS+FQAHIqFxwu5JGQWNhhrBPAAPELQUqgcEMzC5e6PXbjADMbzKHxG8xqzxo+0BYlsMAckkwrHYoK41NgkWgLJUOlaEnSwSZXy0OlxFmSpwQ2JMZioNGwrCRoCcJiU0zgZlS+AeFoofnQkC80FJntmoyonBcSFAAGt7FgynyRAVDAB5dA4n6ETAY2CEbGKVGghC9UAAMlAx3KhQGaYQACUpERqnVQLn84WyIo1JQy5Xq+9w185SbRqAAArQdR5uOgHV6mhUGvWhYiRrRMiYTF8UE9tBo6ADRp8YyaXvYswDXqicfzADCwfoCeIi+gOhXw8+E-qG6i5A7rM+6Xv2J6gGe+AXhBV7Husgz0pEmBZoombZu2zRXCsHR+J2qCYt2xZHgCoiIVEz6vooT74C+H5thcmF-DhAHbruIEwf2fiQdBfYQncgziFAiCRJk+A0IGCDwNEsQfroeg7lyEL3poEguMEDbJLaiQUOYoBQjw9D4HwNHYmQeh+JIILcqA8mgksZA4i00BPM5MwLrAsBBMk2QUJkTk6aAEwCLZoCQJgamqXA7IQeQ26Me5nmwAGNkKQkwjyuw0AIGF6CQjwMJwgiUTaKAXCeW6dBoF6UXaLoYQoIE9DcjQ3maH5KlBnRSZxgazSqspVDGAmoDUbRhApsh6H0BRH4DNNNGvm2k1yuI6aEAgeDSEEtBGXwcAfvMlkYFlxANkYdoqU4VADZpKCsMJHo-hoWgoJgPDELVFrndpjgIIw4TQDQuSCcGVDZNoVAhWlC66rJgiPRKCCSA4dCMMgBpkppmVbLoqAeDkGxDCOE4ANJknq66NFwmJJYoyrkDOhA3oTymgGTqAU3+m6AZiigRHCVzMwJYBTNFKowMECQQogX1pbmLnkdoTm6DuqDuJV-CkhSDoMN4wm+uNhNnZO6pcA45yLFuQR86irQ3nKxum+blMkASiiEKCOCWbA9uE+IAAi0DvTQBp+rZwQtJgV5+M6Dq7fthDzNE+66JZSDJNS7h4zG20y+tLT6y4ukABLIdAEWBME1N0jRZkw5ngPJA2yVkpSsZHW5CQOdQeDDekODw8pKaretEgCOkuyaJE8AUEBz0xcEZgclcRg4vw0WA05yRSypyA7uazeutdxPPTHoMouo87haocVN5A8CILoLoy5HmC6FwTDzKg2ARMgCh+2ASAHMuDtBAL-F819ZhxXMNJYAABHUsEQDYUGAEKAA7B0IU6ChQAFZgDN1hPCVAABaAaxCrrEObsAHBHQABsAAODoTCAAMABiGhDCmEdGYaIIAA)里也提到了这一点
 
 
 
-### 泛型
+
+### 数组
+
+- ts没有set的支持（了解于2022.01.21）  
+  不过可以用标注对象的方法来标注set
+
+
+
+##### 泛型
 
 例子
 
@@ -422,34 +472,6 @@ const bird3: BirdInterface = bird1;
   `Array<number>`
 - 子项为『只有name属性且name属性为字符串的对象』的数组  
   `Array<{ name: string }>`
-
-**接口生成器**
-
-（自己起的名字）
-
-- 例子  
-  下面这个例子中`Backpack`就是接口生成器  
-  `Backpack<类型>`就会生成一个接口
-
-  ```ts
-  interface Backpack<Type> {
-      add: (obj: Type) => void;
-      get: () => Type;
-  }
-  
-  const backpack: Backpack<string> = {
-      add(val) {
-          this._val=val
-      },
-      get() {
-          return this._val
-      },
-  }
-  
-  const object = backpack.get();
-  
-  backpack.add('23');
-  ```
 
 
 
@@ -762,4 +784,14 @@ const bird3: BirdInterface = bird1;
     `declare const或let LIB_CONTAIN_TYPE: string`
 
 
+
+### 配置
+
+[`tsconfig.json`](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
+
+
+
+- compilerOptions.target  
+  编译目标  
+  有时候报错
 
