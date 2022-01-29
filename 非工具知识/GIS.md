@@ -1,10 +1,10 @@
-# GIS
+### GIS
 
 地理信息系统（Geographic Information System或 Geo－Information system）
 
 
 
-# 高程与海拔
+### 高程与海拔
 
 - 两者单位相同，并且都用来描述垂直距离  
 - 高程有很多种，可以以不同高度为起点  
@@ -13,7 +13,7 @@
 
 
 
-# 地理编码与反向地理编码
+### 地理编码与反向地理编码
 
 - **地理编码**  
   通过地名或地址信息转换为地球上的位置（坐标）
@@ -22,7 +22,15 @@
 
 
 
-# 其他名词
+### 坐标系
+
+- 中国坐标加密  
+
+  - > 测绘地图后要加密后才可以出版和发布；所有汽车导航都要加入保密算法将COM口读出来的真实坐标进行转换，这样才可以和电子地图进行匹配  —— [火星坐标系统 词条](https://baike.baidu.com/item/%E7%81%AB%E6%98%9F%E5%9D%90%E6%A0%87%E7%B3%BB%E7%BB%9F/6734069?fr=aladdin)
+
+
+
+### 其他名词
 
 - [CRS](https://en.wikipedia.org/wiki/Spatial_reference_system)  
   coordinate reference system的缩写和SRS是同一个意思
@@ -37,3 +45,8 @@
   通过飞行器建立真实世界三维模型的技术  
   其中一种格式叫OSGB
 
+
+
+### 其他
+
+- [查看行政区划代码](http://www.mca.gov.cn/article/sj/xzqh/1980/)

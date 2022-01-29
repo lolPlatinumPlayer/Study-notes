@@ -492,10 +492,22 @@ App.vue代表应用
 - `uni.redirectTo`  
   调用该方法后 调用返回上一页方法 是不会到达这个页面的  
   而是会到达该页面的上一页
+- 返回上一页  
+  `uni.navigateBack()`
+  - uniapp开启过的页面是会缓存的，如果调用该方法则会使用缓存的页面  
+    如果是用navigateTo的话则不会使用缓存  
+    （这个特点没找到相关资料，是在h5上测试得来的）
+    - 缓存表现  
+      其中的组件的data都不会变，而且不会执行mounted钩子
+  
 
-[标签](https://uniapp.dcloud.net.cn/component/navigator?id=navigator)
 
-特性
+
+
+
+[标签](https://uniapp.dcloud.net.cn/component/navigator?id=navigator)（也就是navigator标签）
+
+
 
 
 
@@ -548,7 +560,9 @@ App.vue代表应用
       [css变量](https://uniapp.dcloud.net.cn/frame?id=css%e5%8f%98%e9%87%8f)  
       [自定义导航栏使用注意](https://uniapp.dcloud.net.cn/collocation/pages?id=customnav)
 
-- 设置导航栏与状态栏的样式
+- 设置导航栏与状态栏的样式  
+  下面说的内容在uniapp自带组件[navigation-bar](https://uniapp.dcloud.net.cn/component/navigation-bar)里也可以配置
+  
   - 背景色  
     [pages.json](https://uniapp.dcloud.net.cn/collocation/pages)的navigationBarBackgroundColor配置  
     （寿宁项目小程序里设置什么值最后都是透明，不知道是不是因为用了"navigationStyle":"custom"）
@@ -972,6 +986,10 @@ uniapp专用
     }
   }
   ```
+  
+- [page-meta组件](https://uniapp.dcloud.net.cn/component/page-meta)  
+
+  > 类似html的header标签，性能不如pages.json
 
 
 
@@ -984,6 +1002,7 @@ uniapp专用
 - canvas  
   要使用[uniapp的组件](https://uniapp.dcloud.io/component/canvas)  
   这个组件虽然也叫canvas，但实际上和web的canvas不是一个东西
+- 模板里没有uni这个对象
 
 
 
@@ -1184,6 +1203,8 @@ uniapp专用
 
 - `position:sticky;`似乎都不会生效
 
+  
+
 
 
 # 缺点
@@ -1195,6 +1216,8 @@ uniapp专用
 
 - 要被收集数据  
   在[这个文章](https://ask.dcloud.net.cn/article/36937)里搜索“DCloud数据采集说明”查看
+  
+- 页面参数只能用url带
   
   
 

@@ -369,6 +369,12 @@ directives: {
 
 
 
+### 开发vue组件
+
+https://www.cnblogs.com/max-tlp/p/9338855.html看了一半多点，感觉和普通项目的区别就是入口换了下，然后提供了个install方法来注册全局组件
+
+
+
 
 
 # 数据驱动视图
@@ -1175,6 +1181,9 @@ methods: {
   
     - `$mount`方法  
       会取代掉指定的dom
+      
+    - 提示：我们项目的根实例都是用这种方法生成的  
+      因此根实例也可以加上任何普通实例具有的东西
   
 - vue 基础组件走完才会生成 总体的Vue实例那个变量  
   不过实例通过this去调，是能调到的（这个不知道是不是因为钩子执行时组件整体已经走完了）
@@ -2861,9 +2870,14 @@ iview3组件的事件名真的和文档写的医院，都带`on-`
 **[第二版](https://vant-contrib.gitee.io/vant/#/zh-CN/)**
 
 - [导入](https://vant-contrib.gitee.io/vant/#/zh-CN/quickstart)  
-  按👆这里配了babel<span style="color:red">按需导入</span>的话真的写个`import { Button } from 'vant'`就完事了  
-  不需要写`Vue.use(Button)`
-
+  
+  - 👆按这里配了babel<span style="color:red">按需导入</span>的话真的写个`import { Button } from 'vant'`就完事了  
+    不需要写`Vue.use(Button)`  
+  
+    - 矛盾：2022.01.28看官网发现手动引入组件的话不需要做配babel等任何操作的
+  
+    
+  
 - Picker组件的setValues对于树结构的columns也可以正常生效
 
 - popup组件的close、before-leave、leave事件都不好使

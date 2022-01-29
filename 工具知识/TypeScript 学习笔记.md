@@ -56,6 +56,8 @@
 - [让js拥有ts的校验](https://www.typescriptlang.org/docs/handbook/intro-to-js-ts.html#ts-check)  
   在第一行加上`// @ts-check`  
   <span style='opacity:.5'>（ts文件除了类型校验外还会要求大部分能声明类型的地方都做上声明）</span>
+- tsconfig.json的compilerOptions.target会影响一些语法的使用  
+  比如说为es5（默认就是es5）时不能使用类的`#`写法
 
 
 
@@ -516,6 +518,12 @@ const bird3: BirdInterface = bird1;
 
 ### JSDoc
 
+最佳的使用注释文档的方式应该是[API Extractor](https://api-extractor.com/)，这个[知乎文章](https://zhuanlan.zhihu.com/p/434565485)有介绍一些功能，功能上就比jsdoc多。而且没找到方法从ts文件的jsdoc里生成文档，具体去《其他工具 学习笔记.md》里搜索“ts文件里的注释无法生成文档”查看。API Extractor是[vue3](https://github.com/vuejs/core/blob/main/package.json)都在使用的
+
+
+
+
+
 - 可以从jsdoc中获得悬停提示（jsdoc写在js、ts中都可以）
 
 - ts文件可以从js文件的jsdoc中获得类型  
@@ -617,15 +625,21 @@ const bird3: BirdInterface = bird1;
 
 ##### 引用自己编写的js文件
 
-这里记录一个实战中的例子
+- import的写法  
+  注意：不能用相对路径
+  1. 在src下新建`shims-vue.d.ts`文件
+  2. 对于每个要引用的js文件  
+     都在`shims-vue.d.ts`中加入如下对应代码  
+     `declare module '@/js文件位置'`（不要加`.js`）
+  3. 引用js文件  
+     用如下写法  
+     `import {beFlexible} from "@/js文件位置"`（不要加`.js`）
 
-1. 在src下新建`shims-vue.d.ts`文件
-2. 对于每个要引用的js文件  
-   都在`shims-vue.d.ts`中加入如下对应代码  
-   `declare module '@/js文件位置'`（不要加`.js`）
-3. 引用js文件  
-   用如下写法  
-   `import {beFlexible} from "@/js文件位置"`（不要加`.js`）
+
+- require的写法  
+  可以用相对路径  
+  例子：`const entrance =require('./entrance/entrance').default`  
+  可能要求将`webpack配置对象.amd.toUrlUndefined`设为true
 
 
 
