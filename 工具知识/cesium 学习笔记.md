@@ -91,15 +91,6 @@
 
 
 
-##### 运行
-
-- 直接cdn引入就能写
-- 用npm安装也可以
-  - `import * as Cesium from 'cesium'`  
-    不搞项目配置直接这样搞Cesium里有东西，不过`new Cesium.Viewer('czContainer')`仍然报错
-
-
-
 
 
 - 账号
@@ -107,17 +98,136 @@
     token、帐号是地图服务、地形服务需要的  
     当然就算你没有帐号实际上也是可以用地图服务的
   - 一个不使用帐号的例子  
-      二开的commit id为7adcc4d57157078c1dfcd6f1587cd774b45f8a6b的commit，可能还有更早的例子，但不记得了  
-      InitCesium那个文件应该是用了谷歌地图，所以不需要token，不过有时要翻墙
+    二开的commit id为7adcc4d57157078c1dfcd6f1587cd774b45f8a6b的commit，可能还有更早的例子，但不记得了  
+    InitCesium那个文件应该是用了谷歌地图，所以不需要token，不过有时要翻墙
   - 用npm装1.67版的话，`Cesium.Ion.defaultAccessToken`默认就有值
 
 
 
 
 
-- **关于多次初始化**  
+- **多次初始化**  
   目前做法：用删dom作为退出操作，重新开始就从头执行一遍代码  
   目前做法的测试结果：多次『退出进入』后一切正常，cpu也不会多用，但内存可能会稍微多占一些
+
+
+
+##### 运行
+
+- 直接cdn引入就能写
+
+- 用npm安装也可以
+  - `import * as Cesium from 'cesium'`  
+    不搞项目配置直接这样搞Cesium里有东西，不过`new Cesium.Viewer('czContainer')`仍然报错【】？？？
+    
+  - 如果只加下面这点[官网](https://www.cesium.com/learn/cesiumjs-learn/cesiumjs-quickstart/#install-with-npm)代码的话，无法运行项目，并且会报错  
+    
+    ```js
+    window.CESIUM_BASE_URL = '/';
+    import * as Cesium from 'cesium';
+    import "cesium/Build/Cesium/Widgets/widgets.css";
+    Cesium.Ion.defaultAccessToken = 'your_access_token';
+    ```
+    
+    具体报错在本笔记内搜索“ThirdParty/zip.js”查看  
+    官网上的引入操作不止这几行代码
+    
+  - 在webpack上操作后引入  
+    （不管是搜“cesium webpack”还是“cesium vue”，各个文章的操作方式都是不同的，官网demo也和这些文章不同）  
+  
+    - 一个实践过的webpack操作方式  
+      没发现什么问题（这个方式具体是哪看的无从考究了）  
+      需加内容如下  
+  
+      1. 在vue.config.js里加如下内容  
+  
+         ```js
+         const CopyWebpackPlugin = require('copy-webpack-plugin')
+         const webpack = require('webpack')
+         const path = require('path')
+         
+         // Cesium源码所在目录
+         const cesiumSource = './node_modules/cesium/Source'
+         const cesiumWorkers = '../Build/Cesium/Workers'
+         ```
+  
+      2. 给webpack加上如下配置  
+  
+         ```js
+         output: {
+           sourcePrefix: ' ' // 让webpack 正确处理多行字符串配置 amd参数
+         },
+         amd: {
+           toUrlUndefined: true // 告诉Cesium，webpack中计算 require声明的AMD 模块里的toUrl 函数和标准的不兼容
+         },
+         resolve: {
+           alias: {
+             'vue$': 'vue/dist/vue.esm.js',
+             '@': path.resolve('src'),
+             /* 
+             定义别名cesium后，cesium代表了cesiumSource的文件路径。有了这行才能用'cesium/Cesium'、'cesium/Widgets/widgets.css'来引用cz代码
+             */
+             'cesium': path.resolve(__dirname, cesiumSource),
+           }
+         },
+         plugins: [
+           // 使用 copy-webpack-plugin，它能在编译阶段，把Cesium里静态文件整个拷贝到 dist 目录下，确保我们的服务能访问它
+           new CopyWebpackPlugin([{ from: path.join(cesiumSource, cesiumWorkers), to: 'Workers' }]),
+           new CopyWebpackPlugin([{ from: path.join(cesiumSource, 'Assets'), to: 'Assets' }]),
+           new CopyWebpackPlugin([{ from: path.join(cesiumSource, 'Widgets'), to: 'Widgets' }]),
+           new CopyWebpackPlugin([{ from: path.join(cesiumSource, 'ThirdParty/Workers'), to: 'ThirdParty/Workers' }]),
+           new webpack.DefinePlugin({
+             CESIUM_BASE_URL: JSON.stringify('./') // Cesium载入静态的资源的相对路径
+           })
+         ],
+         module: {
+           unknownContextCritical: /^.\/.*$/, //打印载入特定库时候的警告
+           unknownContextCritical: false, //解决Error: Cannot find module "."
+         },
+         ```
+  
+    - [解决`./node_modules/cesium/Source/ThirdParty/zip.js`报错](https://blog.csdn.net/qq_44749616/article/details/120328371?utm_source=app&app_version=4.15.0&code=app_1562916241&uLinkId=usr1mkqgl919blen)  
+      出现这个报错项目就运行不了  
+      报错中包含`Module parse failed: Unexpected token`  
+  
+      - 解决方式  
+        在configureWebpack函数里加入如下代码  
+  
+        ```js
+        config.module.rules.push({
+          test: /\.js$/, // vue-cli里没给js加loader
+          use: {
+            loader: '@open-wc/webpack-import-meta-loader',
+          },
+        })
+        ```
+  
+      - 问题原因  
+        在cz1.82.1(不含)~1.87.1间某个版本加入了import.meta语法  
+  
+    - 引入  
+      可以用require也可以用import，import好像性能会差一点
+  
+      - 用require引入  
+        引入代码如下  
+  
+        ```js
+        const Cesium = require('cesium/Cesium');
+        require('cesium/Widgets/widgets.css');
+        ```
+  
+      - import  
+  
+        ```js
+        import * as Cesium from 'cesium/Cesium'
+        import 'cesium/Widgets/widgets.css'
+        ```
+  
+      - 如果没引入css的话无法渲染场景（其他库不引入css只会出现样式问题）  
+        cesiumWorkerBootstrapper.js都不会请求（这是cesium的js入口文件里引用的一个文件）  
+        而且不会报错
+  
+    - [这个博客](https://www.jianshu.com/p/85917bcc023f)有说一些优化操作，在博客里搜索“webpack 高级配置”查看
 
 
 
