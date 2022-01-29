@@ -213,6 +213,12 @@ cordova build
     - 有次移动目录后出现了  
     - 有次可能是改到配置文件所以出现了
     - 有次改了生成的app的文件名和配置文件的id和name就出现了
+- 执行命令失败并报错`A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade`和`Android resource compilation failed`  
+  - 尝试解决失败  
+    rm android后add老样子，删除node_modules后rm、add也是老样子
+  - 出现原因  
+    未知。之前好好的，不知道做什么操作后不行了（不知道是不是因为cordova从10升级到11导致的）
+
 
 
 
