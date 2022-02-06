@@ -65,9 +65,10 @@
 
 **`typescript`npm包**
 
-装完后就可以用`tsc ts文件`编译ts了
-
-可以局部安装
+- 可以局部安装
+- 编译ts：`tsc ts文件`
+- 生成tsconfig文件：`tsc --init`  
+  生成的文件每行都有注释
 
 
 
@@ -118,7 +119,15 @@ function greeter(person: string) {
   也就是说注解要写在参数后面而不能写在属性后面  
   （写属性后面的话和解构赋值重命名语法相同，因此会被识别为重命名）
 
+**其他**
 
+- 自动补全  
+  用vscode写类型注解时有自动补全功能  
+  - 例子  
+    若引用了puppeteer  
+    写类型注解时只要输入一个P，提示里就会拥有puppeteer的Page  
+    点击这个Page就会自动补全Page这个类型注解  
+    并且增加引用Page类型的代码
 
 
 
@@ -649,24 +658,34 @@ const bird3: BirdInterface = bird1;
 
 工程化引入
 
-- 大部分库需要单独下载.d.ts  
-  - 可以在[这个网站](https://www.typescriptlang.org/dt/search?search=)里搜索下载地址  
-  - 不下的话vscode会有波浪线
-- 少量库会自己携带.d.ts  
-  比如[Editor.js](https://github.com/codex-team/editor.js)和[L7](https://gitee.com/antv/L7)（都是纯ts编写的项目，node_modules里都是js+.d.ts，都是找不到.ts文件的）
-
-- 下载完.d.ts就可以用了  
-  编辑器和编译过程就都有提示了
+- 库有对应.d.ts后才能使用  
+  能使用的话编辑器和编译过程就都会有提示
 
   - npm下载的.d.ts文件也是有“全局作用域”的（起码"@types/jquery": "^1.10.36"是这样）  
     具体来说就是.d.ts里的接口或type在项目代码里也可以用（只测过接口的）
-    
+
   - vscode类型提示  
-  
+
     | 文件类型 | 引用js包 | 引用带.d.ts的包        |
     | -------- | -------- | ---------------------- |
     | js       | 都没     | 有悬停说明、没类型校验 |
     | ts       | 都没     | 有悬停说明、有类型校验 |
+
+- 库自身有.d.ts的话直接装库后就能使用了  
+  
+  - 2022.01看时这些库的数量比较少  
+    有的话目前看到的都是纯ts项目，比如[Editor.js](https://github.com/codex-team/editor.js)和[L7](https://gitee.com/antv/L7)（题外话：node_modules里都是js+.d.ts，都是找不到.ts文件的）
+  - 引用.d.ts的入口本笔记下方有记录，搜索“指定`.d.ts`的入口”进行查看
+
+- 对于库自身没有.d.ts文件的需要单独下载.d.ts的依赖  
+  - 可以在[这个网站](https://www.typescriptlang.org/dt/search?search=)里搜索下载地址  
+    这些搜出来的依赖都是微软或ts社区维护的
+  - 不下的话vscode会有波浪线
+  - 这样下下来的依赖都会存在`node_modules/@types`里
+- 如果下不到.d.ts依赖的话只能自己写.d.ts  
+  [这个视频](https://b23.tv/cn9EMLc)从16分39秒到结束都在说这个事
+
+
 
 
 
@@ -808,4 +827,14 @@ const bird3: BirdInterface = bird1;
 - compilerOptions.target  
   编译目标  
   有时候报错
+
+
+
+
+
+### 其他
+
+- vscode
+
+
 

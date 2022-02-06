@@ -694,6 +694,10 @@ entity中的图形配置项
       控制方法：给`slicePartitions`配置项赋值  
       最终数量=`slicePartitions`值  
       注意：2条“经线”才会形成1个圆
+  
+- [`Cesium.Ellipsoid.WGS84`](https://cesium.com/learn/cesiumjs/ref-doc/Ellipsoid.html#.WGS84)  
+  其实就是个模仿地球的椭球体  
+  源码就一行：`new Ellipsoid(6378137.0, 6378137.0, 6356752.3142451793)`
 
 
 

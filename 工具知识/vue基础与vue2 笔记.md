@@ -148,6 +148,22 @@
 
 谷歌控制台sources选项卡 -> Page选项卡 -> Top文件夹 -> webpack://文件夹 -> src文件夹
 
+
+
+### 概念
+
+
+
+##### [声明式渲染](https://cn.vuejs.org/v2/guide/index.html#%E5%A3%B0%E6%98%8E%E5%BC%8F%E6%B8%B2%E6%9F%93)
+
+意思就是按声明的内容渲染  
+相对立的就是命令式渲染，命令式渲染就是一步一步告诉程序怎么做，在经历各个步骤后达到渲染的目的  
+[这个知乎回答](https://www.zhihu.com/question/68121329/answer/413672808)做了进一步说明
+
+这个概念应该是vue提出的，不过大部分人认为react也是声明式渲染
+
+
+
 # 综合
 
 - 尽量不要去修改vue生成的dom，不然可能导致视图更新错误  
@@ -369,9 +385,9 @@ directives: {
 
 
 
-### 开发vue组件
+### 开发vue组件并发布到npm
 
-https://www.cnblogs.com/max-tlp/p/9338855.html看了一半多点，感觉和普通项目的区别就是入口换了下，然后提供了个install方法来注册全局组件
+[这篇博客](https://www.cnblogs.com/max-tlp/p/9338855.html)看了一半多点，感觉和普通项目的区别就是入口换了下，然后提供了个install方法来注册全局组件
 
 
 
@@ -1267,9 +1283,9 @@ methods: {
 
 ### 组件实例
 
+官网的`vm`变量都是组件实例
 
-
-实例里this就代表实例本身
+- 实例里this就代表实例本身
 
 - 通过实例找到prop  
   在`_prop`属性上可以找到全部的prop值（包括没传的）
