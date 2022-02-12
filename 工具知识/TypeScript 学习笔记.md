@@ -14,6 +14,9 @@
 
 - `as`  
   例子：const myUserAccount = jsonParserUnknown(\`{ "name": "Samuel" }\`) as User
+  - `值 as any`  
+    感觉是把`值`标为any类型的写法
+  
 - string[]
 - `&`  
   例子：`type Owl = { nocturnal: true } & BirdType`
@@ -52,7 +55,8 @@
 一个看https://www.typescriptlang.org/docs/handbook/intro-to-js-ts.html一个看https://article.itxueyuan.com/2dBmKl
 
 - 忽略下一行的校验  
-  `// @ts-ignore`
+  `// @ts-ignore`  
+  如果把下一行的语句拆成多行的话，校验结果也不会有变化（就是说一个语句是多行还是一行，效果是一样的）
 - [让js拥有ts的校验](https://www.typescriptlang.org/docs/handbook/intro-to-js-ts.html#ts-check)  
   在第一行加上`// @ts-check`  
   <span style='opacity:.5'>（ts文件除了类型校验外还会要求大部分能声明类型的地方都做上声明）</span>
@@ -96,7 +100,7 @@ function greeter(person: string) {
 
 添加了类型注解的参数会被要求为必传，且数据类型加了限制
 
-类型注解在会产生这些内容的地方都可以使用：参数、变量、属性、返回值
+可用类型注解的地方：参数、变量、属性、返回值
 
 - 在返回值处使用类型注释的写法  
 
@@ -125,13 +129,17 @@ function greeter(person: string) {
   用vscode写类型注解时有自动补全功能  
   - 例子  
     若引用了puppeteer  
-    写类型注解时只要输入一个P，提示里就会拥有puppeteer的Page  
-    点击这个Page就会自动补全Page这个类型注解  
-    并且增加引用Page类型的代码
+    写类型注解时只要输入一个`P`，提示里就会拥有puppeteer的`Page`  
+    点击这个`Page`就会自动补全`Page`这个类型注解  
+    并且增加引用`Page`类型的代码
 
 
 
-### 基本类型
+### 可用作类型注解的内容
+
+
+
+##### 基本类型
 
 [官网](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html#defining-types)称为“primitive types”
 
@@ -291,9 +299,29 @@ function greeter(person: string) {
 
 
 
-### [字面量类型](https://www.typescriptlang.org/docs/handbook/literal-types.html)
+##### [字面量类型](https://www.typescriptlang.org/docs/handbook/literal-types.html)
 
 ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布尔值
+
+
+
+##### 组合类型
+
+即用`|`连接多种类型或值（[字面量类型](https://www.typescriptlang.org/docs/handbook/literal-types.html)）  
+示例如下：
+
+- `true | 'true'`
+- `string | Date`
+
+可以直接作为类型注解，也可以用`type`关键字生成一个新的类型
+
+- `type`关键字的用例  
+
+  ```ts
+  type combineTypeA = string | Date
+  let combineTypeAVar:combineTypeA
+  combineTypeAVar='11'
+  ```
 
 
 
@@ -302,7 +330,8 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
 这是一个自己起的名词  
 意思是不需要手动添加任何类型，ts也会自动加上类型
 
-- 比如`let a=1`就会自动给`a`加上number类型
+- 比如`let a=1`就会自动给`a`加上number类型  
+  后续给a赋值非number数据就会报错
 
 - 比如  
 
@@ -349,31 +378,29 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
 
 
 
-### 组合类型
-
-即用`|`连接多种类型或值（[字面量类型](https://www.typescriptlang.org/docs/handbook/literal-types.html)）  
-示例如下：
-
-- `true | 'true'`
-- `string | Date`
-
-可以直接作为类型注解，也可以用`type`关键字生成一个新的类型
-
-- `type`关键字的用例  
-
-  ```ts
-  type combineTypeA = string | Date
-  let combineTypeAVar:combineTypeA
-  combineTypeAVar='11'
-  ```
-
-
-
 ### 对象
 
 - [`type`定义对象结构时和接口的区别](https://stackoverflow.com/questions/37233735/typescript-interfaces-vs-types/52682220#52682220)  
-  接口可以重复声明，而`type`不行  
-  官网[这个例子](https://www.typescriptlang.org/play?#code/PTAEBUAsFMCdtAQ3qALgdwPagLaIJYB2ammANgM4mgAm0AxmcgqjKBZIgA4KYBmSQgFgAUCFCYARgCsGqAFygiqOH0T1oVRIRpoAnjyRl8iCpoB0okFbBRoepCgBucBxXw58TWABpBuvkxYNDYcTApUUHpMHDDielNNGyR6SNYECkQcaEsRUVQDBAAhfFgacELQAF5QAG9RUFB0IgBzCkUAJgBuUQBfHryRZVV1YtKaAElCFVg1DTqGptb20G6+0VFowgjQSXGARkUSsorDGtqlwjbO0H7NzG3IvbKOo-GpmbmEc8vr1duBskigxEABXMwQQoAZXosHwXEi+C07FQsFBqVBsEQZH0hgoegi0BwPmS+FQAHIqFxwu5JGQWNhhrBPAAPELQUqgcEMzC5e6PXbjADMbzKHxG8xqzxo+0BYlsMAckkwrHYoK41NgkWgLJUOlaEnSwSZXy0OlxFmSpwQ2JMZioNGwrCRoCcJiU0zgZlS+AeFoofnQkC80FJntmoyonBcSFAAGt7FgynyRAVDAB5dA4n6ETAY2CEbGKVGghC9UAAMlAx3KhQGaYQACUpERqnVQLn84WyIo1JQy5Xq+9w185SbRqAAArQdR5uOgHV6mhUGvWhYiRrRMiYTF8UE9tBo6ADRp8YyaXvYswDXqicfzADCwfoCeIi+gOhXw8+E-qG6i5A7rM+6Xv2J6gGe+AXhBV7Husgz0pEmBZoombZu2zRXCsHR+J2qCYt2xZHgCoiIVEz6vooT74C+H5thcmF-DhAHbruIEwf2fiQdBfYQncgziFAiCRJk+A0IGCDwNEsQfroeg7lyEL3poEguMEDbJLaiQUOYoBQjw9D4HwNHYmQeh+JIILcqA8mgksZA4i00BPM5MwLrAsBBMk2QUJkTk6aAEwCLZoCQJgamqXA7IQeQ26Me5nmwAGNkKQkwjyuw0AIGF6CQjwMJwgiUTaKAXCeW6dBoF6UXaLoYQoIE9DcjQ3maH5KlBnRSZxgazSqspVDGAmoDUbRhApsh6H0BRH4DNNNGvm2k1yuI6aEAgeDSEEtBGXwcAfvMlkYFlxANkYdoqU4VADZpKCsMJHo-hoWgoJgPDELVFrndpjgIIw4TQDQuSCcGVDZNoVAhWlC66rJgiPRKCCSA4dCMMgBpkppmVbLoqAeDkGxDCOE4ANJknq66NFwmJJYoyrkDOhA3oTymgGTqAU3+m6AZiigRHCVzMwJYBTNFKowMECQQogX1pbmLnkdoTm6DuqDuJV-CkhSDoMN4wm+uNhNnZO6pcA45yLFuQR86irQ3nKxum+blMkASiiEKCOCWbA9uE+IAAi0DvTQBp+rZwQtJgV5+M6Dq7fthDzNE+66JZSDJNS7h4zG20y+tLT6y4ukABLIdAEWBME1N0jRZkw5ngPJA2yVkpSsZHW5CQOdQeDDekODw8pKaretEgCOkuyaJE8AUEBz0xcEZgclcRg4vw0WA05yRSypyA7uazeutdxPPTHoMouo87haocVN5A8CILoLoy5HmC6FwTDzKg2ARMgCh+2ASAHMuDtBAL-F819ZhxXMNJYAABHUsEQDYUGAEKAA7B0IU6ChQAFZgDN1hPCVAABaAaxCrrEObsAHBHQABsAAODoTCAAMABiGhDCmEdGYaIIAA)里也提到了这一点
+  - 接口可以重复声明，而`type`不行  
+    官网[这个例子](https://www.typescriptlang.org/play?#code/PTAEBUAsFMCdtAQ3qALgdwPagLaIJYB2ammANgM4mgAm0AxmcgqjKBZIgA4KYBmSQgFgAUCFCYARgCsGqAFygiqOH0T1oVRIRpoAnjyRl8iCpoB0okFbBRoepCgBucBxXw58TWABpBuvkxYNDYcTApUUHpMHDDielNNGyR6SNYECkQcaEsRUVQDBAAhfFgacELQAF5QAG9RUFB0IgBzCkUAJgBuUQBfHryRZVV1YtKaAElCFVg1DTqGptb20G6+0VFowgjQSXGARkUSsorDGtqlwjbO0H7NzG3IvbKOo-GpmbmEc8vr1duBskigxEABXMwQQoAZXosHwXEi+C07FQsFBqVBsEQZH0hgoegi0BwPmS+FQAHIqFxwu5JGQWNhhrBPAAPELQUqgcEMzC5e6PXbjADMbzKHxG8xqzxo+0BYlsMAckkwrHYoK41NgkWgLJUOlaEnSwSZXy0OlxFmSpwQ2JMZioNGwrCRoCcJiU0zgZlS+AeFoofnQkC80FJntmoyonBcSFAAGt7FgynyRAVDAB5dA4n6ETAY2CEbGKVGghC9UAAMlAx3KhQGaYQACUpERqnVQLn84WyIo1JQy5Xq+9w185SbRqAAArQdR5uOgHV6mhUGvWhYiRrRMiYTF8UE9tBo6ADRp8YyaXvYswDXqicfzADCwfoCeIi+gOhXw8+E-qG6i5A7rM+6Xv2J6gGe+AXhBV7Husgz0pEmBZoombZu2zRXCsHR+J2qCYt2xZHgCoiIVEz6vooT74C+H5thcmF-DhAHbruIEwf2fiQdBfYQncgziFAiCRJk+A0IGCDwNEsQfroeg7lyEL3poEguMEDbJLaiQUOYoBQjw9D4HwNHYmQeh+JIILcqA8mgksZA4i00BPM5MwLrAsBBMk2QUJkTk6aAEwCLZoCQJgamqXA7IQeQ26Me5nmwAGNkKQkwjyuw0AIGF6CQjwMJwgiUTaKAXCeW6dBoF6UXaLoYQoIE9DcjQ3maH5KlBnRSZxgazSqspVDGAmoDUbRhApsh6H0BRH4DNNNGvm2k1yuI6aEAgeDSEEtBGXwcAfvMlkYFlxANkYdoqU4VADZpKCsMJHo-hoWgoJgPDELVFrndpjgIIw4TQDQuSCcGVDZNoVAhWlC66rJgiPRKCCSA4dCMMgBpkppmVbLoqAeDkGxDCOE4ANJknq66NFwmJJYoyrkDOhA3oTymgGTqAU3+m6AZiigRHCVzMwJYBTNFKowMECQQogX1pbmLnkdoTm6DuqDuJV-CkhSDoMN4wm+uNhNnZO6pcA45yLFuQR86irQ3nKxum+blMkASiiEKCOCWbA9uE+IAAi0DvTQBp+rZwQtJgV5+M6Dq7fthDzNE+66JZSDJNS7h4zG20y+tLT6y4ukABLIdAEWBME1N0jRZkw5ngPJA2yVkpSsZHW5CQOdQeDDekODw8pKaretEgCOkuyaJE8AUEBz0xcEZgclcRg4vw0WA05yRSypyA7uazeutdxPPTHoMouo87haocVN5A8CILoLoy5HmC6FwTDzKg2ARMgCh+2ASAHMuDtBAL-F819ZhxXMNJYAABHUsEQDYUGAEKAA7B0IU6ChQAFZgDN1hPCVAABaAaxCrrEObsAHBHQABsAAODoTCAAMABiGhDCmEdGYaIIAA)里也提到了这一点
+  - 猜测接口只要符合要求就能通过校验而type必须声明类型时就是指定type才能通过校验  
+    猜测依据是[官方对接口的描述](https://www.typescriptlang.org/docs/handbook/typescript-tooling-in-5-minutes.html#interfaces)
+
+- 放开属性限制  
+  示例如下  
+
+  ```ts
+  {
+    a:1;
+    [propName: string|symbol]: any;
+  }
+  ```
+
+  上面的代码意味着：只要对象有一个值为1的属性a，那就能通过校验
+
+  - number  
+    虽然vscode提示`propName`允许的类型为string、symbol和number  
+    但是`[propName: string|symbol]`和`[propName: string|symbol|number]`在vscode里的错误提示是完全一致的
 
 
 
@@ -386,7 +413,8 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
 - 如果设置了接口没有定义的属性  
   一样属于错误  
   不过面对用类创建的对象时，是允许拥有未定义的属性的
-- [可继承](https://www.typescriptlang.org/docs/handbook/interfaces.html#extending-interfaces)
+- [可继承](https://www.typescriptlang.org/docs/handbook/2/objects.html#extending-types)  
+  （[这个官方废弃的文档页面](https://www.typescriptlang.org/docs/handbook/interfaces.html#extending-interfaces)也有描述）
 - 同名接口  
   （官网上有相关说明的页面，目前看到的有[声明合并](https://www.typescriptlang.org/docs/handbook/declaration-merging.html)和[这个例子](https://www.typescriptlang.org/play?#code/PTAEBUAsFMCdtAQ3qALgdwPagLaIJYB2ammANgM4mgAm0AxmcgqjKBZIgA4KYBmSQgFgAUCFCYARgCsGqAFygiqOH0T1oVRIRpoAnjyRl8iCpoB0okFbBRoepCgBucBxXw58TWABpBuvkxYNDYcTApUUHpMHDDielNNGyR6SNYECkQcaEsRUVQDBAAhfFgacELQAF5QAG9RUFB0IgBzCkUAJgBuUQBfHryRZVV1YtKaAElCFVg1DTqGptb20G6+0VFowgjQSXGARkUSsorDGtqlwjbO0H7NzG3IvbKOo-GpmbmEc8vr1duBskigxEABXMwQQoAZXosHwXEi+C07FQsFBqVBsEQZH0hgoegi0BwPmS+FQAHIqFxwu5JGQWNhhrBPAAPELQUqgcEMzC5e6PXbjADMbzKHxG8xqzxo+0BYlsMAckkwrHYoK41NgkWgLJUOlaEnSwSZXy0OlxFmSpwQ2JMZioNGwrCRoCcJiU0zgZlS+AeFoofnQkC80FJntmoyonBcSFAAGt7FgynyRAVDAB5dA4n6ETAY2CEbGKVGghC9UAAMlAx3KhQGaYQACUpERqnVQLn84WyIo1JQy5Xq+9w185SbRqAAArQdR5uOgHV6mhUGvWhYiRrRMiYTF8UE9tBo6ADRp8YyaXvYswDXqicfzADCwfoCeIi+gOhXw8+E-qG6i5A7rM+6Xv2J6gGe+AXhBV7Husgz0pEmBZoombZu2zRXCsHR+J2qCYt2xZHgCoiIVEz6vooT74C+H5thcmF-DhAHbruIEwf2fiQdBfYQncgziFAiCRJk+A0IGCDwNEsQfroeg7lyEL3poEguMEDbJLaiQUOYoBQjw9D4HwNHYmQeh+JIILcqA8mgksZA4i00BPM5MwLrAsBBMk2QUJkTk6aAEwCLZoCQJgamqXA7IQeQ26Me5nmwAGNkKQkwjyuw0AIGF6CQjwMJwgiUTaKAXCeW6dBoF6UXaLoYQoIE9DcjQ3maH5KlBnRSZxgazSqspVDGAmoDUbRhApsh6H0BRH4DNNNGvm2k1yuI6aEAgeDSEEtBGXwcAfvMlkYFlxANkYdoqU4VADZpKCsMJHo-hoWgoJgPDELVFrndpjgIIw4TQDQuSCcGVDZNoVAhWlC66rJgiPRKCCSA4dCMMgBpkppmVbLoqAeDkGxDCOE4ANJknq66NFwmJJYoyrkDOhA3oTymgGTqAU3+m6AZiigRHCVzMwJYBTNFKowMECQQogX1pbmLnkdoTm6DuqDuJV-CkhSDoMN4wm+uNhNnZO6pcA45yLFuQR86irQ3nKxum+blMkASiiEKCOCWbA9uE+IAAi0DvTQBp+rZwQtJgV5+M6Dq7fthDzNE+66JZSDJNS7h4zG20y+tLT6y4ukABLIdAEWBME1N0jRZkw5ngPJA2yVkpSsZHW5CQOdQeDDekODw8pKaretEgCOkuyaJE8AUEBz0xcEZgclcRg4vw0WA05yRSypyA7uazeutdxPPTHoMouo87haocVN5A8CILoLoy5HmC6FwTDzKg2ARMgCh+2ASAHMuDtBAL-F819ZhxXMNJYAABHUsEQDYUGAEKAA7B0IU6ChQAFZgDN1hPCVAABaAaxCrrEObsAHBHQABsAAODoTCAAMABiGhDCmEdGYaIIAA)）  
   可以写同名接口  
@@ -464,6 +492,12 @@ const bird3: BirdInterface = bird1;
 
 
 
+- type不仅可以用来定义狭义对象  
+  和可以定义数组和promise
+- 可以做类似vue的mixin的操作  
+  通过[`&`](https://www.typescriptlang.org/docs/handbook/2/objects.html#intersection-types)来做  
+  示例：`某个type & {a:1,b:2}`
+
 
 
 ### 数组
@@ -505,9 +539,22 @@ const bird3: BirdInterface = bird1;
 
 ### 模块化
 
-<span style='opacity:.5'>（目前是观摩余榕的代码得出的结论）</span>
-
 和es module一致，起码可以导出`type`定义的内容
+
+- 导出多个内容  
+  不要用`export default {a,b,c}`这种写法  
+  这样的话无法使用`a`、`b`、`c`作为类型注解  
+
+  - 一个可以作为类型注解的写法如下  
+
+    ```ts
+    import Map from './Map'
+    export {Map}
+    import Marker from './Marker'
+    export {Marker}
+    ```
+
+  - 用namespace等方法应该也是可以的
 
 - 导入报错  
   只要不导入模块（变量）都不会报错  
@@ -622,7 +669,7 @@ const bird3: BirdInterface = bird1;
         - 若声明时未赋值，那将会是any类型
     - 要注意入口是否是any类型
 
-
+- 从这篇[博客](https://blog.csdn.net/weixin_43736464/article/details/106885937)来看，cesium也是用jsdoc，同时有输出.d.ts
 
 
 
@@ -682,8 +729,13 @@ const bird3: BirdInterface = bird1;
     这些搜出来的依赖都是微软或ts社区维护的
   - 不下的话vscode会有波浪线
   - 这样下下来的依赖都会存在`node_modules/@types`里
+  
 - 如果下不到.d.ts依赖的话只能自己写.d.ts  
   [这个视频](https://b23.tv/cn9EMLc)从16分39秒到结束都在说这个事
+  
+- 引用类型  
+  和引用库里内容的写法完全一致  
+  比如要把某个变量声明为指定类的，直接在类型注解里写这个类就行了（ts会自行判断当前是要用这个类的类型还是js里的类本身）
 
 
 
@@ -752,7 +804,7 @@ const bird3: BirdInterface = bird1;
 
 声明好后把内容导入其他js或ts都可以拥有类型推导（不过导入到js里的话类型推导功能是有缺陷的）
 
-注意：一个js文件配套了对应的.d.ts后，其内部仍然是不会有.d.ts里的类型推导的
+注意：一个js文件配套了对应的.d.ts后，其内部默认仍然是不会有.d.ts里的类型推导的
 
 - 简单示例  
 
@@ -784,8 +836,11 @@ const bird3: BirdInterface = bird1;
 
 
 
-- 写于`.d.ts`里的内容都可以写在`.ts`里  
-  (个人观察得出的)
+- 写于`.d.ts`里的内容基本都可以写在`.ts`里  
+  只有少数操作必须写在`.d.ts`里，下面写出必须写`.d.ts`里的操作
+  - 给window加属性
+  - 引用node_modules里的.d.ts声明的类型
+  
 - `.d.ts`专门写声明，是给库的使用者用的  
   - 放在项目里ide可以以此产生错误提示  
     （似乎对js文件也有效果）
@@ -815,6 +870,20 @@ const bird3: BirdInterface = bird1;
 - 声明全局变量（目前说的是就是全局变量，而不是挂在window、process下的属性）
   - 非对象  
     `declare const或let LIB_CONTAIN_TYPE: string`
+  
+- [声明window下的属性](https://my.oschina.net/tearlight/blog/3059568)  
+  找个.d.ts加入如下代码  
+
+  ```ts
+  interface Window {
+    属性名: 类型;
+  }
+  ```
+
+  这样声明后通过`window`去操作属性就没问题了，但是直接写`属性名`而不加`window.`的话就不行  
+  要允许不加`window.`的话还要找个.d.ts加入如下代码  
+  `declare const或let 属性名: 类型`  
+  （不加在.d.ts里而只是加在.ts里的话没有全局作用域，只有加了的ts文件里能用）
 
 
 
@@ -826,7 +895,10 @@ const bird3: BirdInterface = bird1;
 
 - compilerOptions.target  
   编译目标  
-  有时候报错
+  ts会依据编译目标进行报错
+- [是否允许使用可能为空的值](https://www.typescriptlang.org/tsconfig#strictNullChecks)  
+  `compilerOptions.strictNullChecks`  
+  默认不允许（一方面不允许是很不方便的，这会让项目产生多余的代码，使用空值并不会导致什么问题。另一方面ts有时会把必定有值的内容判断为可能为空，比如说用if或方法生成的类成员）
 
 
 
@@ -834,7 +906,16 @@ const bird3: BirdInterface = bird1;
 
 ### 其他
 
+- 导入json  
+  默认不支持  
+  在`tsconfig.json`里将"resolveJsonModule"设为true后支持
 - vscode
+  - 总览项目的ts校验  
+    最下方的PROBLEMS选项卡
 
 
 
+
+用ts的好处
+
+- 如果类型全部写好的话，那所有东西都可以不用看代码就能溯源

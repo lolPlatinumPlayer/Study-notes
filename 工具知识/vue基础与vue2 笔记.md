@@ -1943,12 +1943,24 @@ mounted: function () {
 
 - ts使用体验不佳  
   [这个知乎问题](https://www.zhihu.com/question/310485097/answer/591869966)里有一些描述
+  
 - method互调的时候可以有校验
+
 - 似乎只要通过模板，校验就无法成功
+
 - 默认情况下和vue2结合会报错但是可以打包和运行  
   减少报错的方法是“用类的形式写组件”，下一条笔记就有记录怎么写
+  
 - 可以在任意的SFC中加入ts  
   （比如说A SFC用了B SFC，可以只在B里加ts，而A不用加）
+  
+- vscode不会产生错误提示  
+  不仅是ts的没有，普通的js语法错误提示都没了（甚至不用ts的SFC里也没有提示）  
+  [这个贴子](https://tieba.baidu.com/p/6306556027)就遇到了这个情况，林先也说智能提示不是很好  
+
+  > vue3没有这个问题 —— 林先的同事
+
+  余榕的vue2也没有问题
 
 操作
 
@@ -1991,6 +2003,12 @@ mounted: function () {
 vue2虽然原生也支持类的写法，不过会有一些问题（比如method里没有this）
 
 建议使用这2个依赖：[vue-class-component](https://class-component.vuejs.org/)、[vue-property-decorator](https://github.com/kaorun343/vue-property-decorator)
+
+
+
+
+
+
 
 ### vue-class-component
 
@@ -2925,6 +2943,15 @@ iview3组件的事件名真的和文档写的医院，都带`on-`
    验证函数为：`(rule, value) => value === 'muji'`
 2. 验证函数传入asyncValidator属性  
    验证函数返回一个Promise，可以reslove也可以reject
+
+
+
+### vscode
+
+vscode默认不支持vue相关内容，需要通过Vuter等插件来做
+
+- Vuter  
+  有不少配置
 
 
 
