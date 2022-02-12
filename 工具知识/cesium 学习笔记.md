@@ -2,10 +2,16 @@
 
 **学习进度**
 
+- 无底图且球透明的场景  
+  这样就可以那种只有局部的三维地图了
+- https://github.com/YanzheZhang/Cesium.HPUZYZ.Demo  
+  学习的好东西
+- https://github.com/NASA-AMMOS/3DTilesRendererJS  
+  似乎把three和cz和3dtile结合了
 - 水面  
   [demo](https://sandcastle.cesium.com/?src=Lighting.html&label=All)
 - 镜头锁定住一点进行环绕  
-  应该是可以做的
+  可以做，记得CesiumLab里就有
 - 线路A  
   下次从https://www.cesium.com/docs/tutorials/cesium-workshop/ 的Setup开始学
 - 线路B
@@ -120,27 +126,42 @@
   - `import * as Cesium from 'cesium'`  
     不搞项目配置直接这样搞Cesium里有东西，不过`new Cesium.Viewer('czContainer')`仍然报错【】？？？
     
-  - 如果只加下面这点[官网](https://www.cesium.com/learn/cesiumjs-learn/cesiumjs-quickstart/#install-with-npm)代码的话，无法运行项目，并且会报错  
+  - [官方方式](https://www.cesium.com/learn/cesiumjs-learn/cesiumjs-quickstart/#install-with-npm)引入
     
-    ```js
-    window.CESIUM_BASE_URL = '/';
-    import * as Cesium from 'cesium';
-    import "cesium/Build/Cesium/Widgets/widgets.css";
-    Cesium.Ion.defaultAccessToken = 'your_access_token';
-    ```
+    - 官方引入方式和本笔记记录的“一个实践过的webpack操作方式”比较类似  
+      下面列出将“一个实践过的webpack操作方式”改为官方引入方式所需操作  
     
-    具体报错在本笔记内搜索“ThirdParty/zip.js”查看  
-    官网上的引入操作不止这几行代码
+      1. 引入cz的代码由  
+         `import * as Cesium from 'cesium/Cesium'`改为  
+         `import * as Cesium from 'cesium'`
+      2. 给`webpack配置对象.resolve.mainFiles`赋值`['index','Cesium']`
+      3. 删除`new CopyWebpackPlugin([{ from: path.join(cesiumSource, 'ThirdParty/Workers'), to: 'ThirdParty/Workers' }])`
+      4. 将  
+         `CESIUM_BASE_URL: JSON.stringify('./')`改为  
+         `CESIUM_BASE_URL: JSON.stringify('')`
+    
+    - 如果只加下面这点[官网](https://www.cesium.com/learn/cesiumjs-learn/cesiumjs-quickstart/#install-with-npm)代码的话，无法运行项目，并且会报错  
+    
+      ```js
+      window.CESIUM_BASE_URL = '/'; // 官方demo里不需要手动加这行代码，应该是由webpack的DefinePlugin插件做的
+      import * as Cesium from 'cesium';
+      import "cesium/Build/Cesium/Widgets/widgets.css";
+      Cesium.Ion.defaultAccessToken = 'your_access_token';
+      ```
+    
+      具体报错在本笔记内搜索“ThirdParty/zip.js”查看  
+      官网上的引入操作不止这几行代码
     
   - 在webpack上操作后引入  
     （不管是搜“cesium webpack”还是“cesium vue”，各个文章的操作方式都是不同的，官网demo也和这些文章不同）  
   
-    - 一个实践过的webpack操作方式  
-      没发现什么问题（这个方式具体是哪看的无从考究了）  
+    - 一个实践过的webpack操作方式（这个方式具体是哪看的无从考究了）  
+      除了无法结合ts使用外没别的问题  
+      要结合ts用的话要改为官方方式引入（本笔记上方有记录如何操作）  
       需加内容如下  
-  
+      
       1. 在vue.config.js里加如下内容  
-  
+      
          ```js
          const CopyWebpackPlugin = require('copy-webpack-plugin')
          const webpack = require('webpack')
@@ -148,9 +169,8 @@
          
          // Cesium源码所在目录
          const cesiumSource = './node_modules/cesium/Source'
-         const cesiumWorkers = '../Build/Cesium/Workers'
          ```
-  
+         
       2. 给webpack加上如下配置  
   
          ```js
@@ -172,7 +192,7 @@
          },
          plugins: [
            // 使用 copy-webpack-plugin，它能在编译阶段，把Cesium里静态文件整个拷贝到 dist 目录下，确保我们的服务能访问它
-           new CopyWebpackPlugin([{ from: path.join(cesiumSource, cesiumWorkers), to: 'Workers' }]),
+           new CopyWebpackPlugin([{ from: path.join(cesiumSource, '../Build/Cesium/Workers'), to: 'Workers' }]),
            new CopyWebpackPlugin([{ from: path.join(cesiumSource, 'Assets'), to: 'Assets' }]),
            new CopyWebpackPlugin([{ from: path.join(cesiumSource, 'Widgets'), to: 'Widgets' }]),
            new CopyWebpackPlugin([{ from: path.join(cesiumSource, 'ThirdParty/Workers'), to: 'ThirdParty/Workers' }]),
@@ -263,9 +283,23 @@
     - https://zhuanlan.zhihu.com/p/340669216
     - https://blog.csdn.net/qq_26991807/article/details/103862839
 
+- 使用天地图底图  
+  服务大部分时候都是卡的
+  - [官方方法](http://lbs.tianditu.gov.cn/docs/#/sanwei/)  
+    - 官方的说法是：“目前支持cesuim1.52、1.58、1.63.1”
+    - 在cz1.89.0上简单试了下是不行的  
+      会报错：`normal must be normalized`
+  - [知乎方法](https://zhuanlan.zhihu.com/p/267935427)  
+    可行  
+    - 标注用的是栅格标注（标注图层是可以去掉的）
+    - 这个方法里说要设置`Cesium.Ion.defaultAccessToken`实际上是不用的
+    - 关于[`subdomains`配置](https://cesium.com/learn/cesiumjs/ref-doc/WebMapTileServiceImageryProvider.html?classFilter=WebMapTileServiceImageryProvider)  
+      [知乎方法](https://zhuanlan.zhihu.com/p/267935427)配了8个，这样会让天地图服务的配额高速消耗，但也会提升切片的加载速度  
+      平时留1个就行了，不然耗不起
 
 
-### 地形（terrain）
+
+##### 地形（terrain）
 
 - **概念**  
   让地球表面有凹凸（没有地形的话就只是平面或曲面）
@@ -280,6 +314,44 @@
   });
   ```
   就拥有了地形
+  
+- 如果物体依据球体表面设置高度（而不是地形表面）  
+  那地形不会盖住这些物体  
+
+  - 依据球体表面设置高度的情况  
+    - polyline的clampToGround设为false
+    - 设置polygon的height
+
+
+
+##### 使用自建服务
+
+- 影像
+
+- 地形  
+
+  - 服务端  
+    - 数据下载  
+      [ZY给的一个地址](https://www.gscloud.cn/sources/index?pid=302&ptitle=DEM%20%E6%95%B0%E5%AD%97%E9%AB%98%E7%A8%8B%E6%95%B0%E6%8D%AE&rootid=1)  
+      [ZY说可能可以用的一个地址](http://www.ngcc.cn/ngcc/)
+    - 建立服务  
+      用cesiumLab应该就行了
+
+  - 前端使用  
+
+    - 使用ZY书峰乡数据的例子  
+      在Viewer配置项里加上如下代码  
+
+      ```js
+      terrainProvider: new Cesium.CesiumTerrainProvider({
+        url: '一个地址',
+        requestVertexNormals: true,
+      })
+      ```
+
+      
+
+  
 
 
 
@@ -310,6 +382,7 @@ viewer.scene.skyBox = new Cesium.SkyBox({
 
 - then和otherwise会返回`Promise$1`实例  
   但是彼此间是不相等的（用`===`判断结果为`false`）
+- ts里类型写es6的Promise也能契合这个cz的Promise
 - `Promise$1`实例应该都是`Cesium.when()`生成的
 - [github源码](https://github.com/CesiumGS/cesium/blob/1.89/Source/DataSources/DataSourceCollection.js)里引用'when.js'的地址不存在  
   但是在[官网](https://cesium.com/downloads/)上下的源码里`when.js`是存在的  
@@ -325,7 +398,9 @@ viewer.scene.skyBox = new Cesium.SkyBox({
 
 
 
-# 编程
+# 前端编程
+
+
 
 ### 镜头
 
@@ -353,7 +428,7 @@ viewer.scene.skyBox = new Cesium.SkyBox({
   
 - 将镜头瞬移到指定坐标  
   `viewer.camera.setView`方法  
-  使用方法参考上一条的`flyTo`方法
+  传参参考上一条的`flyTo`方法
 
 - 保存镜头位置信息，以便未来把镜头放到保存的位置
 
@@ -446,20 +521,19 @@ viewer.scene.skyBox = new Cesium.SkyBox({
 
   - 叠加类型  
     [`classificationType`选项](https://cesium.com/learn/cesiumjs/ref-doc/Cesium3DTileset.html#classificationType)  
-    - 效果  
-      若产生叠加，那该模型的形状会消失  
-      而被叠加物体的表面会变成该模型的颜色  
-      变色区域为：不叠加时该模型遮挡被叠加物体的区域
-    
+    这里说的其实都是多边形的（包含模型的笔记见2022.2.11前的版本，不过对于多边形来说不怎么适用）
+    - 叠加效果  
+      用来叠加的物体会覆盖在被叠加物表面
+    - 叠加区域  
+      用来叠加的物体垂直于地面投影在被叠加内容上的部分
     - [可选值](https://cesium.com/learn/cesiumjs/ref-doc/global.html#ClassificationType)  
-      - undefined不产生叠加
-      - TERRAIN：应该是和地形叠加
+      - TERRAIN：和地球表面叠加
       - CESIUM_3D_TILE：和3dtile叠加
-      - BOTH：应该是同时和地形和3dtile叠加
+      - BOTH：同时和地球表面与3dtile叠加
 
 
 
-### “物体”
+### [“物体”](https://cesium.com/learn/cesiumjs-learn/cesiumjs-creating-entities/)
 
 目前属于自己定义的一个概念
 
@@ -501,6 +575,13 @@ entity和primitive对比
 
 ### [entity](https://cesium.com/learn/cesiumjs/ref-doc/Entity.html)
 
+- 一个entity允许携带多个不同图形  
+  比如同时携带线和和面
+  - entity里存在的图形会是对应图形的实例  
+    不存在的就是undefined
+
+
+
 
 
 **demo**
@@ -511,8 +592,7 @@ entity和primitive对比
 ```js
 // 圆
 var pointEntity = viewer.entities.add({
-  // 点击点后弹出的描述信息 (sn大屏项目测试发现点击后不会弹出，甚至把默认控件都放出来也没看见)
-  description: `行数不定的字符串`,
+  description: `行数不定的字符串`, // 点击点后弹出的描述信息 (sn大屏项目测试发现点击后不会弹出，甚至把默认控件都放出来也没看见)
   position: Cesium.Cartesian3.fromDegrees(经度,纬度,高度),
   point: { pixelSize: 10, color: Cesium.Color.ORANGE }
 })
@@ -526,24 +606,36 @@ var pointEntity = viewer.entities.add({
 
 - 第一种：`viewer.entities.add`
 
-  - 入参：可以是[Entity](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html)实例也可以是[Entity的配置项](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html#.ConstructorOptions)
-    - 配置项
-      - 配置对象的属性都会被添加到实例里<span style='opacity:.5'>（自己写文档里没有的属性也行）</span>  
+  - 入参：可以是[Entity](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html)实例也可以是[Entity的配置对象](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html#.ConstructorOptions)
+    - 配置对象
+      - 配置对象的属性都会被添加到实例里<span style='opacity:.5'>（不管文档里有没有这个属性，都会添加进去）</span>  
         甚至实例里还会有配置对象加下划线版本的属性<span style='opacity:.5'>（比如原属性名是a，加下划线后就是_a）</span>
   - 返回值：[Entity](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html)实例
 
 - 第二种  
 
   > 由 [`CzmlDataSource`](https://cesium.com/learn/cesiumjs/ref-doc/CzmlDataSource.html)、[`GeoJsonDataSource`](https://cesium.com/learn/cesiumjs/ref-doc/GeoJsonDataSource.html)这样的数据源生成 —— [Entity文档](https://cesium.com/learn/cesiumjs/ref-doc/Entity.html)
+  
+  具体方法在本笔记的“数据源”部分有记录
 
 
 
 ##### 操作
 
-- 设置坐标  
-  `position`配置项  
-  操作方法去[Entity的配置项](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html#.ConstructorOptions)里找
+- 坐标  
+
+  - 设置初始值  
+    `position`配置项  
+    操作方法去[Entity的配置项](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html#.ConstructorOptions)里找
+  - 后期修改  
+    通过[`position`属性](https://cesium.com/learn/cesiumjs/ref-doc/Entity.html#position)修改  
+    <span style='opacity:.5'>（官网👆上似乎说还可以通过赋值来修改）</span>
+
+- 更改图形  
+  Entity实例里有存各个图形的实例，可以通过图形的实例去做更改
+
   
+
   
 
 ##### 图形
@@ -554,9 +646,27 @@ var pointEntity = viewer.entities.add({
 
 - 按目前了解，一般图形的载体都是entity  
   entity有一部分的配置就是图形
+  
 - 图形的配置项<span style='opacity:.5'>（注意是图形的不是entity的）</span>  
   - `show`用来设置是否显示
   - `material`用来设置材质
+  
+- 覆盖关系  
+
+  - zIndex配置  
+    默认不生效的  
+    不同图形有不同的生效条件（个人猜测之所以有条件，是为了确保这些东西都在地面上）  
+    如果不生效的话一定是近的盖住远的  
+    - 这个zIndex是可以跨entity比较的
+
+  - height:0的面<span style='opacity:.5'>（zIndex不生效）</span>一定会盖住clampToGround:true的线<span style='opacity:.5'>（zIndex生效）</span>
+  - 如果zIndex都生效但是都没设值的话  
+    表现会很奇怪  
+    - 案例  
+      2个带线和面的entity  
+      覆盖关系为：先画的线>后画的线>先画的面>后画的面
+
+  
 
 
 
@@ -583,15 +693,16 @@ entity中的图形配置项
   - 让尺寸随着『相机与物体间的距离』而变化  
     配置项：`scaleByDistance`  
     配置项的值：[`Cesium.NearFarScalar`](https://cesium.com/docs/cesiumjs-ref-doc/NearFarScalar.html)实例（关于该实例更多内容可在本笔记内查看）  
-
+    默认值：不会近大远小  
+    
   - 让透明度随着『相机与物体间的距离』而变化  
     配置项：`translucencyByDistance`  
     配置项的值：[`Cesium.NearFarScalar`](https://cesium.com/docs/cesiumjs-ref-doc/NearFarScalar.html)实例（关于该实例更多内容可在本笔记内查看）
-
+  
   - 让圆只在『相机与物体间的距离』在指定区间内时才显示  
     配置项：`distanceDisplayCondition`  
     配置项的值：`new Cesium.DistanceDisplayCondition (会显示的最小距离,会显示的最大距离)`
-
+  
     
 
 ###### [立方体](https://cesium.com/docs/cesiumjs-ref-doc/BoxGraphics.html#.ConstructorOptions)  
@@ -624,11 +735,11 @@ entity中的图形配置项
     {
       dimensions: new Cesium.Cartesian3(
         纬线方向的厚度,
-    经线方向的厚度,
+        经线方向的厚度,
         高度
       ),
       fill: false,
-  outline: true,
+    outline: true,
       outlineColor: Cesium.Color.YELLOW.withAlpha(不透明度),
     }
     ```
@@ -729,19 +840,56 @@ entity中的图形配置项
 
 
 
+###### 多边形
+
+[`polygon`配置项](https://cesium.com/learn/cesiumjs/ref-doc/PolygonGraphics.html)  
+
+- 可以增加厚度成多面体  
+  厚度可以不等的（就是说可以做出各个地方厚度不一样的多面体）
+- 控制离开球面的高度  
+  `height`配置项  
+  这里说的球面不包括地形  
+  只有值为undefined时才会贴在地形表面
+  - 决定`height`值的情况
+    - 直接用entity生成多边形，那`height`不设的话就是undefined  
+      （就算去掉数据里的首尾重复点，结果也是一样的）
+    - 用geojson数据源生成的话`height`会是0
+  - 为undefined时会有如下bug
+    - 描边不显示
+    - 如果用8字型数据  
+      那会生成一个难以形容的立体形状  
+      （`height`不为undefined的话生成的是一个三角形）
+  - 提醒：不为undefined的话zIndex无法生效
+- 有“叠加类型”选项  
+  和模型一样，具体内容见模型的“叠加类型”部分
+- 坐标用顺时针逆时针都可以
+- 描边宽度  
+  无法大于1（[有的博客](https://blog.csdn.net/weixin_33716941/article/details/93150599)说只有win不行，可是去余榕的mac上试过也是不行）
+
+
+
+
+
+
+
+
+
 ###### 其他
 
-- [多边形](https://cesium.com/learn/cesiumjs/ref-doc/PolygonGraphics.html)  
-  - 可以增加厚度成多面体  
-    厚度可以不等的（就是说可以做出各个地方厚度不一样的多面体）
-  - 控制离地高度  
-    `height`配置项
-  - 有“叠加类型”选项  
-    和模型一样，具体内容见模型的“叠加类型”部分
-  - 坐标么有顺时针逆时针都可以
 - 模型  
   [demo](https://sandcastle.cesium.com/index.html?src=3D%2520Models.html)
 - [墙](https://cesium.com/learn/cesiumjs/ref-doc/WallGraphics.html)
+- 图（含canvas）  
+  [`billboard`](https://cesium.com/learn/cesiumjs/ref-doc/BillboardGraphics.html)
+- 线  
+  [`polyline`配置项](https://cesium.com/learn/cesiumjs/ref-doc/PolylineGraphics.html#.ConstructorOptions)  
+  - 宽度模式  
+    `clampToGround`配置项  
+    - 默认值为false  
+      线各处宽度在屏幕上看都一样
+    - true  
+      线在地面上有一致的宽度  
+      （就是说屏幕上看的话宽度不一定一致）
 
 
 
@@ -785,6 +933,8 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
 - 增加图形  
   `collection.add`方法  
   比如[BillboardCollection#add](https://cesium.com/docs/cesiumjs-ref-doc/BillboardCollection.html#add)
+- 获取所有entity  
+  通过`values`属性可以获取（文档里没写这个方法）
 
 
 
@@ -811,8 +961,6 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
   - geojson：对应[GeoJsonDataSource类](https://cesium.com/learn/cesiumjs/ref-doc/GeoJsonDataSource.html)
   - czml：对应[CzmlDataSource类](https://cesium.com/learn/cesiumjs/ref-doc/CzmlDataSource.html)
   - kml：对应[KmlDataSource类](https://cesium.com/learn/cesiumjs/ref-doc/KmlDataSource.html)
-- 获取entity的方法  
-  dataSource的entities属性是一个[EntityCollection](https://cesium.com/learn/cesiumjs/ref-doc/EntityCollection.html)实例，里边放着entity
 
 
 
@@ -830,21 +978,52 @@ viewer.dataSources.add(
 
 **编程流程**
 
-1. 创建一个DataSource实例  
-   基本都是用DataSource类的load方法创建  
+1. 创建一个DataSource实例或能生成实例的Promise  
+   用`DataSource类.load`方法创建（这里只介绍这种创建方法，一般来说也是用这种方法创建）  
    这个方法会返回一个`Promise$1`实例，`Promise$1`实例的then方法会返回DataSource实例
    - 入参  
      1. 第一个入参  
         可以是一个数据源的url也可以是一个内存里的数据源
      2. 第二个入参  
-        一个配置（像[GeoJsonDataSource](https://cesium.com/learn/cesiumjs/ref-doc/GeoJsonDataSource.html#.LoadOptions)的话就有一部分对entity的设置）
+        一个配置，像[GeoJsonDataSource](https://cesium.com/learn/cesiumjs/ref-doc/GeoJsonDataSource.html#.LoadOptions)的话就有少量对entity的设置
    - 返回值：一个`Promise$1`实例  
      `Promise$1`实例的then方法会返回DataSource实例
 2. 把实例添加进场景  
    `viewer.dataSources.add(入参)`  
-   这个方法接受2种入参
+   [这个方法](https://cesium.com/learn/cesiumjs/ref-doc/DataSourceCollection.html#add)接受2种入参
    1. DataSource实例
    2. 返回DataSource实例的Promise$1实例
+
+
+
+**操作**
+
+- 获取entity的方法  
+  dataSource的entities属性是一个[EntityCollection](https://cesium.com/learn/cesiumjs/ref-doc/EntityCollection.html)实例，里边放着entity
+- 做样式等设置的方法  
+  - 可以在『DataSource类的load方法』的第二个参数进行设置<span style='opacity:.5'>（像[GeoJsonDataSource](https://cesium.com/learn/cesiumjs/ref-doc/GeoJsonDataSource.html#.LoadOptions)的话就有少量对entity的设置）</span>
+  - GeoJSON的话如果符合[simplestyle-spec](https://github.com/mapbox/simplestyle-spec)，也会按properties的渲染  
+    cz1.89.0基本遵守[simplestyle-spec1.1.0](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0)<span style='opacity:.5'>（描边宽度不生效是因为entity本身就不支持）</span>
+    - 不遵守simplestyle-spec的部分  
+      - simplestyle-spec默认颜色是灰色  
+        但是cz改为了黄色
+    - 透明度  
+      simplestyle-spec的透明度完全依据透明度类属性走  
+      虽然simplestyle-spec写着fill-opacity默认值是0.6，但是cz里设了fill的话默认值就会变成1  
+      fill里的透明度不会生效
+    - cz里颜色值允许用`rgb(1,1,1)`和`rgba(1,1,1,.5)`格式<span style='opacity:.5'>（simplestyle-spec的意思好像是只能用#ace和#aaccee这种格式）</span>
+    - 提醒：如果直接生成entity（不用数据源）的话，就算遵从simplestyle-spec也不会生效
+  - 获取entity后修改entity  
+    用这个方法想做什么设置都可以
+
+
+
+GeoJsonDataSource
+
+- entity里会存GeoJSON里的properties  
+  存properties的属性就叫[`properties`](https://cesium.com/learn/cesiumjs/ref-doc/Entity.html#properties)
+
+- > 可以加载墨卡托数据 —— ZY
 
 
 
@@ -861,6 +1040,8 @@ viewer.dataSources.add(
 ### 事件
 
 笔记待整理
+
+
 
 ##### 加载完成事件
 
@@ -1044,13 +1225,23 @@ viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEven
 
 
 
-**坐标系转换**  
+坐标系转换  
 可以看看[`Cesium.SceneTransforms`](https://cesium.com/docs/cesiumjs-ref-doc/SceneTransforms.html)
 
 
 
-[`Cesium.Cartesian3`](https://cesium.com/docs/cesiumjs-ref-doc/Cartesian3.html)  
-是比较常用的，据说是空间直角坐标系  
+[`Cesium.Cartographic`](https://cesium.com/docs/cesiumjs-ref-doc/Cartographic.html)  
+比较罕见，属性里的经纬度是用弧度表示
+
+
+
+###### [`Cesium.Cartesian3`](https://cesium.com/docs/cesiumjs-ref-doc/Cartesian3.html)  
+
+*是比较常用的，应该是表示空间直角坐标系的3维向量*  
+
+
+
+实例内容
 
 - `x`、`y`、`z`属性存有x、y、z坐标
 - 有克隆该实例的方法：`实例.clone`
@@ -1076,8 +1267,18 @@ viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEven
 
 
 
-[`Cesium.Cartographic`](https://cesium.com/docs/cesiumjs-ref-doc/Cartographic.html)  
-比较罕见，属性里的经纬度是用弧度表示
+相关util
+
+- 将经纬度海拔转为Cartesian3实例  
+  [`Cesium.Cartesian3.fromDegrees`](https://cesium.com/learn/cesiumjs/ref-doc/Cartesian3.html#.fromDegrees)  
+  （这是一个几何方向的方法，但是一般用来做经纬度的转换）
+- 将经纬度数组转为Cartesian3实例数组  
+  [`Cesium.Cartesian3.fromDegreesArray`](https://cesium.com/learn/cesiumjs/ref-doc/Cartesian3.html#.fromDegreesArray)  
+  （这是一个几何方向的方法，但是一般用来做经纬度的转换）
+- 将经纬度海拔数组转为Cartesian3实例数组  
+  应该是用Cesium.Cartesian3.fromDegreesArrayHeights，没仔细了解
+
+
 
 
 
@@ -1199,6 +1400,83 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
 - **时间轴**  
   拖动手柄以选择到哪个时间
 
+
+
+# [CesiumLab](http://www.cesiumlab.com/)
+
+- 官网可以下个exe  
+  exe打开是个本地网页  
+  里面有不少东西
+
+- 服务  
+
+  > 国内公司基本都是用这个工具做数据服务 —— 为鑫
+
+  ZY的书峰乡地形服务好像也是用这个做的
+
+
+
+### [EarthSDK](http://www.earthsdk.com/)
+
+3个js库的统称  
+功能不少，还可以调整FOV
+
+
+
+**资源**
+
+- [官网](http://www.earthsdk.com/)提供了个下载包  
+  下载包里包括：文档、demo和3个js库的生产版
+
+
+
+**特性**
+
+- 有暴露出Cesium，且能取出EarthSDK中的Viewer进行操作
+
+
+
+**简述3个js库**
+
+[设计的重点：配置式、与vue结合](https://github.com/cesiumlab/XbsjEarthUI/wiki/Cesium%E7%9A%84%E6%89%A9%E5%B1%95%E5%B7%A5%E5%85%B7%E5%8C%85-EarthSDK%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%971#earthsdk%E6%8F%90%E4%BE%9B%E8%B6%85%E7%BA%A7%E6%98%93%E7%94%A8%E7%9A%84api)
+
+- XbsjEarthUI  
+  开源有文档  
+  依赖XbsjEarth
+- XbsjEarth  
+  闭源有文档  
+  依赖XbsjCesium
+- XbsjCesium  
+  闭源无文档 
+
+
+
+**XbsjEarthUI**
+
+- 可以研究，但不建议使用  
+  原因如下
+
+  - api文档不全  
+    缺少教程
+  - 依赖2个闭源库  
+    且闭源库文档也不全
+
+- [官方有时候](https://github.com/cesiumlab/XbsjEarthUI/wiki/Cesium%E7%9A%84%E6%89%A9%E5%B1%95%E5%B7%A5%E5%85%B7%E5%8C%85-EarthSDK%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%971#%E6%A0%B7%E4%BE%8B%E7%A8%8B%E5%BA%8Fxbsjearthui)不把XbsjEarthUI当成EarthSDK的一部分
+
+- 有在码云和github上开源
+
+- 有部分是用vue写的
+
+  
+
+# [TerriaJS系列](https://github.com/TerriaJS/terriajs)
+
+基于Cesium的项目，主要是数据、地图展示，似乎有提供服务
+
+Cesium不可用时可以退回Leaflet
+
+
+
 # 相关文件格式
 
 - **KML**（Keyhole Markup Language）  
@@ -1266,4 +1544,7 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
     `viewer.scene.globe.tileLoadProgressEvent.addEventListener(函数)`
   - 规避方法为：  
     祖先高度设为`0`，`overflow`设为`hidden`
+- 本地文档  
+  源码下下来运行`npm run generateDocumentation`  
+  命令执行完后运行index.html就可以看文档了
 

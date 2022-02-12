@@ -105,16 +105,20 @@ es6+会用下面这种标签来标记
 
 # 数字
 
-### 表达
+
+
+表达
 
 - `1e-2`等于0.01
 - `1e2`等于100
 
 
+
 ### 操作
 
-四舍五入 Math.round(7.25)
-取出大的值 Math.max(2,4)
+- 四舍五入：`Math.round(7.25)`
+- 取出大的值：`Math.max(第一个值,第二个值)`
+- 平方：`Math.pow(基数,指数)`
 
 
 
@@ -684,6 +688,10 @@ class HasSetGet {
 
 （这里介绍的内容都来自[EventTarget](https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget)）
 
+
+
+**操作**
+
 这里写的是最正规的方法
 以下事件名不加on
 
@@ -691,6 +699,8 @@ class HasSetGet {
   `元素.addEventListener(字符串事件名, 函数名)`
 - 移除事件
   `元素.removeEventListener(字符串事件名, 函数名)`
+
+
 
 **特性**
 
@@ -703,9 +713,18 @@ class HasSetGet {
 
 
 
+**焦点相关**
+
+div上似乎没有聚焦、失焦事件  
+不过window有
+
+做『判断按键按下状态』时，可以增加对window焦点的监听，这样状态判断就万无一失了
 
 
-**增加自定义事件**
+
+
+
+### 增加自定义事件
 
 <span style='opacity:.5'>这里用代码来说明</span>
 
@@ -720,18 +739,16 @@ const event = new CustomEvent("自定义事件名", 配置对象); // 第二个�
 - 监听事件的回调的参数  
   是customEvent实例，拥有一个detail属性，里边有传递的数据
 
+
+
+评价
+
+- 自己写事件的话还是不要依赖这个api<span style='opacity:.5'>（像mapbox、leaflet等库都是自己写的事件系统）</span>  
+  缺陷严重
+
 - 缺点  
   - 无法继承事件
   - 传输数据必须从`detail`属性里取
-
-
-
-**焦点相关**
-
-div上似乎没有聚焦、失焦事件  
-不过window有
-
-做『判断按键按下状态』时，可以增加对window焦点的监听，这样状态判断就万无一失了
 
 
 
@@ -989,6 +1006,12 @@ const除了以上区别外，const在声明时必须赋值，而且其声明的�
 在二进制位移，返回十进制。  
 向左的即为左移，在右侧加上位移数个数的0，反之同理  
 a<<b在数学中相当于a=a*2^b，反之类似  
+
+
+
+### [`^`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_XOR)
+
+
 
 ### `~`
 
@@ -1847,7 +1870,6 @@ js中的正则表达式就是`RegExp`对象
   - js方法：`\u4e00-\u9fa5`（代码示例：`/[\u4e00-\u9fa5]/.test('dsac上次ds')`）  
   - php方法：`\x80-\xff`  
   
-
 - 数量  
    `*`匹配重复任意次(可能是0次)，而 `+`则匹配重复1次或更多次  
    而问号(?)表示零次或一次  
@@ -2145,12 +2167,19 @@ Symbol是第七种数据类型
 作用：负责导出
 
 两种格式：  
-1. `export{a,b}`  
+1. `export {a,b}`  
    就算只export一个变量也要用括号，之后import也要带括号
 2. `export var a='xx'`  
-   这种格式不能用as在输出时重命名变量  
+   
+   - 这种格式有个变体如下  
+   
+     ```js
+     export class A{}
+     ```
+   
+   - 这种格式不能用as在输出时重命名变量  
 
-两种格式 变量在`export`前或`export`时都必须定义，且不可重复定义  
+两种格式的变量在`export`前或`export`时都必须定义，且不可重复定义  
 
 - `import`后`export`的简写方式：  
 
@@ -2158,6 +2187,8 @@ Symbol是第七种数据类型
   - `export * from './math'`
 
   上面这2种简写的测试环境：`math.js`里都是用`export`导出的
+  
+- 这种写法可以用多次（比如说第一行导出了A，第二行可以接着导出B）
 
 
 

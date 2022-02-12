@@ -1,10 +1,10 @@
-### GIS
+# GIS
 
 地理信息系统（Geographic Information System或 Geo－Information system）
 
 
 
-### 高程与海拔
+# 高程与海拔
 
 - 两者单位相同，并且都用来描述垂直距离  
 - 高程有很多种，可以以不同高度为起点  
@@ -13,7 +13,7 @@
 
 
 
-### 地理编码与反向地理编码
+# 地理编码与反向地理编码
 
 - **地理编码**  
   通过地名或地址信息转换为地球上的位置（坐标）
@@ -22,15 +22,44 @@
 
 
 
-### 坐标系
+# 坐标系
+
+（有的资料叫坐标系有的资料叫坐标系统，其实都是一个东西）
 
 - 中国坐标加密  
-
+  也就是GCJ-02坐标系（火星坐标系）
+  
   - > 测绘地图后要加密后才可以出版和发布；所有汽车导航都要加入保密算法将COM口读出来的真实坐标进行转换，这样才可以和电子地图进行匹配  —— [火星坐标系统 词条](https://baike.baidu.com/item/%E7%81%AB%E6%98%9F%E5%9D%90%E6%A0%87%E7%B3%BB%E7%BB%9F/6734069?fr=aladdin)
+  
+  - [百度](https://lbsyun.baidu.com/index.php?title=coordinate)和[高德](https://lbs.amap.com/api/webservice/guide/api/convert/)会基于GCJ-02进行二次加密
+  
+- WGS84  
+  GPS是基于WGS84的
 
 
 
-### 其他名词
+### EPSG
+
+> WGS84 是目前最流行的地理坐标系统。在国际上，每个坐标系统都会被分配一个 [EPSG](https://epsg.io/) 代码，EPSG:4326 就是 WGS84 的代码 —— https://www.cnblogs.com/E7868A/p/11460865.html
+
+
+
+# [GeoJSON](https://geojson.org/)
+
+- 图层  
+  在ol、leaflet、mapbox里一份GeoJSON都是对应一个图层（cz里也可以依据GeoJSON渲染，但是渲染出的东西应该不叫图层）
+- 要素（应该是叫要素）  
+  对应GeoJSON里的feature
+- 几何图形  
+  一个feature可以对应任意数量的要素  
+  比如点，就有单点类型和多点类型的feature，这个情况在线、面里也是一样的  
+  甚至一个要素可以包含不同类型的几何图形（[GeometryCollection](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.8)类型的feature就可以）
+
+
+
+
+
+# 其他名词
 
 - [CRS](https://en.wikipedia.org/wiki/Spatial_reference_system)  
   coordinate reference system的缩写和SRS是同一个意思
@@ -47,6 +76,6 @@
 
 
 
-### 其他
+# 其他
 
 - [查看行政区划代码](http://www.mca.gov.cn/article/sj/xzqh/1980/)
