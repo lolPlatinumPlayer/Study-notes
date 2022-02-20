@@ -28,14 +28,14 @@
 ### ts的功能
 
 - 用ts的话在编程阶段ide就会给出校验结果
-  - 不同文件也会被视为处于相同作用域  
-    比如说不能在不同文件中用`let`声明同样的变量、比如不同文件的同名接口也会进行合并  
-    默认情况是这样的，[这里](https://www.jianshu.com/p/78268bd9af0a?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation)略微有提到修改默认配置以取消这个特性的方法
-  
+
+- 不同文件也会被视为处于相同作用域  
+  比如说不能在不同文件中用`let`声明同样的变量、比如不同文件的同名接口默认会进行合并
+
 - ide可以获得悬停提示（比如某个变量有哪些成员）
-  
+
   - 如果是jsdoc的话还可以获得额外说明
-  
+
 - 编译阶段就会给出错误提示  
   并且webpack4默认拒绝编译有错误的生产环境包  
   不过`typescript`npm包是允许编译有错误的文件的
@@ -401,6 +401,11 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
   - number  
     虽然vscode提示`propName`允许的类型为string、symbol和number  
     但是`[propName: string|symbol]`和`[propName: string|symbol|number]`在vscode里的错误提示是完全一致的
+  
+- 限制键类型  
+  `{[key in 键类型]: 属性值类型;}`
+
+  - `{[propName: 键类型]:属性值类型;}`这种写法是不行的
 
 
 
@@ -418,8 +423,9 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
 - 同名接口  
   （官网上有相关说明的页面，目前看到的有[声明合并](https://www.typescriptlang.org/docs/handbook/declaration-merging.html)和[这个例子](https://www.typescriptlang.org/play?#code/PTAEBUAsFMCdtAQ3qALgdwPagLaIJYB2ammANgM4mgAm0AxmcgqjKBZIgA4KYBmSQgFgAUCFCYARgCsGqAFygiqOH0T1oVRIRpoAnjyRl8iCpoB0okFbBRoepCgBucBxXw58TWABpBuvkxYNDYcTApUUHpMHDDielNNGyR6SNYECkQcaEsRUVQDBAAhfFgacELQAF5QAG9RUFB0IgBzCkUAJgBuUQBfHryRZVV1YtKaAElCFVg1DTqGptb20G6+0VFowgjQSXGARkUSsorDGtqlwjbO0H7NzG3IvbKOo-GpmbmEc8vr1duBskigxEABXMwQQoAZXosHwXEi+C07FQsFBqVBsEQZH0hgoegi0BwPmS+FQAHIqFxwu5JGQWNhhrBPAAPELQUqgcEMzC5e6PXbjADMbzKHxG8xqzxo+0BYlsMAckkwrHYoK41NgkWgLJUOlaEnSwSZXy0OlxFmSpwQ2JMZioNGwrCRoCcJiU0zgZlS+AeFoofnQkC80FJntmoyonBcSFAAGt7FgynyRAVDAB5dA4n6ETAY2CEbGKVGghC9UAAMlAx3KhQGaYQACUpERqnVQLn84WyIo1JQy5Xq+9w185SbRqAAArQdR5uOgHV6mhUGvWhYiRrRMiYTF8UE9tBo6ADRp8YyaXvYswDXqicfzADCwfoCeIi+gOhXw8+E-qG6i5A7rM+6Xv2J6gGe+AXhBV7Husgz0pEmBZoombZu2zRXCsHR+J2qCYt2xZHgCoiIVEz6vooT74C+H5thcmF-DhAHbruIEwf2fiQdBfYQncgziFAiCRJk+A0IGCDwNEsQfroeg7lyEL3poEguMEDbJLaiQUOYoBQjw9D4HwNHYmQeh+JIILcqA8mgksZA4i00BPM5MwLrAsBBMk2QUJkTk6aAEwCLZoCQJgamqXA7IQeQ26Me5nmwAGNkKQkwjyuw0AIGF6CQjwMJwgiUTaKAXCeW6dBoF6UXaLoYQoIE9DcjQ3maH5KlBnRSZxgazSqspVDGAmoDUbRhApsh6H0BRH4DNNNGvm2k1yuI6aEAgeDSEEtBGXwcAfvMlkYFlxANkYdoqU4VADZpKCsMJHo-hoWgoJgPDELVFrndpjgIIw4TQDQuSCcGVDZNoVAhWlC66rJgiPRKCCSA4dCMMgBpkppmVbLoqAeDkGxDCOE4ANJknq66NFwmJJYoyrkDOhA3oTymgGTqAU3+m6AZiigRHCVzMwJYBTNFKowMECQQogX1pbmLnkdoTm6DuqDuJV-CkhSDoMN4wm+uNhNnZO6pcA45yLFuQR86irQ3nKxum+blMkASiiEKCOCWbA9uE+IAAi0DvTQBp+rZwQtJgV5+M6Dq7fthDzNE+66JZSDJNS7h4zG20y+tLT6y4ukABLIdAEWBME1N0jRZkw5ngPJA2yVkpSsZHW5CQOdQeDDekODw8pKaretEgCOkuyaJE8AUEBz0xcEZgclcRg4vw0WA05yRSypyA7uazeutdxPPTHoMouo87haocVN5A8CILoLoy5HmC6FwTDzKg2ARMgCh+2ASAHMuDtBAL-F819ZhxXMNJYAABHUsEQDYUGAEKAA7B0IU6ChQAFZgDN1hPCVAABaAaxCrrEObsAHBHQABsAAODoTCAAMABiGhDCmEdGYaIIAA)）  
   可以写同名接口  
-  最终发挥作用的接口是多个同名接口的合并  
-  不允许在同名接口中把不同属性定义为不同类型
+  - 最终发挥作用的接口是多个同名接口的合并  
+    [这里](https://www.jianshu.com/p/78268bd9af0a?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation)略微有提到修改默认配置以取消这个特性的方法
+  - 不允许在同名接口中把不同属性定义为不同类型
 - [将属性标记为可选的](https://www.typescriptlang.org/docs/handbook/2/objects.html#optional-properties)  
   只要在属性名后加上`?`即可
 
@@ -493,10 +499,14 @@ const bird3: BirdInterface = bird1;
 
 
 - type不仅可以用来定义狭义对象  
-  和可以定义数组和promise
+  还可以用来定义数组和promise
 - 可以做类似vue的mixin的操作  
   通过[`&`](https://www.typescriptlang.org/docs/handbook/2/objects.html#intersection-types)来做  
   示例：`某个type & {a:1,b:2}`
+- type可以和变量、参数重名  
+  重名也能正常工作
+- 可以引用自生来做递归
+- 2个type甚至还可以互相引用
 
 
 
@@ -509,6 +519,8 @@ const bird3: BirdInterface = bird1;
 
 ##### 泛型
 
+可以写为`Array<类型>`也可以写为`<类型>[]`
+
 例子
 
 - 子项为字符串的数组  
@@ -517,6 +529,18 @@ const bird3: BirdInterface = bird1;
   `Array<number>`
 - 子项为『只有name属性且name属性为字符串的对象』的数组  
   `Array<{ name: string }>`
+
+
+
+### Promise
+
+`Promise<返回值的类型>`
+
+
+
+### Map
+
+`Map<键类型, 值类型>`
 
 
 
@@ -759,8 +783,8 @@ const bird3: BirdInterface = bird1;
 
 ##### 给别人引用
 
-- [指定`.d.ts`的入口](https://www.typescriptlang.org/docs/handbook/declaration-files/dts-from-js.html#editing-the-packagejson)  
-  翻译过来就是有如下确认步骤
+- [确定`.d.ts`的入口](https://www.typescriptlang.org/docs/handbook/declaration-files/dts-from-js.html#editing-the-packagejson)  
+  确定步骤如下
   1. 查看package.json是否有types属性  
      有的话就以此为入口
      - 若写的是一个.d.ts的地址  
