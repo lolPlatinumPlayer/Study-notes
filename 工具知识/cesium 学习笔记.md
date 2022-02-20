@@ -1460,7 +1460,8 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
     缺少教程
   - 依赖2个闭源库  
     且闭源库文档也不全
-
+  - vue组件都是自己的代码（不过可能是从iview复制的代码。判断依据是：package.json里有iview，而且注释里有引用iview）
+  
 - [官方有时候](https://github.com/cesiumlab/XbsjEarthUI/wiki/Cesium%E7%9A%84%E6%89%A9%E5%B1%95%E5%B7%A5%E5%85%B7%E5%8C%85-EarthSDK%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%971#%E6%A0%B7%E4%BE%8B%E7%A8%8B%E5%BA%8Fxbsjearthui)不把XbsjEarthUI当成EarthSDK的一部分
 
 - 有在码云和github上开源
