@@ -106,7 +106,7 @@
   - 一个不使用帐号的例子  
     二开的commit id为7adcc4d57157078c1dfcd6f1587cd774b45f8a6b的commit，可能还有更早的例子，但不记得了  
     InitCesium那个文件应该是用了谷歌地图，所以不需要token，不过有时要翻墙
-  - 用npm装1.67版的话，`Cesium.Ion.defaultAccessToken`默认就有值
+  - 用npm装Cesium的话，`Cesium.Ion.defaultAccessToken`默认就有值
 
 
 
@@ -197,7 +197,7 @@
            new CopyWebpackPlugin([{ from: path.join(cesiumSource, 'Widgets'), to: 'Widgets' }]),
            new CopyWebpackPlugin([{ from: path.join(cesiumSource, 'ThirdParty/Workers'), to: 'ThirdParty/Workers' }]),
            new webpack.DefinePlugin({
-             CESIUM_BASE_URL: JSON.stringify('./') // Cesium载入静态的资源的相对路径
+             CESIUM_BASE_URL: JSON.stringify('./') // Cesium载入静态的资源的相对路径（写空串可以运行，但是打包后地址不对）
            })
          ],
          module: {
@@ -396,6 +396,16 @@ viewer.scene.skyBox = new Cesium.SkyBox({
 
 
 
+### 时间
+
+cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-doc/JulianDate.html?classFilter=Date)
+
+- Date的时间和JulianDate是有差的  
+  朱利安时间=UTC=GMT  
+  北京时间=UTC+8=GMT+8
+- 将Date转为JulianDate的方法  
+  [`JulianDate.fromDate`](https://cesium.com/learn/cesiumjs/ref-doc/JulianDate.html?classFilter=Date#.fromDate)
+
 
 
 # 前端编程
@@ -430,14 +440,19 @@ viewer.scene.skyBox = new Cesium.SkyBox({
   `viewer.camera.setView`方法  
   传参参考上一条的`flyTo`方法
 
+- 将镜头瞬移或缓动到某些东西上  
+  
+  - 瞬移：`viewer.zoomTo`
+  - 缓动：`viewer.flyTo`
+  
+  入参接受类型非常丰富，单entity、多entity、数据源等等都支持
+  
 - 保存镜头位置信息，以便未来把镜头放到保存的位置
 
   - 保存镜头位置信息  
     `const a=viewer.camera.position.clone`
   - 把镜头放到保存的位置  
     `viewer.camera.flyTo({destination: a})`
-  
-  
   
   - 倾斜信息就放在camera的pitch属性里  
     而镜头位置是position
@@ -449,11 +464,6 @@ viewer.scene.skyBox = new Cesium.SkyBox({
 **与物体关联的镜头操作**
 
 这里的物体可以是`viewer.entities`
-
-- 将镜头瞬移到物体上  
-  `viewer.zoomTo(物体)`
-- 将镜头缓动到物体上  
-  `viewer.flyTo(物体)`
 
 - 将镜头“锁定”在物体上  
   `viewer.trackedEntity=物体`  
@@ -634,8 +644,12 @@ var pointEntity = viewer.entities.add({
 - 更改图形  
   Entity实例里有存各个图形的实例，可以通过图形的实例去做更改
 
+- 显隐  
+  [`show`属性](http://127.0.0.1:5501/Build/Documentation/Entity.html?classFilter=entity#show)  
+  读取和修改都用这个属性
   
-
+  
+  
   
 
 ##### 图形
@@ -650,6 +664,24 @@ var pointEntity = viewer.entities.add({
 - 图形的配置项<span style='opacity:.5'>（注意是图形的不是entity的）</span>  
   - `show`用来设置是否显示
   - `material`用来设置材质
+  
+- 图形的属性<span style='opacity:.5'>（以下内容通过观察得出）</span>  
+  配置项都会在属性里存在  
+  
+  - 如果某个配置没配，那在属性里值就会是undefined  
+  - 修改  
+    对属性进行赋值即可<span style='opacity:.5'>（就算值是undefined，修改也可以生效）</span>  
+    - 部分类型的值可以用`值.setValue(新值)`的方法进行修改  
+      比如值为[`ConstantProperty`实例](https://cesium.com/learn/cesiumjs/ref-doc/ConstantProperty.html)时
+  - 查看  
+    属性如果有值的话都会是cz的实例  
+    - 属性值不一定是设置值，比如如下设置值
+      - js的原始值  
+        属性值将会是[`ConstantProperty`实例](http://127.0.0.1:5501/Build/Documentation/ConstantProperty.html)
+      - cz的[`Color`实例](https://cesium.com/learn/cesiumjs/ref-doc/Color.html)  
+        属性值将会是[`ColorMaterialProperty`实例](https://cesium.com/learn/cesiumjs/ref-doc/ColorMaterialProperty.html)
+    - 查看设置值  
+      通过实例的`getValue(julianDate)`方法来查看
   
 - 覆盖关系  
 
@@ -1280,6 +1312,28 @@ viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEven
 
 
 
+##### 动画
+
+- 每帧设置配置  
+  官方提供了[`CallbackProperty`类](https://cesium.com/learn/cesiumjs/ref-doc/CallbackProperty.html)来辅助这个事（虽然感觉帮助不大，主要作用就是帮你封装代码）  
+  每帧执行回调，回调返回值将会作用于Property
+  - 性能  
+    用它做动画或者不做动画，肉眼看差别不大  
+    第二个参数设true还是false肉眼看差别不大
+  - 使用  
+    `CallbackProperty`实例应该可以用在大部分Property上
+    - 可用的Property中一部分直接作为设置值使用即可
+    - 一部分要用别的方法使用  
+      <span style='opacity:.5'>（这些“别的方法”在文档上都没有说）</span>  
+      比如说作为ColorMaterialProperty的入参  
+      比如说作为ImageMaterialProperty的image配置项的值
+  - 回调执行时机  
+    - 只是实例化的话不会执行  
+    - 添加到场景里就会开始执行  
+    - 隐藏entity也会执行  
+    - 把polygon图形的fill设为false之后填充材质（`material`配置项）的回调就不会执行了
+    - 第二个参数设为true时返回值不变的话不会执行（没想到这是怎么实现的，不执行怎么知道返回值变不变呢）
+
 
 
 ##### 效果
@@ -1433,6 +1487,8 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
 **特性**
 
 - 有暴露出Cesium，且能取出EarthSDK中的Viewer进行操作
+- 使用上是免费的  
+  但是[获取源码、技术咨询、修改版权信息](http://www.cesiumlab.com/#/service)都要钱
 
 
 
@@ -1460,7 +1516,9 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
     缺少教程
   - 依赖2个闭源库  
     且闭源库文档也不全
-
+  - 复制源码出来用也不太适合  
+    看过图层控制的代码，内部vue组件依赖不少的，一个图层控制源码了解完半天或一天就过去了
+  
 - [官方有时候](https://github.com/cesiumlab/XbsjEarthUI/wiki/Cesium%E7%9A%84%E6%89%A9%E5%B1%95%E5%B7%A5%E5%85%B7%E5%8C%85-EarthSDK%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%971#%E6%A0%B7%E4%BE%8B%E7%A8%8B%E5%BA%8Fxbsjearthui)不把XbsjEarthUI当成EarthSDK的一部分
 
 - 有在码云和github上开源
