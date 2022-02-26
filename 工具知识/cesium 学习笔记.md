@@ -335,42 +335,39 @@
       [ZY给的一个地址](https://www.gscloud.cn/sources/index?pid=302&ptitle=DEM%20%E6%95%B0%E5%AD%97%E9%AB%98%E7%A8%8B%E6%95%B0%E6%8D%AE&rootid=1)  
       [ZY说可能可以用的一个地址](http://www.ngcc.cn/ngcc/)
     - 建立服务  
-      用cesiumLab应该就行了
-
+      
+      - 把如下文件存到http服务器上，然后地形服务的url就是文件夹所在地址  
+      
+        ```
+        文件夹
+           meta.json
+           layer.json
+           .tmp文件夹
+           0文件夹
+           1文件夹
+           2文件夹
+           等等
+        ```
+      
+        
+      
+      - 用cesiumLab应该可以
+    
   - 前端使用  
-
+  
     - 使用ZY书峰乡数据的例子  
       在Viewer配置项里加上如下代码  
-
+  
       ```js
       terrainProvider: new Cesium.CesiumTerrainProvider({
         url: '一个地址',
         requestVertexNormals: true,
       })
       ```
-
-      
-
   
-
-
-
-### 天空盒
-
-设置天空盒贴图
-
-```js
-viewer.scene.skyBox = new Cesium.SkyBox({
-  sources: {
-    positiveX: "images/sky/right.jpg",
-    negativeX: "images/sky/left.jpg",
-    positiveY: "images/sky/front.jpg",
-    negativeY: "images/sky/back.jpg",
-    positiveZ: "images/sky/top.jpg",
-    negativeZ: "images/sky/bottom.jpg",
-  },
-})
-```
+      
+  
+  
 
 
 
@@ -408,15 +405,69 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
 
 
 
+
+
 # 前端编程
+
+
+
+### [`Viewer`](https://cesium.com/learn/cesiumjs/ref-doc/Viewer.html)
+
+- 场景模式  
+  可以选择是3维球体还是二维还是三维平面等  
+  `sceneMode`配置项  
+  [可选值](https://cesium.com/learn/cesiumjs/ref-doc/global.html#SceneMode)如下
+  - Cesium.SceneMode.SCENE3D  
+    默认值  
+    3维球体
+  - Cesium.SceneMode.SCENE2D  
+    二维  
+    不可旋转不可倾斜
+  - Cesium.SceneMode.COLUMBUS_VIEW  
+    三维平面
+  - Cesium.SceneMode.MORPHING  
+    官网描述是在二三维间渐变  
+    目前没体验出和三维球体的区别，可能是只有配置为这个，后续才能在各个模式间切换
+
+
+
+##### 天空盒
+
+- 可在[Viewer的配置项](https://cesium.com/learn/cesiumjs/ref-doc/Viewer.html#.ConstructorOptions)中设置也可以实例化Viewer后设置
+
+- 后期设置天空盒贴图的demo  
+
+  ```js
+  viewer.scene.skyBox = new Cesium.SkyBox({
+    sources: {
+      positiveX: "images/sky/right.jpg",
+      negativeX: "images/sky/left.jpg",
+      positiveY: "images/sky/front.jpg",
+      negativeY: "images/sky/back.jpg",
+      positiveZ: "images/sky/top.jpg",
+      negativeZ: "images/sky/bottom.jpg",
+    },
+  })
+  ```
+
+  
+
+
 
 
 
 ### 镜头
 
+- 返回以米为单位的像素大小  
+  [`getPixelSize`方法](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#getPixelSize)
+- 获得镜头朝向  
+  [`direction`属性](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#direction)
+- 获得镜头离地距离  
+  [`getMagnitude`方法](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#getMagnitude)
 
 
-**与物体无关的镜头操作**
+
+##### 与物体无关的镜头操作
 
 - 将镜头缓动到指定坐标  
 
@@ -435,17 +486,17 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
     orientation配置项的heading属性  
     例子  
     `heading:Cesium.Math.toRadians(30,0)`
+  - 停止缓动并留在当前位置  
+    [`cancelFlight`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#cancelFlight)
+  - 停止缓动并瞬移到终点  
+    [`completeFlight`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#completeFlight)
   
 - 将镜头瞬移到指定坐标  
   `viewer.camera.setView`方法  
   传参参考上一条的`flyTo`方法
 
-- 将镜头瞬移或缓动到某些东西上  
-  
-  - 瞬移：`viewer.zoomTo`
-  - 缓动：`viewer.flyTo`
-  
-  入参接受类型非常丰富，单entity、多entity、数据源等等都支持
+- 让镜头往指定方向上瞬移  
+  [`move`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#move)及“See:”里列出来的前移后移等方法
   
 - 保存镜头位置信息，以便未来把镜头放到保存的位置
 
@@ -453,15 +504,16 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
     `const a=viewer.camera.position.clone`
   - 把镜头放到保存的位置  
     `viewer.camera.flyTo({destination: a})`
-  
   - 倾斜信息就放在camera的pitch属性里  
     而镜头位置是position
+  
+  
 
 
 
 
 
-**与物体关联的镜头操作**
+##### 与物体关联的镜头操作
 
 这里的物体可以是`viewer.entities`
 
@@ -472,7 +524,26 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
   - 解除“锁定”  
     `viewer.trackedEntity=null`
 
+- 将镜头瞬移或缓动到某些东西上  
+
+  - 瞬移：`viewer.zoomTo`
+  - 缓动：`viewer.flyTo`
+
+  入参接受类型非常丰富，单entity、多entity、数据源等等都支持
+
   
+
+  
+
+##### 限制镜头
+
+[`viewer.scene.screenSpaceCameraController`](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html)
+
+- 限制镜头离地距离（仅限制交互操作，也就是说不会限制用编程的方式移动镜头）  
+  给`minimumZoomDistance`和`maximumZoomDistance`赋值  
+  在即将到达限制距离时，距离的移动会变慢，越接近越慢
+
+
 
 
 
@@ -585,7 +656,7 @@ entity和primitive对比
 
 ### [entity](https://cesium.com/learn/cesiumjs/ref-doc/Entity.html)
 
-- 一个entity允许携带多个不同图形  
+- 一个entity允许携带多个不同种的图形  
   比如同时携带线和和面
   - entity里存在的图形会是对应图形的实例  
     不存在的就是undefined
@@ -970,6 +1041,74 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
 
 
 
+### 材质
+
+[这个回答](https://stackoverflow.com/questions/50298267/how-to-use-material-fromtype-in-cesium)里说了图形和primitive有不同的材质api  
+[`Material`](https://cesium.com/learn/cesiumjs/ref-doc/Material.html?classFilter=Material)类只能primitive用
+
+
+
+##### 图形的`material`配置项
+
+
+
+可以直接写一个颜色（比如`Cesium.Color.RED.withAlpha(0.5)`）  
+可以直接写一个图片地址  
+也可以写各个具体的实例  
+
+
+
+**具体的实例**
+
+具体实例的列表见[MaterialProperty](https://cesium.com/learn/cesiumjs/ref-doc/MaterialProperty.html)  
+这个MaterialProperty类似于各具体类的父类，但实际上不是
+
+- `ImageMaterialProperty`可以用栅格图也可以用svg  
+  不过用了svg后还是会模糊
+
+
+
+##### primitive的材质
+
+- 用svg也会模糊  
+  demo如下  
+
+  ```js
+  var instance = new Cesium.GeometryInstance({
+    geometry: new Cesium.EllipseGeometry({
+      center: Cesium.Cartesian3.fromDegrees(-100.0, 20.0),
+      semiMinorAxis: 500000.0,
+      semiMajorAxis: 1000000.0,
+      rotation: Cesium.Math.PI_OVER_FOUR,
+      vertexFormat: Cesium.VertexFormat.POSITION_AND_ST
+    }),
+    id: 'object returned when this instance is picked and to get/set per-instance attributes'
+  });
+  scene.primitives.add(new Cesium.Primitive({
+    geometryInstances: instance,
+    appearance: new Cesium.EllipsoidSurfaceAppearance({
+      material: new Cesium.Material({
+        fabric: {
+          type: 'Image',
+          uniforms: {
+            image: './resource/img/redBorder1.svg',
+          }
+        }
+      })
+    })
+  }))
+  ```
+
+  
+
+##### svg
+
+2边都会模糊  
+去svg文件里加大width、height就可以变清晰  
+当然加大之后会造成性能负担导致cz整个挂掉
+
+
+
 ### 数据源
 
 也就是[DataSource](https://cesium.com/learn/cesiumjs/ref-doc/DataSource.html)
@@ -1055,6 +1194,10 @@ GeoJsonDataSource
 - entity里会存GeoJSON里的properties  
   存properties的属性就叫[`properties`](https://cesium.com/learn/cesiumjs/ref-doc/Entity.html#properties)
 
+  - 取出properties  
+    `entity.properties.getValue(任意值)`  
+    [文档](https://cesium.com/learn/cesiumjs/ref-doc/PropertyBag.html#getValue)要求传入[JulianDate](https://cesium.com/learn/cesiumjs/ref-doc/JulianDate.html)，实际上传什么都可以
+  
 - > 可以加载墨卡托数据 —— ZY
 
 
@@ -1096,121 +1239,85 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
 
 ##### 鼠标事件
 
-[ScreenSpaceEventHandler](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html)上有[增](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceEventHandler.html#setInputAction)、[减](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)监听函数等方法
+[ScreenSpaceEventHandler](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html)
 
 - 在这里可以找到一个事件处理器实例：  
   `viewer.cesiumWidget.screenSpaceEventHandler`
+- 可以建立多个实例  
+  建立方法：`new ScreenSpaceEventHandler(viewer.canvas)`
+
+- [设置监听函数](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#setInputAction)  
+  `ScreenSpaceEventHandler实例.setInputAction(监听函数,事件类型)`
+
+  - 监听函数（action）  
+    唯一形参是cz封装的鼠标事件对象
+    - 鼠标事件对象  
+      （找遍[api文档](https://cesium.com/docs/cesiumjs-ref-doc/index.html)也没看到相关说明）  
+      应该都只有少量简单的属性，比如`position`、`startPosition`、`endPosition`  
+      - `position`  
+        值是`Cartesian2`实例，实例的xy值就是鼠标在canvas上所处的xy值  
+        把这个属性传给`viewer.scene.pick`就可以获得点击到的物体
+
+  - 事件类型  
+    这个参数要输入`Cesium.ScreenSpaceEventType`的属性  
+    可选值见[这里](https://cesium.com/docs/cesiumjs-ref-doc/global.html#ScreenSpaceEventType)  
+
+  注意：这个方法是设置而不是增加。如果设置了多个函数，只有最后设置的函数会生效
+
+- 没有只监听一次的方法  
+  手动去做的话也有问题  
+
+  - 比如禁用拖动地图（用enableRotate还是rotateEventTypes没差）后监听拖动事件（LEFT_DOWN+LEFT_UP+MOUSE_MOVE）  
+    在拖动结束后允许拖动的话，如果鼠标一直处于滑动状态，那地图就会被拖上一会
+
+- [删除监听函数](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)
 
 
 
-[设置监听函数](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#setInputAction)
+##### 设置镜头交互方式
 
-`ScreenSpaceEventHandler实例.setInputAction(监听函数,事件类型)`
+给[`viewer.scene.screenSpaceCameraController`](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html)的属性赋值
 
-- 监听函数（action）  
-  唯一形参是cz封装的鼠标事件对象
-  - 鼠标事件对象  
-    （找遍[api文档](https://cesium.com/docs/cesiumjs-ref-doc/index.html)也没看到相关说明）  
-    应该都只有少量简单的属性，比如`position`、`startPosition`、`endPosition`  
-    - `position`  
-      值是`Cartesian2`实例，实例的x、y值和canvas坐标是一致的
-- 事件类型  
-  这个参数要输入`Cesium.ScreenSpaceEventType`的属性  
-  可选值见[这里](https://cesium.com/docs/cesiumjs-ref-doc/global.html#ScreenSpaceEventType)
 
-注意：这个方法的功能是设置而不是增加。如果设置了多个函数，只有最后设置的函数会生效
+
+- 缩放  
+  更改：[`zoomEventTypes`属性](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#zoomEventTypes)  
+  禁用/启用：[`enableZoom`属性](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#enableZoom)
+
+- 平移地图  
+  更改：[`rotateEventTypes`属性](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#rotateEventTypes)  
+  禁用/启用：[`enableRotate`属性](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#enableRotate)
 
 
 
 
 
-##### 判断点击物体
+### 拾取物体
 
-方法A：`viewer.scene.pick`
+- 依据屏幕点坐标返回第一个物体  
+  [`viewer.scene.pick(Cartesian2实例)`](https://cesium.com/learn/cesiumjs/ref-doc/Scene.html#pick)
 
-```js
-viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEvent) {
-  const pickedFeature = viewer.scene.pick(czMouseEvent.position);
-  console.log(pickedFeature)
-}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-```
+  - 返回值   
+    （只在👆这个文档里看到少量说明）
 
-**返回对象**
+    - 只会返回第一个点到的物体（[这篇文章](https://blog.csdn.net/zhangqun23/article/details/83056315)也认同这个观点）
 
-没看到对返回对象的说明
+    - 返回对象的id属性就是用`viewer.entities.add`添加的实例
 
-- 只会返回第一个点到的物体（[这篇文章](https://blog.csdn.net/zhangqun23/article/details/83056315)也认同这个观点）
-- 返回对象的id属性就是用`viewer.entities.add`添加的实例
-- 没点到东西（点地球不算）的话返回undefined  
-  （经验之谈）
+    - 没有地球以外的东西的话返回undefined  
 
+  - 拾取范围  
+    一个矩形，以输入点为中心，矩形内有东西就会返回对象
 
+    - 设置拾取范围  
+      通过该方法（`pick`）的第二和第三个参数设置
 
-### 材质
-
-[这个回答](https://stackoverflow.com/questions/50298267/how-to-use-material-fromtype-in-cesium)里说了图形和primitive有不同的材质api  
-[`Material`](https://cesium.com/learn/cesiumjs/ref-doc/Material.html?classFilter=Material)类只能primitive用
+- 依据屏幕点坐标返回物体（可不限数量）  
+  [`viewer.scene.drillPick(Cartesian2实例)`](https://cesium.com/learn/cesiumjs/ref-doc/Scene.html#drillPick)  
+  和pick差不多，就是返回的是数组（没物体的话返回空数组） 
+  提醒：width和height都不能传入0
 
 
-
-##### 图形的`material`配置项
-
-
-
-可以直接写一个颜色（比如`Cesium.Color.RED.withAlpha(0.5)`）  
-可以直接写一个图片地址  
-也可以写各个具体的实例  
-
-
-
-**具体的实例**
-
-具体实例的列表见[MaterialProperty](https://cesium.com/learn/cesiumjs/ref-doc/MaterialProperty.html)  
-这个MaterialProperty类似于各具体类的父类，但实际上不是
-
-- `ImageMaterialProperty`可以用栅格图也可以用svg  
-  不过用了svg后还是会模糊
-
-
-
-##### primitive的材质
-
-- 用svg也会模糊  
-  demo如下  
-
-  ```js
-  var instance = new Cesium.GeometryInstance({
-    geometry: new Cesium.EllipseGeometry({
-      center: Cesium.Cartesian3.fromDegrees(-100.0, 20.0),
-      semiMinorAxis: 500000.0,
-      semiMajorAxis: 1000000.0,
-      rotation: Cesium.Math.PI_OVER_FOUR,
-      vertexFormat: Cesium.VertexFormat.POSITION_AND_ST
-    }),
-    id: 'object returned when this instance is picked and to get/set per-instance attributes'
-  });
-  scene.primitives.add(new Cesium.Primitive({
-    geometryInstances: instance,
-    appearance: new Cesium.EllipsoidSurfaceAppearance({
-      material: new Cesium.Material({
-        fabric: {
-          type: 'Image',
-          uniforms: {
-            image: './resource/img/redBorder1.svg',
-          }
-        }
-      })
-    })
-  }))
-  ```
-
-  
-
-##### svg
-
-2边都会模糊  
-去svg文件里加大width、height就可以变清晰  
-当然加大之后会造成性能负担导致cz整个挂掉
 
 
 
@@ -1257,13 +1364,10 @@ viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEven
 
 
 
-坐标系转换  
-可以看看[`Cesium.SceneTransforms`](https://cesium.com/docs/cesiumjs-ref-doc/SceneTransforms.html)
-
-
-
 [`Cesium.Cartographic`](https://cesium.com/docs/cesiumjs-ref-doc/Cartographic.html)  
-比较罕见，属性里的经纬度是用弧度表示
+比较罕见  
+用经纬度和高度表示一个三维坐标  
+经纬度用弧度表示，高度为距离椭球表面的米数
 
 
 
@@ -1299,7 +1403,16 @@ viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEven
 
 
 
-相关util
+###### 坐标转换
+
+
+
+坐标系转换  
+可以看看[`Cesium.SceneTransforms`](https://cesium.com/docs/cesiumjs-ref-doc/SceneTransforms.html)
+
+
+
+转为空间直角坐标系坐标
 
 - 将经纬度海拔转为Cartesian3实例  
   [`Cesium.Cartesian3.fromDegrees`](https://cesium.com/learn/cesiumjs/ref-doc/Cartesian3.html#.fromDegrees)  
@@ -1309,6 +1422,22 @@ viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(function (czMouseEven
   （这是一个几何方向的方法，但是一般用来做经纬度的转换）
 - 将经纬度海拔数组转为Cartesian3实例数组  
   应该是用Cesium.Cartesian3.fromDegreesArrayHeights，没仔细了解
+- 将屏幕坐标转为Cartesian3实例  
+  - [`viewer.camera.pickEllipsoid`方法](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#pickEllipsoid)  
+    这个方法应该是转为地球表面的坐标
+  - [`viewer.scene.pickPosition`方法](https://cesium.com/learn/cesiumjs/ref-doc/Scene.html#pickPosition)  
+    和`viewer.camera.pickEllipsoid`的数值会有些差异，不过这个方法时不时会返回undefined，原因未知
+
+
+
+转为经纬度高度坐标
+
+- 将空间三维坐标转为经纬度高度  
+  [`Cartographic.fromCartesian`](https://cesium.com/learn/cesiumjs/ref-doc/Cartographic.html#.fromCartesian)
+
+
+
+
 
 
 

@@ -148,7 +148,25 @@ webpack4里并没有test模式
     - 在SFC的style标签里引用不存在的背景图
     - 还原有问题的`.babelrc`和`babel.config.js`
 
+- 使用ts+cz时无法打包  
 
+  - 报错如下  
+
+    ```cmd
+    Syntax Error: Thread Loader (Worker 某个数字)
+    Cannot read property 'length' of undefined
+    ```
+
+  - 解决方法  
+    将配置的`parallel`设为false
+
+  - 问题分析  
+
+    - 将`parallel`设为false的作用应该是关掉[thread-loader](https://v4.webpack.js.org/loaders/thread-loader/#root)
+    - webpack4本身没有`parallel`这个配置  
+      不过[HtmlMinimizerWebpackPlugin](https://webpack.js.org/plugins/html-minimizer-webpack-plugin/#parallel)、[CssMinimizerWebpackPlugin](https://webpack.js.org/plugins/css-minimizer-webpack-plugin/#parallel)、[TerserWebpackPlugin](https://webpack.js.org/plugins/terser-webpack-plugin/#parallel)里都有这个配置，而且作用都是“Use multi-process parallel running to improve the build speed”，这和[thread-loader](https://v4.webpack.js.org/loaders/thread-loader/#root)的作用是差不多的
+
+    综上所述，估计是[thread-loader](https://v4.webpack.js.org/loaders/thread-loader/#root)出现了一个未知的问题导致无法打包
 
 
 

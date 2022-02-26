@@ -2,6 +2,7 @@
 
 # 待研究
 
+- watch中的函数没有this，加bind也没有（已证实，待和下面其他几条共同了解）
 - created里执行的函数的this是undefined
 - 在method里调用函数，函数的this居然不是组件实例？
   中间加一层this.$nextTick的话this就是组件实例了  
@@ -479,7 +480,11 @@ trim:过滤用户输入的首尾空格
 
 ### [data选项](https://cn.vuejs.org/v2/api/#data)
 
-- 可以通过[`this.$data`](https://cn.vuejs.org/v2/api/#vm-data)访问
+- 可以通过[`this.$data`](https://cn.vuejs.org/v2/api/#vm-data)访问  
+  也可以通过`this._data`访问，2者间是全等的（测试于vue2.6.14）  
+  不过官网没有对`this._data`的说明，不建议使用
+  
+- > 以 `_` 或 `$` 开头的 属性 不会被 Vue 实例代理
   
 - 子项与视图更新
   
@@ -607,7 +612,9 @@ getter的简写方法：在计算属性中直接写入无参数匿名函数，re
 
 
 
-除了基础写法外还可以用[“编程式”的写法](https://cn.vuejs.org/v2/api/#vm-watch)来产生watch
+- 除了基础写法外还可以用[“编程式”的写法](https://cn.vuejs.org/v2/api/#vm-watch)来产生watch
+
+  
 
 
 
@@ -1338,9 +1345,8 @@ methods: {
 - 可用`this.$refs`的生命周期  
   - `beforeDestroy`可用
   - `destroyed`不可用
-
-- v-for中的ref都要去数组里取  
-  if、else中不用
+- if、else中的ref不用去数组里取
+- ref也可以用v-bind
 
 
 
@@ -1883,6 +1889,9 @@ mounted: function () {
   - 三个基础标签外的地方写任何文本都是注释  
     （基础标签指的是template/script/style）  
   - 模板的引号之间可以写注释（甚至可以写多行注释）
+    - 一次使原代码失效的例子  
+      给组件加上`@click.native="方法/*注释*/"`  
+      会导致方法不触发
 - 单文件组件的使用
   要先 import componentName from './fileName.vue'
   然后再在引入文件的components属性中写上componentName，之后组件就能正常使用了
@@ -1891,7 +1900,8 @@ mounted: function () {
 
 
 - .vue文件生成的就是一个配置对象  
-  （vue组件实例的配置对象）
+  （vue组件实例的配置对象）  
+  所以多次实例化并不会多次执行最外层的js
 
 
 
@@ -1994,26 +2004,24 @@ mounted: function () {
   
   - 似乎只要通过模板，校验就无法成功
   
-    - 比如refs
+    - 比如通过ref调用方法会报错（但是可以编译）  
+      解决办法`(this.$refs.xxxxxxxx as any).方法()`
     - 比如elementUI的事件（简单尝试过，没成功）
-  
+- 默认就可以和ts结合  
+  只是计算属性等东西会有问题，用类的形式写组件可以解决其中一部分
 - method互调的时候可以有校验
-
 - this里似乎不会加上依赖注入的东西
-
 - 默认情况下和vue2结合会报错但是可以打包和运行  
   减少报错的方法是“用类的形式写组件”，下一条笔记就有记录怎么写
-
 - 可以在任意的SFC中加入ts  
   （比如说A SFC用了B SFC，可以只在B里加ts，而A不用加）
-
 - vscode不会产生错误提示  
-  不仅是ts的没有，普通的js语法错误提示都没了（甚至不用ts的SFC里也没有提示）  
-  [这个贴子](https://tieba.baidu.com/p/6306556027)就遇到了这个情况，林先也说智能提示不是很好  
-
-  > vue3没有这个问题 —— 林先的同事
-
-  余榕的vue2也没有问题
+  （这其实是个设置问题）
+  - 解决方法  
+    记得是在vscode里设置下就行了
+  - 问题表现  
+    不仅是ts的没有，普通的js语法错误提示都没了（甚至不用ts的SFC里也没有提示）  
+    [这个贴子](https://tieba.baidu.com/p/6306556027)就遇到了这个情况，林先也说智能提示不是很好  
 
 操作
 
@@ -2044,8 +2052,7 @@ mounted: function () {
     
   - [vue-property-decorator](https://github.com/kaorun343/vue-property-decorator#Prop)的写法也不行
   
-- 通过ref调用方法会报错（但是可以编译）  
-  解决办法`(this.$refs.xxxxxxxx as any).方法()`
+  
 
 
 
@@ -2166,6 +2173,11 @@ export default class HelloWorld extends Vue {
     
 }
 ```
+
+- data值为undefined的话似乎会被忽略（意思就是没有这个data）（背景：ts）
+  - `vm.$data`和`vm._data`里都找不到对应内容
+  - vue-devtools检测不到（背景：Vue.js devtools
+    6.0.0 beta 20）
 
 
 
@@ -2442,6 +2454,16 @@ vue2的异步组件是一种组织普通组件的方法
     这个语法应该源自[webpack](https://workingforvh.gitbook.io/study-notes/gong-ju-zhi-shi/gou-jian-gong-ju-xue-xi-bi-ji#yi-bu-jia-zai-mo-kuai)
   - `import ComA from './components/ComA.vue'`  
     这种写法是不会异步加载的
+
+
+
+注意
+
+- 用异步组件的话，不能用变量提升的mixin  
+  否则整个实例出不来（使用异步组件的组件的实例），并且报错`Cannot read properties of undefined (reading 'components')`  
+  （原因未知）
+
+
 
 
 
@@ -2769,6 +2791,23 @@ lin
 - 监听单次选中变化情况  
   elementUI没提供这个事件，只能用点击复选框的事件代替（除了点击复选框，还可以用`setCheckedKeys`等方法改变选中状态）
 - 击复选框的事件：`check`
+
+其他
+
+- 获取状态  
+  应该都是要等mounted的nextTick后获取才能正确  
+  （测试过`getCheckedKeys`，mounted时获取都是空数组）
+
+
+
+##### 多选框
+
+Checkbox 
+
+- 点击事件会触发2次  
+  这是源码第一个span上出来的问题  
+  click.prevent可以解决这个问题  
+  发现这个问题的背景是一个用cz的项目（未在非cz项目上测试）
 
 
 
