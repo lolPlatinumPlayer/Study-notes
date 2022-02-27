@@ -1653,6 +1653,9 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
 - 有在码云和github上开源
 
 - 有部分是用vue写的
+  - vue组件都是自己的代码
+    - 可能是从iview复制的代码  
+      判断依据是：package.json里有iview，而且注释里有引用iview
 
   
 
