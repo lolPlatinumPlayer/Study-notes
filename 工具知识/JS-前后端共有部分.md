@@ -1615,7 +1615,7 @@ a.unshift('a','b','c')
 
 [`arr.sort`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
 
-对输入数组进行排序并返回
+对输入数组进行排序并返回（注意：这句话的意思是会改变原数组）
 
 - [回调](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#%E5%8F%82%E6%95%B0)  
   可选  

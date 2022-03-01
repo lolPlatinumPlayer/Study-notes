@@ -1,5 +1,3 @@
-- [某个中文教程](https://ts.xcatliu.com/introduction/index.html)
-
 
 
 ### 学习目标
@@ -8,7 +6,7 @@
   答案：默认情况下是没有的
   - 如果没有的话  
     了解项目中用了ts写出的库后，编译项目阶段，输入该库的内容能否拥有类型检查（应该是有的）
-- [ts与资源](https://v4.webpack.docschina.org/guides/typescript/#%E5%AF%BC%E5%85%A5%E5%85%B6%E4%BB%96%E8%B5%84%E6%BA%90)  
+- [webpack中的ts与资源](https://v4.webpack.docschina.org/guides/typescript/#%E5%AF%BC%E5%85%A5%E5%85%B6%E4%BB%96%E8%B5%84%E6%BA%90)  
 
 不着急了解的功能
 
@@ -62,6 +60,19 @@
   <span style='opacity:.5'>（ts文件除了类型校验外还会要求大部分能声明类型的地方都做上声明）</span>
 - tsconfig.json的compilerOptions.target会影响一些语法的使用  
   比如说为es5（默认就是es5）时不能使用类的`#`写法
+
+
+
+### 相关资源
+
+- [某个中文教程](https://ts.xcatliu.com/introduction/index.html)
+
+- [Playground](https://www.typescriptlang.org/play)  
+  - 可以在线运行ts
+  - 可以将ts转为js+.d.ts  
+    js里会保留全部注释，.d.ts里只保留jsdoc注释
+
+
 
 
 
