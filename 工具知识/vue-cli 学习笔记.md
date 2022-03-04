@@ -158,7 +158,7 @@ webpack4里并没有test模式
     ```
 
   - 解决方法  
-    将配置的`parallel`设为false
+    将配置的[`parallel`](https://cli.vuejs.org/zh/config/#parallel)设为false
 
   - 问题分析  
 
@@ -218,13 +218,15 @@ vue-cli含有模板：https://github.com/vuejs-templates
   
   - 代理全部内容的配置  
   
-    ```js
-    devServer: {
-      proxy:请求发往的地址,
-    }
-    ```
+    - 最简写法  
     
-    - 如果要加其他配置的话这要写  
+      ```js
+      devServer: {
+        proxy:请求发往的地址,
+      }
+      ```
+    
+    - 如果要加其他配置的话这样写  
     
       ```js
       devServer: {
@@ -236,19 +238,14 @@ vue-cli含有模板：https://github.com/vuejs-templates
       }
       ```
     
-      [http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware#context-matching)说的`'**'`并不好使
-    
-  - 需要走代理的请求的写法  
-  
-    - axios的baseURL设为`'./'`或者空串或者不设  
-      （可能不用axios也可以代理，只要请求路径是相对地址就行）
+      - [http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware#context-matching)说的`'**'`并不好使
     
   - 代理部分接口的配置  
   
     ```js
     proxy: {
-      "/请求中包含的地址": { // 这个地址出现在请求任意位置都可以
-        target: `${baseUrl}`, 
+      "/请求中包含的路径": { // 这个地址出现在请求任意位置都可以
+        target: `${baseUrl}`, // 
         /* pathRewrite: {
            "^/bigdata": "/bigdata",
         }, */
@@ -256,14 +253,26 @@ vue-cli含有模板：https://github.com/vuejs-templates
     },
     ```
   
+    - 最终请求地址  
+      最终请求地址=`target`+`/请求中包含的路径`+其他内容
+    - 配为接口地址的开头，而不是请求中包含的路径  
+      在开头加上'^'即可
+    - 注意：配`请求中包含的路径`时不要有重合  
+      - 例子  
+        2个地址为`'/a'`和`'/b/a'`  
+        一次经验是`'/b/a'`会按`'/a'`里的来
     - 注释起来的部分不知道作用  
-      不过就算"/请求中包含的地址"不是请求的开头  
+      不过就算"/请求中包含的路径"不是请求的开头  
       放开注释之后也可以正常运作
   
-  - 注意  
-    axios的baseURL设为`'./'`或者空串或者不设的接口走的肯定是本地地址  
-    所以 **走本地地址并不代表被代理**  
-    没被代理的接口的状态码为404
+  - 需要走代理的请求的写法  
+  
+    - axios的baseURL设为`'./'`或者空串或者不设  
+      （不用axios也可以代理，只要请求路径是相对地址就行）
+      - 注意  
+        axios的baseURL设为`'./'`或者空串或者不设的接口走的肯定是本地地址  
+        所以 **走本地地址并不代表被代理**  
+        没被代理的接口的状态码为404
   
   
   

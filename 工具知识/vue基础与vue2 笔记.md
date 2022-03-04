@@ -1583,7 +1583,9 @@ mounted: function () {
 
     > `null` 和 `undefined` 会通过任何类型验证 —— [官网](https://cn.vuejs.org/v2/guide/components-props.html#Prop-%E9%AA%8C%E8%AF%81)
 
-
+- 自定义校验函数  
+  `validator(prop值)`方法  
+  返回true代表通过校验
 
 
 
@@ -2783,20 +2785,36 @@ lin
 
 ##### [树形控件](https://element.eleme.cn/#/zh-CN/component/tree)
 
-选中事件
+勾选事件
 
 - 监听每个节点选中情况的变化  
   `check-change`事件  
   点击一次，所有变更选中状态的节点都会触发回调（包括有后代的节点）
 - 监听单次选中变化情况  
   elementUI没提供这个事件，只能用点击复选框的事件代替（除了点击复选框，还可以用`setCheckedKeys`等方法改变选中状态）
-- 击复选框的事件：`check`
+- 点击复选框的事件：`check`<span style='opacity:.5'>（提醒：这是点击的事件，用api来改变勾选状态是不会触发这个事件的）</span>
+
+勾选
+
+- 设置单节点勾选状态  
+  `.setChecked(id, 是否勾选,是否影响子节点)`
+  - 注意默认默认情况下：若取消父节点勾选，子节点勾选是不会被取消的  
+    希望子节点也被影响的话，要把第三个参数设为true
+- 设置整体勾选状态  
+  `.setCheckedKeys(要勾选的节点的id组成的数组)`  
+  （没传入id的节点就会被设置为未勾选状态）
 
 其他
 
 - 获取状态  
   应该都是要等mounted的nextTick后获取才能正确  
   （测试过`getCheckedKeys`，mounted时获取都是空数组）
+- 设置指定节点的后代数据  
+  `updateKeyChildren`方法
+  - 第一个参数：要修改的节点的id
+  - 第二个参数：要设置的数据
+  - 注意：这个方法是会改变prop的
+
 
 
 

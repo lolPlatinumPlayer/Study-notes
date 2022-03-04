@@ -255,11 +255,11 @@
 
 ### 底图服务
 
+
+
+##### 影像
+
 - 默认应该是bing地图，因为开地图选择控件的话默认选的是bing
-
-- 搭建本地地图服务  
-
-  - [这个博客](https://blog.csdn.net/hzh839900/article/details/78063118)里搜索“SingleTileImageryProvider”可以查看相关内容
 
 - 使用mapbox底图  
   MapboxImageryProvider可以，MapboxStyleImageryProvider可能也可以
@@ -285,6 +285,7 @@
 
 - 使用天地图底图  
   服务大部分时候都是卡的
+
   - [官方方法](http://lbs.tianditu.gov.cn/docs/#/sanwei/)  
     - 官方的说法是：“目前支持cesuim1.52、1.58、1.63.1”
     - 在cz1.89.0上简单试了下是不行的  
@@ -293,9 +294,27 @@
     可行  
     - 标注用的是栅格标注（标注图层是可以去掉的）
     - 这个方法里说要设置`Cesium.Ion.defaultAccessToken`实际上是不用的
-    - 关于[`subdomains`配置](https://cesium.com/learn/cesiumjs/ref-doc/WebMapTileServiceImageryProvider.html?classFilter=WebMapTileServiceImageryProvider)  
-      [知乎方法](https://zhuanlan.zhihu.com/p/267935427)配了8个，这样会让天地图服务的配额高速消耗，但也会提升切片的加载速度  
-      平时留1个就行了，不然耗不起
+
+- 限制加载服务的最大层级  
+  配置[`ImageryProvider`](https://cesium.com/learn/cesiumjs/ref-doc/ImageryProvider.html)的`maximumLevel`配置  
+  超过这个层级<span style='opacity:.5'>（离地过近）</span>就不会加载更深层级的底图服务  
+  这个限制可以在深层级服务不理想的情况下发挥作用<span style='opacity:.5'>（天地图在深层级下就会返回一张图片，图片上写着“此级别下无影像”）</span>
+
+  - 设为非整数可能会出现问题  
+    在本笔记上方的[知乎方法](https://zhuanlan.zhihu.com/p/267935427)里设为非整数cz就会全屏报错，报错信息如下：  
+
+    ```
+    An error occurred while rendering. Rendering has stopped.
+    RangeError: Maximum call stack size exceeded
+    ```
+
+- 冗余加载  
+  冗余加载可以提升底图切片的获取速度，也会加大服务端压力  
+  [`subdomains`配置](https://cesium.com/learn/cesiumjs/ref-doc/WebMapTileServiceImageryProvider.html#.ConstructorOptions)配的越多冗余量越大  
+  大部分[`ImageryProvider`](https://cesium.com/learn/cesiumjs/ref-doc/ImageryProvider.html)似乎都没有这个配置  
+
+  - 天地图  
+    上文说的[知乎方法](https://zhuanlan.zhihu.com/p/267935427)配了8个，这样会让天地图服务的配额高速消耗，平时留1个就行了，不然耗不起
 
 
 
@@ -327,6 +346,8 @@
 ##### 使用自建服务
 
 - 影像
+
+  - [这个博客](https://blog.csdn.net/hzh839900/article/details/78063118)里搜索“SingleTileImageryProvider”可以查看相关内容
 
 - 地形  
 
@@ -541,7 +562,11 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
 
 - 限制镜头离地距离（仅限制交互操作，也就是说不会限制用编程的方式移动镜头）  
   给`minimumZoomDistance`和`maximumZoomDistance`赋值  
-  在即将到达限制距离时，距离的移动会变慢，越接近越慢
+  - 最近距离  
+    `minimumZoomDistance`  
+  - 单位应该是米
+  - 在即将到达限制距离时，距离的移动会变慢，越接近越慢
+  
 
 
 
@@ -1447,7 +1472,7 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
   官方提供了[`CallbackProperty`类](https://cesium.com/learn/cesiumjs/ref-doc/CallbackProperty.html)来辅助这个事（虽然感觉帮助不大，主要作用就是帮你封装代码）  
   每帧执行回调，回调返回值将会作用于Property
   - 性能  
-    用它做动画或者不做动画，肉眼看差别不大  
+    用它做动画或者不做动画（应该是用他做还是不用它做吧），肉眼看差别不大  
     第二个参数设true还是false肉眼看差别不大
   - 使用  
     `CallbackProperty`实例应该可以用在大部分Property上
@@ -1460,14 +1485,23 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
     - 只是实例化的话不会执行  
     - 添加到场景里就会开始执行  
     - 隐藏entity也会执行  
-    - 把polygon图形的fill设为false之后填充材质（`material`配置项）的回调就不会执行了
-    - 第二个参数设为true时返回值不变的话不会执行（没想到这是怎么实现的，不执行怎么知道返回值变不变呢）
+    - 把polygon图形的fill设为false之后填充材质（`material`配置项）的回调就不会执行了？？？
+    - 第二个参数设为true时返回值不变的话不会执行（不理解这是怎么实现的，不执行怎么知道返回值变不变呢）  
+      好像是“设为true的话不用回调返回的JuliaTime就只会执行一次”才对
 
 
 
 ##### 效果
 
 可以从[bloom后处理效果](https://cesium.com/docs/cesiumjs-ref-doc/PostProcessStageCollection.html#bloom)
+
+
+
+# 性能优化
+
+- entity图形的material配置项  
+  给ColorMaterialProperty的话会复用，给Color不会复用（判断依据是各material属性间是否全等）  
+  不过复用后性能提升不明显
 
 
 

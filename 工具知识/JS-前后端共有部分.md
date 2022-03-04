@@ -1564,6 +1564,19 @@ callback中返回的是布尔值，为真的子项会进入新数组
 
 
 
+### unshift
+
+在数组头部添加元素，并返回添加后的数组长度
+
+```js
+let a=[1,2,3]
+a.unshift('a','b','c')
+```
+
+上面这段代码执行后a等于`["a", "b", "c", 1, 2, 3]`
+
+
+
 
 ### join
 `arr.join(分隔符)`
@@ -1579,23 +1592,10 @@ callback中返回的是布尔值，为真的子项会进入新数组
 
 
 
-### unshift
-
-在数组头部添加元素，并返回添加后的数组长度
-
-```js
-let a=[1,2,3]
-a.unshift('a','b','c')
-```
-
-上面这段代码执行后a等于`["a", "b", "c", 1, 2, 3]`
-
-
-
 
 ### splice
 `arr.splice(index,howmany,item1,item2,不定数量的item,itemN)`
-从数组中添加/删除项目，然后返回被删除的项目，会改变原数组
+从数组中添加/删除项目，然后返回被删除的项目所组成的数组，会改变原数组
 
 1. `index`  
    添加/删除项目的位置（包含），使用负数可从数组结尾处规定位置
@@ -1608,6 +1608,18 @@ a.unshift('a','b','c')
 1. `item1,item2,不定数量的item,itemN`	  
    向数组添加的新项目  
    （可以省略）
+
+
+
+### [copyWithin](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/copyWithin)
+
+用数组中的一段元素覆盖另一段元素
+
+IE以外都支持
+
+`数组.copyWithin(第一个被覆盖元素的序号,第一个用来覆盖的元素的序号,最后一个用来覆盖的元素的序号)`  
+
+- `最后一个用来覆盖的元素的序号`的默认值为数组中最后一个元素的序号
 
 
 

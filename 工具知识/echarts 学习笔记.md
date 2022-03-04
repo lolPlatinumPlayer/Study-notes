@@ -358,6 +358,18 @@ map serie应该是geo的超集<span style='opacity:.5'>（因为map serie可以�
   网上找了一段时间，只找到用富文本实现的方法  
   而且都是echarts4的  
   改成echarts5后会出现问题（位置偏移、颜色丢失）
+- <span style='opacity:.5'>（标注线后的）</span>文本  
+  - 在空间有点不够时，会采用省略号方式显示  
+  - 在空间不足摆放<span style='opacity:.5'>（大概）</span>3个字符时，一个字都不会显示
+- 标注线及背后文本的显示  
+  默认在空间不足时不会显示，甚至鼠标划入之后都不会显示
+  - 强制鼠标划入后显示  
+    把[`avoidLabelOverlap`](https://echarts.apache.org/zh/option.html#series-pie.avoidLabelOverlap)设为false
+  - 强制显示<span style='opacity:.5'>（鼠标划入前就强制显示）</span>  
+    没办法强制显示<span style='opacity:.5'>（已经看过饼图的全部配置项，并且询问了余榕和令彰）</span>
+
+- 标注线歪到扇区里的bug  
+  应该可以通过缩小[`labelLine.maxSurfaceAngle`](https://echarts.apache.org/zh/option.html#series-pie.labelLine.maxSurfaceAngle)来解决
 
 
 
@@ -368,7 +380,7 @@ map serie应该是geo的超集<span style='opacity:.5'>（因为map serie可以�
   - 描边
 
     - bug1  
-      把`textBorderWidth`设为0无法取消描边  
+      把`textBorderWidth`设为0无法取消描边<span style='opacity:.5'>（饼图等图表用这种方式可以取消）</span>  
     - bug2  
       设置`textBorderColor`会让描边消失
 
@@ -530,6 +542,10 @@ demo1更合理
     不设置left和right就可以居中（目前没找到其他方法）
   - 让图例子项水平对齐  
     没找到方法
+
+错误
+
+- 如果把数据的name设为数字，那图例就不会出现（测试于`getColorLineRingOption`方法）
 
 
 
@@ -703,7 +719,7 @@ demo1更合理
     第一段：length  
     第二段：length2
   - echarts5中一个没用的配置  
-    `labelLine.showAbove`  
+    `labelLine.showAbove`<span style='opacity:.5'>（设了也不会让线盖在扇区上）</span>  
   
 - 饼图中“饼”的文本标注  
   文本来源：系列的data属性的子项的name属性  

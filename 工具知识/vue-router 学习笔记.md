@@ -534,6 +534,37 @@ if (to.hash) {
 
 
 
+# 和TypeScript结合
+
+- 解决`this.$router`报错  
+
+  - 一个试过可行的方案  
+    在`shims-vue.d.ts`里加如下内容  
+
+    ```ts
+    import VueRouter from 'vue-router';
+    import { Route } from 'vue-router';
+    declare module 'vue/types/vue' {
+      interface Vue {
+        $router: VueRouter;
+        $router: Route;
+      }
+    }
+    ```
+
+    `shims-vue.d.ts`里对vue的声明代码如下  
+
+    ```ts
+    declare module '*.vue' {
+      import Vue from 'vue'
+      export default Vue
+    }
+    ```
+
+    
+
+
+
 
 
 # 缺陷
