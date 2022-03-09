@@ -118,13 +118,29 @@ es6+会用下面这种标签来标记
 
 - 四舍五入：`Math.round(7.25)`
 - 取出大的值：`Math.max(第一个值,第二个值)`
-- 平方：`Math.pow(基数,指数)`
+- 平方
+  - [`基数**指数`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Exponentiation)
+  - [`Math.pow(基数,指数)`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Math/pow)
+  - `**`和`Math.pow`的区别  
+    - `Math.pow`不支持BigInt
+    - IE不支持`**`
+- 进制转换
+  - 10进制转其他  
+    见本笔记toString部分  
+    输入数字返回字符串
+  - 其他进制转10  
+    [`parseInt(字符串,进制)`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/parseInt)  
+    返回数字
+
+
 
 
 
 ### BigInt
 
 > [ES2020](https://github.com/tc39/proposal-bigint) 引入了一种新的数据类型 BigInt —— [阮一峰](https://es6.ruanyifeng.com/#docs/number#BigInt-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B)
+
+> chrome67和node10的某个版本开始支持BigInt —— [justjavac](https://zhuanlan.zhihu.com/p/36330307)
 
 **可参考资料如下**
 
@@ -134,9 +150,18 @@ es6+会用下面这种标签来标记
 - [tc39提议（github版本）](https://github.com/tc39/proposal-bigint)
 - [tc39提议（网页版本）](https://tc39.es/proposal-bigint/)
 
+**使用**
+
+- 创建方式  
+  可以用3种方式创建：`数字n`、`BigInt(字符串)`、`BigInt(数字)`
+  - 不同方式创建的BigInt的判断结果用`===`判断可以是`true`的
+  - 提醒：尽量不要用`BigInt(数字)`的方式创建  
+    因为普通数字有精度问题，用有问题的数字创建的BigInt肯定也是有问题的
+
 **特性**
 
-- 可以表示任意大的整数
+- 可以表示任意整数  
+  可以无穷大也可以无穷小也可以是0
 
 - 与Number的关系
 
@@ -1158,6 +1183,26 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/type
 
 
 
+### `while`和`do while`
+
+```js
+while (判断) {
+  内容
+}
+```
+
+```js
+do {
+   内容
+} while (判断)
+```
+
+`while`可能一次都不执行，而`do while`至少执行一次
+
+
+
+
+
 
 ### `switch`
 
@@ -1291,6 +1336,8 @@ switch(表达式){
 
 
 
+
+
 # 结束循环、跳出函数
 `break`、`return`可以结束for循环、`switch`  
 无法结束`map`、`forEach`  
@@ -1311,8 +1358,12 @@ switch(表达式){
 
 
 - `throw Error()`  
-  可以结束一个大的语句块  
-  当然也可以结束forEach，forEach的后续代码也会被结束掉
+  - 可以结束后续所有代码，套了多少层函数都没用  
+  - `throw Error()`前就存在的定时器不会受到影响  
+    比如先开了个setTimeout，然后`throw Error()`，到指定时间后setTimeout的回调还是会执行
+  - 当然也可以结束forEach，甚至forEach的后续代码都会被结束掉
+
+
 
 # 对象相关的api
 
@@ -1739,8 +1790,9 @@ IE以外都支持
 
 多种数据类型都可以执行这个方法来返回字符串
 
-- **用于数字类型时**  
+- [对于数字](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/toString)  
   可以传一个参数来进行进制转换，可以把十进制转为指定进制的字符串  
+  例子：`(4).toString(2)`返回`'100'`
 
 
 
