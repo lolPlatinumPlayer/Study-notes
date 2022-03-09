@@ -423,6 +423,8 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
   北京时间=UTC+8=GMT+8
 - 将Date转为JulianDate的方法  
   [`JulianDate.fromDate`](https://cesium.com/learn/cesiumjs/ref-doc/JulianDate.html?classFilter=Date#.fromDate)
+- 获取当前的JulianDate（语法糖）  
+  [`JulianDate.now()`](https://cesium.com/learn/cesiumjs/ref-doc/JulianDate.html#.now)
 
 
 
@@ -497,28 +499,38 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
     destination: Cesium.Cartesian3.fromDegrees(经度,纬度,海拔)
   })
   ```
-  
-  - 倾斜  
-    orientation配置项的pitch属性  
-    可以直接写数字  
-    不过下面这个用法应该更常见  
-    `pitch:Cesium.Math.toRadians(-80)`
-  - 旋转  
-    orientation配置项的heading属性  
-    例子  
-    `heading:Cesium.Math.toRadians(30,0)`
-  - 停止缓动并留在当前位置  
-    [`cancelFlight`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#cancelFlight)
-  - 停止缓动并瞬移到终点  
-    [`completeFlight`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#completeFlight)
-  
+
+  - 朝向（`orientation`配置项）  
+    <span style='opacity:.5'>（官方没有具体说明，所有了解都只能靠自己测出来）</span>  
+    不设的话就是正对地面  
+    有2种写法，2种写法不能共存，共存的话要么只有写法二生效，要么直接报错
+    - 写法一：heading、pitch、roll  
+      单位都是弧度<span style='opacity:.5'>（可以用`Cesium.Math.toRadians`方法把角度转为弧度）</span>  
+      这三个都不是必传
+      - heading：地球及宇宙逆时针旋转角度<span style='opacity:.5'>（实际上改变的是镜头，但是heading对镜头的改变用语言描述比较复杂，因此用地球来描述，这样比较好理解）</span>
+      - pitch：镜头与地球切线的夹角
+      - roll：镜头顺时针旋转角度
+      - 若镜头正对地球，那heading和roll具有相同表现<span style='opacity:.5'>（若设置heading=a且roll=b，那heading=a+b和该设置有相同效果）</span>
+    - 写法二：direction、up  
+      direction不必传，up必传
+      - direction：镜头朝向
+      - up：镜头上方朝向
+      - 坐标系未了解【】
+      - 输入方向会做归一化处理
+
+- 停止缓动并留在当前位置  
+  [`camera.cancelFlight`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#cancelFlight)
+
+- 停止缓动并瞬移到终点  
+  [`camera.completeFlight`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#completeFlight)
+
 - 将镜头瞬移到指定坐标  
   `viewer.camera.setView`方法  
   传参参考上一条的`flyTo`方法
 
 - 让镜头往指定方向上瞬移  
   [`move`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#move)及“See:”里列出来的前移后移等方法
-  
+
 - 保存镜头位置信息，以便未来把镜头放到保存的位置
 
   - 保存镜头位置信息  
@@ -527,7 +539,7 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
     `viewer.camera.flyTo({destination: a})`
   - 倾斜信息就放在camera的pitch属性里  
     而镜头位置是position
-  
+
   
 
 
@@ -546,14 +558,19 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
     `viewer.trackedEntity=null`
 
 - 将镜头瞬移或缓动到某些东西上  
-
-  - 瞬移：`viewer.zoomTo`
-  - 缓动：`viewer.flyTo`
-
-  入参接受类型非常丰富，单entity、多entity、数据源等等都支持
-
+  注意这2个方法来自viewer而不是camera，配置比camera的少很多  
   
-
+  | 功能 | 代码                                                         |
+  | ---- | ------------------------------------------------------------ |
+  | 缓动 | [`viewer.flyTo(目标,配置)`](https://cesium.com/learn/cesiumjs/ref-doc/Viewer.html#flyTo) |
+  | 瞬移 | [`viewer.zoomTo(目标,offset)`](https://cesium.com/learn/cesiumjs/ref-doc/Viewer.html#zoomTo) |
+  
+  - 可以作为目标的东西非常多，单entity、多entity、数据源等等都支持
+  - 调用`viewer.flyTo`后调用停止方法<span style='opacity:.5'>（[`camera.cancelFlight`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#cancelFlight)或[`camera.completeFlight`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#completeFlight)）</span>并不一定生效  
+    比如`duration`设为`1.5`的话在0.5秒内调用停止方法都是不生效的
+  
+  
+  
   
 
 ##### 限制镜头
@@ -686,7 +703,8 @@ entity和primitive对比
   - entity里存在的图形会是对应图形的实例  
     不存在的就是undefined
 
-
+- `viewer.entities.add`之后物体并不一定立即显示  
+  label确实是立即显示，但是线和面要等底图影像服务加载到一定程度才会出现
 
 
 
@@ -958,6 +976,8 @@ entity中的图形配置项
 
 ###### [文本](https://cesium.com/docs/cesiumjs-ref-doc/Label.html)  
 
+`label`
+
 [demo](https://sandcastle.cesium.com/index.html?src=Labels.html)
 
 - 偏移
@@ -965,6 +985,12 @@ entity中的图形配置项
     `eyeOffset`配置项
   - 以屏幕像素为单位的偏移  
     `pixelOffset`配置项
+- 样式  
+  有很多地方可以设置，比如font、scale、fillColor等，其中style比较特殊，值为对象
+  - font  
+    要求输入值满足以下格式，否则为固定值（固定值应该是`'14px sans-serif'`）  
+    `数字px 字体`
+
 
 
 
@@ -1333,14 +1359,16 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
 
   - 拾取范围  
     一个矩形，以输入点为中心，矩形内有东西就会返回对象
-
     - 设置拾取范围  
-      通过该方法（`pick`）的第二和第三个参数设置
-
+      通过该方法（`pick`）的第二和第三个参数设置矩形宽高
+  
 - 依据屏幕点坐标返回物体（可不限数量）  
   [`viewer.scene.drillPick(Cartesian2实例)`](https://cesium.com/learn/cesiumjs/ref-doc/Scene.html#drillPick)  
-  和pick差不多，就是返回的是数组（没物体的话返回空数组） 
-  提醒：width和height都不能传入0
+  
+  - 返回值为数组（没物体的话返回空数组）  
+    数组子项的id属性是用`viewer.entities.add`添加的实例  
+  
+  - 提醒：width和height都不能传入0
 
 
 
@@ -1455,7 +1483,7 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
 
 
 
-转为经纬度高度坐标
+转为经纬度高度坐标<span style='opacity:.5'>（必须带高度，没有单纯只转出经纬度的方法）</span>
 
 - 将空间三维坐标转为经纬度高度  
   [`Cartographic.fromCartesian`](https://cesium.com/learn/cesiumjs/ref-doc/Cartographic.html#.fromCartesian)
@@ -1580,25 +1608,29 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
   - **右上角**  
     ![cesium-展示页面-右上角](..\图片\cesium-展示页面-右上角.PNG)
 
-### cz默认带的小部件
+### [widget（小部件）](https://cesium.com/learn/cesiumjs/ref-doc/CesiumWidget.html)
 
-这个小部件指的就是默认就带的html元素
+小部件一般都会有html部分
 
-##### 去除小部件
+- 通过Viewer配置增加的小部件也是由`CesiumWidget`实现的
+
+
+
+##### 去除默认开启的小部件
 
 ```js
 const viewer = new Cesium.Viewer('cesiumContainer', {
-  animation: false,  //（下方）动画控制不显示
-  timeline: false,    //（下方）时间线不显示
+  animation: false, //（下方）动画控制不显示
+  timeline: false, //（下方）时间线不显示
   fullscreenButton: false, //（右下角）全屏按钮不显示
   homeButton: false, //（右上角）homePage按钮不显示
-  baseLayerPicker: false, //（右上角）地图选择按钮不显示
-  sceneModePicker:false, //（右上角）球体地图与平面地图切换按钮不显示
+  baseLayerPicker: false, //（右上角）底图服务选择按钮不显示
+  sceneModePicker:false, //（右上角）模式切换按钮不显示（可选球体、3d平面和2d平面）
   geocoder:false, //（右上角）搜索按钮不显示
-  navigationHelpButton:false, //（右上角）提示信息按钮不显示
+  navigationHelpButton:false, //（右上角）镜头操作说明按钮不显示
 })
   
-// （下方）ion文字不显示
+// （左下角）隐藏左下角版权信息
 viewer._cesiumWidget._creditContainer.style.display = "none"
 ```
 
@@ -1616,6 +1648,16 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
   重置时间方面的操作
 - **时间轴**  
   拖动手柄以选择到哪个时间
+
+
+
+##### 其他小部件详细描述
+
+- baseLayerPicker放出来的话  
+  文本会参与到遮挡关系中<span style='opacity:.5'>（原本都是最前显示的）</span>
+
+- 投影方式选择按钮  
+  `projectionPicker`配置项，默认值为false
 
 
 

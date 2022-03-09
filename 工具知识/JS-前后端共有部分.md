@@ -2598,28 +2598,29 @@ function a(p0,p1='p1'){
       `Uncaught (in promise) reject的实参`
     - `reject`触发的catch中的回调或者then里的onRejected里会获得传给`reject`的参数
 
-- then  
+- then和catch都会返回一个新的promise  
+  [这个MDN页面](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8)有相关描述  
+  【】👆说可以`return`promise来形成另一个异步操作，有空试试
 
-  - > 即使是一个已经变成 resolve 状态的 Promise，传递给 `then()` 的函数也总是会被异步调用 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E6%97%B6%E5%BA%8F)
-
-  - `promise.then(fn)`会返回一个新的promise  
-    （这点要注意，`.then`之后就不是原来的对象了）  
-    [这个MDN页面](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8)有相关描述  
-    
-    - 如果fn里return了一个值  
-      那被返回的promise的then的参数就是return值
-    - 新的promise也是能catch的
-    
-  - `promise.catch(fn)`也会返回一个promise  
-
-    - 如果进了catch的话要让返回promise失败只能使用throw（throw什么都可以）
+  - then
+    - 如果回调里return了一个值  
+      那then返回的promise的then的参数就是return值
+  - catch
+  
+    - 如果进了catch的话要让返回promise失败只能使用throw<span style='opacity:.5'>（throw什么都可以）</span>
       - 返回promise成功的话  
         返回promise的then的参数也是catch回调的return值
       - 返回promise失败的话  
         返回promise的catch的参数是throw的内容
-    - 没进catch的话那结果和没有catch是一样的
+  
+- then  
 
-  - 【】测测多个then之间是否是同步执行的
+  - > 即使是一个已经变成 resolve 状态的 Promise，传递给 `then()` 的函数也总是会被异步调用 —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises#%E6%97%B6%E5%BA%8F)
+
+  - 提醒：对于同一个promise，多次then得到的东西都是相同的<span style='opacity:.5'>（也就是说，会发生引用传递）</span>  
+    fetch也是这样、axios0.21.4也是这样
+
+  - 【】测测多个then之间是否是同步执行的<span style='opacity:.5'>（不好设计实验）</span>
 
   
 
@@ -2861,7 +2862,7 @@ fetch(某个请求地址,{ // 加第二个参数可以规避在跨域时的报�
 
 基本介绍
 
-- fetch方法返回一个promise实例
+- fetch方法返回一个promise实例<span style='opacity:.5'>（其他promise有的特性这个promise都有）</span>
 - fetch据说可以全面替代xhr（js请求除了xhr就是fetch），完整见[mdn](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch)
 
 入参
@@ -2888,7 +2889,7 @@ fetch(某个请求地址,{ // 加第二个参数可以规避在跨域时的报�
 就是[Response实例](https://developer.mozilla.org/zh-CN/docs/Web/API/Response)
 
 - 获取可读性数据   
-  - 已使用过的都是只能使用一次的，并且返回的都是promise
+  已使用过的方法<span style='opacity:.5'>（text和json）</span>都是只能调用一次的，并且返回的都是promise
   - 转字符串  
     [`text()`](https://developer.mozilla.org/en-US/docs/Web/API/Response/text) 
   - 转json  
