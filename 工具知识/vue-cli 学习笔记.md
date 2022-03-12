@@ -28,6 +28,12 @@
 
 全局安装命令是：`npm install -g @vue/cli`
 
+- [用命令行初始化项目](https://cli.vuejs.org/zh/guide/creating-a-project.html#%E6%8B%89%E5%8F%96-2-x-%E6%A8%A1%E6%9D%BF-%E6%97%A7%E7%89%88%E6%9C%AC)  
+  `vue init`  
+  - 默认没有这个命令  
+    默认运行会提示：`Command vue init requires a global addon to be installed`  
+    `npm install -g @vue/cli-init`后可以运行这个命令
+
 
 
 ### `vue ui`
@@ -139,15 +145,6 @@ webpack4里并没有test模式
 
 ##### 问题记录
 
-- 使用绝对路径引用文件结果报错“无法在node_modules里找到指定依赖”  
-  原因未知  
-  在整理大屏项目模板时发现了这个情况（不仅是ts报错，js里也报错）  
-  结果后面先解决其他问题，解决之后这个问题也消失了  
-  - 后面试过还原以下内容，都没把问题复现出来
-    - 去掉`shims-vue.d.ts`中的`declare module '@/auth'`
-    - 在SFC的style标签里引用不存在的背景图
-    - 还原有问题的`.babelrc`和`babel.config.js`
-
 - 使用ts+cz时无法打包  
 
   - 报错如下  
@@ -168,7 +165,14 @@ webpack4里并没有test模式
 
     综上所述，估计是[thread-loader](https://v4.webpack.js.org/loaders/thread-loader/#root)出现了一个未知的问题导致无法打包
 
-
+- （该问题无法复现）使用绝对路径引用文件结果报错“无法在node_modules里找到指定依赖”  
+  <span style='opacity:.5'>（原因未知）</span>  
+  在整理大屏项目模板时发现了这个情况（不仅是ts报错，js里也报错）  
+  结果后面先解决其他问题，解决之后这个问题也消失了  
+  - 后面试过还原以下内容，都没把问题复现出来
+    - 去掉`shims-vue.d.ts`中的`declare module '@/auth'`
+    - 在SFC的style标签里引用不存在的背景图
+    - 还原有问题的`.babelrc`和`babel.config.js`
 
 
 

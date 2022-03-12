@@ -257,6 +257,15 @@
 
 
 
+非重点内容
+
+- 查看数据来源  
+  把类名为`cesium-credit-lightbox-overlay`的dom的`display:none`去掉  
+  然后就会出现“Data provided by：”字样，后面几行就会说明来源  
+  <span style='opacity:.5'>（用mapbox影像的话就会有一行`© Mapbox © OpenStreetMap Improve this map`，如果再用静态地形文件做服务的话，下一行就会是`layer.json`里的不知道是attribution属性还是description属性）</span>
+
+
+
 ##### 影像
 
 - 默认应该是bing地图，因为开地图选择控件的话默认选的是bing
@@ -1374,6 +1383,63 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
 
 
 
+### [widget（小部件）](https://cesium.com/learn/cesiumjs/ref-doc/CesiumWidget.html)
+
+小部件一般都会有html部分
+
+- <span style='opacity:.5'>（怀疑这widget和小部件没关系啊，感觉是渲染整个场景的，[这个影像服务切换demo](https://sandcastle.cesium.com/index.html?src=Imagery%2520Layers%2520Manipulation.html)里也没有使用widget）</span>
+- <span style='opacity:.5'>（怎么感觉整个场景都是widget实现的，就算cz的使用者不加widget，canvas父元素的类名也是`cesium-widget`）</span>
+- 通过Viewer配置增加的小部件也是由`CesiumWidget`实现的
+
+
+
+##### 去除默认开启的小部件
+
+```js
+const viewer = new Cesium.Viewer('cesiumContainer', {
+  animation: false, //（下方）动画控制不显示
+  timeline: false, //（下方）时间线不显示
+  fullscreenButton: false, //（右下角）全屏按钮不显示
+  homeButton: false, //（右上角）homePage按钮不显示
+  baseLayerPicker: false, //（右上角）底图服务选择按钮不显示
+  sceneModePicker:false, //（右上角）模式切换按钮不显示（可选球体、3d平面和2d平面）
+  geocoder:false, //（右上角）搜索按钮不显示
+  navigationHelpButton:false, //（右上角）镜头操作说明按钮不显示
+})
+  
+// （左下角）隐藏左下角版权信息
+viewer._cesiumWidget._creditContainer.style.display = "none"
+```
+
+
+
+##### 下方仪表盘和时间轴
+
+用来控制时间的
+
+- **仪表盘下面三个按钮**  
+  控制时间暂停或者正负向走动
+- **仪表盘外圈的环和指针**  
+  控制时间流速
+- **仪表盘左上角时钟**  
+  重置时间方面的操作
+- **时间轴**  
+  拖动手柄以选择到哪个时间
+
+
+
+##### 其他小部件详细描述
+
+- baseLayerPicker放出来的话  
+  文本会参与到遮挡关系中<span style='opacity:.5'>（原本都是最前显示的）</span>
+
+- 投影方式选择按钮  
+  `projectionPicker`配置项，默认值为false
+
+
+
+
+
 ### 其他
 
 
@@ -1608,57 +1674,6 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
   - **右上角**  
     ![cesium-展示页面-右上角](..\图片\cesium-展示页面-右上角.PNG)
 
-### [widget（小部件）](https://cesium.com/learn/cesiumjs/ref-doc/CesiumWidget.html)
-
-小部件一般都会有html部分
-
-- 通过Viewer配置增加的小部件也是由`CesiumWidget`实现的
-
-
-
-##### 去除默认开启的小部件
-
-```js
-const viewer = new Cesium.Viewer('cesiumContainer', {
-  animation: false, //（下方）动画控制不显示
-  timeline: false, //（下方）时间线不显示
-  fullscreenButton: false, //（右下角）全屏按钮不显示
-  homeButton: false, //（右上角）homePage按钮不显示
-  baseLayerPicker: false, //（右上角）底图服务选择按钮不显示
-  sceneModePicker:false, //（右上角）模式切换按钮不显示（可选球体、3d平面和2d平面）
-  geocoder:false, //（右上角）搜索按钮不显示
-  navigationHelpButton:false, //（右上角）镜头操作说明按钮不显示
-})
-  
-// （左下角）隐藏左下角版权信息
-viewer._cesiumWidget._creditContainer.style.display = "none"
-```
-
-
-
-##### 下方仪表盘和时间轴
-
-用来控制时间的
-
-- **仪表盘下面三个按钮**  
-  控制时间暂停或者正负向走动
-- **仪表盘外圈的环和指针**  
-  控制时间流速
-- **仪表盘左上角时钟**  
-  重置时间方面的操作
-- **时间轴**  
-  拖动手柄以选择到哪个时间
-
-
-
-##### 其他小部件详细描述
-
-- baseLayerPicker放出来的话  
-  文本会参与到遮挡关系中<span style='opacity:.5'>（原本都是最前显示的）</span>
-
-- 投影方式选择按钮  
-  `projectionPicker`配置项，默认值为false
-
 
 
 # [CesiumLab](http://www.cesiumlab.com/)
@@ -1740,6 +1755,26 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
 基于Cesium的项目，主要是数据、地图展示，似乎有提供服务
 
 Cesium不可用时可以退回Leaflet
+
+
+
+# 其他插件
+
+
+
+### [cesium-navigation-es6](https://github.com/cesium-plugin/cesium-navigation-es6)
+
+拥有的小部件：
+
+- 比例尺
+- 缩放地图按钮（中间有带个重置镜头的刷新图标）
+- 指南针
+  - 可以通过指南针移动镜头  
+    可以上下移动，也可以旋转镜头
+  - [指南针外环无法关闭](https://github.com/cesium-plugin/cesium-navigation-es6/issues/3)  
+    对应的是`enableCompassOuterRing`配置项
+
+
 
 
 
