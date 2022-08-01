@@ -2,6 +2,22 @@
 
 - 下一次学习[这](https://github.com/jackfrued/Python-100-Days/blob/master/Day01-15/02.%E8%AF%AD%E8%A8%80%E5%85%83%E7%B4%A0.md#%E8%BF%90%E7%AE%97%E7%AC%A6)的“下面的例子演示了比较运算符”
 
+
+
+# 起步
+
+
+
+- [安装](https://github.com/jackfrued/Python-100-Days/blob/master/Day01-15/01.%E5%88%9D%E8%AF%86Python.md#%E5%AE%89%E8%A3%85python%E8%A7%A3%E9%87%8A%E5%99%A8)
+- 确认本机是否安装python  
+  `python --version`
+
+
+
+
+
+
+
 ## 占位符语法
 
 类似js的模板字符串  
@@ -37,3 +53,10 @@ print('%d %% %d = %d' % (表达式1, 表达式2, 表达式3))
 ## 记录
 
 已安装python：3.7.6、2.7
+
+
+
+# 非重点内容
+
+- arcmap10.2下载的python2.7.3和python官网装的python2.7.18是有差异的  
+  用[mxd2qgs](https://github.com/fitnr/mxd2qgs)时报的错就不一样

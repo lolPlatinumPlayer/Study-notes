@@ -207,6 +207,10 @@ vue-cli含有模板：https://github.com/vuejs-templates
 地址为：[官方的配置文档](https://cli.vuejs.org/zh/config)  
 里边内容是按照配置项来分的，比如`devServer`配置项的地址就是https://cli.vuejs.org/zh/config/#devserver
 
+- `devServer`配置项  
+  应该就是[webpack的`devServer`配置项](https://v4.webpack.js.org/configuration/dev-server/)  
+  包括`devServer.proxy`
+
 注意：
 
 - 是否给文件名增加随机字符串  
@@ -223,15 +227,15 @@ vue-cli含有模板：https://github.com/vuejs-templates
   - 代理全部内容的配置  
   
     - 最简写法  
-    
+  
       ```js
       devServer: {
         proxy:请求发往的地址,
       }
       ```
-    
+  
     - 如果要加其他配置的话这样写  
-    
+  
       ```js
       devServer: {
         proxy:{
@@ -241,16 +245,16 @@ vue-cli含有模板：https://github.com/vuejs-templates
         },
       }
       ```
-    
+  
       - [http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware#context-matching)说的`'**'`并不好使
-    
+  
   - 代理部分接口的配置  
   
     ```js
     proxy: {
       "/请求中包含的路径": { // 这个地址出现在请求任意位置都可以
         target: `${baseUrl}`, // 
-        /* pathRewrite: {
+        /* pathRewrite: { 这部分没意义
            "^/bigdata": "/bigdata",
         }, */
       },
@@ -259,27 +263,26 @@ vue-cli含有模板：https://github.com/vuejs-templates
   
     - 最终请求地址  
       最终请求地址=`target`+`/请求中包含的路径`+其他内容
-    - 配为接口地址的开头，而不是请求中包含的路径  
-      在开头加上'^'即可
+    - 配为接口地址的开头，而不是`请求中包含的路径`  
+      方法：把`"/请求中包含的路径"`改为`"^/请求开头的路径"`
     - 注意：配`请求中包含的路径`时不要有重合  
       - 例子  
-        2个地址为`'/a'`和`'/b/a'`  
+        比如说有2个地址：`'/a'`和`'/b/a'`  
         一次经验是`'/b/a'`会按`'/a'`里的来
-    - 注释起来的部分不知道作用  
-      不过就算"/请求中包含的路径"不是请求的开头  
+    - 注释起来的部分没意义  
+      就算"/请求中包含的路径"不是请求的开头  
       放开注释之后也可以正常运作
   
   - 需要走代理的请求的写法  
+    只要是通往本地地址就会走代理（本地地址具体来说就是前端项目启起来的地址）  
+    如果没有特殊情况，直接用相对路径即可完成代理  
+    <span style='opacity:.5'>（axios走相对路径的方法：`baseURL`设为`'./'`或者空串或者不设）</span>
   
-    - axios的baseURL设为`'./'`或者空串或者不设  
-      （不用axios也可以代理，只要请求路径是相对地址就行）
-      - 注意  
-        axios的baseURL设为`'./'`或者空串或者不设的接口走的肯定是本地地址  
-        所以 **走本地地址并不代表被代理**  
-        没被代理的接口的状态码为404
+  - 提醒：走本地地址并不代表被代理  
+    要启起来代理服务，并且走本地地址，这样才算代理
   
-  
-  
+
+
 
 ### 命令
 
@@ -366,6 +369,10 @@ vue-cli含有模板：https://github.com/vuejs-templates
 在代码里都能获取到，但并没有挂在`window`下
 
 `process.env`默认有2个属性：`NODE_ENV`和`BASE_URL`（[cli文档的环境变量部分](https://cli.vuejs.org/zh/guide/mode-and-env.html#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F)提到了这点）
+
+- 如果使用了未定义的环境变量  
+  有可能导致编译出问题  
+  但是不会报错（终端和浏览器都不会报错）
 
 
 

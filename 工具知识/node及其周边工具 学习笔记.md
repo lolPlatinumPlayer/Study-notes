@@ -203,7 +203,20 @@ const json内容 = JSON.parse(fs.readFileSync("./package.json"));
 ```
 
 - 同步读取文件用`fs`的`readFileSync`方法
-- 读 json 的话，还要再用`JSON.parse`方法
+- 读取结果为字符串
+- 读取文件夹下所有文件的文件名  
+  `fs.readdirSync`只读第一级
+
+其他
+
+- 创建文件  
+  [`fs.writeFile`](https://nodejs.org/docs/latest-v10.x/api/fs.html#fs_fs_writefile_file_data_options_callback)  
+  如果要创建的位置上已经有同名文件的话则会将其覆盖
+- 往文件里追加内容  
+  `fs.appendFile`  
+  文件不存在的话会创建文件
+
+- [把文件夹下所有文件里的文本都加到一个文件里](https://blog.csdn.net/weixin_43315721/article/details/118890276)<span style='opacity:.5'>（这博客应该是这个功能）</span>
 
 ### 模块
 
@@ -360,7 +373,9 @@ nvm-windows 是另一个独立项目
 - 对于安装报错的版本
   - 也会展示在 nvm list 列表里
   - 也可以用 nvm use 切换，且没有任何报错  
-    **但是不能使用 npm 命令**
+    **但是不能使用 npm 命令**  
+    原因：可能是npm安装失败  
+    解决方法：删掉重装
 
 # express
 

@@ -34,13 +34,26 @@
   - [百度](https://lbsyun.baidu.com/index.php?title=coordinate)和[高德](https://lbs.amap.com/api/webservice/guide/api/convert/)会基于GCJ-02进行二次加密
   
 - WGS84  
-  GPS是基于WGS84的
+  GPS是基于WGS84的  
+  （全称似乎是：WGS 1984）
 
 
 
 ### EPSG
 
-> WGS84 是目前最流行的地理坐标系统。在国际上，每个坐标系统都会被分配一个 [EPSG](https://epsg.io/) 代码，EPSG:4326 就是 WGS84 的代码 —— https://www.cnblogs.com/E7868A/p/11460865.html
+> WGS84 是目前最流行的地理坐标系统。在国际上，每个坐标系统都会被分配一个 [EPSG](https://epsg.io/) 代码，EPSG:4326 就是基于 WGS84 的 —— https://www.cnblogs.com/E7868A/p/11460865.html
+
+EPSG:3857也是基于WGS84的
+
+
+
+### 平面投影
+
+目前见过的只有2种：高斯-克吕格(Gauss-Krüger)投影 和 墨卡托(Mercator)投影
+
+> 高斯-克吕格投影也被称为[横轴墨卡托投影](https://pro.arcgis.com/zh-cn/pro-app/2.8/help/mapping/properties/transverse-mercator.htm)的椭圆体版本 —— [ArcGIS Pro](https://pro.arcgis.com/zh-cn/pro-app/2.8/help/mapping/properties/gauss-kruger.htm)
+
+- 高斯-克吕格 和 墨卡托 的坐标并不是相近的【】从工信一张图那里补充点细节过来
 
 
 
@@ -56,6 +69,21 @@
   甚至一个要素可以包含不同类型的几何图形（[GeometryCollection](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.8)类型的feature就可以）
 
 
+
+# 底图服务标准
+
+<span style='opacity:.5'>（搭建服务的方法见其他笔记）</span>
+
+- > 具体使用方法请参考OGC WMTS标准 中GetCapabilities 和GetTile —— [天地图](http://lbs.tianditu.gov.cn/server/MapService.html)
+
+- [WMS（Web Map Service）](https://www.ogc.org/standards/wms)  
+  Web 地图服务  
+  OGC开发的标准协议<span style='opacity:.5'>（1999年）</span>
+  - [支持WMS的相关产品](https://en.wikipedia.org/wiki/Web_Map_Service#Software)  
+- [WMTS（Web Map Tile Service）](https://www.ogc.org/standards/wmts)  
+  Web地图瓦片服务  
+  OGC开发的标准协议<span style='opacity:.5'>（2010年）</span>
+  - 比WMS性能更强
 
 
 
@@ -79,3 +107,6 @@
 # 其他
 
 - [查看行政区划代码](http://www.mca.gov.cn/article/sj/xzqh/1980/)
+- shp文件  
+  - 一般会有多个附属文件  
+    比如：`.lock`、`.shx`、`.sbx`、`.sbn`、`.prj`、`.dbf`

@@ -44,7 +44,7 @@
 
   - 直接填充矩形（不用先创建路径）  
     `ctx.fillRect(10, 10, 100, 100)`  
-四个参数为x/y/width/height
+    四个参数为x/y/width/height
     
   - 创建路径后填充  
   可以创建多个路径然后一次性填充  
@@ -206,7 +206,7 @@ context.drawImage(canvas dom, 绘制起点x坐标, 绘制起点y坐标,绘制区
 ### canvas转图像
 
 - 转base64  
-  `canvas.toDataURL()`  
+  [`canvas.toDataURL()`](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLCanvasElement/toDataURL)  
 
   - 让webgl也可用的方法  
 

@@ -1,4 +1,4 @@
-- [class-style component syntax](https://vuejs.org/v2/guide/typescript.html#Class-Style-Vue-Components)  
+- [class-style component syntax](https://vuejs.org/v2/guide/typescript.html#Class-Style-Vue-Components)<span style='opacity:.5'>（这页面没了）</span>  
 
   > 让你可以Use the @Component decorator on classes. —— `vue ui`
 
@@ -96,6 +96,11 @@
   （提醒：经过测试，如果没用v-if的话父子组件是同时mounted的）
 
 
+
+# 其他
+
+- vscode插件
+  - [Vue Language Features (Volar)](https://marketplace.visualstudio.com/items?itemName=vue.volar)
 
 
 

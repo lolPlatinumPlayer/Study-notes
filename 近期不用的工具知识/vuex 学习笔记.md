@@ -47,7 +47,7 @@ state代表完整的数据，而getter则是从完整数据中提取出需要操
 而且getter可以将需要的数据组合在一起，因此写state时只需要考虑查看整体数据时是否直观，不用担心数据结构在操作时会不够直观
 如果在视图中使用state的话，在setter改变后不会触发视图更新而用getter的话会（不过用cdn写的进度条测试里setter改变后会触发视图更新）
 
-
+（state也会触发视图更新，测试于vuex3.6.2、vue2.6.14）
 
 
 
@@ -58,7 +58,7 @@ state代表完整的数据，而getter则是从完整数据中提取出需要操
   当然，可以放computed里
 
 - 定义  
-store的getters中写：  
+  store的getters中写：  
   
    ```js
    函数名(state,getters){
@@ -167,6 +167,12 @@ mutation 都是同步事务
 
 但是如果在mutation中使用异步脚本，vue-devtools无法在“时光旅行”中捕捉到那次mutation延时改变的数据，而action是异步结束后才生成“时光旅行”记录，所以能捕捉到异步后的数据。这就是【action存在的意义】
 辅助函数和mutation等一致
+
+
+
+### [Module](https://v3.vuex.vuejs.org/zh/guide/modules.html#%E6%A8%A1%E5%9D%97%E7%9A%84%E5%B1%80%E9%83%A8%E7%8A%B6%E6%80%81)
+
+
 
 
 

@@ -15,6 +15,8 @@
   >
   > —— [stackoverflow](https://stackoverflow.com/questions/13790592/how-to-upgrade-git-on-windows-to-the-latest-version/48924212#48924212)
 
+- 命令不一定要在根目录使用
+
 
 
 ### 英文专有名词
@@ -91,8 +93,8 @@
 “modified: ”  
 工作区文件内容与版本库不一致 或 暂存区文件内容与分支不一致  
 “renamed: ”  
-（出现过一次，不过不知道触发机制。
-测试了 工作区与暂存区不同、工作区与分支不同、暂存区与分支不同 都没触发）
+git2.28.0.windows.1版本下更名文件夹或文件后`git add .`后被更名内容就会显示`renamed: `  
+<span style='opacity:.5'>（不知道哪个版本下测试了 工作区与暂存区不同、工作区与分支不同、暂存区与分支不同 都没触发“renamed: ”）</span>
 
 
 
@@ -135,7 +137,7 @@
   
   后续push时就要这样写：`git push -f 远程仓库名 develop`（？？？）
   
-  - `.git/config`里的远程仓库名可以随意更改  
+  - `.git/config`文件里的远程仓库名可以随意更改  
     `git pull origin master`里的origin就是仓库名
   
 - `.git/config`里的
@@ -146,7 +148,7 @@
   	fetch = +refs/heads/*:refs/remotes/origin/*
   ```
   是可以删掉的，效果目前感觉就是撤回了如下命令
-  git remote add origin http://192.168.1.220/credit/cmp-big-screen.git
+  `git remote add origin http://192.168.1.220/credit/cmp-big-screen.git`
 
 
 
@@ -171,7 +173,7 @@ git config --global user.email "417783514@qq.com"
 **`git init`**
 
 把这个目录变成Git可以管理的仓库（表述可能不正确）
-（内含工作区与版本库，.git文件夹以外都是工作区，.git是版本库）
+（内含工作区与版本库，`.git`文件夹以外都是工作区，.git是版本库）
 这时候并没有真正创建master分支(`git branch`看不到任何东西)  
 要第一次`add`、`commit`之后才有【】表达待整理  
 要有master之后才能创建其他分支
@@ -229,7 +231,6 @@ git push -u origin master
 
 - 文件夹名与参考名是否相同：不同
 - 是否执行过`git init`命令：是
-- 是否执行过`git commit`命令：是
 - 网站：码云、github、hrtGitlab
 
 github的话要多加一行`git branch -M main`
@@ -252,7 +253,12 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
     这个报错应该是因为没有确定远程仓库（仓库名）导致的
     
   - hrtGitlab在push时报错`fatal: repository 'xxxx.git/' not found`  
-    解决方法：remote add时不用http的地址，改用SSH即可
+    
+    - 解决方法a：remote add时不用http的地址，改用SSH即可  
+    - 解决方法b：用网页的url下载<span style='opacity:.5'>（clone按钮里的http地址不行）</span>
+    
+  - 报错`error: failed to push some refs to xxxxx`  
+    原因：项目未执行过`git commit`
 
 
 
@@ -276,33 +282,55 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
     会分配一个名称  
     关于分配名称的规则看[官方说明](https://git-scm.com/docs/git-clone/zh_HANS-CN#git-clone-ltgt)  
     根据经验看大多都是`.git`前的那级路径
+  
 - [clone ssh](https://www.cnblogs.com/akidongzi/p/8366535.html)  
+  
   - 提示：↖这个博客里说的“~/.ssh 目录”就是类似`C:\Users\Administrator\.ssh`这样的路径
-  - hrtGitlab可以添加多个私钥
-  - 提示：公钥是以`ssh-rsa `开头的
-  - 一次成功的经验  
-    按着[这个博客](https://www.cnblogs.com/lz0925/p/10725010.html)做  
-    然后下hrtGitlab成功了  
-    （提示：git bash里输密码时光标都没反应的）  
-    不过每次和远程仓库交互都要输密码
-- hrt gitlab有次下下来用`git branch`命令只能看到master分支  
-  不过checkout到其他分支也会有其他分支的代码
+  
+  - [这个博客](https://blog.csdn.net/u012480379/article/details/117993104)感觉会规范一点
+  - 公钥  
+    以`ssh-rsa `开头  
+  
+    > 通常包含在`C:\Users\Administrator\.ssh\id_rsa.pub`中 —— [hrtGitlab](http://192.168.1.220:10080/profile/keys)
+  
+  - 在电脑上配置多个ssh公钥  
+  
+    > 同一台电脑的同一个ssh共钥无法配置到多个github账号。例如公司的电脑ssh公钥配置到公司的github账号后，无法在使用同一个公钥配置个人的github账号。这时候需要生成多个ssh密钥，分别配置给不同的github账户 —— [博客](https://blog.csdn.net/m0_37347379/article/details/121975374)
+  
+  - hrtGitlab
+  
+    - hrtGitlab可以添加多个私钥<span style='opacity:.5'>（2022.05.25不确定是否属实）</span>
+    - hrtGitlab可以添加多个公钥
+    - hrtGitlab添加workingforvh邮箱的公钥会失败，但是用@fjhrt.com的邮箱就可以成功  
+      报错为：`Fingerprint已经被使用`
+    - hrtGitlab添加公钥后会显示对应公钥的fingerprint  
+      但是这个fingerprint和`ssh-keygen -t rsa -C '邮箱' -f ~/.ssh/文件名`命令里显示的fingerprint是不一样的
+    - 一次成功的经验  
+      按着[这个博客](https://www.cnblogs.com/lz0925/p/10725010.html)做  
+      然后下hrtGitlab成功了  
+      （提示：git bash里输密码时光标都没反应的）  
+      不过每次和远程仓库交互都要输密码
+    - hrt gitlab有次下下来用`git branch`命令只能看到master分支  
+      不过checkout到其他分支也会有其他分支的代码
+    - [hrtGitlab初次下载的说明](http://192.168.1.220:38080/bin/view/%E5%9F%B9%E8%AE%AD%E6%95%99%E7%A8%8B/2%E3%80%81%E6%95%99%E7%A8%8B/2.1%E3%80%81%E4%BB%A3%E7%A0%81%E6%89%98%E7%AE%A1/git/gitlab%20SSH%20%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/)  
+      感觉就是多了一步“生成私钥”<span style='opacity:.5'>（依据公钥生成私钥的`ppk`文件）（可是在hrtPC上没搜到`ppk`文件）</span>
 
 经验
 
 - 在文银电脑上clone Study-notes时，发现clone后里边没东西。再执行`git pull origin master`后才有东西
 
 - hrt的gitlab项目无法用http地址clone  
-  用个人笔记本也无法clone
+  用个人笔记本也无法clone  
+  <span style='opacity:.5'>（本笔记上方有说`remote add`网页的url是可行的，但是`remote add`和`clone`是不一样的）</span>
   
-  - 在hrt电脑上用https来clone elementUI也是不行  
+  - 在hrtPC上用https来clone elementUI也是不行  
     报错如下：  
-
+  
     ```
     Please make sure you have the correct access rights
     and the repository exists.
     ```
-
+  
     
 
 ### 与同一个电脑上的仓库通信
@@ -352,7 +380,7 @@ git push -u origin 你要推送的分支名 // 推送一个分支就要执行一
       
       可以推送  
       但是只会更新git里的内容，仓库里的实体文件不会变  
-      这个方法来自[博客A](https://www.cnblogs.com/cosiray/archive/2012/06/01/2530967.html)，是加在远程仓库的.git/config里的
+      这个方法来自[博客A](https://www.cnblogs.com/cosiray/archive/2012/06/01/2530967.html)，是加在远程仓库的`.git/config`文件里的
       
       - 让远程仓库实体文件同步的方法  
         在远程仓库有任何改动前输入`git reset --hard`  
@@ -445,6 +473,15 @@ git checkout 分支名 // 切换分支
 
 ### 重命名分支
 
+
+
+- <b style='color:red'>注意</b>  
+  本地分支重命名再提交到远端后，虽然远端会新增一个分支  
+  但是本地重命名后的分支连的不会是新增的分支，而是原来连接的远端分支  
+  <span style='opacity:.5'>（这点可以在`.git/config`文件里确认）</span>
+
+
+
 本地的
 
 - 重命名当前（指向的）分支  
@@ -452,11 +489,11 @@ git checkout 分支名 // 切换分支
 - 重命名非当前（指向的）分支  
   `git branch -m 旧的分支名 新的分支名`
 
+
+
 远程的
 
 - 百度到的都是先删除，然后本地改完再提交
-
-
 
 
 
@@ -676,6 +713,22 @@ bbbb
 
 
 
+# 重命名
+
+<span style='opacity:.5'>（测试于2.28.0.windows.1版本）</span>
+
+- 在只是更名而没有修改文件内容的情况下  
+  正常`add`、`commit`就可以识别为重命名（`renamed:`）
+- 既更名也修改文件内容的情况下  
+  正常`add`、`commit`是无法识别为重命名的<span style='opacity:.5'>（会被识别为旧的删除新的添加）</span>  
+  可以用[`git mv`](https://git-scm.com/docs/git-mv/en)命令解决这个问题
+
+
+
+
+
+
+
 # 查看历史
 
 
@@ -738,8 +791,9 @@ bbbb
 要退出这个未命名分支的话只要再`checkout`到普通分支就行了  
 `checkout`到普通分支后未命名分支就会消失
 
-**不过在未命名分支里做修改的话似乎会导致严重的问题，暂时不要在未命名分支里做任何commit**
+<span style='color:orange'>不过在未命名分支里做修改的话似乎会导致严重的问题，暂时不要在未命名分支里做任何commit</span>
 
+- 就算没有commit，切换到分支里后，也会把做的修改带过去<span style='opacity:.5'>（在复杂情况下肯定会出问题）</span>
 - 一次“修改”后安全离开的经验  
   都是在webstorm的控制台里操作的  
   操作步骤如下：
@@ -749,7 +803,7 @@ bbbb
   3. 切换到落后当前分支很多的主支
   4. 控制台报了错：  
      `Your branch is up to date with 'origin/master'.`
-  5. 但是成功切换到主支，而且临时分支消失了
+  5. 但还是成功切换到了主支，且未命名分支消失
 
 
 
@@ -770,6 +824,14 @@ bbbb
 - 变成未来某个版本
   $ git reset --hard 2b595d5eac
   hard后面是未来版本的版本号的头几位，输入后git会自动检索
+
+
+
+##### 用指定commit新建分支
+
+`git checkout commit的id -b 分支名`
+
+新建完之后会切换过去
 
 
 
@@ -821,6 +883,7 @@ bbbb
 - 被这个命令执行过的文件，`add .`将不会添加这些文件  
   对于未追踪(untracked)的文件无法使用这个命令
 - 不过对于已经add的文件，使用这个命令并不会从“被add的列表”中移除
+- 注意：这个命令会将文件还原到上一次commit的状态
 
 
 
@@ -864,8 +927,8 @@ git commit -m 'xxx'
 
 这个命令的特性
 
-- 这个命令似乎不会缩小`.git`文件的体积  
 - 如果`commit`的时候不提交这个命令里的`文件或文件夹`的话，`文件或文件夹`还会存留在远程仓库里
+- 这个命令似乎不会缩小`.git`文件夹的体积  
 
 使用这个命令时遇到过的问题
 
@@ -913,7 +976,6 @@ git commit -m 'xxx'
 - `OpenSSL SSL_connect: Connection was reset in connection to github.com:443`  
   同上，不过这个命令是在使用powershel时出现的，在git bash和powershell间反复操作后，最终在git bash上成功push  
   不成功是网页上的github无法访问，成功时网页上的github也能访问
-
 - 报错`error: invalid path`  
   这是因为git仓库里部分文件用了windows下不可用的文件名  
   - 部分不可用的文件名：aux、com1、com2、com3
@@ -923,14 +985,17 @@ git commit -m 'xxx'
     `git config core.ignorecase`
   - 设置项目是否大小写<b style="color:red">不</b>敏感  
     `git config core.ignorecase 布尔值`
+- `git pull`后报错`error: The following untracked working tree files would be overwritten by merge:`并且无法合并代码  
+  错误原因：git仓库上存在仅大小写不同的文件或文件夹  
+  解决办法：不要让仓库出现仅大小写不同的文件和文件夹
 
 
 
 # git相关工具
 
+- [官网列出的GUI客户端](https://git-scm.com/downloads/guis)
 - 不要使用windows自带记事本编辑文件  
   （可能是因为会把编码改为GBK）
-
 - 各终端可使用git命令的情况
   - powershell：可用
   - git bash：可用
@@ -989,7 +1054,7 @@ git commit -m 'xxx'
 ### github desktop
 
 - 在github上改了仓库名后都可以用desktop推送  
-  甚至.git/config里的`[remote "origin"]`都还是旧的名字
+  甚至`.git/config`文件里的`[remote "origin"]`都还是旧的名字
 
 
 
@@ -1043,6 +1108,9 @@ cd d:nospace/learngit
   比如说第10个至第15个commit间共更改了哪些内容，而不是看一个个commit分别改了哪些内容  
   （如果不行的话看看合并commit要怎么操作）
 
+- ssh报错`Enter passphrase for key`  
+  不知道输什么
+  
   
 
 

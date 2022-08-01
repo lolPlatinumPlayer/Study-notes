@@ -1,3 +1,11 @@
+
+
+- 有不少关于geojson的ts类型
+
+
+
+
+
 名词定义
 
 - FeatureCollection  
@@ -31,6 +39,27 @@
 
 
 
+### 坐标转换
+
+- 经纬度转墨卡托  
+  `toMercator`
+- 墨卡托转经纬度  
+  `toWgs84`
+
+
+
+
+
+# 几何结构转换
+
+- 依据点生成多边形  
+  有concave和convex两种方法  
+  并没有搞得很明白，2个方法试了下都是只留凸多边形
+
+
+
+
+
 # 判断拓扑关系
 
 除了专用于点的方法，其他方法的几何体输入要求都是([Geometry](https://tools.ietf.org/html/rfc7946#section-3.1)|[Feature](https://tools.ietf.org/html/rfc7946#section-3.2) )  
@@ -38,9 +67,12 @@
 
 
 
-### 判断一个几何体是否包含另一个几何体  
+### 判断两个几何体的包含关系
 
-`turf.booleanContains(大的几何体,小的几何体)`或`turf.booleanWithin(小的几何体,大的几何体)`
+有2个方法可以判断
+
+- `turf.booleanContains(大的几何体,小的几何体)`
+- `turf.booleanWithin(小的几何体,大的几何体)`
 
 
 
@@ -230,7 +262,7 @@
 - `transformTranslate`  
   输入geojson  
   旋转单位是角度（一圈是360那个）  
-天上往下看是顺时针转（中国内是：角度0时朝北，角度90朝东）  
+  天上往下看是顺时针转（中国内是：角度0时朝北，角度90朝东）  
   
 - 但是不知道为什么下面的代码并不如预期  
   
@@ -265,3 +297,10 @@
 - 简化多边形 `simplify`
 - 缩放 `transformScale`
 - 求线条交点 `lineIntersect`
+- 最短路径  
+  `shortestPath`  
+  返回从起点到终点间避开障碍物的最短路径<span style='opacity:.5'>（文档的demo看起来不像是最短路径）</span>
+- 等高线  
+  `isobands`和`isolines`
+- 似乎有聚类或避让的功能  
+  `clustersDbscan`、`clustersKmeans`等名字带cluster的方法

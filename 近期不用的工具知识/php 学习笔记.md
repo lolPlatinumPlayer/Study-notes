@@ -144,7 +144,13 @@ php接收字段中有数组的话，接收后赋值给变量的都会变成php�
 ## 数据库操作
 
 - PDO  
-  一个api，有一定防注入的能力
+  一个api，有一定防注入的能力  
+  下面介绍PDO实例的方法
+  - 执行一条SQL语句并返回受影响的行数  
+    [`exec`](https://www.runoob.com/php/pdo-exec.html)
+  - 执行一条SQL语句并返回受影响的行<span style='opacity:.5'>（感觉是用数组形式返回的）</span>  
+    [`query`](https://www.runoob.com/php/pdo-query.html)
+  
 
 ### MySQL
 

@@ -242,15 +242,21 @@ Path -> Layer -> Evented -> Class
 
 ### 增加底图
 
-添加一个瓦片图层到地图上
+- 原生方式  
+  添加一个瓦片图层到地图上
 
-```javascript
-L.tileLayer(url模板, {
-  id: 'mapbox.streets'
-}).addTo(map);
-```
+  ```javascript
+  L.tileLayer(url模板, {
+    id: 'mapbox.streets'
+  }).addTo(map);
+  ```
 
-第二个参数可能叫options（本笔记中就这么叫）
+  第二个参数可能叫options（本笔记中就这么叫）
+
+- 插件方式  
+  使用[ChineseTmsProviders](https://github.com/htoooth/Leaflet.ChineseTmsProviders)<span style='opacity:.5'>（linZongA项目里就是用这个）</span>
+
+
 
 
 
@@ -258,7 +264,7 @@ L.tileLayer(url模板, {
 
 - 有很多底图都可以用  
   甚至用高德底图还不需要账号  
-  [这个插件](https://github.com/htoooth/Leaflet.ChineseTmsProviders)里就列了不少可用的底图
+  [ChineseTmsProviders<span style='opacity:.5'>（插件）</span>](https://github.com/htoooth/Leaflet.ChineseTmsProviders)里就列了不少可用的底图
 - url模板还是少改好，按照leaflet官网改mapbox的url会导致底图无法加载
 
 
@@ -303,8 +309,12 @@ L.tileLayer(url模板, {
 
 
 
-### 一些添加物
+### 添加物
 
+- 显隐  
+  应该是没有显隐方法的，只有移除方法<span style='opacity:.5'>（`remove`、`removeFrom`等）</span>  
+  不过[`L.GeoJSON`](https://leafletjs.com/reference.html#geojson)的话有个[`filter`](https://leafletjs.com/reference.html#geojson-filter)回调应该可以做显隐
+  
 - 标记点  
   `const marker = L.marker([51.5, -0.09]).addTo(map)`  
 
@@ -327,6 +337,9 @@ L.tileLayer(url模板, {
   ```
 
   - 用svg实现的
+
+- 线  
+  [`L.polyline`](https://leafletjs.com/reference.html#polyline)
 
 - [多边形](https://leafletjs.com/reference.html#polygon)  
 
@@ -357,10 +370,17 @@ L.tileLayer(url模板, {
 - [图片图层](https://leafletjs.com/reference.html#imageoverlay)  
 
 - 依据geojson生成对应添加物  
-  [`L.geoJSON`方法](https://leafletjs.com/reference.html#geojson)
+  [`L.geoJSON`方法](https://leafletjs.com/reference.html#geojson)  
 
   - 样式：style选项  
     文档说要用函数，但是直接写一个对象也是可以的
+  - 继承自[`L.FeatureGroup`](https://leafletjs.com/reference.html#featuregroup)
+  - onEachFeature回调  
+    创建每个feature时执行
+  - pointToLayer回调  
+    应该是创建每个Point类型的feature时执行  
+    - 该回调的return内容会加到geoJSON实例里<span style='opacity:.5'>（不return就不会加）</span>  
+    - 不return会导致`onEachFeature`不执行
 
 
 
@@ -418,7 +438,7 @@ L.tileLayer(url模板, {
       let DefaultIcon = L.icon({
         iconUrl: icon,
         shadowUrl: iconShadow,
-        iconAnchor:[12,41],
+        iconAnchor:[13,41],
       });
       L.Marker.prototype.options.icon = DefaultIcon;
       ```
@@ -434,3 +454,35 @@ L.tileLayer(url模板, {
       就是将options设为`{name: '[path][name].[ext]'}`  
       这样的话marker的默认图片会出来，但是marker的默认阴影不会出来
 
+
+
+# 相关工具
+
+
+
+### 实时绘制库
+
+[Leaflet-Geoman](https://www.npmjs.com/package/@geoman-io/leaflet-geoman-free)
+
+- [es module的引入方式](https://www.npmjs.com/package/@geoman-io/leaflet-geoman-free#include-as-es6-module)  
+  ```js
+  import '@geoman-io/leaflet-geoman-free';  
+  import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';  
+  ```
+
+  
+
+### 全屏按钮
+
+[leaflet.fullscreen](https://www.npmjs.com/package/leaflet.fullscreen)
+
+功能：在leaflet的工具栏位置加一个全屏按钮
+
+- es module的引入方式  
+
+  ```js
+  import 'leaflet.fullscreen/Control.FullScreen'
+  import 'leaflet.fullscreen/Control.FullScreen.css'
+  ```
+
+- api看官网

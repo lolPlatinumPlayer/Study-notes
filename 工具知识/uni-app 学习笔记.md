@@ -218,6 +218,10 @@
 - 网站  
   发行 =》 网站（后面还跟着一堆）  
   弹窗里的“网站域名”没必要写
+- 小程序  
+  - 会自动删除之前打的包
+  - 如果发现有的电脑打包会超过大小限制而有的不会  
+    应该是`node_modules`造成的差异<span style='opacity:.5'>（一般来说后装的`node_modules`会更大）</span>
 
 
 
@@ -482,13 +486,15 @@ App.vue代表应用
 
 [api列表](https://uniapp.dcloud.net.cn/api/README?id=%e8%b7%af%e7%94%b1)
 
-- `uni.navigateTo({url:一个地址})`  
+- [`uni.navigateTo({url:一个地址})`](https://uniapp.dcloud.net.cn/api/router.html#navigateto)  
   - 可以写相对地址也可以写绝对地址  
     - 写相对路径一定要以`/`开头  
       （相对路径可以是url的『路径』部分）
   - <span style='color:red'>写错地址不会报错也没有任何反应</span>
   - 可以导航到同路径不同query的页面  
     和导航到其他页面效果一致（已测浏览器端）
+  - 不能连续跳转超过10次<span style='opacity:.5'>（官方文档没有说明）</span>  
+    可以百度到相关说明，比如[这个博客](https://blog.csdn.net/weixin_48200589/article/details/122822482)
 - `uni.redirectTo`  
   调用该方法后 调用返回上一页方法 是不会到达这个页面的  
   而是会到达该页面的上一页

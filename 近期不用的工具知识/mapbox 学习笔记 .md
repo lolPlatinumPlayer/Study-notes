@@ -1,3 +1,8 @@
+- 可以吸纳以下笔记  
+  `电气符号库\笔记\相关技术.md`
+
+
+
 # 对mapbox的理解
 
 - 产品定位  
@@ -341,71 +346,97 @@ var map = new mapboxgl.Map({
 - **瓦片**  
 
   - [使用瓦片的方法](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#tiled-sources)  
-    👆说是3种，其实感觉就是2种：1️⃣使用TileJSON的配置2️⃣写一个TileJSON配置文件的地址  
+    👆说了3种：1️⃣使用TileJSON的配置2️⃣写一个TileJSON配置文件的地址3️⃣在url里输入`{bbox-epsg-3857}`的方法  
   
     - [TileJSON规范](https://github.com/mapbox/tilejson-spec)（里边会给出具体说每个配置的页面，比如[3.0.0](https://github.com/mapbox/tilejson-spec/tree/master/3.0.0)）
   
-  - raster数据源可以用瓦片  
+  - **raster数据源**可以用瓦片  
+    [raster数据源完整配置项](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#raster)
+  
+    - 默认情况下在移动端会模糊  
+  
+      - 一个改善的方法  
+        缩小数据源的[`tileSize`](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#raster-tileSize)配置<span style='opacity:.5'>（地图库是设置为128）</span>  
+        （缩小后不能增加指定面积的瓦片像素密度，但是可以缩小瓦片，最终缓解模糊问题）
+  
+    - 希望同时从多个url加载瓦片的话就在`tiles`数组里写多个url
   
     - 一个`source`属性值示例  
   
       ```js
       {
         type: "raster",
-        url: "aegis://aegis.HillShade",//这个url是sjdt的，换成mapbox应该也一样
+        url: "aegis://aegis.HillShade", // 这个url是sjdt的，换成mapbox应该也一样
         tileSize: 512
       }
       ```
   
-    - 天地图的示例（移动端会模糊）   
+    - 天地图的示例  
   
       ```js
-        style: {
-          "sources": {
-            "baseImg": {
-              "type": "raster",
-              'tiles': [
-                "http://t0.tianditu.com/vec_w/wmts?tk=" + mapImgServerAccessToken + "&SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=tiles"
-              ],
-              'tileSize': 256,
-            },
-            "baseMark": {
-              "type": "raster",
-              'tiles': [
-                "http://t0.tianditu.com/cva_w/wmts?tk=" + mapImgServerAccessToken + "&SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=w&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=tiles"
-              ],
-              'tileSize': 256,
-            }
+      style: {
+        "sources": {
+          "baseImg": {
+            "type": "raster",
+            'tiles': [
+              "http://t0.tianditu.com/vec_w/wmts?tk=" + mapImgServerAccessToken + "&SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=tiles"
+            ],
+            'tileSize': 256,
           },
-          "layers": [
-            {
-              "id": "baseImg",
-              "type": "raster",
-              "source": "baseImg",
-              "minzoom": 0,
-              "maxzoom": 17
-            },
-            {
-              "id": "baseMark",
-              "type": "raster",
-              "source": "baseMark",
-              "minzoom": 0,
-              "maxzoom": 17
-            },
-          ],
-          version: 8,
+          "baseMark": {
+            "type": "raster",
+            'tiles': [
+              "http://t0.tianditu.com/cva_w/wmts?tk=" + mapImgServerAccessToken + "&SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=w&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=tiles"
+            ],
+            'tileSize': 256,
+          }
         },
-        maxZoom: 16.7, // 再大就算请求了天地图，也是返回空白图片
-        pitchWithRotate:false,
-        dragRotate:false,
-        maxPitch:0,
+        "layers": [
+          {
+            "id": "baseImg",
+            "type": "raster",
+            "source": "baseImg",
+            "minzoom": 0,
+            "maxzoom": 17
+          },
+          {
+            "id": "baseMark",
+            "type": "raster",
+            "source": "baseMark",
+            "minzoom": 0,
+            "maxzoom": 17
+          },
+        ],
+        version: 8,
+      },
+      maxZoom: 16.7, // 再大就算请求了天地图，也是返回空白图片
+      pitchWithRotate:false,
+      dragRotate:false,
+      maxPitch:0,
       ```
-      
-    - 默认情况下在移动端会模糊  
   
-      - 一个改善的方法  
-        缩小数据源的[`tileSize`](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#raster-tileSize)配置  
-        （缩小后不能增加指定面积的瓦片像素密度，但是可以缩小瓦片，最终缓解模糊问题）
+    - OSM的示例  
+      ```js
+      style: {
+        version: 8,
+        sources: {
+          osm: {
+            type: 'raster',
+            tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            'tileSize':256,
+          }
+        },
+        layers: [{
+          id: 'osm',
+          type: 'raster',
+          source: 'osm',
+        }],
+      },
+      maxZoom:16,
+      pitchWithRotate:false,
+      dragRotate:false,
+      maxPitch:0,
+      ```
   
   - [矢量瓦片](https://docs.mapbox.com/mapbox-gl-js/api/sources/#vectortilesource)  
     若要进一步学习，最好以『获取“更多类型”的矢量瓦片数据源』为目标（虽然官网有很多矢量瓦片相关的页面，但是很多都看不懂，因此没收集进笔记。可以通过使用mapbox工具定义数据源或使用其他厂家的数据源为入口学习，使用过程中深入各种配置应该就能了解到背后的相关知识）

@@ -308,16 +308,16 @@ console.log('a[3]',a[3]) // undefined
    创建并返回一个绑定函数  
    
    - 几种传参情况
-     - `bind`没有实参的话  
-       不建议不传实参  
-       试了几个例子，绑定函数的`this`都是`window`，这和MDN上说的不一样  
-       <span style='opacity:.5'>MDN上写“执行作用域的 `this` 将被视为新函数的 `thisArg`”  </span>
      - `bind`有实参的话  
        第一个参数会作为绑定函数的`this`  
        <span style='opacity:.5'>补充：绑定的是引用值（被绑定对象改变后，函数也是按改变后的值执行的）</span>
      - `bind`有多个实参的话  
        除了第一个参数以外的参数，都会作为新创建函数的初始参数  
        <span style='opacity:.5'>初始参数：给函数传的参数都会排在初始参数的后面  </span>
+     - `bind`没有实参的话  
+       <span style='color:orange'>不建议</span>不传实参  
+       试了几个例子，绑定函数的`this`都是`window`，这和MDN上说的不一样  
+       <span style='opacity:.5'>MDN上写“执行作用域的 `this` 将被视为新函数的 `thisArg`”  </span>
      
    - 绑定函数  
      > 绑定函数不管怎么调用，都有同样的 **this** 值  —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#%E5%88%9B%E5%BB%BA%E7%BB%91%E5%AE%9A%E5%87%BD%E6%95%B0)  
@@ -1125,10 +1125,12 @@ mdn的说明是判断构造函数的prototype属性是否出现在对象的原�
 
 
 
-### `typeof`
+### [`typeof`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/typeof)
 
-`typeof a`返回a的数据类型，返回值是字符串，优先级第二级，测试表如下：
-https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/typeof
+`typeof a`返回a的数据类型，返回值是字符串，优先级第二级
+
+测试表地址：[测试表](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/typeof#%E6%8F%8F%E8%BF%B0)
+
 注意：对于数组返回的是和对象一样的'object'
 
 
@@ -1297,7 +1299,9 @@ switch(表达式){
 
 
 
-### for in 
+### [for in](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/for...in)
+
+- chrome100可以对字符串使用
 
 
 
@@ -1320,7 +1324,7 @@ switch(表达式){
   console.log(a) // 输出：{aaa: 1, bbb: 1, a: 0, b: 1}
   ```
 
-  
+- <span style='opacity:.5'>（值为undefined也会被遍历）</span>
 
 
 
@@ -1572,7 +1576,7 @@ map似乎全面领先forEach。map可以return，而forEach不行，而且forEac
 
 
 
-### reduce
+### [reduce](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce)
 
 ```js
 arr.reduce((之前计算的结果,currentVal)=>{
@@ -1585,10 +1589,12 @@ arr.reduce((之前计算的结果,currentVal)=>{
 - 回调的第一个参数  
   - 第二项的回调中  
     第一个参数是第一项
-  - 第三项及以后的回调中  
+  - 第二项之后的回调中  
     第一个参数是前一个回调的返回值
 - 回调的第二个参数  
   第二个参数就是当前项
+- 回调的第三个参数  
+  序号，默认从1开始
 
 回调基本都是命名为`reducer`
 
@@ -1611,7 +1617,6 @@ callback中返回的是布尔值，为真的子项会进入新数组
 没输入xx则不执行这个方法
 只要有输入xx，不管值是什么都会向arr末尾增加一个值为xx的子项
 可以输入多个子项，用逗号隔开
-不可用于对象
 
 
 
@@ -1649,13 +1654,18 @@ a.unshift('a','b','c')
 从数组中添加/删除项目，然后返回被删除的项目所组成的数组，会改变原数组
 
 1. `index`  
-   添加/删除项目的位置（包含），使用负数可从数组结尾处规定位置
+   添加或删除项目的位置<span style='opacity:.5'>（在位置x添加项目后，原本在位置x的元素就会向后移动）</span>  
+   
+   - 使用负数可从数组结尾处规定位置  
+     -1是最后一位  
+     <span style='opacity:.5'>（写负数并不会更改删除元素时的方向。删除元素仍然是和正数一样向后删的，并不会向前删。写负数只是用来指定一个位置，仅此而已）</span>
 1. `howmany`  
    要删除的项目数量。如果设置为 0，则不会删除项目  
 
    > 如果被省略了，或者它的值大于等于`array.length - start`(也就是说，如果它大于或者等于`start`之后的所有元素的数量)，那么`start`之后数组的所有元素都会被删除。
    >
    > —— [MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/splice#%E5%8F%82%E6%95%B0)
+   
 1. `item1,item2,不定数量的item,itemN`	  
    向数组添加的新项目  
    （可以省略）
@@ -1688,6 +1698,15 @@ IE以外都支持
     - 返回值<0 则 第一个形参代表的子项排在第二个前面
     - 返回值>0 则 第一个形参代表的子项排在第二个后面
     - 返回值=0 <span style='color:red'>最好不要返回0</span>
+
+
+
+颠倒数组
+
+[`reverse`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse)
+
+- 会改变原数组
+- 会返回原数组
 
 
 
@@ -1727,6 +1746,8 @@ IE以外都支持
 # 数组与字符串共有的方法
 
 
+
+
 ### concat
 
 只有字符串或数组能调用这个方法
@@ -1739,6 +1760,7 @@ IE以外都支持
   【】？如果传进去的不是数组则会作为元素连接
 - [字符串调用](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/concat)的话  
   不会改变调用`concat`的变量
+
 
 
 ### slice
@@ -1932,7 +1954,7 @@ js中的正则表达式就是`RegExp`对象
    语法示例如下
    - `/[a-z]/`  
      所有小写字母
-   - `/[a-zA-Z]]/`  
+   - `/[a-zA-Z]/`  
      所有字母
    
 - **不包含**  
@@ -2152,13 +2174,16 @@ Symbol是第七种数据类型
   除了转字符串读取外还可以通过调用`description`属性来读取  
   *`description`是ES2019提出来的*
 
-# 模块
+
+
+# 模块化方案
 
 - UMD  
   糅合了CommonJS和AMD  
   如果2者都不可用，则将模块公开到全局
 
 - CommonJS  
+  node最开始用的就是这个模块化方案
 
   - 同步的
 
@@ -2174,8 +2199,16 @@ Symbol是第七种数据类型
 - [CMD](https://github.com/seajs/seajs/issues/242)  
   异步的  
 
-  - 实现库：seajs
-
+  - 实现库：seajs  
+    <span style='opacity:.5'>（以下内容测试于神采基座）</span>
+    - 可以导入js、css、html  
+      不能导入jpg<span style='opacity:.5'>（还没等那行代码执行，就会阻塞报错`Uncaught SyntaxError: Invalid or unexpected token`）</span>  
+    - `require`js不能省略后缀名
+    - `require`js的返回内容是`module.exports`的内容
+    - `require`css的返回内容是`undefined`
+    - `require`html的返回内容是html文件里的文本
+    - 报错提示不友好
+  
 - AMD、CMD区别
 
   - AMD推崇在定义模块的最前面就要声明好依赖  
@@ -2187,6 +2220,8 @@ Symbol是第七种数据类型
   未来
 
 - YUI
+
+
 
 # [es module](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Modules)
 
@@ -2303,6 +2338,7 @@ Symbol是第七种数据类型
 语法：  
 - `import {a} from './s2'`  
   这种语法针对export的输出，可以引入多个变量  
+  <span style="color:orange">提示：这种方法无法用于`export default`的对象，并不能将对象结构</span><span style='opacity:.5'>（但是不会报错，只是会得到一个`undefined`）</span>
   
 - `import b from './s3'`  
   这种语法针对`export default`的输出，意思为 导入./s3模块并命名为b  
@@ -2794,7 +2830,8 @@ function a(p0,p1='p1'){
 	    }
     ```
     加了`async`的函数会返回一个promise，并且会异步执行  
-    如果要获取加了`async`的函数return值，需要用`await`或`then`
+    如果要获取加了`async`的函数return值，需要用`await`或`then`  
+    不throw应该是没法走catch的<span style='opacity:.5'>（`return Error()`不行）</span>，throw可以走catch，且错误只会从catch中出来<span style='opacity:.5'>（不catch就会直接报错出来）</span>
     
     对于map用了await后每个子项会变成promise，要写for循环才行，例子如下
     
@@ -2895,6 +2932,15 @@ function a(p0,p1='p1'){
 
 <span style='background:#eef5f4;padding:0 10px'>es6</span>
 
+
+
+基本介绍
+
+- fetch方法返回一个promise实例<span style='opacity:.5'>（其他promise有的特性这个promise都有）</span>
+- fetch据说可以全面替代xhr（js请求除了xhr就是fetch），完整见[mdn](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch)
+
+
+
 demo
 
 ```javascript
@@ -2905,17 +2951,29 @@ fetch(某个请求地址,{ // 加第二个参数可以规避在跨域时的报�
 }).then((Response实例)=>{
 })
 ```
-- **普通post请求**  
+
+
+请求
+
+- get请求
+
+  - demo  
+    ```js
+    fetch('url')
+      .then(x=>x.json())
+      .then(x=>{
+        console.log(x)
+      })
+    ```
+  - 不能拥有body属性，传参只能写在请求地址里（这点网上资料都没提到）  
+- 普通post请求  
   各参数放进一个对象转为字符串后放进`body`属性  
   【】Content-Type是 text/plain;charset=UTF-8，已学的node方法没办法接收到数据
-- **form的post请求**  
+- form的post请求  
   `body`里放`FormData`实例  
   每个参数用实例的`append`方法加
 
-基本介绍
 
-- fetch方法返回一个promise实例<span style='opacity:.5'>（其他promise有的特性这个promise都有）</span>
-- fetch据说可以全面替代xhr（js请求除了xhr就是fetch），完整见[mdn](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch)
 
 入参
 
@@ -2950,11 +3008,7 @@ fetch(某个请求地址,{ // 加第二个参数可以规避在跨域时的报�
 
 
 
-其他特性
 
-- get方法不能拥有body属性，传参只能写在请求地址里（这点网上资料都没提到）  
-
-  
 
 ### new request
 

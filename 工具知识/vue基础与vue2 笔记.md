@@ -388,7 +388,7 @@ directives: {
 
 ### 开发vue组件并发布到npm
 
-操作步骤
+webpack3操作步骤
 
 1. `vue init webpack-simple 项目名`<span style='opacity:.5'>（运行失败的话试试`npm install -g @vue/cli-init`后再运行）</span>
 
@@ -553,9 +553,9 @@ trim:过滤用户输入的首尾空格
   
   - 如果希望在操作初始不存在的子项后更新视图
     - 赋值：`vm.$set(对象或数组,键名或序号,新值)`
-    - 删除：`vm.$delete(对象或数组,键名或序号)`
+    - 删除：`vm.$delete(对象或数组,键名或序号)`<span style='opacity:.5'>（可以真正把数组的那项的位子删掉，而不是像js的`delete`那样）</span>
     
-    这两个方法在`Vue`全局对象上也是存在的（不过没有美元符）
+    这两个方法在`Vue`全局对象上也是存在的（叫`Vue.set`和`Vue.delete`）
   
 - 对象直接赋值的话不会触发视图更新【】有空再确认下  
   键名应该可以是中文
@@ -652,13 +652,21 @@ getter的简写方法：在计算属性中直接写入无参数匿名函数，re
       不过finalVideoPlayerOption.sources[0].src是会跟着变的
 - 有时候计算属性回调出错控制台也不会报错  
   只会在vue devtools的对应的计算属性里显示一个出错的状态
+- getter不要`return`后面不带值【】未确定，去掉 v-if="rowList"就可以了  
+  不然未来计算结果有return值后该计算属性也会是`undefined`<span style='opacity:.5'>（一次实践的经验）</span>  
+  <span style='opacity:.5'>（什么都不`return`的话是可以的，不会出现这里说的问题）</span>
 
 
 
-##### 计算属性的setter（set属性）
+##### 计算属性的setter
 
-要使用setter必须有一个getter（这种情况下要写为计算属性的get属性），setter只能以单参数匿名函数放于计算属性的set属性中，参数代表计算属性新赋的值，当直接操作计算属性的值时运行setter（get计算结果变化并不会运行setter）。
-任何方法都无法通过操作计算属性来改变其值，setter也不行。
+也就是`set`属性
+
+- 要使用setter必须有一个getter（这种情况下要写为计算属性的`get`属性）
+- setter只能以单参数匿名函数放于计算属性的`set`属性中，参数代表计算属性新赋的值，当直接操作计算属性的值时运行setter（get计算结果变化并不会运行setter）。
+- 任何方法都无法通过操作计算属性来改变其值，setter也不行。
+
+
 
 ### watch属性（watcher）
 
@@ -787,6 +795,7 @@ Vue对象中methods属性的 属性 可以匿名函数为值，在Mustache中输
 
 - 方法名含中文的话有时候会有问题  
   事件触发的方法的名称带有中文的话，是不会触发这个方法的
+- methods参数默认值可以从this里取
 
 ### [v-bind](https://cn.vuejs.org/v2/api/#v-bind)
 
@@ -1083,6 +1092,13 @@ methods: {
 
 
 
+- 一个没用的知识  
+  `v-for`里是可以用`this`的，比如`v-for="(item, i) in 某个method(this.a.b)"`
+
+
+
+
+
 # [事件](https://cn.vuejs.org/v2/api/#v-on)
 
 - 可以有动态事件
@@ -1105,7 +1121,7 @@ methods: {
      - click
      - submit
      - keyup  
-       只能给文本框使用`keyup.你要的按键（字母、空格、方向键等）`，详见：https://cn.vuejs.org/v2/guide/events.html#按键修饰符  
+       只能给文本框使用`keyup.你要的按键（字母、空格、方向键等）`，详见：[官网](https://cn.vuejs.org/v2/guide/events.html#按键修饰符  )
      - input  
        （未测试，估计是文本框专用的，输入内容一变化就触发）  
 
@@ -1200,7 +1216,8 @@ methods: {
 
 - 模板不支持使用`?.`  
   否则无法通过编译  
-  （为深入了解是不是babel问题，应该不是）
+  （未深入了解是不是babel问题，应该不是）  
+  用webpack5搭建的项目都不行
 
 
 
@@ -1321,6 +1338,8 @@ methods: {
     - 可以传实例  
       测试过用`Vue.extend(配置)`生成的实例
   - 要在父实例前注册才有效
+  - 作用域：  
+    用`new Vue`创建出来的实例的后代里可以访问到全局注册的组件<span style='opacity:.5'>（经验，文档没写多少`Vue.component`的东西）</span>
 - 局部注册  
   也就是直接写一个配置对象  
   可用 `<div is='components'></div>` 动态更换组件，可用对象动态加载内容，全局注册不能动态加载？？
@@ -1401,12 +1420,13 @@ methods: {
 
 特性
 
-- vue的ref似乎只会加，不会减
-  比如说2个if else的组件用了同一个ref，从一个组件切到另一个组件后ref元素数量就从1变成2了
 - 可用`this.$refs`的生命周期  
   - `beforeDestroy`可用
   - `destroyed`不可用
-- if、else中的ref不用去数组里取
+- vue的ref似乎只会加，不会减
+  比如说2个if else的组件用了同一个ref，从一个组件切到另一个组件后ref元素数量就从1变成2了  
+  【】有反例：hrtFirstGisProject的layerController.vue中的MapLayerTree实例在变更key<span style='opacity:.5'>（切换年份）</span>后数量不会增加
+- if、else中的ref不用去数组里取【】和上条矛盾了吧
 - ref也可以用v-bind
 
 
@@ -1528,8 +1548,8 @@ mounted: function () {
 
   - 双向绑定  
     - 第一级属性  
-      默认不绑定，加上[sync](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)修饰符与对应事件后可以绑定  
-      （[《sync教程》](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)有提到这种用法）  
+      默认不绑定，加上[sync](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)修饰符与`'update:prop名'`事件后可以绑定  
+      具体操作方法见[《sync教程》](https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)
     - 第二级属性  
       默认绑定
 
@@ -1552,20 +1572,20 @@ mounted: function () {
   ```
 
   （这种方法修改子组件数据可以规避控制台警告，目前建议使用这种方式）
-  让 继承数据 经过处理后再显示有三种方法：
 
-1. 直接在{{}}里写表达式，效果与第二点相同
+- 让 继承数据 经过处理后再显示有三种方法：
 
+  1. 直接在`{{}}`里写表达式，效果与第二点相同
+  
   2. ```js
      computed: {
-          counter: function () {
-            return this.myMessage+10
-          }
-      }
+       counter: function () {
+         return this.myMessage+10
+       }
+     }
      ```
-
-  3. 要 继承数据 不随 父组件数据 更新的话只能用如下方法
-
+  
+  3. 要 继承数据 不随 父组件数据 更新的话只能用如下方法  
      ```js
      data: function () {
        return { sona: this.myMessage+10 }
@@ -1574,13 +1594,18 @@ mounted: function () {
 
 - 默认值  
 
-  - 默认值不符合要求  
-    取默认值时如果默认值不符合校验规则，也是会报错的  
+  - 默认值不符合要求的情况  
+    默认值不符合校验规则的话也是会报错的  
     不过有一些值是例外的，比如：`null`与`undefined`
   - props收到undefined会用默认值，null不会
 
 - method作为prop传入后并不会改变this  
   甚至加上bind都不好使
+  
+- prop在接收data时应该是要等一个$nextTick的<span style='opacity:.5'>（一次实践后的猜测）</span>
+
+- 如果组件标签上有prop名没有prop值，那值就会是true  
+  比如`<组件名 某个prop名 />`这种
 
 
 
@@ -1913,7 +1938,21 @@ mounted: function () {
 [`this.$listeners`](https://cn.vuejs.org/v2/api/#vm-listeners)  
 
 - 这个属性不会返回带了`.native`修饰符的监听器
+
 - 这个属性不会返回用`组件实例.$on`监听的监听器
+
+- 提醒：用这个成员传递监听器  
+  一般会这样写  
+
+  ```js
+  for (const eventName in this.$listeners) {
+    const listener = this.$listeners[eventName];
+    某个组件实例.$on(eventName, listener);
+  }
+  ```
+
+  不过如果“某个组件实例”也是用this.$listeners接收监听器的话，你这样写就传递不了了  
+  像Ant Design Vue 1就不行，elementUI的vue2版本则可以
 
 
 
@@ -1933,13 +1972,16 @@ mounted: function () {
   ```
 
 - 可以写多个style标签
+
 - src 导入要遵循和require() 调用一样的路径解析规则，也就是说需要用以 ./ 开头的相对路径，引用node_modules资源的话不用加 ./
+
 - 和普通js组件的区别  
   - 可以把css和组件代码放在一个文件里
   - 导出的对象会比配置多一些内容  
     没有template属性，有render属性  
     也是一个普通对象（构造函数就是Object）
   - 本笔记下方“export default”记录的内容
+  
 - 导出组件
   - export default  
     这种方式导出的组件可以不写template属性  
@@ -1947,6 +1989,7 @@ mounted: function () {
   - export  
     用这种方式导出的组件和普通js文件里导出没有差别  
     （普通js里能导出的组件代码，复制到SFC里用export导出，不会产生任何差异）
+  
 - 注释  
   包括但不限于以下2种方式
   - 三个基础标签外的地方写任何文本都是注释  
@@ -1955,9 +1998,18 @@ mounted: function () {
     - 一次使原代码失效的例子  
       给组件加上`@click.native="方法/*注释*/"`  
       会导致方法不触发
+  
 - 单文件组件的使用
   要先 import componentName from './fileName.vue'
   然后再在引入文件的components属性中写上componentName，之后组件就能正常使用了
+  
+- 绝对路径  
+
+  - 模板中  
+    `<img src="@/assets/images/resourceChain/noData.png" alt="" />`  
+    linZongA项目中`~@/`也可以
+  - 样式中  
+    `background-image: url(~@/assets/images/resourceChain/treeOptBtnBg.png);`<span style='opacity:.5'>（less）</span>
 
 
 
@@ -2011,15 +2063,16 @@ mounted: function () {
 
 - [深度作用选择器](https://vue-loader.vuejs.org/zh/guide/scoped-css.html#%E6%B7%B1%E5%BA%A6%E4%BD%9C%E7%94%A8%E9%80%89%E6%8B%A9%E5%99%A8)  
   `>>>`或`/deep/`或`::v-deep`  
-
+  <span style='opacity:.5'>（这个选择器并不是初始版本就有的，是后续某个版本加上的）</span>
+  
   - 在样式里加『随机属性』属性时加在深度作用选择器前面的那个元素上  
-
+  
   - 深度作用选择器之后的内容编译成css后，都不会带『随机属性』
-
-  - 深度作用选择器会被编译成一个后代选择器（也就是` `）  
+  
+  - 深度作用选择器会被编译成一个后代选择器（也就是空格）<span style='opacity:.5'>（没找到方法只限定于子代）</span>  
     （hrt的sxy系统与ptxy系统中只能用`::v-deep`）  
     （hrt的sxy系统与ptxy系统中`.a::v-deep.b`并不会编译成`.a .b`，要自己在中间加上空格才行，不过下面这种情况会编译出后代选择器）  
-
+  
     ```scss
     .el-select{
       width: 100%;
@@ -2028,9 +2081,9 @@ mounted: function () {
       }
     }
     ```
-
+  
   - 一个特别的用法  
-
+  
     ```vue
     <style lang="less" scoped>
         /deep/.van-tabs__wrap{
@@ -2038,16 +2091,18 @@ mounted: function () {
         }
     </style>
     ```
-
+  
     编译后的样式如下  
-
+  
     ```css
     [data-v-09865096] .van-tabs__wrap {
         height: 90px;
     }
     ```
-
-    
+  
+  - `&::v-deep`可行而`&/deep/`不可行  
+    <span style='opacity:.5'>（测试过vue-cli4和vue-cli3的less）</span>  
+    甚至后面还可以再接`&>`
 
 
 
@@ -2368,10 +2423,12 @@ sxy项目做MyTableCol组件时依据观察得来的结论
   规则可以用数组（字符串形式也可以）或正则来写
 
 - 从[博客A](https://blog.csdn.net/fu983531588/article/details/90321827)看来  
-  （以下内容并未实践）
   - keep-alive中的组件比其他组件多一些生命周期钩子  
-    比如[activated](https://cn.vuejs.org/v2/api/#activated)和[deactivated](https://cn.vuejs.org/v2/api/#deactivated)
-  - 可以配合vue-router使用
+    比如[deactivated](https://cn.vuejs.org/v2/api/#deactivated)（并未实践）和activated
+    - [activated](https://cn.vuejs.org/v2/api/#activated)  
+      每次keep-alive中显示组件时都会触发组件的这个方法
+      - mounted早于activated触发
+  - 可以配合vue-router使用（并未实践）
 
 和v-show区别
 
@@ -2546,6 +2603,11 @@ vue2的异步组件是一种组织普通组件的方法
     一堆报错中基本都是第一个data（data()return的第一个属性）的错  
     接近中间的位置报了一个真正的错
 
+- 如果一个组件的入参由method计算而来，并且method在模板中接收了data  
+  那么在模板中其他data改变后  
+  **组件里对这个参数的watch也会被触发**  
+  估计是因为method重新计算了，当然计算结果在数学上是一致的，但是js上如果结果是引用值的话结果不是全等的
+
 
 
 # 风格指南
@@ -2569,7 +2631,7 @@ vue2的异步组件是一种组织普通组件的方法
 
 ### webpack5
 
-这部分描述给webpack5加上vue开发环境的方法<span style='opacity:.5'>（含SFC支持）</span>
+这部分描述给webpack5加上vue开发环境的方法<span style='opacity:.5'>（含SFC支持）</span><span style='opacity:.5'>（不含热更新，热更新和vue无关）</span>
 
 1. 装如下依赖（版本号要固定）  
 
@@ -2579,18 +2641,37 @@ vue2的异步组件是一种组织普通组件的方法
    "vue-template-compiler": "^2.6.14",
    ```
 
-   这时候运行项目会失败并且报错`Cannot find module 'webpack/lib/rules/DescriptionDataMatcherRulePlugin'`
+2. 先在配置文件里`const {VueLoaderPlugin} = require('vue-loader')`  
+   然后在`配置对象.plugins`数组里加上`new VueLoaderPlugin()`
+   
+2. 在`webpack配置对象.resolve.extensions`数组的最前面加上`'.vue'`和`'.js'`
+   
+   - <span style='opacity:.5'>（不加`'.js'`的话也没发现问题，但是用webpack-dev-server时终端会报很多错，比如下面这个）</span>
+   
+     ```cmd
+     ERROR in ./node_modules/html-entities/lib/index.js 14:25-54
+     Module not found: Error: Can't resolve './named-references' in '项目路径\node_modules\html-entities\lib'
+     ```
+   
+     
+   
+4. `配置对象.module.rules`数组的最前面加上`{test: /\.vue$/,loader: 'vue-loader'}`
 
-2. 解决报错<span style='opacity:.5'>（解决方案受[这个博客](https://blog.csdn.net/kfgauss/article/details/120335600)的启发）</span>  
-   （报错的来源是`\node_modules\vue-loader\lib\plugin-webpack5.js`）  
-   解决方法：去这个文件👆里把`DescriptionDataMatcherRulePlugin`改成`ObjectMatcherRulePlugin`即可
+5. 这时候运行项目有可能会失败并且报错`Cannot find module 'webpack/lib/rules/DescriptionDataMatcherRulePlugin'`  
+
+   - 解决报错<span style='opacity:.5'>（解决方案受[这个博客](https://blog.csdn.net/kfgauss/article/details/120335600)的启发）</span>  
+     （报错的来源是`\node_modules\vue-loader\lib\plugin-webpack5.js`）  
+     解决方法：去这个文件👆里把`DescriptionDataMatcherRulePlugin`改成`ObjectMatcherRulePlugin`即可
+
+
 
 
 
 ### Vue Devtools
 
 - [是否允许项目使用devtools](https://cn.vuejs.org/v2/api/#devtools)  
-  注意：要在生产环境开启的话一定要把`Vue.config.devtools = true`放在第一行（import语句外的第一行）
+  注意：要在生产环境开启的话一定要把`Vue.config.devtools = true`放在第一行（import语句外的第一行）  
+  <span style='opacity:.5'>（一次在由客户封装的vue里，在他们的回调里加上这句代码也可以开启调试）</span>
 
 xml里组件名来源
 
@@ -2614,6 +2695,12 @@ bug
 
 ### element
 
+- 只import单个组件  
+  不按需导入也可以只import单个组件  
+  - 但是有时有问题<span style='opacity:.5'>（目前发现huaBinYiZhangTu中的表格有问题，这是一个用了江苏神采科技研发的基座的项目）</span>
+
+
+
 **按需导入**
 
 - babel配置  
@@ -2622,8 +2709,9 @@ bug
   - [官方例子](https://element.eleme.cn/#/zh-CN/component/quickstart#an-xu-yin-ru)里配的是`babel-preset-es2015`，实际上这样是不好的  
     （没装`babel-preset-es2015`的话会遇到问题，而`babel-preset-es2015`早就被babel放弃了）  
 
-    - 跟上潮流把`babel-preset-es2015`改成`@babel/preset-env`才能让一切顺利
-
+    - 好的方案：  
+      把`babel-preset-es2015`改成`@babel/preset-env`<span style='opacity:.5'>（没记错的话，`@babel/preset-env`是babel官方推荐的）</span>
+    
     - 余榕在`.babelrc`里将presets设为[]，而在`babel.config.js`里写`module.exports = {presets: ['@vue/cli-plugin-babel/preset']}`  
       这样也是可以的
 
@@ -2631,14 +2719,20 @@ bug
 
 
 ##### input框
-- 处理数字建议用InputNumber组件
-  InputNumber组件把按钮隐藏后对数字的各方面操作基本都强于Input组件
-  如果在监听 Input组件绑定值 的计算属性中给 Input组件绑定值 赋值，那后续再输入一次，这个值就会变成字符串（因为绑定值在Input组件内其实都是字符串，因此容易出现这种bug）
+
+
 - InputNumber组件
-  如果绑定值为null的话这个组件会将绑定值改为0（会触发视图更新）（undefined的话则不会被更改）
+  - 如果绑定值为null的话这个组件会将绑定值改为0（会触发视图更新）（undefined的话则不会被更改）
+  - 如果在监听 Input组件绑定值 的计算属性中给 Input组件绑定值 赋值，那后续再输入一次，这个值就会变成字符串（因为绑定值在Input组件内其实都是字符串，因此容易出现这种bug）
+  - 数值过大时会有问题  
+    - 有可能变成科学计数法
+    - 有可能丢失精度
+    - 有可能变成`Infinity`
+
 
 
 ##### 下拉框
+
 - 让下拉框能转换没有显示的选项的方法
   v-for使用拥有所有能转换的数据
   v-show再过滤出需要显示的选项（这里用v-if的话就只能转换有显示的选项的数据）
@@ -2703,12 +2797,15 @@ bug
     prop和from的属性都写中文的话验证是不能完全生效的  
     （一次经验中是只生效的第一项）
   - 自定义验证规则
-    就是validator方法（与type、required、message等同级）  
-    validator方法形参为：rule、 value、 callback、 source、 options  
-    rule中有与validator同级的type、required、message等信息  
-    value是要验证的值  
-    callback是验证方法（validate）的回调，不传参或不调用代表符合验证条件，有传参则代表不符合验证条件，会触发相关视图效果（传true也是一样的）  
-    callback是单参数的，这个传参是控制台提示信息，会在不符合验证时在控制台进行打印
+    就是`validator`方法（与type、required、message等同级）  
+    `validator`方法形参为：rule、 value、 callback、 source、 options  
+    
+    - rule中有与validator同级的type、required、message等信息  
+    - value是要验证的值  
+    - callback是验证方法（`validate`）的回调<span style='opacity:.5'>（不调用`callback`的话`validate`的回调就不会触发）</span>  
+      - 不传参或不调用代表符合验证条件，有传参则代表不符合验证条件，会触发相关视图效果（传true也是一样的）  
+      - callback是单参数的，这个传参是控制台提示信息，会在不符合验证时在控制台进行打印
+    
     - 没找到获得同级data的方法
   - 触发验证的时机  
     由rules属性的属性的子项的trigger属性控制  
@@ -2765,22 +2862,51 @@ bug
 
 ##### 表格
 - 自定义单元格内容
-  ```vue
-  <template slot-scope="scope">
-    需要的dom（最外层没有标签也可以）
-  </template>
-  ```
-  template中可以用scope.row调取（传给表格的data中）属于这一行的子项
-  scope.column调取这一列的内容
-  scope.$index调取这一行的序号（从0开始）
-  scope中还有一些其他数据
-  template改成其他标签也可以
-  el-table-column标签上无法加样式与类名
-
+  
+  - 自定义模板  
+    ```vue
+    <template slot-scope="scope">
+      需要的dom（最外层没有标签也可以）
+    </template>
+    ```
+  
+    template中可以用scope.row调取（传给表格的data中）属于这一行的子项
+    scope.column调取这一列的内容
+    scope.$index调取这一行的序号（从0开始）
+    scope中还有一些其他数据
+    template改成其他标签也可以
+    el-table-column标签上无法加样式与类名
+  
+  - 只是自定义文本  
+    用`formatter`prop（值是回调）
+  
 - 超出隐藏  
   `:show-overflow-tooltip="true"`可以达到目的  
   但是目前只成功了单行且不带“...”的  
   （在各级元素上加样式都进行了尝试，不过多行和带“...”的都没成功过）
+
+- bug：固定高度的情况下增加列会导致高度变化  
+  <span style='opacity:.5'>（目前发现huaBinYiZhangTu中有问题，这是一个用了江苏神采科技研发的基座的项目）</span>  
+  在有固定列的情况下，固定列还会大幅位移  
+  解决方法：增加列后用v-if重新渲染表格
+
+- 合并单元格  
+  `span-method`prop（值是回调）  
+
+  - 可不返回内容  
+  - 返回rowspan代表纵向占几格  
+  - 返回colspan代表横向占几格
+
+- 展开
+
+  - 全部展开/全部收起  
+    `default-expand-all`属性  
+    - 配合v-if使用可以动态控制
+      - 但是和懒加载一起用有bug  
+        全部收起后已加载过的节点还要重新加载
+  - 设置目前的展开行  
+    `expand-row-keys`属性
+
 
 
 
@@ -2807,6 +2933,17 @@ el-menu
 lin
 
 
+
+##### Tabs 标签页
+
+bug
+
+- `el-tab-pane`标签的`name`属性设为空串的话，会被转为0  
+  <span style='opacity:.5'>（0是`name`属性的默认值）</span>
+
+
+
+
 ##### 自动消失型提示
 - this.$message.error(参数)各种传参情况
   - 空串：空白
@@ -2821,10 +2958,15 @@ lin
 - 目前没找到自己封装请求的方法  
   http-request可能可以
 
-- 文件列表  
+- 文件列表（`file-list`属性）  
   这个属性只能用来往组件里传东西，不能取东西  
-  往这个属性里传东西可以改变组件各钩子的fileList参数
+  往这个属性里传东西可以改变组件各钩子的fileList参数  
 
+  - 子项的response属性不是响应式的  
+    这就导致在后端返回数据后，不会触发视图更新
+  - 多选的话会导致无法识别文件类型  
+    （没有`子项.raw.type`属性）
+  
 - 多选
 
   - 用组件的上传行为上传多个文件只能分多次请求
@@ -2860,7 +3002,9 @@ lin
     </el-upload>
     ```
 
-    
+
+
+
 
 ##### 时间选择组件
 
@@ -2879,7 +3023,8 @@ lin
   点击一次，所有变更选中状态的节点都会触发回调（包括有后代的节点）
 - 监听单次选中变化情况  
   elementUI没提供这个事件，只能用点击复选框的事件代替（除了点击复选框，还可以用`setCheckedKeys`等方法改变选中状态）
-- 点击复选框的事件：`check`<span style='opacity:.5'>（提醒：这是点击的事件，用api来改变勾选状态是不会触发这个事件的）</span>
+- 点击复选框的事件：`check`<span style='opacity:.5'>（提醒：这是点击的事件，用api来改变勾选状态是不会触发这个事件的）</span>  
+  对于禁止勾选的节点不会触发这个事件
 
 勾选
 
@@ -2896,11 +3041,21 @@ lin
 - 获取状态  
   应该都是要等mounted的nextTick后获取才能正确  
   （测试过`getCheckedKeys`，mounted时获取都是空数组）
+  
 - 设置指定节点的后代数据  
   `updateKeyChildren`方法
   - 第一个参数：要修改的节点的id
   - 第二个参数：要设置的数据
   - 注意：这个方法是会改变prop的
+  
+- 设置节点的展开状态<span style='opacity:.5'>（官网没有写这个方法）</span>  
+  ```js
+  for(let i=0;i<树形控件实例.store._getAllNodes().length;i++){
+    树形控件实例.store._getAllNodes()[i].expanded=是否展开
+  }
+  ```
+
+  
 
 
 
@@ -3025,6 +3180,8 @@ el-table的不行，会报一个并不真实的错误，我觉得应该是依赖
   
 - bug：el-image组件会请求2次图片
 
+- [popover](https://element.eleme.cn/#/zh-CN/component/popover)reference插槽不能是template，不然没法触发交互事件
+
 
 
 
@@ -3138,7 +3295,37 @@ iview3组件的事件名真的和文档写的医院，都带`on-`
   
   
   
-  
+
+### [Ant Design Vue 1](https://1x.antdv.com/docs/vue/introduce-cn/)
+
+Ant Design Vue只有第一版支持vue2
+
+
+
+**树形控件**
+
+[`a-tree`](https://1x.antdv.com/components/tree-cn/)
+
+- 选中  
+  这里“选中”的意思是点击节点文本后，文本会有的高亮效果<span style='opacity:.5'>（对于勾选情况没有影响）</span>
+  - api命名都带`select`
+  - 只能选中一个节点  
+    虽然`select`事件返回的`selectedKeys`和`defaultSelectedKeys`prop都是数组，但是实际上只能选中一个节点
+
+- 勾选
+  - 事件：`check`  
+    - 形参
+      - `checkedKeys`  
+        事件触发后勾选的节点的key组成的数组
+      - `checked`  
+        引发勾选事件的勾选框最后是否选中
+      - `checkedNodes`  
+        事件触发后勾选的节点的`a-tree-node`组件组成的数组  
+        <span style='opacity:.5'>（只要有节点就会有`a-tree-node`组件的，就算你没有显式使用也会有的）</span>
+      - `node`  
+        触发事件的<span style='opacity:.5'>（节点的）</span>`a-tree-node`组件
+
+
 
 
 
@@ -3176,3 +3363,4 @@ vscode默认不支持vue相关内容，需要通过Vuter等插件来做
   已测试浏览器：IE11、chrome90、firefox89
 - [vue-seamless-scroll](https://chenxuan0000.github.io/vue-seamless-scroll/zh/)  
   官网说[hoverstop](https://chenxuan0000.github.io/vue-seamless-scroll/zh/guide/properties.html#hoverstop)默认值是false，实际上是true
+- [关系图](https://github.com/seeksdream/relation-graph)

@@ -95,7 +95,7 @@
       如果设`50%`的话，在最大一条数据和最小数据差别比较大时，会向下延展，设'100%'会延展更多（表述不清楚，实践就懂了）
 - y轴数值强制显示  
   应该没办法实现  
-  试过[`interval: 0`](https://echarts.apache.org/zh/option.html#yAxis.axisLabel.interval)  
+  试过`axisLabel`的[`interval: 0`](https://echarts.apache.org/zh/option.html#yAxis.axisLabel.interval)  
   甚至写其他数字也没效果，可能因为不是类目轴
 
 
@@ -191,7 +191,10 @@ rich:{
 
 可以监听各种事件  
 
-- [监听事件](https://echarts.apache.org/zh/api.html#echartsInstance.on)
+> 事件有两种：1. 鼠标事件 2. 调用[dispatchAction](https://echarts.apache.org/zh/api.html#echartsInstance.dispatchAction)后触发的事件 —— [官网](https://echarts.apache.org/zh/api.html#echartsInstance.on)
+
+- 监听事件  
+  [`echartsInstance.on`](https://echarts.apache.org/zh/api.html#echartsInstance.on)
 
 - 事件的返回内容
   - “鼠标事件”  
@@ -214,6 +217,11 @@ rich:{
 - 对于折线图  
 
   > <span style='color:orange'>所有事件都是相对节点而言的</span> —— 杭兴
+  
+- 可以配套一些和坐标相关的方法使用  
+  比如：[convertToPixel](https://echarts.apache.org/zh/api.html#echartsInstance.convertToPixel)、convertFromPixel 、containPixel 
+
+
 
 具体事件
 
@@ -267,23 +275,28 @@ leaflet、mapbox、高德等也需要插件
 
 
 
-##### [注册地图](https://echarts.apache.org/zh/api.html#echarts.registerMap)
+##### 注册地图
+
+[`echarts.registerMap`](https://echarts.apache.org/zh/api.html#echarts.registerMap)
 
 - 一个demo：  
   `echarts.registerMap(地图名, geojson)`  
-  geojson geometry合法类型有：Polygon、MultiPolygon
+- 数据源  
+  可用svg（dom）或geojson做数据源
+  - geojson geometry合法类型有：Polygon、MultiPolygon
+
 
 
 
 ##### geo与map serie
 
-map serie应该是geo的超集<span style='opacity:.5'>（因为map serie可以生成geo，所以这么说）</span>  
-不过一般情况下用geo就足够了，除非要修改显示的区域名或者做visualMap  
+map serie应该是geo的超集<span style='opacity:.5'>（因为map serie可以生成geo，所以这么说）</span>，不过map serie也可以不用geo，直接用注册的底图  
+不过一般情况下用geo就足够了，除非要修改显示的区域名或者做[`visualMap`](https://echarts.apache.org/zh/option.html#visualMap)<span style='opacity:.5'>（visualMap可以生成一个通过数值区间高亮部分内容的控件）</span>  
 可以通过map serie的[geoIndex配置项](https://echarts.apache.org/zh/option.html#series-map.geoIndex)将map serie和geo连起来
 
 
 
-###### `geo`配置项
+###### [`geo`配置项](https://echarts.apache.org/zh/option.html#geo)
 
 - 淡出（blur）  
   淡出效果颜色是残留的  
@@ -549,6 +562,41 @@ demo1更合理
 
 
 
+### 视图缩放
+
+[`dataZoom`](https://echarts.apache.org/zh/option.html#dataZoom)<span style='opacity:.5'>（echarts4也有）</span>
+
+- 3种类型  
+  内置型、滑动条型、框选型  
+
+- 内置型和滑动条型  
+  都是放在option第一级的`dataZoom`配置项里  
+
+  - 只用一种类型的话  
+    直接给`dataZoom`赋一个对象就行了
+
+  - 同时用2种的话  
+    在`dataZoom`里写如下内容
+
+    ```js
+    [
+      {
+        start: 50,
+        end: 100
+      },
+      {
+        type: 'inside',
+      },
+    ]
+    ```
+
+    - `type`属性的默认值就是`'slider'`（滑动条型）
+    - 起止点按第一个子项的来<span style='opacity:.5'>（第二个子项里无法设置起止点）</span>  
+      起止点通过`start`和`end`配置  
+      输入值为百分比
+
+
+
 ### 说明框
 
 鼠标划过后出现的说明框
@@ -659,15 +707,23 @@ demo1更合理
 
 - 系列列表：`series`  
   重点，本笔记下方有进一步说明
+  
 - 标题：`title`
+
 - 图例：`legend`
+
 - 平面直角坐标系的x轴：`xAxis`
+
 - 平面直角坐标系的y轴：`yAxis`
+
 - 图表主体4个边的位置：`grid`
+
 - 提示框：`tooltip`  
   也就是鼠标划到图表主体上时跟随鼠标显示的东西
+  
 - 背景色：`backgroundColor`
-- 数据截取功能：`dataZoom`
+
+  
 
 
 
@@ -760,9 +816,12 @@ demo1更合理
 
   - 可用场景：富文本、图例的color配置
   
-- echarts[主题](https://echarts.apache.org/v4/zh/api.html#echarts.init)设为'dark'会导致部分“item”颜色丢失  
+- [echarts内置主题只有2个](https://echarts.apache.org/handbook/zh/concepts/style#%E9%A2%9C%E8%89%B2%E4%B8%BB%E9%A2%98%EF%BC%88theme%EF%BC%89)  
+  那就是：默认和'dark'
+  
+  - 设为'dark'会导致部分“item”颜色丢失  
 
-  - [这个例子](https://www.makeapie.com/editor.html?c=xCCPKm1NLI)就可以体现  
-    这个例子中设为dark会导致小圆点和圆点后的文本都变成白色  
-
-  （只测过echarts4）
+    - [这个例子](https://www.makeapie.com/editor.html?c=xCCPKm1NLI)就可以体现  
+      这个例子中设为dark会导致小圆点和圆点后的文本都变成白色  
+  
+    （只测过echarts4）

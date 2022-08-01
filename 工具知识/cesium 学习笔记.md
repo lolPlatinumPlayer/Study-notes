@@ -1,5 +1,9 @@
 # 学习
 
+- heading, pitch, range的内容单独抽出来记一处笔记
+
+
+
 **学习进度**
 
 - 无底图且球透明的场景  
@@ -97,8 +101,6 @@
 
 
 
-
-
 - 账号
   - 不需要token、帐号等额外的东西  
     token、帐号是地图服务、地形服务需要的  
@@ -155,7 +157,7 @@
   - 在webpack上操作后引入  
     （不管是搜“cesium webpack”还是“cesium vue”，各个文章的操作方式都是不同的，官网demo也和这些文章不同）  
   
-    - 一个实践过的webpack操作方式（这个方式具体是哪看的无从考究了）  
+    - 『一个实践过的webpack操作方式』（这个方式具体是哪看的无从考究了）  
       除了无法结合ts使用外没别的问题  
       要结合ts用的话要改为官方方式引入（本笔记上方有记录如何操作）  
       需加内容如下  
@@ -268,41 +270,7 @@
 
 ##### 影像
 
-- 默认应该是bing地图，因为开地图选择控件的话默认选的是bing
-
-- 使用mapbox底图  
-  MapboxImageryProvider可以，MapboxStyleImageryProvider可能也可以
-
-  - MapboxImageryProvider  
-    demo如下  
-
-    ```js
-    const viewer = new Cesium.Viewer('cesiumContainer',{ 
-      imageryProvider:new Cesium.MapboxImageryProvider({
-        mapId:'mapbox.satellite',//底图类型
-        accessToken: mapbox的Token,
-      }),
-      baseLayerPicker:false
-    } );
-    ```
-
-  - MapboxStyleImageryProvider  
-    找到了2个文章，还没试过  
-
-    - https://zhuanlan.zhihu.com/p/340669216
-    - https://blog.csdn.net/qq_26991807/article/details/103862839
-
-- 使用天地图底图  
-  服务大部分时候都是卡的
-
-  - [官方方法](http://lbs.tianditu.gov.cn/docs/#/sanwei/)  
-    - 官方的说法是：“目前支持cesuim1.52、1.58、1.63.1”
-    - 在cz1.89.0上简单试了下是不行的  
-      会报错：`normal must be normalized`
-  - [知乎方法](https://zhuanlan.zhihu.com/p/267935427)  
-    可行  
-    - 标注用的是栅格标注（标注图层是可以去掉的）
-    - 这个方法里说要设置`Cesium.Ion.defaultAccessToken`实际上是不用的
+- 默认值：[`createWorldImagery`](https://cesium.com/learn/cesiumjs/ref-doc/global.html#createWorldImagery)<span style='opacity:.5'>（[`Viewer`](https://cesium.com/learn/cesiumjs/ref-doc/Viewer.html)的`imageryProvider`配置项）</span>
 
 - 限制加载服务的最大层级  
   配置[`ImageryProvider`](https://cesium.com/learn/cesiumjs/ref-doc/ImageryProvider.html)的`maximumLevel`配置  
@@ -325,6 +293,68 @@
   - 天地图  
     上文说的[知乎方法](https://zhuanlan.zhihu.com/p/267935427)配了8个，这样会让天地图服务的配额高速消耗，平时留1个就行了，不然耗不起
 
+- 可以有多个影像底图  
+  cz负责管理影像底图的是：[`viewer.imageryLayers`](https://cesium.com/learn/cesiumjs/ref-doc/Viewer.html#imageryLayers)
+  
+  - 增加影像底图  
+    [`viewer.imageryLayers.add`](https://cesium.com/learn/cesiumjs/ref-doc/ImageryLayerCollection.html#add)  
+    （[`addImageryProvider`](https://cesium.com/learn/cesiumjs/ref-doc/ImageryLayerCollection.html#addImageryProvider)也可以，不过它内部也是调用add，源码没几行）
+  - 序号  
+    - 序号越大越靠前
+    - 加大序号  
+      [`raise`](https://cesium.com/learn/cesiumjs/ref-doc/ImageryLayerCollection.html#raise)、[`raiseToTop`](https://cesium.com/learn/cesiumjs/ref-doc/ImageryLayerCollection.html#raiseToTop)
+    - 减少序号  
+      [`lower`](https://cesium.com/learn/cesiumjs/ref-doc/ImageryLayerCollection.html#lower)、[`lowerToBottom`](https://cesium.com/learn/cesiumjs/ref-doc/ImageryLayerCollection.html#lowerToBottom)
+  - 有`get(idx) → layer`、`indexOf(layer) → idx`、remove、removeAll、判断layer是否存在 等方法  
+    这里就不赘述了
+  - 多个影像底图会同时加载
+  - 如果初始影像底图加载失败，其他影像底图也无法显示  
+    `raiseToTop`也没用
+
+
+
+具体的影像底图
+
+- 使用mapbox底图  
+  有如下2种选择
+
+  - MapboxImageryProvider  
+    demo如下  
+
+    ```js
+    const viewer = new Cesium.Viewer('cesiumContainer',{ 
+      imageryProvider:new Cesium.MapboxImageryProvider({
+        mapId:'mapbox.satellite', // 底图类型
+        accessToken: mapbox的Token,
+      }),
+      baseLayerPicker:false
+    } );
+    ```
+
+  - MapboxStyleImageryProviderr可能也可以  
+    找到了2个文章，还没试过  
+
+    - https://zhuanlan.zhihu.com/p/340669216
+    - https://blog.csdn.net/qq_26991807/article/details/103862839
+
+- 使用天地图底图  
+  服务大部分时候都是卡的
+
+  - [官方方法](http://lbs.tianditu.gov.cn/docs/#/sanwei/)  
+    - 官方的说法是：“目前支持cesuim1.52、1.58、1.63.1”
+    - 在cz1.89.0上简单试了下是不行的  
+      会报错：`normal must be normalized`
+  - [知乎方法](https://zhuanlan.zhihu.com/p/267935427)  
+    可行  
+    - 标注用的是栅格标注（标注图层是可以去掉的）<span style='opacity:.5'>（标注图层只包含道路和文本，大部分区域是透明的）</span>
+    - 这个方法里说要设置`Cesium.Ion.defaultAccessToken`实际上是不用的
+
+- 网格底图<span style='opacity:.5'>（不需要发起请求）</span>  
+  [`Cesium.GridImageryProvider`](https://cesium.com/learn/cesiumjs/ref-doc/GridImageryProvider.html)
+  
+- 使用图片作为底图  
+  [`Cesium.UrlTemplateImageryProvider`](https://cesium.com/learn/cesiumjs/ref-doc/UrlTemplateImageryProvider.html)的url传个图片地址就行了
+
 
 
 ##### 地形（terrain）
@@ -332,23 +362,28 @@
 - **概念**  
   让地球表面有凹凸（没有地形的话就只是平面或曲面）
   
-- **使用方法**  
-  把`var viewer = new Cesium.Viewer(cz的html容器的id)`  
-  改成  
+- **设置地形**  
+  有2种方式  
   
-  ```javascript
-  var viewer = new Cesium.Viewer(cz的html容器的id, {
-    terrainProvider: Cesium.createWorldTerrain()
-  });
-  ```
-  就拥有了地形
+  - 一：viewer的terrainProvider配置  
+    例子：`terrainProvider: Cesium.createWorldTerrain(),`
+  - 二：给`viewer.scene.terrainProvider`赋值  
+    - 赋值后地形会重新加载（就算是之前用过的地形也一样）<span style='opacity:.5'>（在视图上会有一个明显地加载过程）</span>
+    - 就算没有地形`viewer.scene.terrainProvider`也会有值  
+      值是一个[`EllipsoidTerrainProvider`](https://cesium.com/learn/cesiumjs/ref-doc/EllipsoidTerrainProvider.html) 
+  
+- 关闭地形  
+  `viewer.scene.terrainProvider = new Cesium.EllipsoidTerrainProvider()`  
+  <span style='opacity:.5'>（2022.03.21看应该只有这一种方法）</span>
   
 - 如果物体依据球体表面设置高度（而不是地形表面）  
   那地形不会盖住这些物体  
 
-  - 依据球体表面设置高度的情况  
+  - 部分依据球体表面设置高度的情况如下：  
     - polyline的clampToGround设为false
     - 设置polygon的height
+
+  
 
 
 
@@ -362,8 +397,7 @@
 
   - 服务端  
     - 数据下载  
-      [ZY给的一个地址](https://www.gscloud.cn/sources/index?pid=302&ptitle=DEM%20%E6%95%B0%E5%AD%97%E9%AB%98%E7%A8%8B%E6%95%B0%E6%8D%AE&rootid=1)  
-      [ZY说可能可以用的一个地址](http://www.ngcc.cn/ngcc/)
+      [地理空间数据云](https://www.gscloud.cn/sources/index)  
     - 建立服务  
       
       - 把如下文件存到http服务器上，然后地形服务的url就是文件夹所在地址  
@@ -378,8 +412,6 @@
            2文件夹
            等等
         ```
-      
-        
       
       - 用cesiumLab应该可以
     
@@ -448,18 +480,33 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
 - 场景模式  
   可以选择是3维球体还是二维还是三维平面等  
   `sceneMode`配置项  
-  [可选值](https://cesium.com/learn/cesiumjs/ref-doc/global.html#SceneMode)如下
-  - Cesium.SceneMode.SCENE3D  
-    默认值  
-    3维球体
-  - Cesium.SceneMode.SCENE2D  
-    二维  
-    不可旋转不可倾斜
-  - Cesium.SceneMode.COLUMBUS_VIEW  
-    三维平面
-  - Cesium.SceneMode.MORPHING  
-    官网描述是在二三维间渐变  
-    目前没体验出和三维球体的区别，可能是只有配置为这个，后续才能在各个模式间切换
+  
+  - [可选值](https://cesium.com/learn/cesiumjs/ref-doc/global.html#SceneMode)如下
+  
+    - Cesium.SceneMode.SCENE3D  
+      默认值  
+      3维球体
+  
+    - Cesium.SceneMode.SCENE2D  
+      二维  
+      不可旋转不可倾斜
+  
+    - Cesium.SceneMode.COLUMBUS_VIEW  
+      三维平面
+  
+    - Cesium.SceneMode.MORPHING  
+      官网描述是在二三维间渐变  
+      目前没体验出和三维球体的区别<span style='opacity:.5'>（可能是只有配置为这个，后续才能在各个模式间切换）</span>
+  
+  - 动态切换  
+    给[`viewer.scene.mode`](https://cesium.com/learn/cesiumjs/ref-doc/Scene.html#mode)赋值
+  
+- 让地球透明  
+  `viewer.scene.globe.show=false`
+  - 会让贴在地形上的东西也透明  
+    <span style='opacity:.5'>（不贴地的不会）</span>
+
+
 
 
 
@@ -490,12 +537,20 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
 
 ### 镜头
 
+[`camera`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html)
+
 - 返回以米为单位的像素大小  
   [`getPixelSize`方法](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#getPixelSize)
-- 获得镜头朝向  
-  [`direction`属性](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#direction)
 - 获得镜头离地距离  
   [`getMagnitude`方法](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#getMagnitude)
+- 获得镜头朝向  
+  [`direction`属性](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#direction)
+- 倾斜信息  
+  pitch属性  
+- heading  
+  应该是heading属性
+- 镜头位置  
+  position属性
 
 
 
@@ -505,21 +560,23 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
 
   ```js
   viewer.camera.flyTo({
-    destination: Cesium.Cartesian3.fromDegrees(经度,纬度,海拔)
+    destination: Cesium.Cartesian3.fromDegrees(经度,纬度,海拔),
+    // orientation 朝向
   })
   ```
 
-  - 朝向（`orientation`配置项）  
+  - 朝向（`orientation`配置项）<span style='opacity:.5'>（非必填）</span>  
     <span style='opacity:.5'>（官方没有具体说明，所有了解都只能靠自己测出来）</span>  
     不设的话就是正对地面  
     有2种写法，2种写法不能共存，共存的话要么只有写法二生效，要么直接报错
     - 写法一：heading、pitch、roll  
       单位都是弧度<span style='opacity:.5'>（可以用`Cesium.Math.toRadians`方法把角度转为弧度）</span>  
       这三个都不是必传
-      - heading：地球及宇宙逆时针旋转角度<span style='opacity:.5'>（实际上改变的是镜头，但是heading对镜头的改变用语言描述比较复杂，因此用地球来描述，这样比较好理解）</span>
-      - pitch：镜头与地球切线的夹角
+      - heading：地球及宇宙逆时针旋转角度<span style='opacity:.5'>（实际上改变的是镜头，但是heading对镜头的改变用语言描述起来比较复杂，因此用地球来描述，这样比较好理解）</span>
+      - pitch：镜头与地球切线的夹角  
+        负数为从天空俯视，正数为从地底仰视
       - roll：镜头顺时针旋转角度
-      - 若镜头正对地球，那heading和roll具有相同表现<span style='opacity:.5'>（若设置heading=a且roll=b，那heading=a+b和该设置有相同效果）</span>
+      - 提示：若镜头正对地球，那heading和roll具有相同表现<span style='opacity:.5'>（相同表现的意思是这2种设置是相同的：设置heading=a; roll=b，设置heading=a+b; roll=0）</span>
     - 写法二：direction、up  
       direction不必传，up必传
       - direction：镜头朝向
@@ -527,29 +584,53 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
       - 坐标系未了解【】
       - 输入方向会做归一化处理
 
+- 将镜头瞬移到指定坐标  
+  `viewer.camera.setView`方法  
+  传参参考上一条的`flyTo`方法
+  
+- 镜头缓动到球体上<span style='opacity:.5'>（一个虚构的球体）</span>  
+  [`camera.flyToBoundingSphere`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#flyToBoundingSphere)  
+
+  ```js
+  viewer.camera.flyToBoundingSphere(
+    new Cesium.BoundingSphere(Cartesian3实例, 半径),
+    {
+      offset: new Cesium.HeadingPitchRange(heading, pitch, range),
+    },
+  )
+  ```
+  
+  - 2d视图里看到的东西会比3d视图少
+  - 镜头距离的计算方式
+    - 用`BoundingSphere`里的半径  
+      触发条件：`BoundingSphere`里有半径且没有`offset`或者`HeadingPitchRange`的range为0  
+      效果：镜头距离为差不多能看全`BoundingSphere`的距离<span style='opacity:.5'>（目前觉得是这样）</span>
+    - 用`HeadingPitchRange`的range  
+      触发条件：有`offset`且`HeadingPitchRange`的range不为0  
+      效果：range代表距离地球表面多远（用负数的话代表从地底往地表看）<span style='opacity:.5'>（目前觉得是这样）</span>
+  - 半径和range的单位  
+    - [官网](https://cesium.com/learn/cesiumjs/ref-doc/HeadingPitchRange.html)说range单位是米  
+    - [官网](https://cesium.com/learn/cesiumjs/ref-doc/BoundingSphere.html?classFilter=bound)没有说BoundingSphere里的半径的单位  
+      估计也是米
+  
 - 停止缓动并留在当前位置  
   [`camera.cancelFlight`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#cancelFlight)
 
 - 停止缓动并瞬移到终点  
   [`camera.completeFlight`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#completeFlight)
 
-- 将镜头瞬移到指定坐标  
-  `viewer.camera.setView`方法  
-  传参参考上一条的`flyTo`方法
-
 - 让镜头往指定方向上瞬移  
-  [`move`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#move)及“See:”里列出来的前移后移等方法
+  [`move`方法](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#move)及“See:”下方列出来的前移后移等方法
 
-- 保存镜头位置信息，以便未来把镜头放到保存的位置
-
-  - 保存镜头位置信息  
-    `const a=viewer.camera.position.clone`
-  - 把镜头放到保存的位置  
-    `viewer.camera.flyTo({destination: a})`
-  - 倾斜信息就放在camera的pitch属性里  
-    而镜头位置是position
-
+- 保存镜头位置信息，以便未来把镜头放到保存的位置  
+  <span style='opacity:.5'>（该方法最终效果的倾斜和旋转都是默认值）</span>
   
+  - 保存镜头位置信息  
+    `const a=viewer.camera.position.clone()`
+  - 把镜头放到保存的位置  
+    `viewer.camera.flyTo({destination: a})`  
+  
+
 
 
 
@@ -566,7 +647,7 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
   - 解除“锁定”  
     `viewer.trackedEntity=null`
 
-- 将镜头瞬移或缓动到某些东西上  
+- 将镜头移动到某些东西上  
   注意这2个方法来自viewer而不是camera，配置比camera的少很多  
   
   | 功能 | 代码                                                         |
@@ -574,25 +655,77 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
   | 缓动 | [`viewer.flyTo(目标,配置)`](https://cesium.com/learn/cesiumjs/ref-doc/Viewer.html#flyTo) |
   | 瞬移 | [`viewer.zoomTo(目标,offset)`](https://cesium.com/learn/cesiumjs/ref-doc/Viewer.html#zoomTo) |
   
-  - 可以作为目标的东西非常多，单entity、多entity、数据源等等都支持
+  - 哥伦布视图和2d视图下，这两个方法定位位置都不对<span style='opacity:.5'>（有很大偏差）</span>
+  - 可以作为目标的东西非常多  
+    比如：单entity、多entity、数据源、以及返回这些东西的promise
   - 调用`viewer.flyTo`后调用停止方法<span style='opacity:.5'>（[`camera.cancelFlight`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#cancelFlight)或[`camera.completeFlight`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#completeFlight)）</span>并不一定生效  
     比如`duration`设为`1.5`的话在0.5秒内调用停止方法都是不生效的
+  - `offset`配置<span style='opacity:.5'>（2个方法的`offset`是一样的）</span>  
+    用来设置镜头的朝向和高度  
+    - 不设置  
+      旋转为0  
+      倾斜为45度  
+      高度会根据目标的大小来变化<span style='opacity:.5'>（目标越大高度也越大）</span>
+    - 值为[`HeadingPitchRange`](https://cesium.com/learn/cesiumjs/ref-doc/HeadingPitchRange.html)实例  
+      一二三参数分别为：旋转、倾斜、高度<span style='opacity:.5'>（真的是高度，而不是文档里写的距离）</span>  
+      <span style='opacity:.5'>（测试版本：1.89.0）</span>
+      - 设置倾斜的bug  
+        最终的镜头位置会是物体的正上方<span style='opacity:.5'>（意思就是说如果设个负30度，可能物体就看不见了）</span>
   
   
-  
-  
+
+bug
+
+- SceneMode.SCENE2D或SceneMode.COLUMBUS_VIEW下  
+  给带polygon的entity追加position和billboard后（只有position或billboard都没问题）  
+  对这样的entity使用viewer.flyTo或viewer.zoomTo的话  
+  最终镜头位置是不对的<span style='opacity:.5'>（和正确位置有极大偏差）</span>  
+  在网上反复搜索都没找到相关信息
+
+
+
+
+
+
 
 ##### 限制镜头
 
-[`viewer.scene.screenSpaceCameraController`](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html)
+[`viewer.scene.screenSpaceCameraController`](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html)  
+（仅限制交互操作，也就是说不会限制用编程的方式移动镜头）
 
-- 限制镜头离地距离（仅限制交互操作，也就是说不会限制用编程的方式移动镜头）  
-  给`minimumZoomDistance`和`maximumZoomDistance`赋值  
-  - 最近距离  
-    `minimumZoomDistance`  
+- 限制镜头离地距离  
+  - 限制最近距离  
+    `minimumZoomDistance`属性  
+  - 限制最远距离  
+    `maximumZoomDistance`属性  
   - 单位应该是米
-  - 在即将到达限制距离时，距离的移动会变慢，越接近越慢
+  - 在即将到达限制距离时，距离的移动会变慢，越接近越慢（可能是`bounceAnimationTime`属性控制的）
+- 禁止左键拖动地图  
+  - 3d视图：  
+    把[`enableRotate`](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#enableRotate)设为`false`<span style='opacity:.5'>（2d视图下不会产生任何影响）</span>
+  - 2d视图：  
+    把[`enableTranslate`](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#enableTranslate)设为`false`<span style='opacity:.5'>（3d视图下不会产生任何影响）</span>
   
+- 禁止倾斜和旋转地图  
+  把[`enableTilt`](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#enableTilt)设为`false`
+- 禁止缩放地图  
+  把[`enableZoom`](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#enableZoom)设为`false`
+
+
+
+##### 设置镜头交互方式
+
+给[`viewer.scene.screenSpaceCameraController`](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html)的属性赋值
+
+
+
+- 缩放  
+  更改：[`zoomEventTypes`属性](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#zoomEventTypes)  
+  禁用/启用：[`enableZoom`属性](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#enableZoom)
+
+- 平移地图  
+  更改：[`rotateEventTypes`属性](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#rotateEventTypes)  
+  禁用/启用：[`enableRotate`属性](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#enableRotate)
 
 
 
@@ -636,8 +769,8 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
     })
   ```
 
-  
-  
+- entity方法
+
 - 流形式加载
 
   ```js
@@ -654,6 +787,7 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
   - 叠加类型  
     [`classificationType`选项](https://cesium.com/learn/cesiumjs/ref-doc/Cesium3DTileset.html#classificationType)  
     这里说的其实都是多边形的（包含模型的笔记见2022.2.11前的版本，不过对于多边形来说不怎么适用）
+    
     - 叠加效果  
       用来叠加的物体会覆盖在被叠加物表面
     - 叠加区域  
@@ -662,12 +796,31 @@ cz有自己的时间类：[`JulianDate`](https://cesium.com/learn/cesiumjs/ref-d
       - TERRAIN：和地球表面叠加
       - CESIUM_3D_TILE：和3dtile叠加
       - BOTH：同时和地球表面与3dtile叠加
+    
+  - 给不同高度的建筑（整体是一个模型）上不同的颜色  
+    
+    - https://b23.tv/uKMyQp8 10分50秒
+    
+    - > 用[`Cesium3DTileStyle`](https://cesium.com/learn/cesiumjs/ref-doc/Cesium3DTileStyle.html)来做 —— [谋篇文章](http://t.zoukankan.com/telwanggs-p-13043836.html)
+    
+      文末有说不同建筑不同颜色是shp文件中预先编辑好的字段
+    
+  - 使用自定义着色器  
+    
+    - 监听[`tileVisible`](https://cesium.com/learn/cesiumjs/ref-doc/Cesium3DTileset.html#tileVisible)的方式<span style='opacity:.5'>（[这里](https://blog.csdn.net/weixin_39150852/article/details/124710094)有个demo）</span>
+    - [`customShader`属性](https://cesium.com/learn/cesiumjs/ref-doc/Cesium3DTileset.html#customShader)可能可以，不过似乎被标记为 实验性的
 
 
 
 ### [“物体”](https://cesium.com/learn/cesiumjs-learn/cesiumjs-creating-entities/)
 
 目前属于自己定义的一个概念
+
+- 跟随地图的html  
+  应该没有现成工具只能自己手写
+- 避让效果  
+  2022.06.02再网上翻了一大圈没找到避让效果<span style='opacity:.5'>（demo或者工具都没找到）</span>  
+  不过可能可以用[`Cesium.EntityCluster`](https://cesium.com/learn/cesiumjs/ref-doc/EntityCluster.html)做聚类和避让
 
 
 
@@ -695,6 +848,8 @@ entity和primitive对比
 
 **其他**
 
+【】贴地和定义“高度”的意义这2部分待合并
+
 - 贴地  
   由`clampToGround`配置和`classificationType`共同影响  
   - `clampToGround`决定是否贴地  
@@ -702,6 +857,25 @@ entity和primitive对比
     entity和图形里没发现有的，不过默认就是贴地的（已测试多边形）  
   - [`classificationType`](https://cesium.com/learn/cesiumjs/ref-doc/global.html#ClassificationType)决定贴哪种地  
     多边形里默认就是都贴
+  
+- 定义“高度”的意义<span style='opacity:.5'>（这里“高度”指的是Entity的`position`配置项的`Cesium.Cartesian3.fromDegrees`方法的第三个参数）</span>  
+  定义方法：给`heightReference`配置项赋值  
+  `heightReference`配置项可选值：
+  
+  1. 传统认知的海拔（和地形无关）  
+     `Cesium.HeightReference.NONE`  
+     这个是默认值  
+      立方体的锚点在中心
+  2. 让立方体固定在地形上  
+     `Cesium.HeightReference.CLAMP_TO_GROUND`  
+     这时第三个参数是失效的  
+      立方体的锚点在底面的中心
+  3. 立方体高于地形的距离  
+     `Cesium.HeightReference.RELATIVE_TO_GROUND`  
+     立方体的锚点在底面的中心
+  
+  
+  box、label、billboard等都有这个配置项
 
 
 
@@ -711,9 +885,19 @@ entity和primitive对比
   比如同时携带线和和面
   - entity里存在的图形会是对应图形的实例  
     不存在的就是undefined
-
 - `viewer.entities.add`之后物体并不一定立即显示  
   label确实是立即显示，但是线和面要等底图影像服务加载到一定程度才会出现
+- 似乎可以用entity做父子关系，相当于别的库的group的概念  
+  通过[`parent`配置项](https://cesium.com/learn/cesiumjs/ref-doc/Entity.html#parent)来做
+- 坐标  
+  大部分图形使用entity.position作为坐标  
+  仅有少量图形不使用entity.position作为坐标，下面列出这些图形
+  - 图形列表<span style='opacity:.5'>（2022.06.13官网最新[文档](https://cesium.com/learn/cesiumjs/ref-doc/Entity.html)）</span>  
+    - polygon  
+    - polyline
+    - polylineVolume
+    - wall
+
 
 
 
@@ -762,11 +946,26 @@ var pointEntity = viewer.entities.add({
     操作方法去[Entity的配置项](https://cesium.com/docs/cesiumjs-ref-doc/Entity.html#.ConstructorOptions)里找
   - 后期修改  
     通过[`position`属性](https://cesium.com/learn/cesiumjs/ref-doc/Entity.html#position)修改  
-    <span style='opacity:.5'>（官网👆上似乎说还可以通过赋值来修改）</span>
+    直接赋值也可以修改
 
 - 更改图形  
-  Entity实例里有存各个图形的实例，可以通过图形的实例去做更改
-
+  Entity实例里有存各个图形的实例，可以通过图形的实例去做更改  
+  也可以通过给赋值一整个图形配置来修改，比如下面这种写法  
+  
+  ```js
+  entity.billboard={
+    image:templateConfig.ornamentIco,
+    width: 30,
+    height: 30,
+    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+    heightReference:Cesium.HeightReference.CLAMP_TO_GROUND,
+    scaleByDistance: new Cesium.NearFarScalar(20000, 1, 400000, 0),
+  }
+  ```
+  
+  
+  
 - 显隐  
   [`show`属性](http://127.0.0.1:5501/Build/Documentation/Entity.html?classFilter=entity#show)  
   读取和修改都用这个属性
@@ -877,7 +1076,7 @@ entity中的图形配置项
         高度
       ),
       material: Cesium.Color.RED.withAlpha(不透明度),
-    outline: true,
+      outline: true,
       outlineColor: Cesium.Color.BLACK,
   }
     ```
@@ -899,26 +1098,11 @@ entity中的图形配置项
     }
     ```
   
-  - 定义“高度”的意义<span style='opacity:.5'>（这里“高度”指的是Entity的`position`配置项的`Cesium.Cartesian3.fromDegrees`方法的第三个参数）</span>  
-    定义方法：给`heightReference`配置项赋值  
-    `heightReference`配置项可选值：
-  
-    1. 传统认知的海拔（和地形无关）  
-       `Cesium.HeightReference.NONE`  
-       这个是默认值  
-        立方体的锚点在中心
-    2. 让立方体固定在地形上  
-       `Cesium.HeightReference.CLAMP_TO_GROUND`  
-       这时第三个参数是失效的  
-        立方体的锚点在底面的中心
-    3. 立方体高于地形的距离  
-       `Cesium.HeightReference.RELATIVE_TO_GROUND`  
-       立方体的锚点在底面的中心
-  
   - 投影  
     目前的尝试都是失败的  
-    已经尝试过的方案：给`shadows`配置项设置了所有枚举值、半透明的、不透明的、边框的各种情况、加地形与不加的、实例化`viewer`时`shadows`与`terrainShadows`配置项的设与不设
-  
+    已经尝试过的方案：给`shadows`配置项设置了所有枚举值、半透明的、不透明的、边框的各种情况、加地形与不加的、实例化`viewer`时`shadows`与`terrainShadows`配置项的设与不设  
+    [这个官方demo](https://sandcastle.cesium.com/index.html?src=Shadows.html)可以成功投下模型的影子
+    
   - 允许显示物体时的镜头距物体的区间  
     配置项为`distanceDisplayCondition`，值为[DistanceDisplayCondition](https://cesium.com/docs/cesiumjs-ref-doc/DistanceDisplayCondition.html)实例
 
@@ -1012,7 +1196,7 @@ entity中的图形配置项
 - 控制离开球面的高度  
   `height`配置项  
   这里说的球面不包括地形  
-  只有值为undefined时才会贴在地形表面
+  只有值为`undefined`时才会贴在地形表面
   - 决定`height`值的情况
     - 直接用entity生成多边形，那`height`不设的话就是undefined  
       （就算去掉数据里的首尾重复点，结果也是一样的）
@@ -1028,6 +1212,9 @@ entity中的图形配置项
 - 坐标用顺时针逆时针都可以
 - 描边宽度  
   无法大于1（[有的博客](https://blog.csdn.net/weixin_33716941/article/details/93150599)说只有win不行，可是去余榕的mac上试过也是不行）
+- `textureCoordinates`配置  
+  应该是用来控制各个面的贴图方向的  
+  如果没用[ImageMaterialProperty](https://cesium.com/learn/cesiumjs/ref-doc/ImageMaterialProperty.html)应该是不生效的，读取`textureCoordinates`属性也会返回undefined<span style='opacity:.5'>（已测试[StripeMaterialProperty](https://cesium.com/learn/cesiumjs/ref-doc/StripeMaterialProperty.html)）</span>
 
 
 
@@ -1106,6 +1293,9 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
 [这个回答](https://stackoverflow.com/questions/50298267/how-to-use-material-fromtype-in-cesium)里说了图形和primitive有不同的材质api  
 [`Material`](https://cesium.com/learn/cesiumjs/ref-doc/Material.html?classFilter=Material)类只能primitive用
 
+- [着色器似乎只能给3D Tiles用](https://github.com/CesiumGS/cesium/tree/main/Documentation/CustomShaderGuide#applying-a-custom-shader)  
+  3D Tiles中的用法在本笔记内搜索“Cesium.Cesium3DTileset”查看
+
 
 
 ##### 图形的`material`配置项
@@ -1113,7 +1303,7 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
 
 
 可以直接写一个颜色（比如`Cesium.Color.RED.withAlpha(0.5)`）  
-可以直接写一个图片地址  
+可以直接写一个图片地址【】真的吗——2022.06.17  
 也可以写各个具体的实例  
 
 
@@ -1123,8 +1313,10 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
 具体实例的列表见[MaterialProperty](https://cesium.com/learn/cesiumjs/ref-doc/MaterialProperty.html)  
 这个MaterialProperty类似于各具体类的父类，但实际上不是
 
-- `ImageMaterialProperty`可以用栅格图也可以用svg  
-  不过用了svg后还是会模糊
+- 用图片当材质  
+  `ImageMaterialProperty`  
+  可以用栅格图也可以用svg  
+  不过svg是转成栅格图后使用的
 
 
 
@@ -1163,7 +1355,7 @@ collection目前是自己定义的一个概念，包括但不仅限于如下内�
 
 ##### svg
 
-2边都会模糊  
+2种用法都会模糊  
 去svg文件里加大width、height就可以变清晰  
 当然加大之后会造成性能负担导致cz整个挂掉
 
@@ -1278,6 +1470,33 @@ GeoJsonDataSource
 
 
 
+##### [`Event`](https://cesium.com/learn/cesiumjs/ref-doc/Event.html)实例
+
+cesium中有些类的部分成员是`Event`实例<span style='opacity:.5'>（比如`Camera`的[`moveEnd`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#moveEnd)）</span>
+
+通过`Event`实例可以进行监听、取消监听等操作
+
+
+
+##### 镜头事件
+
+并不是每次都会触发的，应该是变化量达到[`camera.percentageChanged`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#percentageChanged)以上时才会触发（`camera.percentageChanged`应该是代表前后有多少比例的差异）
+
+- 变化的开始  
+  [`camera.moveStart`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#moveStart)  
+  无参数
+- 一次变化  
+  [`camera.changed`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#changed)  
+  - 一个参数  
+    应该是和[`camera.percentageChanged`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#percentageChanged)所代表的的一样的内容  
+  - 如果`camera.percentageChanged`设得小，那该事件的触发频率也会增加  
+    甚至会让该事件早于[`camera.moveStart`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#moveStart)触发
+- 变化的结尾  
+  [`camera.moveEnd`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#moveEnd)  
+  无参数
+
+
+
 ##### 加载完成事件
 
 例子
@@ -1303,6 +1522,7 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
 
 - 在这里可以找到一个事件处理器实例：  
   `viewer.cesiumWidget.screenSpaceEventHandler`
+  
 - 可以建立多个实例  
   建立方法：`new ScreenSpaceEventHandler(viewer.canvas)`
 
@@ -1332,23 +1552,8 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
 
 - [删除监听函数](https://cesium.com/docs/cesiumjs-ref-doc/ScreenSpaceEventHandler.html#removeInputAction)
 
-
-
-##### 设置镜头交互方式
-
-给[`viewer.scene.screenSpaceCameraController`](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html)的属性赋值
-
-
-
-- 缩放  
-  更改：[`zoomEventTypes`属性](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#zoomEventTypes)  
-  禁用/启用：[`enableZoom`属性](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#enableZoom)
-
-- 平移地图  
-  更改：[`rotateEventTypes`属性](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#rotateEventTypes)  
-  禁用/启用：[`enableRotate`属性](https://cesium.com/learn/cesiumjs/ref-doc/ScreenSpaceCameraController.html#enableRotate)
-
-
+- 提醒：双击会触发单击事件2次  
+  而且单击还是早于双击触发的
 
 
 
@@ -1387,7 +1592,7 @@ helper.add(viewer.scene.globe.tileLoadProgressEvent,  (tileNumNeedLoad)=> {
 
 小部件一般都会有html部分
 
-- <span style='opacity:.5'>（怀疑这widget和小部件没关系啊，感觉是渲染整个场景的，[这个影像服务切换demo](https://sandcastle.cesium.com/index.html?src=Imagery%2520Layers%2520Manipulation.html)里也没有使用widget）</span>
+- <span style='opacity:.5'>（怀疑这个widget和小部件没关系啊，感觉是渲染整个场景的，[这个影像服务切换demo](https://sandcastle.cesium.com/index.html?src=Imagery%2520Layers%2520Manipulation.html)里也没有使用widget）</span>
 - <span style='opacity:.5'>（怎么感觉整个场景都是widget实现的，就算cz的使用者不加widget，canvas父元素的类名也是`cesium-widget`）</span>
 - 通过Viewer配置增加的小部件也是由`CesiumWidget`实现的
 
@@ -1405,6 +1610,7 @@ const viewer = new Cesium.Viewer('cesiumContainer', {
   sceneModePicker:false, //（右上角）模式切换按钮不显示（可选球体、3d平面和2d平面）
   geocoder:false, //（右上角）搜索按钮不显示
   navigationHelpButton:false, //（右上角）镜头操作说明按钮不显示
+  infoBox:false, // 解决控制台报错：Blocked script execution in 'about:blank'..
 })
   
 // （左下角）隐藏左下角版权信息
@@ -1430,9 +1636,13 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
 
 ##### 其他小部件详细描述
 
-- baseLayerPicker放出来的话  
-  文本会参与到遮挡关系中<span style='opacity:.5'>（原本都是最前显示的）</span>
-
+- 底图服务选择按钮  
+  `baseLayerPicker`
+  - 默认值是必应地图  
+    <span style='opacity:.5'>（而不是cesium默认的[createWorldImagery](https://cesium.com/learn/cesiumjs/ref-doc/global.html#createWorldImagery)）</span>
+  - baseLayerPicker放出来的话  
+    文本会参与到遮挡关系中<span style='opacity:.5'>（原本都是最前显示的）</span>
+  
 - 投影方式选择按钮  
   `projectionPicker`配置项，默认值为false
 
@@ -1442,6 +1652,10 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
 
 ### 其他
 
+- 置灰指定内容以外的区域  
+
+  > `viewer.scene.invertClassification = true` —— [某篇文章](https://blog.csdn.net/qq_27816785/article/details/123236815)
+
 
 
 ##### [`Cesium.NearFarScalar`](https://cesium.com/docs/cesiumjs-ref-doc/NearFarScalar.html)
@@ -1450,7 +1664,7 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
 
 - **具体关系描述**
 
-  首先先了解一点，这个标量在这个实例外会有一个设置值  
+  这个标量在这个实例外会有一个设置值  
   然后该实例会依据『相机与物体间的距离』产生一个倍数  
   最终这个标量的真实值将等于：`设置值 * 该实例返回的倍数`
 
@@ -1542,6 +1756,7 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
 - 将经纬度海拔数组转为Cartesian3实例数组  
   应该是用Cesium.Cartesian3.fromDegreesArrayHeights，没仔细了解
 - 将屏幕坐标转为Cartesian3实例  
+  以下2个方法都无法将地形纳入运算，要纳入运算的话估计得手写了
   - [`viewer.camera.pickEllipsoid`方法](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html#pickEllipsoid)  
     这个方法应该是转为地球表面的坐标
   - [`viewer.scene.pickPosition`方法](https://cesium.com/learn/cesiumjs/ref-doc/Scene.html#pickPosition)  
@@ -1556,7 +1771,30 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
 
 
 
+##### [`BoundingSphere`](https://cesium.com/learn/cesiumjs/ref-doc/BoundingSphere.html)
 
+- 有很多获取`BoundingSphere`实例的静态方法
+- 修改半径  
+  直接修改[`radius`属性](https://cesium.com/learn/cesiumjs/ref-doc/BoundingSphere.html?classFilter=boundingSphere#radius)即可<span style='opacity:.5'>（[`flyToBoundingSphere`](https://cesium.com/learn/cesiumjs/ref-doc/Camera.html?classFilter=cam#flyToBoundingSphere)等方法可以正确运行）</span>
+- 获取entity的`BoundingSphere`实例  
+  方法见下方`EntityView`的笔记
+
+<span style='opacity:.5'>（boundingSphere的值不会受到镜头的影响）</span>
+
+
+
+##### [`EntityView`](https://cesium.com/learn/cesiumjs/ref-doc/EntityView.html)
+
+用来获取entity的`BoundingSphere`实例
+
+
+
+注意
+
+- 要调用[`update`方法](https://cesium.com/learn/cesiumjs/ref-doc/EntityView.html#update)后才会生成[`boundingSphere`属性](https://cesium.com/learn/cesiumjs/ref-doc/EntityView.html#boundingSphere)
+- update方法要依赖entity的position、viewFrom等属性，大部分entity应该是没有这些属性的
+- 这条不一定正确：[`update`方法](https://cesium.com/learn/cesiumjs/ref-doc/EntityView.html#update)的`boundingSphere`属性一定要传  
+  不然没效果可能也不会报错
 
 
 
@@ -1583,6 +1821,8 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
     - 第二个参数设为true时返回值不变的话不会执行（不理解这是怎么实现的，不执行怎么知道返回值变不变呢）  
       好像是“设为true的话不用回调返回的JuliaTime就只会执行一次”才对
 
+- [这个文章](https://blog.csdn.net/ls870061011/article/details/122748442)里搜索`Cesium.CompositeProperty`也有动画描述
+
 
 
 ##### 效果
@@ -1596,6 +1836,10 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
 - entity图形的material配置项  
   给ColorMaterialProperty的话会复用，给Color不会复用（判断依据是各material属性间是否全等）  
   不过复用后性能提升不明显
+- 显示文本的那一帧会比较耗时间  
+  如果要贴在地形上的话这个时间会特别明显
+  - 这个显示的操作是异步的
+  
 
 
 
@@ -1616,6 +1860,9 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
   返回第1个参数的副本  
   第2个参数为`true`则用深拷贝，为`false`用浅拷贝。默认为`false`  
   不会拷贝原型链上的属性
+  
+- `Cesium.knockout`  
+  就是[Knockout](https://knockoutjs.com/documentation/introduction.html)
 
 
 
@@ -1651,6 +1898,8 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
     用如下语法引入  
     `Cesium.IonResource.fromAssetId(资源的id)`
 
+
+
 ### Story
 
 可以加模型、地图等内容。  
@@ -1676,12 +1925,16 @@ viewer._cesiumWidget._creditContainer.style.display = "none"
 
 
 
+
+
 # [CesiumLab](http://www.cesiumlab.com/)
 
 - 官网可以下个exe  
   exe打开是个本地网页  
   里面有不少东西
 
+  - > 可以把shp转为3d tiles<span style='opacity:.5'>（已实践）</span> —— [某篇文章](http://t.zoukankan.com/telwanggs-p-13043836.html)
+  
 - 服务  
 
   > 国内公司基本都是用这个工具做数据服务 —— 为鑫
@@ -1758,7 +2011,14 @@ Cesium不可用时可以退回Leaflet
 
 
 
-# 其他插件
+# 其他工具
+
+- [HPUZYZ.Demo](https://github.com/YanzheZhang/Cesium.HPUZYZ.Demo)  
+  demo集合
+- [zhangti0708/cesium-examples](https://github.com/zhangti0708/cesium-examples)  
+  demo集合
+- https://sandcastle.cesium.com  
+  可以在线编写cesium代码并保存（云端可以，本地好像也可以）
 
 
 
@@ -1775,6 +2035,10 @@ Cesium不可用时可以退回Leaflet
     对应的是`enableCompassOuterRing`配置项
 
 
+
+### [xt3d](http://211.149.185.229:8080/home)
+
+- 有大量demo
 
 
 
@@ -1839,13 +2103,27 @@ Cesium不可用时可以退回Leaflet
 
 - 旋转单位是角度（一圈是360那个）
   天上往下看是顺时针转（中国内是：角度0时朝北，角度90朝东）
+  
 - cz（canvas）容器的祖先的`display`为`none`时加载完毕的事件不会触发  
 
   - 监听事件的代码为：  
     `viewer.scene.globe.tileLoadProgressEvent.addEventListener(函数)`
   - 规避方法为：  
     祖先高度设为`0`，`overflow`设为`hidden`
+  
 - 本地文档  
   源码下下来运行`npm run generateDocumentation`  
   命令执行完后运行index.html就可以看文档了
+  
+- 解决如下报错  
+  ```
+  Blocked script execution in 'about:blank' because the document's frame is sandboxed and the 'allow-scripts' permission is not set.
+  ```
+
+  方法：把Viewer的infoBox[配置项](https://cesium.com/learn/cesiumjs/ref-doc/Viewer.html#.ConstructorOptions)设为`false`
+  
+- 效果参考  
+
+  - https://datav.aliyun.com/portal/graphics-engine倒数第三块内容
+  - cesiumLab里点“三维可视”部分
 

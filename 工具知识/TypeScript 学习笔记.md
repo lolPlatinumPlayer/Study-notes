@@ -157,7 +157,7 @@ function greeter(person: string) {
 
 
 
-**js也有的类型**
+###### js也有的类型
 
 列表
 
@@ -172,7 +172,7 @@ function greeter(person: string) {
 
 
 
-**ts比js多的基本类型**
+###### ts比js多的基本类型
 
 - [tuple](https://www.typescriptlang.org/docs/handbook/basic-types.html#tuple)  
   也就是更具体的数组  
@@ -311,6 +311,15 @@ function greeter(person: string) {
 
 
 
+###### js比ts多的基本类型
+
+- 类  
+  在ts里应该只能把类标为函数类型
+
+
+
+
+
 ##### [字面量类型](https://www.typescriptlang.org/docs/handbook/literal-types.html)
 
 ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布尔值
@@ -364,7 +373,7 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
 
 
 
-**面对for in**
+##### 面对for in
 
 - 默认情况下for in中取数据会报错  
   （原因可能是因为不会将对象的键自动识别为字符串类型）
@@ -388,6 +397,15 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
 
     
 
+##### 其他
+
+- 无法通过条件判断得到准确的结果  
+  比如说我们用if else或switch判断一个常量，然后再返回一个值  
+  这个值肯定是确定的，但是ts推导的结果却会把所有条件都走过去  
+  最终结果就是`第一个条件语句块返回结果|第二个条件语句块返回结果|第三个条件语句块返回结果`这种
+
+
+
 
 
 ### 对象
@@ -410,6 +428,7 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
 
   上面的代码意味着：只要对象有一个值为1的属性a，那就能通过校验
 
+  - `propName`改成其他名字也可以
   - number  
     虽然vscode提示`propName`允许的类型为string、symbol和number  
     但是`[propName: string|symbol]`和`[propName: string|symbol|number]`在vscode里的错误提示是完全一致的
@@ -418,6 +437,13 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
   `{[key in 键类型]: 属性值类型;}`
 
   - `{[propName: 键类型]:属性值类型;}`这种写法是不行的
+
+- 只有在面对对象字面量时要求对象完全匹配类型  
+  其它时候<span style='opacity:.5'>（比如赋值）</span>只要不冲突或者没有多的属性就算符合要求了
+  - 其他时候包括如下情况
+    - 非声明的赋值
+    - 声明为实例  
+      （比如：`const 变量名:type或接口 = new 类()`）
 
 
 
@@ -432,6 +458,8 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
   不过面对用类创建的对象时，是允许拥有未定义的属性的
 - [可继承](https://www.typescriptlang.org/docs/handbook/2/objects.html#extending-types)  
   （[这个官方废弃的文档页面](https://www.typescriptlang.org/docs/handbook/interfaces.html#extending-interfaces)也有描述）
+  - 可以继承『类』
+  
 - 同名接口  
   （官网上有相关说明的页面，目前看到的有[声明合并](https://www.typescriptlang.org/docs/handbook/declaration-merging.html)和[这个例子](https://www.typescriptlang.org/play?#code/PTAEBUAsFMCdtAQ3qALgdwPagLaIJYB2ammANgM4mgAm0AxmcgqjKBZIgA4KYBmSQgFgAUCFCYARgCsGqAFygiqOH0T1oVRIRpoAnjyRl8iCpoB0okFbBRoepCgBucBxXw58TWABpBuvkxYNDYcTApUUHpMHDDielNNGyR6SNYECkQcaEsRUVQDBAAhfFgacELQAF5QAG9RUFB0IgBzCkUAJgBuUQBfHryRZVV1YtKaAElCFVg1DTqGptb20G6+0VFowgjQSXGARkUSsorDGtqlwjbO0H7NzG3IvbKOo-GpmbmEc8vr1duBskigxEABXMwQQoAZXosHwXEi+C07FQsFBqVBsEQZH0hgoegi0BwPmS+FQAHIqFxwu5JGQWNhhrBPAAPELQUqgcEMzC5e6PXbjADMbzKHxG8xqzxo+0BYlsMAckkwrHYoK41NgkWgLJUOlaEnSwSZXy0OlxFmSpwQ2JMZioNGwrCRoCcJiU0zgZlS+AeFoofnQkC80FJntmoyonBcSFAAGt7FgynyRAVDAB5dA4n6ETAY2CEbGKVGghC9UAAMlAx3KhQGaYQACUpERqnVQLn84WyIo1JQy5Xq+9w185SbRqAAArQdR5uOgHV6mhUGvWhYiRrRMiYTF8UE9tBo6ADRp8YyaXvYswDXqicfzADCwfoCeIi+gOhXw8+E-qG6i5A7rM+6Xv2J6gGe+AXhBV7Husgz0pEmBZoombZu2zRXCsHR+J2qCYt2xZHgCoiIVEz6vooT74C+H5thcmF-DhAHbruIEwf2fiQdBfYQncgziFAiCRJk+A0IGCDwNEsQfroeg7lyEL3poEguMEDbJLaiQUOYoBQjw9D4HwNHYmQeh+JIILcqA8mgksZA4i00BPM5MwLrAsBBMk2QUJkTk6aAEwCLZoCQJgamqXA7IQeQ26Me5nmwAGNkKQkwjyuw0AIGF6CQjwMJwgiUTaKAXCeW6dBoF6UXaLoYQoIE9DcjQ3maH5KlBnRSZxgazSqspVDGAmoDUbRhApsh6H0BRH4DNNNGvm2k1yuI6aEAgeDSEEtBGXwcAfvMlkYFlxANkYdoqU4VADZpKCsMJHo-hoWgoJgPDELVFrndpjgIIw4TQDQuSCcGVDZNoVAhWlC66rJgiPRKCCSA4dCMMgBpkppmVbLoqAeDkGxDCOE4ANJknq66NFwmJJYoyrkDOhA3oTymgGTqAU3+m6AZiigRHCVzMwJYBTNFKowMECQQogX1pbmLnkdoTm6DuqDuJV-CkhSDoMN4wm+uNhNnZO6pcA45yLFuQR86irQ3nKxum+blMkASiiEKCOCWbA9uE+IAAi0DvTQBp+rZwQtJgV5+M6Dq7fthDzNE+66JZSDJNS7h4zG20y+tLT6y4ukABLIdAEWBME1N0jRZkw5ngPJA2yVkpSsZHW5CQOdQeDDekODw8pKaretEgCOkuyaJE8AUEBz0xcEZgclcRg4vw0WA05yRSypyA7uazeutdxPPTHoMouo87haocVN5A8CILoLoy5HmC6FwTDzKg2ARMgCh+2ASAHMuDtBAL-F819ZhxXMNJYAABHUsEQDYUGAEKAA7B0IU6ChQAFZgDN1hPCVAABaAaxCrrEObsAHBHQABsAAODoTCAAMABiGhDCmEdGYaIIAA)）  
   可以写同名接口  
@@ -439,7 +467,10 @@ ts4.1.3为止只提供了3种类型的字面量类型：字符串、数字、布
     [这里](https://www.jianshu.com/p/78268bd9af0a?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation)略微有提到修改默认配置以取消这个特性的方法
   - 不允许在同名接口中把不同属性定义为不同类型
 - [将属性标记为可选的](https://www.typescriptlang.org/docs/handbook/2/objects.html#optional-properties)  
-  只要在属性名后加上`?`即可
+  - 不设默认值的写法  
+    在属性名后加上`?`即可
+  - 设默认值的写法  
+    和js一致<span style='opacity:.5'>（比如：`属性名: string = '默认值'`）</span>
 
 
 
@@ -515,17 +546,21 @@ const bird3: BirdInterface = bird1;
 - 可以做类似vue的mixin的操作  
   通过[`&`](https://www.typescriptlang.org/docs/handbook/2/objects.html#intersection-types)来做  
   示例：`某个type & {a:1,b:2}`
-- type可以和变量、参数重名  
-  重名也能正常工作
+- type可以和变量、参数重名<span style='opacity:.5'>（重名也能正常工作）</span>  
+  但是不能和类重名
 - 可以引用自生来做递归
 - 2个type甚至还可以互相引用
 
 
 
-### 数组
+### [数组](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays)
 
 - ts没有set的支持（了解于2022.01.21）  
   不过可以用标注对象的方法来标注set
+- 对数组子项进行要求  
+  `[number,string]`要求如下  
+  如果是数组的话要求必须有2个子项，并且第一项是数字第二项是字符串
+- `[]`无法通过`[[number, number]]`的校验，但`Array<[number, number]>`可以
 
 
 
@@ -559,17 +594,44 @@ const bird3: BirdInterface = bird1;
 
 ### 函数
 
-- 参数默认全部必填，除非后面加问号
+- [函数类型](https://www.typescriptlang.org/docs/handbook/2/functions.html#function-type-expressions)  
+  示例：`(参数名: string) => void`  
+
+  > 注意：参数名是必需的
+
+  【】函数类型后续内容值得学习
+
+- 参数默认全部必填  
+  除非后面加问号
+  
+- 返回值可以写this
 
 
 
 ### 类
 
 - 非方法成员必须声明
+- [指定一些形参作为实例的属性](https://www.typescriptlang.org/docs/handbook/2/classes.html#this-types)  
+  - 使用方法：在`constructor`的形参前加`public`（非类的构造函数不能用`public`）
+  - 效果：可以让加了`public`的形参作为实例的属性<span style='opacity:.5'>（没错，这是少有的会改变js的语法）</span>
+- 描述实例<span style='opacity:.5'>（这在多个类有相同特点却没有继承同一个类的时候很有用）</span>  
+  `class 类名 implements type或接口{ ... }`
+- 定义子类必须有的成员或方法  
+  有2种方案
+  - 方案一：[用装饰器实现](https://github.com/microsoft/TypeScript/issues/37132)  
+  - 方案二：父类和子类都定义好这些成员和方法  
+    并且[将`compilerOptions.useDefineForClassFields`配置设为false](https://github.com/Swatinem/rollup-plugin-dts/issues/156)
 
-- 指定一些形参作为实例的属性  
-  - 使用方法：在类的构造函数的形参前加`public`（普通的构造函数不能用`public`）
-  - 效果：可以让加了`public`的形参作为实例的属性
+- 防止成员在构造函数外被修改  
+  [用`readonly`前缀](https://www.typescriptlang.org/docs/handbook/2/classes.html#readonly)
+- 指定成员或方法仅本类可用  
+  命名以`#`开头即可（经验之谈，文档还没看过）  
+  [ts版本小于4.3不可用](https://stackoverflow.com/questions/69316110/error-ts18022-a-method-cannot-be-named-with-a-private-identifier)<span style='opacity:.5'>（4.1确实不可用，4.6.2可用）</span>
+- 指定成员或方法仅本类及子类可用  
+  [用`protected`前缀](https://www.typescriptlang.org/docs/handbook/2/classes.html#protected)
+  - 调用`#`开头的方法  
+    只会调到当前类的，意思就是就算子类有同名方法也不会调子类的方法
+
 
 
 
@@ -863,6 +925,8 @@ const bird3: BirdInterface = bird1;
     ```
 
 - js与.d.ts组合后类型推导完全依据.d.ts里的来（即使.d.ts里写错了的也是这样）
+
+- `.d.ts`里的类型有全局作用域<span style='opacity:.5'>（不需要`import`也可以使用）</span>
 
 
 
